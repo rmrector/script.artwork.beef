@@ -1,0 +1,3 @@
+v0.0.1~dev
+- Drop it
+- Add series and movie artwork from Fanart.tv to the library
