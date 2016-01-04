@@ -15,6 +15,7 @@ class ArtworkProcessor(object):
     def __init__(self):
         self.monitor = xbmc.Monitor()
         self.dryrun = True
+        self.autolanguages = None
 
     def process_allartwork(self, mediatype):
         pass
@@ -29,7 +30,8 @@ class ArtworkProcessor(object):
             mediaitem = quickjson.get_episode_details(dbid, ['art', 'uniqueid'])
         if not mediaitem:
             return
-        mediaitem = self.process_mediaitem(mediaitem, mode)
+        self.setlanguages()
+        mediaitem = self._process_mediaitem(mediaitem, mode)
         if not mediaitem:
             return
         if mode == MODE_GUI:
@@ -39,8 +41,9 @@ class ArtworkProcessor(object):
 
     def process_medialist(self, medialist):
         resultlist = []
+        self.setlanguages()
         for mediaitem in medialist:
-            mediaitem = self.process_mediaitem(mediaitem, MODE_AUTO)
+            mediaitem = self._process_mediaitem(mediaitem, MODE_AUTO)
             if not mediaitem:
                 continue
             resultlist.append(mediaitem)
@@ -50,6 +53,10 @@ class ArtworkProcessor(object):
         return resultlist
 
     def process_mediaitem(self, mediaitem, mode):
+        self.setlanguages()
+        return self._process_mediaitem(mediaitem, mode)
+
+    def _process_mediaitem(self, mediaitem, mode):
         if 'tvshowid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.TVSHOW
         elif 'movieid' in mediaitem:
@@ -69,6 +76,11 @@ class ArtworkProcessor(object):
         else:
             mediaitem['available art'] = self.get_available_artwork(mediaitem)
         return mediaitem
+
+    def setlanguages(self):
+        self.autolanguages = [pykodi.get_language(xbmc.ISO_639_1), '']
+        if self.autolanguages[0] != 'en':
+            self.autolanguages.append('en')
 
     def add_additional_iteminfo(self, mediaitem):
         if mediaitem['mediatype'] == mediatypes.TVSHOW:
@@ -92,9 +104,6 @@ class ArtworkProcessor(object):
 
     def get_top_missing_art(self, mediaitem, missing_art):
         newartwork = {}
-        languages = [pykodi.get_language(xbmc.ISO_639_1), '']
-        if languages[0] != 'en':
-            languages.append('en')
         for missingart in missing_art:
             if missingart.startswith(mediatypes.SEASON):
                 mediatype = mediatypes.SEASON
@@ -105,11 +114,11 @@ class ArtworkProcessor(object):
             if missingart not in mediaitem['available art']:
                 continue
             if mediatypes.artinfo[mediatype][artkey]['multiselect']:
-                existingart = []
+                existingurls = []
                 existingartnames = []
                 for art, url in mediaitem['art'].iteritems():
                     if art.startswith(missingart):
-                        existingart.append(pykodi.unquoteimage(url))
+                        existingurls.append(pykodi.unquoteimage(url))
                         existingartnames.append(art)
 
                 missingartnames = []
@@ -118,7 +127,7 @@ class ArtworkProcessor(object):
                     if multikey not in existingartnames:
                         missingartnames.append(multikey)
 
-                newart = [art for art in mediaitem['available art'][missingart] if art['language'] in languages and art['url'] not in existingart]
+                newart = [art for art in mediaitem['available art'][missingart] if self._auto_filter(art, existingurls)]
                 if not newart:
                     continue
                 newartcount = 0
@@ -130,8 +139,9 @@ class ArtworkProcessor(object):
                     newartwork[name] = newart[newartcount]['url']
                     newartcount += 1
             else:
-                if mediaitem['available art'][missingart][0]['language'] in languages:
-                    newartwork[missingart] = mediaitem['available art'][missingart][0]['url']
+                newart = next((art for art in mediaitem['available art'][missingart] if self._auto_filter(art)), None)
+                if newart:
+                    newartwork[missingart] = newart['url']
         return newartwork
 
     def list_missing_arttypes(self, mediaitem):
@@ -213,3 +223,7 @@ class ArtworkProcessor(object):
                 return
             if movieart:
                 quickjson.set_movie_details(mediaitem['movieid'], art=movieart)
+
+    def _auto_filter(self, art, ignoreurls=()):
+        # Add filter on rating and resolution
+        return art['language'] in self.autolanguages and art['url'] not in ignoreurls
