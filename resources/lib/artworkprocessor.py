@@ -89,11 +89,9 @@ class ArtworkProcessor(object):
 
     def get_top_missing_art(self, mediaitem, missing_art):
         newartwork = {}
-        language = xbmc.getLanguage(xbmc.ISO_639_1)
-        if language != 'en':
-            language = (language, 'en')
-        else:
-            language = (language,)
+        languages = [pykodi.get_language(xbmc.ISO_639_1), '']
+        if languages[0] != 'en':
+            languages.append('en')
         for missingart in missing_art:
             if missingart.startswith(mediatypes.SEASON):
                 mediatype = mediatypes.SEASON
@@ -117,7 +115,7 @@ class ArtworkProcessor(object):
                     if multikey not in existingartnames:
                         missingartnames.append(multikey)
 
-                newart = [art for art in mediaitem['available art'][missingart] if art['language'] in language and art['url'] not in existingart]
+                newart = [art for art in mediaitem['available art'][missingart] if art['language'] in languages and art['url'] not in existingart]
                 if not newart:
                     continue
                 newartcount = 0
@@ -129,7 +127,7 @@ class ArtworkProcessor(object):
                     newartwork[name] = newart[newartcount]['url']
                     newartcount += 1
             else:
-                if mediaitem['available art'][missingart][0]['language'] in language:
+                if mediaitem['available art'][missingart][0]['language'] in languages:
                     newartwork[missingart] = mediaitem['available art'][missingart][0]['url']
         return newartwork
 
