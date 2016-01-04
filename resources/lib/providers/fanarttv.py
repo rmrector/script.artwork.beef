@@ -51,7 +51,7 @@ class FanartTvSeriesProvider(FanartTvAbstractProvider):
                     except ValueError:
                         self.log('Data for \'%s\' from provider has a small problem: image season was set incorrectly, to "%s", so I can\'t tell which season it belongs to. The image URL is:\n%s' % (data['name'], image['season'], image['url']))
                         # throw it into the 'all' pile
-                        itype = itype % -1
+                        itype = itype % (-1,)
                 if itype not in result:
                     result[itype] = []
                 rating = (5 + int(image['likes']) / 3.0, '%s likes' % image['likes'])
