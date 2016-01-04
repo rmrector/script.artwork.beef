@@ -84,7 +84,10 @@ class ArtworkProcessor(object):
             return
         images = {}
         for provider in providers.get_providers()[mediaitem['mediatype']]:
-            images.update(provider.get_images(mediaitem['imdbnumber']))
+            for arttype, artlist in provider.get_images(mediaitem['imdbnumber']).iteritems():
+                if arttype not in images:
+                    images[arttype] = []
+                images[arttype].extend(artlist)
         return images
 
     def get_top_missing_art(self, mediaitem, missing_art):
