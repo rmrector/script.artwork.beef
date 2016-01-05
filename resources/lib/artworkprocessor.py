@@ -15,6 +15,7 @@ class ArtworkProcessor(object):
     def __init__(self):
         self.monitor = xbmc.Monitor()
         self.dryrun = True
+        self.language = None
         self.autolanguages = None
 
     def process_allartwork(self, mediatype):
@@ -78,9 +79,11 @@ class ArtworkProcessor(object):
         return mediaitem
 
     def setlanguages(self):
-        self.autolanguages = [pykodi.get_language(xbmc.ISO_639_1), '']
-        if self.autolanguages[0] != 'en':
-            self.autolanguages.append('en')
+        self.language = pykodi.get_language(xbmc.ISO_639_1)
+        if self.language == 'en':
+            self.autolanguages = (self.language, '')
+        else:
+            self.autolanguages = (self.language, 'en', '')
 
     def add_additional_iteminfo(self, mediaitem):
         if mediaitem['mediatype'] == mediatypes.TVSHOW:
@@ -100,6 +103,14 @@ class ArtworkProcessor(object):
                 if arttype not in images:
                     images[arttype] = []
                 images[arttype].extend(artlist)
+        for arttype, imagelist in images.iteritems():
+            # Match the primary language, for everything but fanart
+            # then size descending
+            # Then rating descending
+            imagelist.sort(key=lambda image: image['rating'][0], reverse=True)
+            imagelist.sort(key=lambda image: image['size'][0], reverse=True)
+            if arttype != 'fanart':
+                imagelist.sort(key=lambda image: '%s-%s' % (0 if image['language'] == self.language else 1, image['language']))
         return images
 
     def get_top_missing_art(self, mediaitem, missing_art):
