@@ -20,7 +20,7 @@ class TheTVDBProvider(AbstractProvider):
 
     def __init__(self):
         super(TheTVDBProvider, self).__init__()
-        self.session.headers['Content-Type'] = 'application/json'
+        self.session.headers['Accept'] = 'application/json'
 
     def log(self, message, level=xbmc.LOGDEBUG):
         log(message, level, tag=self.name)
@@ -69,7 +69,7 @@ class TheTVDBProvider(AbstractProvider):
                     resultimage['url'] = self.imageurl_base + image['fileName']
                     resultimage['language'] = language
                     if image['ratingsInfo']['average']:
-                        resultimage['rating'] = (image['ratingsInfo']['average'], '{:1f}'.format(image['ratingsInfo']['average']))
+                        resultimage['rating'] = (image['ratingsInfo']['average'], '{:.1f}'.format(image['ratingsInfo']['average']))
                     else:
                         resultimage['rating'] = (5, 'Not rated')
                     if arttype in ('series', 'seasonwide'):
@@ -87,5 +87,5 @@ class TheTVDBProvider(AbstractProvider):
 
     def _login(self):
         loginurl = 'https://api-beta.thetvdb.com/login'
-        response = self.session.post(loginurl, json={'apikey': self.apikey}, timeout=5)
+        response = self.session.post(loginurl, json={'apikey': self.apikey}, headers={'Content-Type': 'application/json'}, timeout=5)
         self.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
