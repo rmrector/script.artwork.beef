@@ -31,12 +31,13 @@ class ArtworkProcessor(object):
             mediaitem = quickjson.get_episode_details(dbid, ['art', 'uniqueid'])
         if not mediaitem:
             return
-        self.setlanguages()
-        mediaitem = self._process_mediaitem(mediaitem, mode)
+        mediaitem = self.process_mediaitem(mediaitem, mode)
         if not mediaitem:
             return
         if mode == MODE_GUI:
             pass # prompt with 'available art'
+        else:
+            mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
 
         self.add_art_to_library(mediaitem)
 
@@ -47,6 +48,7 @@ class ArtworkProcessor(object):
             mediaitem = self._process_mediaitem(mediaitem, MODE_AUTO)
             if not mediaitem:
                 continue
+            mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
             resultlist.append(mediaitem)
             self.add_art_to_library(mediaitem)
             if self.monitor.waitForAbort(0.5):
@@ -70,10 +72,8 @@ class ArtworkProcessor(object):
             return
         self.add_additional_iteminfo(mediaitem)
         if mode == MODE_AUTO:
-            missing = self.list_missing_arttypes(mediaitem)
-            if missing:
+            if next(self.list_missing_arttypes(mediaitem), False):
                 mediaitem['available art'] = self.get_available_artwork(mediaitem)
-                mediaitem['selected art'] = self.get_top_missing_art(mediaitem, missing)
         else:
             mediaitem['available art'] = self.get_available_artwork(mediaitem)
         return mediaitem
@@ -119,8 +119,10 @@ class ArtworkProcessor(object):
             imagelist.sort(key=lambda image: (0 if image['language'] == self.language else 1, image['language']))
 
     def get_top_missing_art(self, mediaitem):
+        if not mediaitem.get('available art'):
+            return {}
         newartwork = {}
-        for missingart in missing_art:
+        for missingart in self.list_missing_arttypes(mediaitem):
             if missingart.startswith(mediatypes.SEASON):
                 mediatype = mediatypes.SEASON
                 artkey = missingart.rsplit('.', 1)[1]
@@ -133,7 +135,7 @@ class ArtworkProcessor(object):
                 existingurls = []
                 existingartnames = []
                 for art, url in mediaitem['art'].iteritems():
-                    if art.startswith(missingart):
+                    if art.startswith(missingart) and url:
                         existingurls.append(pykodi.unquoteimage(url))
                         existingartnames.append(art)
 
@@ -143,7 +145,7 @@ class ArtworkProcessor(object):
                     if multikey not in existingartnames:
                         missingartnames.append(multikey)
 
-                newart = [art for art in mediaitem['available art'][missingart] if self._auto_filter(art, existingurls)]
+                newart = [art for art in mediaitem['available art'][missingart] if self._auto_filter(missingart, art, existingurls)]
                 if not newart:
                     continue
                 newartcount = 0
@@ -155,7 +157,7 @@ class ArtworkProcessor(object):
                     newartwork[name] = newart[newartcount]['url']
                     newartcount += 1
             else:
-                newart = next((art for art in mediaitem['available art'][missingart] if self._auto_filter(art)), None)
+                newart = next((art for art in mediaitem['available art'][missingart] if self._auto_filter(missingart, art)), None)
                 if newart:
                     newartwork[missingart] = newart['url']
         return newartwork
@@ -240,6 +242,9 @@ class ArtworkProcessor(object):
             if movieart:
                 quickjson.set_movie_details(mediaitem['movieid'], art=movieart)
 
-    def _auto_filter(self, art, ignoreurls=()):
-        # Add filter on rating and resolution
-        return art['language'] in self.autolanguages and art['url'] not in ignoreurls
+    def _auto_filter(self, arttype, art, ignoreurls=()):
+        if art['rating'].sort < 5:
+            return False
+        if arttype.endswith('fanart') and art['size'].sort < 1276:
+            return False
+        return art['language'] in self.autolanguages and art.get('status', providers.HAPPY_IMAGE) == providers.HAPPY_IMAGE and art['url'] not in ignoreurls
