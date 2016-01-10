@@ -18,8 +18,19 @@ class ArtworkProcessor(object):
         self.language = None
         self.autolanguages = None
 
-    def process_allartwork(self, mediatype):
-        pass
+    def process_allartwork(self, mediatype, tvshowid=None):
+        medialist = None
+        if mediatype == mediatypes.TVSHOW:
+            medialist = quickjson.get_tvshows(properties=['art', 'imdbnumber'])
+        elif mediatype == mediatypes.MOVIE:
+            medialist = quickjson.get_movies(properties=['art', 'imdbnumber'])
+        elif mediatype == mediatypes.EPISODE:
+            # Gotta have Series id for this one, not running it for every episode in the DB
+            if tvshowid:
+                medialist = quickjson.get_episodes(tvshowid, properties=['art', 'uniqueid'])
+        if not medialist:
+            return
+        self.process_medialist(medialist)
 
     def process_itemartwork(self, mediatype, dbid, mode):
         mediaitem = None
