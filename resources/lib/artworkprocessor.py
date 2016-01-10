@@ -242,6 +242,14 @@ class ArtworkProcessor(object):
             if movieart:
                 quickjson.set_movie_details(mediaitem['movieid'], art=movieart)
 
+        elif mediaitem['mediatype'] == mediatypes.EPISODE:
+            episodeart = {arttype: url for arttype, url in mediaitem['selected art'].iteritems()}
+            if self.dryrun:
+                log(episodeart)
+                return
+            if episodeart:
+                quickjson.set_episode_details(mediaitem['episodeid'], art=episodeart)
+
     def _auto_filter(self, arttype, art, ignoreurls=()):
         if art['rating'].sort < 5:
             return False
