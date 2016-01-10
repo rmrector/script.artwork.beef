@@ -81,9 +81,9 @@ class ArtworkProcessor(object):
     def setlanguages(self):
         self.language = pykodi.get_language(xbmc.ISO_639_1)
         if self.language == 'en':
-            self.autolanguages = (self.language, '')
+            self.autolanguages = (self.language, None)
         else:
-            self.autolanguages = (self.language, 'en', '')
+            self.autolanguages = (self.language, 'en', None)
 
     def add_additional_iteminfo(self, mediaitem):
         if mediaitem['mediatype'] == mediatypes.TVSHOW:
