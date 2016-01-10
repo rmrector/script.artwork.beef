@@ -57,3 +57,60 @@ class TheMovieDBProvider(AbstractProvider):
                     resultimage['status'] = providers.GOOFY_IMAGE
                 result[generaltype].append(resultimage)
         return result
+
+
+class TheMovieDBEpisodeProvider(AbstractProvider):
+    name = 'themoviedb.org'
+    mediatype = mediatypes.EPISODE
+
+    apikey = '5a0727308f37da772002755d6c073aee'
+    cfgurl = 'http://api.themoviedb.org/3/configuration'
+    tvdbidsearch_url = 'http://api.themoviedb.org/3/find/%s?external_source=tvdb_id'
+
+    apiurl = 'http://api.themoviedb.org/3/tv/%s/season/%s/episode/%s/images'
+    artmap = {'stills': 'fanart'}
+
+    def __init__(self):
+        super(TheMovieDBEpisodeProvider, self).__init__()
+        self.session.headers['Accept'] = 'application/json'
+
+    def log(self, message, level=xbmc.LOGDEBUG):
+        log(message, level, tag=self.name + '.episode')
+
+    def _get_base_url(self):
+        response = self.session.get(self.cfgurl, params={'api_key': self.apikey}, timeout=5)
+        return response.json()['images']['base_url']
+
+    def get_images(self, mediaid):
+        self.log("Getting art for '%s'." % mediaid)
+        response = self.session.get(self.tvdbidsearch_url % mediaid, params={'api_key': self.apikey}, timeout=5)
+        if response.status_code == requests.codes.not_found:
+            return {}
+        response.raise_for_status()
+        data = response.json()
+        if not data['tv_episode_results']:
+            return {}
+        data = data['tv_episode_results'][0]
+        response = self.session.get(self.apiurl % (data['show_id'], data['season_number'], data['episode_number']), params={'api_key': self.apikey}, timeout=5)
+        if response.status_code == requests.codes.not_found:
+            return {}
+        response.raise_for_status()
+        data = response.json()
+        base_url = self._get_base_url()
+        result = {}
+        for arttype, artlist in data.iteritems():
+            generaltype = self.artmap.get(arttype)
+            if not generaltype:
+                continue
+            if artlist and generaltype not in result:
+                result[generaltype] = []
+            for image in artlist:
+                resultimage = {'url': base_url + 'original' + image['file_path'], 'provider': self.name}
+                resultimage['language'] = image['iso_639_1']
+                if image['vote_count']:
+                    resultimage['rating'] = SortedDisplay(image['vote_average'], '{0:.1f}'.format(image['vote_average']))
+                else:
+                    resultimage['rating'] = SortedDisplay(5, 'Not rated')
+                resultimage['size'] = SortedDisplay(image['width'], '%sx%s' % (image['width'], image['height']))
+                result[generaltype].append(resultimage)
+        return result

@@ -3,3 +3,4 @@ v0.0.1~dev
 - Add series and movie artwork from Fanart.tv to the library
 - Add series artwork from TheTVDB
 - Add movie artwork from TheMovieDb
+- Add episode artwork from TheMovieDb

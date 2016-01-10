@@ -106,7 +106,7 @@ artinfo = {
     EPISODE: {
         'fanart': {
 	        'localizeid': 32121,
-	        'autolimit': 0,
+	        'autolimit': 1, # Only considered by individual episode or series, not full library
 	        'multiselect': False
 		}
     }

@@ -2,7 +2,7 @@ import mediatypes
 
 from sorteddisplaytuple import SortedDisplay
 from fanarttv import FanartTVSeriesProvider, FanartTVMovieProvider
-from themoviedb import TheMovieDBProvider
+from themoviedb import TheMovieDBProvider, TheMovieDBEpisodeProvider
 from thetvdbv2 import TheTVDBProvider
 
 # These shouldn't be determined by the providers, but the processor, according to settings for some of them
@@ -14,7 +14,8 @@ GOOFY_IMAGE = SortedDisplay(1, 'goofy')
 
 _providers = {
     mediatypes.TVSHOW: (TheTVDBProvider(), FanartTVSeriesProvider()),
-    mediatypes.MOVIE: (TheMovieDBProvider(), FanartTVMovieProvider())
+    mediatypes.MOVIE: (TheMovieDBProvider(), FanartTVMovieProvider()),
+    mediatypes.EPISODE: (TheMovieDBEpisodeProvider(),)
 }
 
 def get_providers():
