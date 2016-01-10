@@ -104,16 +104,21 @@ class ArtworkProcessor(object):
                     images[arttype] = []
                 images[arttype].extend(artlist)
         for arttype, imagelist in images.iteritems():
-            # Match the primary language, for everything but fanart
-            # then size descending
-            # Then rating descending
-            imagelist.sort(key=lambda image: image['rating'][0], reverse=True)
-            imagelist.sort(key=lambda image: image['size'][0], reverse=True)
-            if arttype != 'fanart':
-                imagelist.sort(key=lambda image: '%s-%s' % (0 if image['language'] == self.language else 1, image['language']))
+            self.sort_images(arttype, imagelist)
         return images
 
-    def get_top_missing_art(self, mediaitem, missing_art):
+    def sort_images(self, arttype, imagelist):
+        # 1. Match the primary language, for everything but fanart
+        # 2. Separate on status, like goofy images
+        # 3. Rating
+        # 4. Size
+        imagelist.sort(key=lambda image: image['size'].sort, reverse=True)
+        imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
+        imagelist.sort(key=lambda image: image.get('status', providers.HAPPY_IMAGE).sort)
+        if not arttype.endswith('fanart'):
+            imagelist.sort(key=lambda image: (0 if image['language'] == self.language else 1, image['language']))
+
+    def get_top_missing_art(self, mediaitem):
         newartwork = {}
         for missingart in missing_art:
             if missingart.startswith(mediatypes.SEASON):
