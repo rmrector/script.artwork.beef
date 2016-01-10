@@ -75,6 +75,10 @@ class TheTVDBProvider(AbstractProvider):
                         resultimage['rating'] = SortedDisplay(5, 'Not rated')
                     if arttype in ('series', 'seasonwide'):
                         resultimage['size'] = SortedDisplay(758, '758x140')
+                        # drop the rating sort value a bit due to size
+                        # Using a banner image like an actual banner, like across the top of the screen, this is a pixelated mess
+                        rating = resultimage['rating']
+                        resultimage['rating'] = SortedDisplay(rating.sort * 0.8, rating.display)
                     elif arttype == 'season':
                         resultimage['size'] = SortedDisplay(680, '680x1000')
                     else:
