@@ -6,6 +6,7 @@ from devhelper.pykodi import log
 import mediatypes
 import providers
 from base import AbstractProvider
+from sorteddisplaytuple import SortedDisplay
 
 # TODO: I can get good sized thumbnails from tmdb with 'w780' instead of 'original' in the URL
 # TODO: Reweigh ratings, as this does the exact opposite of thetvdb, and weighs each single rating very lowly, images rarely hit 6 stars, nor go lower than 4.7
@@ -48,10 +49,10 @@ class TheMovieDBProvider(AbstractProvider):
                 resultimage = {'url': base_url + 'original' + image['file_path'], 'provider': self.name}
                 resultimage['language'] = image['iso_639_1']
                 if image['vote_count']:
-                    resultimage['rating'] = (image['vote_average'], '{:.1f}'.format(image['vote_average']))
+                    resultimage['rating'] = SortedDisplay(image['vote_average'], '{0:.1f}'.format(image['vote_average']))
                 else:
-                    resultimage['rating'] = (5, 'Not rated')
-                resultimage['size'] = (image['width'], '%sx%s' % (image['width'], image['height']))
+                    resultimage['rating'] = SortedDisplay(5, 'Not rated')
+                resultimage['size'] = SortedDisplay(image['width'], '%sx%s' % (image['width'], image['height']))
                 if arttype == 'poster' and image['aspect_ratio'] > 0.685 or image['aspect_ratio'] < 0.66:
                     resultimage['status'] = providers.GOOFY_IMAGE
                 result[generaltype].append(resultimage)

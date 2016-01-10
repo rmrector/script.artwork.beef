@@ -6,6 +6,7 @@ from devhelper.pykodi import log
 
 import mediatypes
 from base import AbstractProvider
+from sorteddisplaytuple import SortedDisplay
 
 # TheTVDB has small thumbnails, but I may want to use them
 class TheTVDBProvider(AbstractProvider):
@@ -69,19 +70,19 @@ class TheTVDBProvider(AbstractProvider):
                     resultimage['url'] = self.imageurl_base + image['fileName']
                     resultimage['language'] = language
                     if image['ratingsInfo']['average']:
-                        resultimage['rating'] = (image['ratingsInfo']['average'], '{:.1f}'.format(image['ratingsInfo']['average']))
+                        resultimage['rating'] = SortedDisplay(image['ratingsInfo']['average'], '{0:.1f}'.format(image['ratingsInfo']['average']))
                     else:
-                        resultimage['rating'] = (5, 'Not rated')
+                        resultimage['rating'] = SortedDisplay(5, 'Not rated')
                     if arttype in ('series', 'seasonwide'):
-                        resultimage['size'] = (758, '758x140')
+                        resultimage['size'] = SortedDisplay(758, '758x140')
                     elif arttype == 'season':
-                        resultimage['size'] = (680, '680x1000')
+                        resultimage['size'] = SortedDisplay(680, '680x1000')
                     else:
                         try:
-                            resultimage['size'] = (int(image['resolution'].split('x')[0]), image['resolution'])
+                            resultimage['size'] = SortedDisplay(int(image['resolution'].split('x')[0]), image['resolution'])
                         except ValueError:
                             self.log('whoops, ValueError on "%s"' % image['resolution'].split('x')[0])
-                            resultimage['size'] = (0, '')
+                            resultimage['size'] = SortedDisplay(0, '')
                     result[ntype].append(resultimage)
         return result
 

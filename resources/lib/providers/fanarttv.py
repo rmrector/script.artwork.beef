@@ -8,6 +8,7 @@ from devhelper.pykodi import log
 import mediatypes
 import providers
 from base import AbstractProvider
+from sorteddisplaytuple import SortedDisplay
 
 class FanartTVAbstractProvider(AbstractProvider):
     # pylint: disable=W0223
@@ -66,7 +67,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                 if itype not in result:
                     result[itype] = []
                 resultimage = {'url': image['url'], 'provider': self.name}
-                resultimage['rating'] = (5 + int(image['likes']) / 3.0, '%s likes' % image['likes'])
+                resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
                 if arttype in ('seasonposter', 'tvposter'): # goofy aspect
@@ -78,21 +79,21 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
 
     def _get_imagesize(self, arttype):
         if arttype in ('hdtvlogo', 'hdclearart'):
-            return (50, 'HD')
+            return SortedDisplay(50, 'HD')
         elif arttype in ('clearlogo', 'clearart'):
-            return (10, 'SD')
+            return SortedDisplay(10, 'SD')
         elif arttype in ('tvbanner', 'seasonbanner'):
-            return (1000, '1000x185')
+            return SortedDisplay(1000, '1000x185')
         elif arttype == 'showbackground':
-            return (1920, '1920x1080')
+            return SortedDisplay(1920, '1920x1080')
         elif arttype in ('tvposter', 'seasonposter'):
-            return (1000, '1000x1426')
+            return SortedDisplay(1000, '1000x1426')
         elif arttype == 'characterart':
-            return (512, '512x512')
+            return SortedDisplay(512, '512x512')
         elif arttype in ('tvthumb', 'seasonthumb'):
-            return (500, '500x281')
+            return SortedDisplay(500, '500x281')
         else:
-            return (0, '')
+            return SortedDisplay(0, '')
 
     def _get_imagelanguage(self, arttype, image):
         if arttype in ('showbackground', 'characterart'):
@@ -138,7 +139,7 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
                 result[generaltype] = []
             for image in artlist:
                 resultimage = {'url': image['url'], 'provider': self.name}
-                resultimage['rating'] = (5 + int(image['likes']) / 6.0, '%s likes' % image['likes'])
+                resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 6.0, '%s likes' % image['likes'])
                 if arttype == 'moviedisc':
                     resultimage['subtype'] = image['disc_type']
                 resultimage['size'] = self._get_imagesize(arttype)
@@ -152,21 +153,21 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
 
     def _get_imagesize(self, arttype):
         if arttype in ('hdmovielogo', 'hdmovieclearart'):
-            return (50, 'HD')
+            return SortedDisplay(50, 'HD')
         elif arttype in ('movielogo', 'movieart'):
-            return (10, 'SD')
+            return SortedDisplay(10, 'SD')
         elif arttype == 'moviebackground':
-            return (1920, '1920x1080')
+            return SortedDisplay(1920, '1920x1080')
         elif arttype == 'movieposter':
-            return (1000, '1000x1426')
+            return SortedDisplay(1000, '1000x1426')
         elif arttype == 'moviedisc':
-            return (1000, '1000x1000')
+            return SortedDisplay(1000, '1000x1000')
         elif arttype == 'moviebanner':
-            return (1000, '1000x185')
+            return SortedDisplay(1000, '1000x185')
         elif arttype == 'moviethumb':
-            return (1000, '1000x562')
+            return SortedDisplay(1000, '1000x562')
         else:
-            return (0, '')
+            return SortedDisplay(0, '')
 
     def _get_imagelanguage(self, arttype, image):
         if arttype == 'moviebackground':
