@@ -1,6 +1,8 @@
 import requests
 import xbmc
 
+from abc import ABCMeta
+
 from devhelper.pykodi import log
 
 import mediatypes
@@ -10,25 +12,40 @@ from sorteddisplaytuple import SortedDisplay
 
 # TODO: I can get good sized thumbnails from tmdb with 'w780' instead of 'original' in the URL
 # TODO: Reweigh ratings, as this does the exact opposite of thetvdb, and weighs each single rating very lowly, images rarely hit 6 stars, nor go lower than 4.7
-class TheMovieDBProvider(AbstractProvider):
-    name = 'themoviedb.org'
-    mediatype = mediatypes.MOVIE
 
-    apikey = '5a0727308f37da772002755d6c073aee'
+class TheMovieDBAbstractProvider(AbstractProvider):
+    # pylint: disable=W0223
+    __metaclass__ = ABCMeta
+
+    name = 'themoviedb.org'
     cfgurl = 'http://api.themoviedb.org/3/configuration'
-    apiurl = 'http://api.themoviedb.org/3/movie/%s/images'
-    artmap = {'backdrops': 'fanart', 'posters': 'poster'}
+    apikey = '5a0727308f37da772002755d6c073aee'
 
     def __init__(self):
-        super(TheMovieDBProvider, self).__init__()
+        super(TheMovieDBAbstractProvider, self).__init__()
         self.session.headers['Accept'] = 'application/json'
-
-    def log(self, message, level=xbmc.LOGDEBUG):
-        log(message, level, tag=self.name)
 
     def _get_base_url(self):
         response = self.session.get(self.cfgurl, params={'api_key': self.apikey}, timeout=5)
         return response.json()['images']['base_url']
+
+    def _get_rating(self, image):
+        if image['vote_count']:
+            # Reweigh ratings, as themoviedb does the exact opposite of thetvdb, and weighs each single rating very lowly, images rarely hit 6 stars, nor go lower than 4.7
+            rating = image['vote_average']
+            rating = 5 + (rating - 5) * 3
+            return SortedDisplay(rating, '{0:.1f}'.format(image['vote_average']))
+        else:
+            return SortedDisplay(5, 'Not rated')
+
+class TheMovieDBProvider(TheMovieDBAbstractProvider):
+    mediatype = mediatypes.MOVIE
+
+    apiurl = 'http://api.themoviedb.org/3/movie/%s/images'
+    artmap = {'backdrops': 'fanart', 'posters': 'poster'}
+
+    def log(self, message, level=xbmc.LOGDEBUG):
+        log(message, level, tag=self.name)
 
     def get_images(self, mediaid):
         self.log("Getting art for '%s'." % mediaid)
@@ -48,25 +65,17 @@ class TheMovieDBProvider(AbstractProvider):
             for image in artlist:
                 resultimage = {'url': base_url + 'original' + image['file_path'], 'provider': self.name}
                 resultimage['language'] = image['iso_639_1']
-                if image['vote_count']:
-                    resultimage['rating'] = SortedDisplay(image['vote_average'], '{0:.1f}'.format(image['vote_average']))
-                else:
-                    resultimage['rating'] = SortedDisplay(5, 'Not rated')
+                resultimage['rating'] = self._get_rating(image)
                 resultimage['size'] = SortedDisplay(image['width'], '%sx%s' % (image['width'], image['height']))
                 if arttype == 'poster' and image['aspect_ratio'] > 0.685 or image['aspect_ratio'] < 0.66:
                     resultimage['status'] = providers.GOOFY_IMAGE
                 result[generaltype].append(resultimage)
         return result
 
-
-class TheMovieDBEpisodeProvider(AbstractProvider):
-    name = 'themoviedb.org'
+class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.EPISODE
 
-    apikey = '5a0727308f37da772002755d6c073aee'
-    cfgurl = 'http://api.themoviedb.org/3/configuration'
     tvdbidsearch_url = 'http://api.themoviedb.org/3/find/%s?external_source=tvdb_id'
-
     apiurl = 'http://api.themoviedb.org/3/tv/%s/season/%s/episode/%s/images'
     artmap = {'stills': 'fanart'}
 
@@ -76,10 +85,6 @@ class TheMovieDBEpisodeProvider(AbstractProvider):
 
     def log(self, message, level=xbmc.LOGDEBUG):
         log(message, level, tag=self.name + '.episode')
-
-    def _get_base_url(self):
-        response = self.session.get(self.cfgurl, params={'api_key': self.apikey}, timeout=5)
-        return response.json()['images']['base_url']
 
     def get_images(self, mediaid):
         self.log("Getting art for '%s'." % mediaid)
@@ -107,10 +112,7 @@ class TheMovieDBEpisodeProvider(AbstractProvider):
             for image in artlist:
                 resultimage = {'url': base_url + 'original' + image['file_path'], 'provider': self.name}
                 resultimage['language'] = image['iso_639_1']
-                if image['vote_count']:
-                    resultimage['rating'] = SortedDisplay(image['vote_average'], '{0:.1f}'.format(image['vote_average']))
-                else:
-                    resultimage['rating'] = SortedDisplay(5, 'Not rated')
+                resultimage['rating'] = self._get_rating(image)
                 resultimage['size'] = SortedDisplay(image['width'], '%sx%s' % (image['width'], image['height']))
                 result[generaltype].append(resultimage)
         return result
