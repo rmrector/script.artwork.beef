@@ -79,7 +79,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
 
     def _get_imagesize(self, arttype):
         if arttype in ('hdtvlogo', 'hdclearart'):
-            return SortedDisplay(50, 'HD')
+            return SortedDisplay(400, 'HD')
         elif arttype in ('clearlogo', 'clearart'):
             return SortedDisplay(10, 'SD')
         elif arttype in ('tvbanner', 'seasonbanner'):
@@ -153,7 +153,7 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
 
     def _get_imagesize(self, arttype):
         if arttype in ('hdmovielogo', 'hdmovieclearart'):
-            return SortedDisplay(50, 'HD')
+            return SortedDisplay(400, 'HD')
         elif arttype in ('movielogo', 'movieart'):
             return SortedDisplay(10, 'SD')
         elif arttype == 'moviebackground':
