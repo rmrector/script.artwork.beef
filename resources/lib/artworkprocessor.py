@@ -8,6 +8,10 @@ from devhelper.pykodi import log
 import mediatypes
 import providers
 
+from artworkselection import ArtworkTypeSelector, ArtworkSelector
+
+addon = pykodi.get_main_addon()
+
 MODE_AUTO = 'auto'
 MODE_GUI = 'gui'
 
@@ -46,7 +50,10 @@ class ArtworkProcessor(object):
         if not mediaitem:
             return
         if mode == MODE_GUI:
-            pass # prompt with 'available art'
+            selected = self.prompt_for_artwork(mediaitem)
+            if not selected:
+                return
+            mediaitem['selected art'] = selected
         else:
             mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
 
@@ -267,3 +274,40 @@ class ArtworkProcessor(object):
         if arttype.endswith('fanart') and art['size'].sort < 1276:
             return False
         return art['language'] in self.autolanguages and art.get('status', providers.HAPPY_IMAGE) == providers.HAPPY_IMAGE and art['url'] not in ignoreurls
+
+    def prompt_for_artwork(self, mediaitem):
+        items = mediaitem['available art'].keys()
+        window = ArtworkTypeSelector('DialogSelect.xml', addon.path, existingart=mediaitem['art'], arttypes=items, medialabel=mediaitem['label'])
+        selectedarttype = window.prompt()
+        if not selectedarttype:
+            return {}
+        artlist = mediaitem['available art'][selectedarttype]
+        if selectedarttype.startswith('season'):
+            stype = selectedarttype.rsplit('.', 1)[1]
+            multi = mediatypes.artinfo[mediatypes.SEASON][stype]['multiselect']
+        else:
+            multi = mediatypes.artinfo[mediaitem['mediatype']][selectedarttype]['multiselect']
+        if multi:
+            existingart = [pykodi.unquoteimage(url) for arttype, url in mediaitem['art'].iteritems() if arttype.startswith(selectedarttype)]
+        else:
+            existingart = []
+            if selectedarttype in mediaitem['art']:
+                existingart.append(pykodi.unquoteimage(mediaitem['art'][selectedarttype]))
+        window = ArtworkSelector('DialogSelect.xml', addon.path, artlist=artlist, arttype=selectedarttype, medialabel=mediaitem['label'], existingart=existingart, multi=multi)
+        selected = window.prompt()
+        if not selected or multi and not (selected[0] or selected[1]):
+            return {}
+        if not multi:
+            return {selectedarttype: selected}
+
+        for url in selected[1]:
+            existingart.remove(url)
+        existingart.extend(selected[0])
+
+        result = {}
+        count = 0
+        for url in existingart:
+            result[selectedarttype + (str(count) if count else '')] = url
+            count += 1
+        result.update({arttype: None for arttype in mediaitem['art'].keys() if arttype.startswith(selectedarttype) and arttype not in result.keys()})
+        return result
