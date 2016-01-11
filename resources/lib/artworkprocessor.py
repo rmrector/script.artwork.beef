@@ -1,4 +1,5 @@
 import xbmc
+import xbmcgui
 
 from devhelper import pykodi
 from devhelper import quickjson
@@ -37,6 +38,8 @@ class ArtworkProcessor(object):
         self.process_medialist(medialist)
 
     def process_itemartwork(self, mediatype, dbid, mode):
+        if mode == MODE_GUI:
+            xbmc.executebuiltin('ActivateWindow(busydialog)')
         mediaitem = None
         if mediatype == mediatypes.TVSHOW:
             mediaitem = quickjson.get_tvshow_details(dbid, ['art', 'imdbnumber'])
@@ -45,11 +48,14 @@ class ArtworkProcessor(object):
         elif mediatype == mediatypes.EPISODE:
             mediaitem = quickjson.get_episode_details(dbid, ['art', 'uniqueid'])
         if not mediaitem:
+            xbmc.executebuiltin('Dialog.Close(busydialog)')
             return
         mediaitem = self.process_mediaitem(mediaitem, mode)
         if not mediaitem:
+            xbmc.executebuiltin('Dialog.Close(busydialog)')
             return
         if mode == MODE_GUI:
+            xbmc.executebuiltin('Dialog.Close(busydialog)')
             selected = self.prompt_for_artwork(mediaitem)
             if not selected:
                 return
@@ -58,19 +64,21 @@ class ArtworkProcessor(object):
             mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
 
         self.add_art_to_library(mediaitem)
+        self.notifycount(len(mediaitem['selected art']))
 
     def process_medialist(self, medialist):
-        resultlist = []
         self.setlanguages()
+        count = 0
         for mediaitem in medialist:
             mediaitem = self._process_mediaitem(mediaitem, MODE_AUTO)
             if not mediaitem:
                 continue
             mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
-            resultlist.append(mediaitem)
             self.add_art_to_library(mediaitem)
-            if self.monitor.waitForAbort(0.5):
+            count += len(mediaitem['selected art'])
+            if self.monitor.waitForAbort(0.2):
                 break
+        self.notifycount(count)
         return resultlist
 
     def process_mediaitem(self, mediaitem, mode):
@@ -311,3 +319,7 @@ class ArtworkProcessor(object):
             count += 1
         result.update({arttype: None for arttype in mediaitem['art'].keys() if arttype.startswith(selectedarttype) and arttype not in result.keys()})
         return result
+
+    def notifycount(self, count):
+        if count:
+            xbmcgui.Dialog().notification('{0} artwork grabbed'.format(count), "Contribute or donate to the awesomeness\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
