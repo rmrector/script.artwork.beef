@@ -126,6 +126,11 @@ class ArtworkProcessor(object):
         images = {}
         for provider in providers.get_providers()[mediaitem['mediatype']]:
             for arttype, artlist in provider.get_images(mediaitem['imdbnumber']).iteritems():
+                if arttype.startswith('season'):
+                    season = arttype.rsplit('.', 2)[1]
+                    if int(season) not in mediaitem['seasons']:
+                        # Don't prompt for artwork for seasons we don't have
+                        continue
                 if arttype not in images:
                     images[arttype] = []
                 images[arttype].extend(artlist)
