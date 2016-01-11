@@ -70,7 +70,7 @@ class TheTVDBProvider(AbstractProvider):
                     resultimage['url'] = self.imageurl_base + image['fileName']
                     resultimage['language'] = language
                     if image['ratingsInfo']['average']:
-                        resultimage['rating'] = SortedDisplay(image['ratingsInfo']['average'], '{0:.1f}'.format(image['ratingsInfo']['average']))
+                        resultimage['rating'] = SortedDisplay(image['ratingsInfo']['average'], '{0:.1f} stars'.format(image['ratingsInfo']['average']))
                     else:
                         resultimage['rating'] = SortedDisplay(5, 'Not rated')
                     if arttype in ('series', 'seasonwide'):

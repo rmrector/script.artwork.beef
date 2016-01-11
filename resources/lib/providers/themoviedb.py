@@ -34,7 +34,7 @@ class TheMovieDBAbstractProvider(AbstractProvider):
             # Reweigh ratings, as themoviedb does the exact opposite of thetvdb, and weighs each single rating very lowly, images rarely hit 6 stars, nor go lower than 4.7
             rating = image['vote_average']
             rating = 5 + (rating - 5) * 3
-            return SortedDisplay(rating, '{0:.1f}'.format(image['vote_average']))
+            return SortedDisplay(rating, '{0:.1f} stars'.format(image['vote_average']))
         else:
             return SortedDisplay(5, 'Not rated')
 
