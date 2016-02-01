@@ -17,27 +17,26 @@ MODE_AUTO = 'auto'
 MODE_GUI = 'gui'
 
 class ArtworkProcessor(object):
-    def __init__(self):
-        self.monitor = xbmc.Monitor()
+    def __init__(self, monitor=None):
+        self.monitor = monitor or xbmc.Monitor()
         self.dryrun = True
         self.language = None
         self.autolanguages = None
 
-    def process_allartwork(self, mediatype, tvshowid=None):
-        medialist = None
-        if mediatype == mediatypes.TVSHOW:
-            medialist = quickjson.get_tvshows(properties=['art', 'imdbnumber'])
-        elif mediatype == mediatypes.MOVIE:
-            medialist = quickjson.get_movies(properties=['art', 'imdbnumber'])
-        elif mediatype == mediatypes.EPISODE:
-            # Gotta have Series id for this one, not running it for every episode in the DB
-            if tvshowid:
-                medialist = quickjson.get_episodes(tvshowid, properties=['art', 'uniqueid'])
-        if not medialist:
-            return
-        self.process_medialist(medialist)
+    @property
+    def processing(self):
+        return pykodi.get_conditional('StringCompare(Window(Home).Property(ArtworkBeef.Status),Processing)')
 
-    def process_itemartwork(self, mediatype, dbid, mode):
+    def process_allepisodes(self, tvshowid):
+        if self.processing:
+            pykodi.execute_builtin('NotifyAll(script.artwork.beef, ShowProgress)')
+            return
+        self.process_medialist(quickjson.get_episodes(tvshowid, properties=['art', 'uniqueid']))
+
+    def process_item(self, mediatype, dbid, mode):
+        if self.processing:
+            pykodi.execute_builtin('NotifyAll(script.artwork.beef, ShowProgress)')
+            return
         if mode == MODE_GUI:
             xbmc.executebuiltin('ActivateWindow(busydialog)')
         mediaitem = None
@@ -50,7 +49,8 @@ class ArtworkProcessor(object):
         if not mediaitem:
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             return
-        mediaitem = self.process_mediaitem(mediaitem, mode)
+        self.setlanguages()
+        mediaitem = self._process_mediaitem(mediaitem, mode)
         if not mediaitem:
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             return
@@ -70,20 +70,15 @@ class ArtworkProcessor(object):
         self.setlanguages()
         count = 0
         for mediaitem in medialist:
+            if self.monitor.waitForAbort(0.15):
+                break
             mediaitem = self._process_mediaitem(mediaitem, MODE_AUTO)
             if not mediaitem:
                 continue
             mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
             self.add_art_to_library(mediaitem)
             count += len(mediaitem['selected art'])
-            if self.monitor.waitForAbort(0.2):
-                break
         self.notifycount(count)
-        return resultlist
-
-    def process_mediaitem(self, mediaitem, mode):
-        self.setlanguages()
-        return self._process_mediaitem(mediaitem, mode)
 
     def _process_mediaitem(self, mediaitem, mode):
         if 'tvshowid' in mediaitem:
@@ -102,7 +97,8 @@ class ArtworkProcessor(object):
                 mediaitem['available art'] = self.get_available_artwork(mediaitem)
         else:
             mediaitem['available art'] = self.get_available_artwork(mediaitem)
-        return mediaitem
+        if mediaitem.get('available art'):
+            return mediaitem
 
     def setlanguages(self):
         self.language = pykodi.get_language(xbmc.ISO_639_1)
@@ -134,6 +130,8 @@ class ArtworkProcessor(object):
                 if arttype not in images:
                     images[arttype] = []
                 images[arttype].extend(artlist)
+            if self.monitor.abortRequested():
+                return
         for arttype, imagelist in images.iteritems():
             self.sort_images(arttype, imagelist)
         return images
@@ -244,6 +242,8 @@ class ArtworkProcessor(object):
             return result
 
     def add_art_to_library(self, mediaitem):
+        if not mediaitem.get('selected art'):
+            return
         if mediaitem['mediatype'] == mediatypes.TVSHOW:
             seriesart = {}
             allseasonart = {}
