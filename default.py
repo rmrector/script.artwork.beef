@@ -12,24 +12,36 @@ def main():
     # TODO: Start from program pops up a select list with some options.
     # Like scan -> new / all, settings -> select series for auto grabbing episode art
     command = get_command()
+    processor = ArtworkProcessor()
     if command.get('dbid'):
-        processor = ArtworkProcessor()
         mode = command.get('mode', 'auto')
         if mode == 'autoepisodes':
             processor.process_allepisodes(int(command['dbid']))
         elif command.get('mediatype'):
             processor.process_item(command['mediatype'], int(command['dbid']), mode)
     else:
-        options = ['grab artwork for new items', 'grab artwork for all items', 'select series to auto grab episode art', 'stop current operation']
+        options = [None, 'settings...']
+        processing = processor.processing
+        if processing:
+            options[0] = 'stop current process'
+        else:
+            options[0] = 'grab artwork for...'
         selected = xbmcgui.Dialog().select('Artwork Beef', options)
         if selected == 0:
-            pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessNewItems)')
-        if selected == 1:
-            pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAllItems)')
-        elif selected == 2:
+            if processing:
+                pykodi.execute_builtin('NotifyAll(script.artwork.beef, CancelCurrent)')
+            else:
+                handle_grab_artwork()
+        elif selected == 1:
             xbmcgui.Dialog().ok('Artwork Beef', 'No can do, boss.')
-        elif selected == 3:
-            pykodi.execute_builtin('NotifyAll(script.artwork.beef, CancelCurrent)')
+
+def handle_grab_artwork():
+    options = ['new items', 'all items']
+    selected = xbmcgui.Dialog().select('Artwork Beef: grab artwork for...', options)
+    if selected == 0:
+        pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessNewItems)')
+    if selected == 1:
+        pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAllItems)')
 
 def get_command():
     command = {}
