@@ -27,17 +27,20 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
         return self.selected
 
     def onInit(self):
-        self.getControl(1).setLabel('Choose art type for {0}'.format(self.medialabel))
-        self.getControl(5).setVisible(False)
-        self.guilist = self.getControl(6)
-        self.guilist.setVisible(True)
-
-        for arttype in self.arttypes:
-            listitem = xbmcgui.ListItem(arttype[0])
-            listitem.setLabel2(arttype[1])
-            if self.existingart.get(arttype[1]):
-                listitem.setArt({'icon': self.existingart[arttype[1]]})
-            self.guilist.addItem(listitem)
+        # This is called every time the window is shown
+        if not self.selected:
+            self.getControl(1).setLabel('Choose art type for {0}'.format(self.medialabel))
+            self.getControl(3).setVisible(False)
+            self.getControl(5).setVisible(False)
+            self.guilist = self.getControl(6)
+            for arttype in self.arttypes:
+                listitem = xbmcgui.ListItem(arttype[0])
+                listitem.setLabel2(arttype[1])
+                if self.existingart.get(arttype[1]):
+                    listitem.setArt({'icon': self.existingart[arttype[1]]})
+                self.guilist.addItem(listitem)
+        else:
+            self.selected = None
         self.setFocus(self.guilist)
 
     def onClick(self, controlid):
@@ -64,16 +67,21 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
 
     def prompt(self):
         self.doModal()
+        if self.multi and self.selected and not (self.selected[0] or self.selected[1]):
+            return None
         return self.selected
 
     def onInit(self):
         self.getControl(1).setLabel('Choose {0} for {1}'.format(self.arttype, self.medialabel))
+        self.getControl(3).setVisible(False)
         self.getControl(5).setVisible(self.multi)
+        self.getControl(5).setLabel('$LOCALIZE[186]')
         self.guilist = self.getControl(6)
-        self.guilist.setVisible(True)
 
         for image in self.artlist:
             lang = xbmc.convertLanguage(image['language'], xbmc.ENGLISH_NAME) if image['language'] else 'No language'
+            if not lang: # xx
+                lang = 'Unknown'
             label = '{0}, {1}, {2}'.format(lang, image['rating'].display, image['size'].display)
             listitem = xbmcgui.ListItem(label)
             listitem.setArt({'icon': image['url']})
@@ -106,6 +114,9 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
                 self.selected = item.getfilename()
                 self.close()
         elif controlid == 5:
+            self.close()
+        elif controlid == 7:
+            self.selected = None
             self.close()
 
 def _sort_art(string, _nsre=re.compile('([0-9]+)')):

@@ -14,8 +14,8 @@
 	<extension point="xbmc.service" start="login" library="service.py" />
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">Adds extra artwork for your media from wonderful web services.</summary>
-		<description lang="en">Adds extra artwork for TV shows, movies and music videos into your library.</description>
-		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com</disclaimer>
+		<description lang="en">Adds extra artwork for TV shows and movies into your library.</description>
+		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database</disclaimer>
 		<platform>all</platform>
 		<language />
 		<website />

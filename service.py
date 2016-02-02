@@ -76,8 +76,9 @@ class ArtworkService(xbmc.Monitor):
                     self.processing = False
                     return
 
-        pykodi.execute_builtin("Notification(Artwork Beef, Grabbing artwork for all {0} items, 6500, -)".format(len(items)))
-        self.processor.process_medialist(items)
+        if items:
+            pykodi.execute_builtin("Notification(Artwork Beef, Grabbing artwork for all {0} items, 6500, -)".format(len(items)))
+            self.processor.process_medialist(items)
         if not self.abortRequested():
             addon.set_setting('lastalldate', currentdate)
             addon.set_setting('lastdate', currentdate)
@@ -110,8 +111,9 @@ class ArtworkService(xbmc.Monitor):
                 self.processing = False
                 return
 
-        pykodi.execute_builtin("Notification(Artwork Beef, Grabbing artwork for {0} new items, 6500, -)".format(len(newitems)))
-        self.processor.process_medialist(newitems)
+        if newitems:
+            pykodi.execute_builtin("Notification(Artwork Beef, Grabbing artwork for {0} new items, 6500, -)".format(len(newitems)))
+            self.processor.process_medialist(newitems)
         if not self.abortRequested():
             addon.set_setting('lastdate', currentdate)
         self.processing = False
