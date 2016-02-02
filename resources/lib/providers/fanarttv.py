@@ -8,6 +8,8 @@ from sorteddisplaytuple import SortedDisplay
 class FanartTVAbstractProvider(AbstractProvider):
     # pylint: disable=W0223
     __metaclass__ = ABCMeta
+
+    name = 'fanart.tv'
     apikey = '***REMOVED***'
     apiurl = 'http://webservice.fanart.tv/v3/%s/%s'
 
@@ -16,7 +18,6 @@ class FanartTVAbstractProvider(AbstractProvider):
         self.session.headers['Accept'] = 'application/json'
 
 class FanartTVSeriesProvider(FanartTVAbstractProvider):
-    name = 'fanart.tv'
     mediatype = mediatypes.TVSHOW
 
     api_section = 'tv'
@@ -41,7 +42,6 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
             return {}
         response.raise_for_status()
         data = response.json()
-        self.log("Getting art for '%s'." % data['name'])
         result = {}
         for arttype, artlist in data.iteritems():
             generaltype = self.artmap.get(arttype)
@@ -51,19 +51,17 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                 itype = generaltype
                 if arttype in ('seasonthumb', 'seasonbanner', 'seasonposter'):
                     try:
-                        itype = itype % int(image['season']) if image['season'] != 'all' else -1
+                        itype = itype % (int(image['season']) if image['season'] != 'all' else -1)
                     except ValueError:
-                        self.log('Data for \'%s\' from provider has a small problem: image season was set incorrectly, to "%s", so I can\'t tell which season it belongs to. The image URL is:\n%s' % (data['name'], image['season'], image['url']))
+                        self.log("Data for '%s' from provider has a small problem: image season was set incorrectly, to \"%s\", so I can't tell which season it belongs to. The image URL is:\n%s" % (data['name'], image['season'], image['url']))
                         # throw it into the 'all seasons' image pile
-                        itype = itype % (-1,)
+                        itype = itype % -1
                 if itype not in result:
                     result[itype] = []
                 resultimage = {'url': image['url'], 'provider': self.name}
                 resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
-                if arttype in ('seasonposter', 'tvposter'): # goofy aspect
-                    resultimage['status'] = providers.GOOFY_IMAGE
                 if arttype == 'showbackground': # frequent dupes with thetvdb
                     resultimage['status'] = providers.NOAUTO_IMAGE
                 result[itype].append(resultimage)
@@ -96,7 +94,6 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         return image['lang'] if image['lang'] not in ('', '00') else None
 
 class FanartTVMovieProvider(FanartTVAbstractProvider):
-    name = 'fanart.tv'
     mediatype = mediatypes.MOVIE
 
     api_section = 'movies'
@@ -118,7 +115,6 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
             return {}
         response.raise_for_status()
         data = response.json()
-        self.log("Getting art for '%s'" % data['name'])
         result = {}
         for arttype, artlist in data.iteritems():
             generaltype = self.artmap.get(arttype)
@@ -128,13 +124,11 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
                 result[generaltype] = []
             for image in artlist:
                 resultimage = {'url': image['url'], 'provider': self.name}
-                resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 6.0, '%s likes' % image['likes'])
+                resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 5.0, '%s likes' % image['likes'])
                 if arttype == 'moviedisc':
                     resultimage['subtype'] = image['disc_type']
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
-                if arttype == 'movieposter': # goofy aspect
-                    resultimage['status'] = providers.GOOFY_IMAGE
                 if arttype == 'moviebackground': # frequent dupes with themoviedb
                     resultimage['status'] = providers.NOAUTO_IMAGE
                 result[generaltype].append(resultimage)

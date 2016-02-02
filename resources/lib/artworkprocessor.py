@@ -59,7 +59,7 @@ class ArtworkProcessor(object):
             return
         if mode == MODE_GUI:
             xbmc.executebuiltin('Dialog.Close(busydialog)')
-            selected = self.prompt_for_artwork(mediaitem)
+            selected, count = self.prompt_for_artwork(mediaitem)
             if not selected:
                 return
             mediaitem['selected art'] = selected
@@ -67,7 +67,7 @@ class ArtworkProcessor(object):
             mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
 
         self.add_art_to_library(mediaitem)
-        self.notifycount(len(mediaitem['selected art']))
+        self.notifycount(count)
 
     def process_medialist(self, medialist):
         self.setlanguages()
@@ -136,7 +136,7 @@ class ArtworkProcessor(object):
                 if arttype.startswith('season'):
                     season = arttype.rsplit('.', 2)[1]
                     if int(season) not in mediaitem['seasons']:
-                        # Don't prompt for artwork for seasons we don't have
+                        # Don't add artwork for seasons we don't have
                         continue
                 if arttype not in images:
                     images[arttype] = []
@@ -202,16 +202,19 @@ class ArtworkProcessor(object):
                     newartwork[missingart] = newart['url']
         return newartwork
 
-    def list_missing_arttypes(self, mediaitem):
+    def list_missing_arttypes(self, mediaitem, includenew=False):
+        arttypes = mediaitem['art'].keys()
+        if includenew:
+            arttypes.extend(mediaitem['selected art'])
         fullartinfo = mediatypes.artinfo[mediaitem['mediatype']]
         for arttype, artinfo in fullartinfo.iteritems():
             if not artinfo['autolimit']:
                 continue
             elif artinfo['autolimit'] == 1:
-                if arttype not in mediaitem['art'].keys():
+                if arttype not in arttypes:
                     yield arttype
             else:
-                artcount = sum(1 for art in mediaitem['art'].keys() if art.startswith(arttype))
+                artcount = sum(1 for art in arttypes if art.startswith(arttype))
                 if artcount < artinfo['autolimit']:
                     yield arttype
 
@@ -223,10 +226,10 @@ class ArtworkProcessor(object):
                     if not artinfo['autolimit']:
                         continue
                     elif artinfo['autolimit'] == 1:
-                        if arttype not in mediaitem['art'].keys():
+                        if arttype not in arttypes:
                             yield arttype
                     else:
-                        artcount = sum(1 for art in mediaitem['art'].keys() if art.startswith(arttype))
+                        artcount = sum(1 for art in arttypes if art.startswith(arttype))
                         if artcount < artinfo['autolimit']:
                             yield arttype
 
@@ -301,32 +304,36 @@ class ArtworkProcessor(object):
 
     def prompt_for_artwork(self, mediaitem):
         items = mediaitem['available art'].keys()
-        window = ArtworkTypeSelector('DialogSelect.xml', addon.path, existingart=mediaitem['art'], arttypes=items, medialabel=mediaitem['label'])
-        selectedarttype = window.prompt()
-        if not selectedarttype:
-            return {}
-        artlist = mediaitem['available art'][selectedarttype]
-        if selectedarttype.startswith('season'):
-            stype = selectedarttype.rsplit('.', 1)[1]
-            multi = mediatypes.artinfo[mediatypes.SEASON][stype]['multiselect']
-        else:
-            multi = mediatypes.artinfo[mediaitem['mediatype']][selectedarttype]['multiselect']
-        if multi:
-            existingart = [pykodi.unquoteimage(url) for arttype, url in mediaitem['art'].iteritems() if arttype.startswith(selectedarttype)]
-        else:
-            existingart = []
-            if selectedarttype in mediaitem['art']:
-                existingart.append(pykodi.unquoteimage(mediaitem['art'][selectedarttype]))
-        window = ArtworkSelector('DialogSelect.xml', addon.path, artlist=artlist, arttype=selectedarttype, medialabel=mediaitem['label'], existingart=existingart, multi=multi)
-        selected = window.prompt()
-        if not selected or multi and not (selected[0] or selected[1]):
-            return {}
-        if not multi:
-            return {selectedarttype: selected}
+        typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', addon.path, existingart=mediaitem['art'], arttypes=items, medialabel=mediaitem['label'])
+        selectedart = None
+        while not selectedart:
+            # The loop shows the first window if viewer backs out of the second, rather than stopping the add-on
+            selectedarttype = typeselectwindow.prompt()
+            if not selectedarttype:
+                return {}, 0
+            artlist = mediaitem['available art'][selectedarttype]
+            if selectedarttype.startswith('season'):
+                stype = selectedarttype.rsplit('.', 1)[1]
+                multi = mediatypes.artinfo[mediatypes.SEASON][stype]['multiselect']
+            else:
+                multi = mediatypes.artinfo[mediaitem['mediatype']][selectedarttype]['multiselect']
+            if multi:
+                existingart = [pykodi.unquoteimage(url) for arttype, url in mediaitem['art'].iteritems() if arttype.startswith(selectedarttype)]
+            else:
+                existingart = []
+                if selectedarttype in mediaitem['art']:
+                    existingart.append(pykodi.unquoteimage(mediaitem['art'][selectedarttype]))
+            artselectwindow = ArtworkSelector('DialogSelect.xml', addon.path, artlist=artlist, arttype=selectedarttype, medialabel=mediaitem['label'], existingart=existingart, multi=multi)
+            selectedart = artselectwindow.prompt()
+            if self.monitor.abortRequested():
+                return {}, 0
 
-        for url in selected[1]:
+        if not multi:
+            return {selectedarttype: selectedart}, 1
+
+        for url in selectedart[1]:
             existingart.remove(url)
-        existingart.extend(selected[0])
+        existingart.extend(selectedart[0])
 
         result = {}
         count = 0
@@ -334,8 +341,10 @@ class ArtworkProcessor(object):
             result[selectedarttype + (str(count) if count else '')] = url
             count += 1
         result.update({arttype: None for arttype in mediaitem['art'].keys() if arttype.startswith(selectedarttype) and arttype not in result.keys()})
-        return result
+        return result, len(selectedart[0])
 
     def notifycount(self, count):
+        log(self.report)
+        self.report = {'missing': 0, 'stillmissing': 0, 'mediatype': {}, 'arttype': {}}
         if count:
             xbmcgui.Dialog().notification('{0} artwork grabbed'.format(count), "Contribute or donate to the awesomeness\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)

@@ -36,7 +36,6 @@ class TheTVDBProvider(AbstractProvider):
         # Bah. The new API needs a request for each art type, fanart/poster/season(poster)/seasonwide(banner)/series(banner)
         # And then double it for languages other than English, to grab fallback images in English
         # And TheTVDB has random unrelated languages attached to some fanart, even when the image itself doesn't have any text, so I can never be sure I have a list of all artwork
-        self.log("Getting art for '%s'." % mediaid)
         result = {}
         languages = [pykodi.get_language(xbmc.ISO_639_1)]
         if languages[0] != 'en':
@@ -69,10 +68,6 @@ class TheTVDBProvider(AbstractProvider):
                         resultimage['rating'] = SortedDisplay(5, 'Not rated')
                     if arttype in ('series', 'seasonwide'):
                         resultimage['size'] = SortedDisplay(758, '758x140')
-                        # drop the rating sort value a bit due to size
-                        # Using a banner image like an actual banner, like across the top of the screen, this is a pixelated mess
-                        rating = resultimage['rating']
-                        resultimage['rating'] = SortedDisplay(rating.sort * 0.8, rating.display)
                     elif arttype == 'season':
                         resultimage['size'] = SortedDisplay(680, '680x1000')
                     else:
@@ -80,7 +75,7 @@ class TheTVDBProvider(AbstractProvider):
                             resultimage['size'] = SortedDisplay(int(image['resolution'].split('x')[0]), image['resolution'])
                         except ValueError:
                             self.log('whoops, ValueError on "%s"' % image['resolution'].split('x')[0])
-                            resultimage['size'] = SortedDisplay(0, '')
+                            resultimage['size'] = SortedDisplay(0, image['resolution'])
                     result[ntype].append(resultimage)
         return result
 

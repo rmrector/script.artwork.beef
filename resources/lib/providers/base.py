@@ -13,7 +13,7 @@ from requests.packages import urllib3
 urllib3.disable_warnings()
 
 # Result dict of lists, keyed on art type
-# {'url': URL, 'language': ISO alpha-2 code, 'rating': tuple; 0=sortable 1=display, 'size': 0=sortable 1=display, 'provider': self.name}
+# {'url': URL, 'language': ISO alpha-2 code, 'rating': tuple; 0=sortable 1=display, 'size': 0=sortable 1=display, 'provider': self.name, 'status': noauto/happy}
 # TODO: preview
 # language should be None if there is no text on the image
 # subtype: disc type, BluRay or DVD or whatever.
