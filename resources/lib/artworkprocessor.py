@@ -17,6 +17,8 @@ MODE_AUTO = 'auto'
 MODE_GUI = 'gui'
 
 THROTTLE_TIME = 0.15
+PREFERRED_SIZE = 1920
+
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -150,10 +152,10 @@ class ArtworkProcessor(object):
     def sort_images(self, arttype, imagelist):
         # 1. Match the primary language, for everything but fanart
         # 2. Separate on status, like goofy images
-        # 3. Size (in 200px groups)
+        # 3. Size (in 200px groups), up to PREFERRED_SIZE
         # 4. Rating
         imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
-        imagelist.sort(key=lambda image: image['size'].sort // 200, reverse=True)
+        imagelist.sort(key=lambda image: (PREFERRED_SIZE if image['size'].sort > PREFERRED_SIZE else image['size'].sort) // 200, reverse=True)
         imagelist.sort(key=lambda image: image.get('status', providers.HAPPY_IMAGE).sort)
         if not arttype.endswith('fanart'):
             imagelist.sort(key=lambda image: (0 if image['language'] == self.language else 1, image['language']))
