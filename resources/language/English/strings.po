@@ -9,3 +9,7 @@ msgstr ""
 msgctxt "#32900"
 msgid "Automatically grab artwork for new items"
 msgstr ""
+
+msgctxt "#32901"
+msgid "Download high quality preview images"
+msgstr ""

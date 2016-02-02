@@ -52,7 +52,6 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
 class ArtworkSelector(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
         super(ArtworkSelector, self).__init__(args, kwargs)
-        self.artlist = kwargs.get('artlist')
         self.arttype = kwargs.get('arttype')
         if self.arttype.startswith('season'):
             if '.0.' in self.arttype:
@@ -61,7 +60,15 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
                 self.arttype = self.arttype.replace('.', ' ')
         self.medialabel = kwargs.get('medialabel')
         self.multi = kwargs.get('multi', False)
-        self.existingart = kwargs.get('existingart', ())
+        self.hqpreview = kwargs.get('hqpreview', False)
+        self.existingart = kwargs.get('existingart', [])
+        artlist = kwargs.get('artlist')
+        urllist = list(item['url'] for item in artlist)
+        self.artlist = []
+        for art in self.existingart:
+            if art not in urllist:
+                self.artlist.append({'url': art, 'preview': art, 'windowlabel': 'Existing artwork'})
+        self.artlist.extend(artlist)
         self.guilist = None
         self.selected = None
 
@@ -79,12 +86,15 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
         self.guilist = self.getControl(6)
 
         for image in self.artlist:
-            lang = xbmc.convertLanguage(image['language'], xbmc.ENGLISH_NAME) if image['language'] else 'No language'
-            if not lang: # xx
-                lang = 'Unknown'
-            label = '{0}, {1}, {2}'.format(lang, image['rating'].display, image['size'].display)
+            if 'windowlabel' in image:
+                label = image['windowlabel']
+            else:
+                lang = xbmc.convertLanguage(image['language'], xbmc.ENGLISH_NAME) if image['language'] else 'No language'
+                if not lang: # xx
+                    lang = 'Unknown'
+                label = '{0}, {1}, {2}'.format(lang, image['rating'].display, image['size'].display)
             listitem = xbmcgui.ListItem(label)
-            listitem.setArt({'icon': image['url']})
+            listitem.setArt({'icon': image['url'] if self.hqpreview else image['preview']})
             listitem.setPath(image['url'])
             if image['url'] in self.existingart:
                 listitem.select(True)
