@@ -16,6 +16,8 @@ addon = pykodi.get_main_addon()
 MODE_AUTO = 'auto'
 MODE_GUI = 'gui'
 
+THROTTLE_TIME = 0.15
+
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
         self.monitor = monitor or xbmc.Monitor()
@@ -50,8 +52,9 @@ class ArtworkProcessor(object):
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             return
         self.setlanguages()
-        mediaitem = self._process_mediaitem(mediaitem, mode)
-        if not mediaitem:
+        self.add_additional_iteminfo(mediaitem)
+        artwork_requested = self.add_available_artwork(mediaitem, mode)
+        if not artwork_requested or not mediaitem.get('available art'):
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             return
         if mode == MODE_GUI:
@@ -70,35 +73,32 @@ class ArtworkProcessor(object):
         self.setlanguages()
         count = 0
         for mediaitem in medialist:
-            if self.monitor.waitForAbort(0.15):
-                break
-            mediaitem = self._process_mediaitem(mediaitem, MODE_AUTO)
-            if not mediaitem:
+            self.add_additional_iteminfo(mediaitem)
+            artwork_requested = self.add_available_artwork(mediaitem, MODE_AUTO)
+            if not artwork_requested:
+                if self.monitor.abortRequested():
+                    break
+                continue
+            if not mediaitem.get('available art'):
+                if self.monitor.waitForAbort(THROTTLE_TIME):
+                    break
                 continue
             mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
             self.add_art_to_library(mediaitem)
             count += len(mediaitem['selected art'])
+            if self.monitor.waitForAbort(THROTTLE_TIME):
+                break
         self.notifycount(count)
 
-    def _process_mediaitem(self, mediaitem, mode):
-        if 'tvshowid' in mediaitem:
-            mediaitem['mediatype'] = mediatypes.TVSHOW
-        elif 'movieid' in mediaitem:
-            mediaitem['mediatype'] = mediatypes.MOVIE
-        elif 'episodeid' in mediaitem:
-            mediaitem['mediatype'] = mediatypes.EPISODE
-        else:
-            log('Not sure what mediatype this is.')
-            log(mediaitem)
-            return
-        self.add_additional_iteminfo(mediaitem)
+    def add_available_artwork(self, mediaitem, mode):
         if mode == MODE_AUTO:
             if next(self.list_missing_arttypes(mediaitem), False):
                 mediaitem['available art'] = self.get_available_artwork(mediaitem)
+                return True
         else:
             mediaitem['available art'] = self.get_available_artwork(mediaitem)
-        if mediaitem.get('available art'):
-            return mediaitem
+            return True
+        return False
 
     def setlanguages(self):
         self.language = pykodi.get_language(xbmc.ISO_639_1)
@@ -108,13 +108,24 @@ class ArtworkProcessor(object):
             self.autolanguages = (self.language, 'en', None)
 
     def add_additional_iteminfo(self, mediaitem):
+        log('Processing {0}'.format(mediaitem['label']))
+        if 'tvshowid' in mediaitem:
+            mediaitem['mediatype'] = mediatypes.TVSHOW
+        elif 'movieid' in mediaitem:
+            mediaitem['mediatype'] = mediatypes.MOVIE
+        elif 'episodeid' in mediaitem:
+            mediaitem['mediatype'] = mediatypes.EPISODE
+        else:
+            log('Not sure what mediatype this is.')
+            log(mediaitem)
+            return False
         if mediaitem['mediatype'] == mediatypes.TVSHOW:
             mediaitem['seasons'], art = self._get_seasons_artwork(quickjson.get_seasons(mediaitem['tvshowid']))
             mediaitem['art'].update(art)
         elif mediaitem['mediatype'] == mediatypes.EPISODE:
             mediaitem['imdbnumber'] = self._get_episodeid(mediaitem)
 
-        return mediaitem
+        return True
 
     def get_available_artwork(self, mediaitem):
         if mediaitem['mediatype'] not in (mediatypes.TVSHOW, mediatypes.MOVIE, mediatypes.EPISODE):

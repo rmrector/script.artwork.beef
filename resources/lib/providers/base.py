@@ -1,11 +1,16 @@
 import requests
 import xbmc
 import xbmcvfs
-
 from abc import ABCMeta, abstractmethod
+
 from cachecontrol import CacheControl
 from cachecontrol.caches import FileCache
 from cachecontrol.heuristics import BaseHeuristic
+from requests.exceptions import Timeout
+from devhelper.pykodi import log
+
+from requests.packages import urllib3
+urllib3.disable_warnings()
 
 # Result dict of lists, keyed on art type
 # {'url': URL, 'language': ISO alpha-2 code, 'rating': tuple; 0=sortable 1=display, 'size': 0=sortable 1=display, 'provider': self.name}
@@ -20,6 +25,8 @@ class AbstractProvider(object):
     name = None
     mediatype = None
 
+    monitor = xbmc.Monitor()
+
     def __init__(self):
         # This would be better in devhelper, maybe
         cachepath = 'special://temp/cachecontrol/'
@@ -27,6 +34,42 @@ class AbstractProvider(object):
             xbmcvfs.mkdirs(cachepath)
         cachepath = unicode(xbmc.translatePath(cachepath), 'utf-8')
         self.session = CacheControl(requests.Session(), cache=FileCache(cachepath, forever=True), heuristic=OneDayCache())
+
+    def doget(self, url, params=None, headers=None):
+        result = self._inget(url, params, headers)
+        if result == None:
+            return
+        errcount = 0
+        while result.status_code == requests.codes.too_many_requests:
+            if errcount > 2:
+                self.log('too many requests', xbmc.LOGWARNING)
+                return
+            errcount += 1
+            try:
+                wait = int(result.headers.get('Retry-After')) + 1
+            except ValueError:
+                wait = 10
+            if self.monitor.waitForAbort(wait):
+                return
+            result = self._inget(url, params=params, headers=headers)
+
+        if result == None:
+            return
+        if result.status_code == requests.codes.not_found:
+            return
+        return result
+
+    def _inget(self, url, params=None, headers=None, timeout=15):
+        try:
+            return self.session.get(url, params=params, headers=headers, timeout=timeout)
+        except Timeout:
+            try:
+                return self.session.get(url, params=params, headers=headers, timeout=timeout)
+            except Timeout:
+                self.log('timeout {0}s x2'.format(timeout), xbmc.LOGWARNING)
+
+    def log(self, message, level=xbmc.LOGDEBUG):
+        log(message, level, tag='%s.%s' % (self.name, self.mediatype))
 
     @abstractmethod
     def get_images(self, mediaid):

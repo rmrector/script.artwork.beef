@@ -2,7 +2,6 @@ import requests
 import xbmc
 
 from devhelper import pykodi
-from devhelper.pykodi import log
 
 import mediatypes
 from base import AbstractProvider
@@ -23,19 +22,14 @@ class TheTVDBProvider(AbstractProvider):
         super(TheTVDBProvider, self).__init__()
         self.session.headers['Accept'] = 'application/json'
 
-    def log(self, message, level=xbmc.LOGDEBUG):
-        log(message, level, tag=self.name)
-
-    def _request_images(self, mediaid, arttype, language):
-        get_params = {'params': {'keyType': arttype}, 'headers': {'Accept-Language': language}, 'timeout': 10}
-        response = self._get_response(self.apiurl % mediaid, **get_params)
-        return response
-
-    def _get_response(self, url, **params):
-        response = self.session.get(url, **params)
+    def _get_response(self, mediaid, arttype, language):
+        getparams = {'params': {'keyType': arttype}, 'headers': {'Accept-Language': language}}
+        response = self.doget(self.apiurl % mediaid, **getparams)
+        if response == None:
+            return
         if response.status_code == requests.codes.unauthorized:
             self._login()
-            response = self.session.get(url, **params)
+            response = self.doget(self.apiurl % mediaid, **getparams)
         return response
 
     def get_images(self, mediaid):
@@ -49,8 +43,8 @@ class TheTVDBProvider(AbstractProvider):
             languages.append('en')
         for arttype in self.artmap.keys():
             for language in languages:
-                response = self._request_images(mediaid, arttype, language)
-                if response.status_code == requests.codes.not_found:
+                response = self._get_response(mediaid, arttype, language)
+                if response == None:
                     continue
                 response.raise_for_status()
 
@@ -92,5 +86,5 @@ class TheTVDBProvider(AbstractProvider):
 
     def _login(self):
         loginurl = 'https://api-beta.thetvdb.com/login'
-        response = self.session.post(loginurl, json={'apikey': self.apikey}, headers={'Content-Type': 'application/json'}, timeout=5)
+        response = self.session.post(loginurl, json={'apikey': self.apikey}, headers={'Content-Type': 'application/json'}, timeout=15)
         self.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
