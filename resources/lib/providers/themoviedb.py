@@ -1,12 +1,6 @@
-import requests
-import xbmc
-
 from abc import ABCMeta
 
-from devhelper.pykodi import log
-
 import mediatypes
-import providers
 from base import AbstractProvider
 from sorteddisplaytuple import SortedDisplay
 
@@ -26,8 +20,10 @@ class TheMovieDBAbstractProvider(AbstractProvider):
         self.session.headers['Accept'] = 'application/json'
 
     def _get_base_url(self):
-        response = self.session.get(self.cfgurl, params={'api_key': self.apikey}, timeout=5)
-        return response.json()['images']['base_url']
+        response = self.doget(self.cfgurl, params={'api_key': self.apikey})
+        if response != None:
+            response.raise_for_status()
+            return response.json()['images']['base_url']
 
     def _get_rating(self, image):
         if image['vote_count']:
@@ -44,16 +40,14 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
     apiurl = 'http://api.themoviedb.org/3/movie/%s/images'
     artmap = {'backdrops': 'fanart', 'posters': 'poster'}
 
-    def log(self, message, level=xbmc.LOGDEBUG):
-        log(message, level, tag=self.name)
-
     def get_images(self, mediaid):
-        self.log("Getting art for '%s'." % mediaid)
-        response = self.session.get(self.apiurl % mediaid, params={'api_key': self.apikey}, timeout=5)
-        if response.status_code == requests.codes.not_found:
+        response = self.doget(self.apiurl % mediaid, params={'api_key': self.apikey})
+        if response == None:
             return {}
         response.raise_for_status()
         base_url = self._get_base_url()
+        if not base_url:
+            return {}
         data = response.json()
         result = {}
         for arttype, artlist in data.iteritems():
@@ -83,25 +77,23 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
         super(TheMovieDBEpisodeProvider, self).__init__()
         self.session.headers['Accept'] = 'application/json'
 
-    def log(self, message, level=xbmc.LOGDEBUG):
-        log(message, level, tag=self.name + '.episode')
-
     def get_images(self, mediaid):
-        self.log("Getting art for '%s'." % mediaid)
-        response = self.session.get(self.tvdbidsearch_url % mediaid, params={'api_key': self.apikey}, timeout=5)
-        if response.status_code == requests.codes.not_found:
+        response = self.doget(self.tvdbidsearch_url % mediaid, params={'api_key': self.apikey})
+        if response == None:
             return {}
         response.raise_for_status()
         data = response.json()
         if not data['tv_episode_results']:
             return {}
         data = data['tv_episode_results'][0]
-        response = self.session.get(self.apiurl % (data['show_id'], data['season_number'], data['episode_number']), params={'api_key': self.apikey}, timeout=5)
-        if response.status_code == requests.codes.not_found:
+        response = self.doget(self.apiurl % (data['show_id'], data['season_number'], data['episode_number']), params={'api_key': self.apikey})
+        if response == None:
             return {}
         response.raise_for_status()
         data = response.json()
         base_url = self._get_base_url()
+        if not base_url:
+            return {}
         result = {}
         for arttype, artlist in data.iteritems():
             generaltype = self.artmap.get(arttype)

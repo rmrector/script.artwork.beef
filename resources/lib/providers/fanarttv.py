@@ -1,9 +1,4 @@
-import requests
-import xbmc
-
 from abc import ABCMeta
-
-from devhelper.pykodi import log
 
 import mediatypes
 import providers
@@ -40,12 +35,9 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         'seasonposter': mediatypes.SEASON + '.%s.poster'
     }
 
-    def log(self, message, level=xbmc.LOGDEBUG):
-        log(message, level, tag='%s.%s' % (self.name, self.api_section))
-
     def get_images(self, mediaid):
-        response = self.session.get(self.apiurl % (self.api_section, mediaid), headers={'api-key': self.apikey}, timeout=5)
-        if response.status_code == requests.codes.not_found:
+        response = self.doget(self.apiurl % (self.api_section, mediaid), headers={'api-key': self.apikey})
+        if response == None:
             return {}
         response.raise_for_status()
         data = response.json()
@@ -120,12 +112,9 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
         'movieposter': 'poster'
     }
 
-    def log(self, message, level=xbmc.LOGDEBUG):
-        log(message, level, tag='%s.%s' % (self.name, self.api_section))
-
     def get_images(self, mediaid):
-        response = self.session.get(self.apiurl % (self.api_section, mediaid), headers={'api-key': self.apikey}, timeout=5)
-        if response.status_code == requests.codes.not_found:
+        response = self.doget(self.apiurl % (self.api_section, mediaid), headers={'api-key': self.apikey})
+        if response == None:
             return {}
         response.raise_for_status()
         data = response.json()
