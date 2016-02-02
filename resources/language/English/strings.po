@@ -1,0 +1,11 @@
+# Kodi Media Center language file
+# Addon Name: Artwork Beef
+# Addon id: service.artwork.beef
+msgid ""
+msgstr ""
+
+# Settings
+
+msgctxt "#32900"
+msgid "Automatically grab artwork for new items"
+msgstr ""

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<settings>
+	<category label="128">
+		<!-- Disabled by default, but after the process is explicitely run for an item or all items, prompt to turn it on. -->
+		<!-- The prompt can be disabled with another setting, probably. -->
+		<setting id="enableservice" label="32900" type="bool" default="false" />
+		<!-- For add-on inner workings -->
+		<setting id="lastdate" type="text" default="" visible="false" />
+		<setting id="lastalldate" type="text" default="" visible="false" />
+	</category>
+</settings>

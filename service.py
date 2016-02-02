@@ -30,6 +30,8 @@ class ArtworkService(xbmc.Monitor):
         pykodi.execute_builtin('SetProperty(ArtworkBeef.Status, {0}, Home)'.format(value))
 
     def run(self):
+        if addon.get_setting('enableservice'):
+            self.process_recentitems()
         while not self.reallyWaitForAbort(10):
             pass
 
@@ -55,7 +57,8 @@ class ArtworkService(xbmc.Monitor):
         elif method == 'Other.ProcessAllItems':
             self.process_allitems()
         elif method in ('System.OnWake', 'VideoLibrary.OnScanFinished'):
-            self.processor.process_recentitems()
+            if addon.get_setting('enableservice'):
+                self.processor.process_recentitems()
 
     def process_allitems(self):
         if self.processing:
