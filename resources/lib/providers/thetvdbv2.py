@@ -61,6 +61,7 @@ class TheTVDBProvider(AbstractProvider):
                             result[ntype] = []
                     resultimage = {'provider': self.name}
                     resultimage['url'] = self.imageurl_base + image['fileName']
+                    resultimage['preview'] = self.imageurl_base + image['thumbnail']
                     resultimage['language'] = language
                     if image['ratingsInfo']['average']:
                         resultimage['rating'] = SortedDisplay(image['ratingsInfo']['average'], '{0:.1f} stars'.format(image['ratingsInfo']['average']))

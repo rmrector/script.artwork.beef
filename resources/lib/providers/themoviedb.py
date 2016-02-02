@@ -13,16 +13,20 @@ class TheMovieDBAbstractProvider(AbstractProvider):
     name = 'themoviedb.org'
     cfgurl = 'http://api.themoviedb.org/3/configuration'
     apikey = '5a0727308f37da772002755d6c073aee'
+    _baseurl = None
 
     def __init__(self):
         super(TheMovieDBAbstractProvider, self).__init__()
         self.session.headers['Accept'] = 'application/json'
 
-    def _get_base_url(self):
-        response = self.doget(self.cfgurl, params={'api_key': self.apikey})
-        if response != None:
-            response.raise_for_status()
-            return response.json()['images']['base_url']
+    @property
+    def baseurl(self):
+        if not self._baseurl:
+            response = self.doget(self.cfgurl, params={'api_key': self.apikey})
+            if response != None:
+                response.raise_for_status()
+                self._baseurl = response.json()['images']['base_url']
+        return self._baseurl
 
     def _get_rating(self, image):
         if image['vote_count']:
@@ -44,8 +48,7 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
         if response == None:
             return {}
         response.raise_for_status()
-        base_url = self._get_base_url()
-        if not base_url:
+        if not self.baseurl:
             return {}
         data = response.json()
         result = {}
@@ -55,8 +58,10 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
                 continue
             if artlist and generaltype not in result:
                 result[generaltype] = []
+            previewbit = 'w300' if arttype == 'backdrops' else 'w342'
             for image in artlist:
-                resultimage = {'url': base_url + 'original' + image['file_path'], 'provider': self.name}
+                resultimage = {'url': self.baseurl + 'original' + image['file_path'], 'provider': self.name}
+                resultimage['preview'] = self.baseurl + previewbit + image['file_path']
                 resultimage['language'] = image['iso_639_1']
                 resultimage['rating'] = self._get_rating(image)
                 resultimage['size'] = SortedDisplay(image['width'], '%sx%s' % (image['width'], image['height']))
@@ -88,8 +93,7 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
             return {}
         response.raise_for_status()
         data = response.json()
-        base_url = self._get_base_url()
-        if not base_url:
+        if not self.baseurl:
             return {}
         result = {}
         for arttype, artlist in data.iteritems():
@@ -99,7 +103,8 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
             if artlist and generaltype not in result:
                 result[generaltype] = []
             for image in artlist:
-                resultimage = {'url': base_url + 'original' + image['file_path'], 'provider': self.name}
+                resultimage = {'url': self.baseurl + 'original' + image['file_path'], 'provider': self.name}
+                resultimage['preview'] = self.baseurl + 'w300' + image['file_path']
                 resultimage['language'] = image['iso_639_1']
                 resultimage['rating'] = self._get_rating(image)
                 resultimage['size'] = SortedDisplay(image['width'], '%sx%s' % (image['width'], image['height']))

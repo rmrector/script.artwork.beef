@@ -59,6 +59,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                 if itype not in result:
                     result[itype] = []
                 resultimage = {'url': image['url'], 'provider': self.name}
+                resultimage['preview'] = image['url'].replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
                 resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
@@ -124,6 +125,7 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
                 result[generaltype] = []
             for image in artlist:
                 resultimage = {'url': image['url'], 'provider': self.name}
+                resultimage['preview'] = image['url'].replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
                 resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 5.0, '%s likes' % image['likes'])
                 if arttype == 'moviedisc':
                     resultimage['subtype'] = image['disc_type']
