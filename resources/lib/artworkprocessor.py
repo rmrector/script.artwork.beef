@@ -72,25 +72,30 @@ class ArtworkProcessor(object):
         self.notifycount(count)
 
     def process_medialist(self, medialist):
+        processed = {'tvshow': [], 'movie': [], 'episode': []}
         self.setlanguages()
         count = 0
         for mediaitem in medialist:
             self.add_additional_iteminfo(mediaitem)
             artwork_requested = self.add_available_artwork(mediaitem, MODE_AUTO)
             if not artwork_requested:
+                processed[mediaitem['mediatype']].append(mediaitem['dbid'])
                 if self.monitor.abortRequested():
                     break
                 continue
             if not mediaitem.get('available art'):
+                processed[mediaitem['mediatype']].append(mediaitem['dbid'])
                 if self.monitor.waitForAbort(THROTTLE_TIME):
                     break
                 continue
             mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
             self.add_art_to_library(mediaitem)
             count += len(mediaitem['selected art'])
+            processed[mediaitem['mediatype']].append(mediaitem['dbid'])
             if self.monitor.waitForAbort(THROTTLE_TIME):
                 break
         self.notifycount(count)
+        return processed
 
     def add_available_artwork(self, mediaitem, mode):
         if mode == MODE_AUTO:
@@ -113,10 +118,13 @@ class ArtworkProcessor(object):
         log('Processing {0}'.format(mediaitem['label']))
         if 'tvshowid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.TVSHOW
+            mediaitem['dbid'] = mediaitem['tvshowid']
         elif 'movieid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.MOVIE
+            mediaitem['dbid'] = mediaitem['movieid']
         elif 'episodeid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.EPISODE
+            mediaitem['dbid'] = mediaitem['episodeid']
         else:
             log('Not sure what mediatype this is.')
             log(mediaitem)
