@@ -6,7 +6,8 @@
 		<setting id="enableservice" label="32900" type="bool" default="false" />
 		<setting id="highquality_preview" label="32901" type="bool" default="false" />
 		<!-- For add-on inner workings -->
-		<setting id="lastdate" type="text" default="" visible="false" />
-		<setting id="lastalldate" type="text" default="" visible="false" />
+		<setting id="lastdate" type="text" default="0" visible="false" />
+		<setting id="lastalldate" type="text" default="0" visible="false" />
+		<setting id="lastunprocesseddate" type="text" default="0" visible="false" />
 	</category>
 </settings>
