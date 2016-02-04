@@ -31,12 +31,6 @@ class ArtworkProcessor(object):
     def processing(self):
         return pykodi.get_conditional('StringCompare(Window(Home).Property(ArtworkBeef.Status),Processing)')
 
-    def process_allepisodes(self, tvshowid):
-        if self.processing:
-            pykodi.execute_builtin('NotifyAll(script.artwork.beef, ShowProgress)')
-            return
-        self.process_medialist(quickjson.get_episodes(tvshowid, properties=['art', 'uniqueid']))
-
     def process_item(self, mediatype, dbid, mode):
         if self.processing:
             pykodi.execute_builtin('NotifyAll(script.artwork.beef, ShowProgress)')
@@ -70,6 +64,8 @@ class ArtworkProcessor(object):
 
         self.add_art_to_library(mediaitem)
         self.notifycount(count)
+        if mode == MODE_AUTO and mediatype == mediatypes.TVSHOW and addon.get_setting('autoaddepisodes_list'):
+            self.process_medialist(quickjson.get_episodes(dbid, properties=['art', 'uniqueid']))
 
     def process_medialist(self, medialist):
         processed = {'tvshow': [], 'movie': [], 'episode': []}
