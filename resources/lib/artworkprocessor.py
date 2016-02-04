@@ -305,9 +305,13 @@ class ArtworkProcessor(object):
         typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', addon.path, existingart=mediaitem['art'], arttypes=items, medialabel=mediaitem['label'])
         selectedart = None
         hqpreview = addon.get_setting('highquality_preview')
+        singlewindow = len(items) == 1
+        # The loop shows the first window if viewer backs out of the second
         while not selectedart:
-            # The loop shows the first window if viewer backs out of the second, rather than stopping the add-on
-            selectedarttype = typeselectwindow.prompt()
+            if singlewindow:
+                selectedarttype = items[0]
+            else:
+                selectedarttype = typeselectwindow.prompt()
             if not selectedarttype:
                 return {}, 0
             artlist = mediaitem['available art'][selectedarttype]
@@ -324,6 +328,8 @@ class ArtworkProcessor(object):
                     existingart.append(pykodi.unquoteimage(mediaitem['art'][selectedarttype]))
             artselectwindow = ArtworkSelector('DialogSelect.xml', addon.path, artlist=artlist, arttype=selectedarttype, medialabel=mediaitem['label'], existingart=existingart, multi=multi, hqpreview=hqpreview)
             selectedart = artselectwindow.prompt()
+            if singlewindow and not selectedart:
+                return {}, 0
             if self.monitor.abortRequested():
                 return {}, 0
 
