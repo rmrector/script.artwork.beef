@@ -4,6 +4,12 @@
 msgid ""
 msgstr ""
 
+# Actions
+
+msgctxt "#32400"
+msgid "Select series to auto add episode artwork"
+msgstr ""
+
 # Settings
 
 msgctxt "#32900"
