@@ -17,7 +17,8 @@ MODE_AUTO = 'auto'
 MODE_GUI = 'gui'
 
 THROTTLE_TIME = 0.15
-PREFERRED_SIZE = 1920
+PREFERRED_FANART_SIZE = 1920
+PREFERRED_SIZE = 1000
 
 
 class ArtworkProcessor(object):
@@ -163,7 +164,8 @@ class ArtworkProcessor(object):
         # 3. Size (in 200px groups), up to PREFERRED_SIZE
         # 4. Rating
         imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
-        imagelist.sort(key=lambda image: (PREFERRED_SIZE if image['size'].sort > PREFERRED_SIZE else image['size'].sort) // 200, reverse=True)
+        preferredsize = PREFERRED_FANART_SIZE if arttype == 'fanart' else PREFERRED_SIZE
+        imagelist.sort(key=lambda image: (image['size'].sort if image['size'].sort <= preferredsize else preferredsize) // 200, reverse=True)
         imagelist.sort(key=lambda image: image.get('status', providers.HAPPY_IMAGE).sort)
         if not arttype.endswith('fanart'):
             imagelist.sort(key=lambda image: (0 if image['language'] == self.language else 1, image['language']))
