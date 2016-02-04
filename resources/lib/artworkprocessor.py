@@ -116,15 +116,15 @@ class ArtworkProcessor(object):
 
     def add_additional_iteminfo(self, mediaitem):
         log('Processing {0}'.format(mediaitem['label']))
-        if 'tvshowid' in mediaitem:
+        if 'episodeid' in mediaitem:
+            mediaitem['mediatype'] = mediatypes.EPISODE
+            mediaitem['dbid'] = mediaitem['episodeid']
+        elif 'tvshowid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.TVSHOW
             mediaitem['dbid'] = mediaitem['tvshowid']
         elif 'movieid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.MOVIE
             mediaitem['dbid'] = mediaitem['movieid']
-        elif 'episodeid' in mediaitem:
-            mediaitem['mediatype'] = mediatypes.EPISODE
-            mediaitem['dbid'] = mediaitem['episodeid']
         else:
             log('Not sure what mediatype this is.')
             log(mediaitem)

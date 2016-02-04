@@ -2,15 +2,15 @@ import sys
 import xbmcgui
 
 from devhelper import pykodi
+from devhelper import quickjson
 
 addon = pykodi.Addon()
 sys.path.append(addon.resourcelibs)
 
 from artworkprocessor import ArtworkProcessor
+from seriesselection import SeriesSelector
 
 def main():
-    # TODO: Start from program pops up a select list with some options.
-    # Like scan -> new / all, settings -> select series for auto grabbing episode art
     command = get_command()
     processor = ArtworkProcessor()
     if command.get('dbid'):
@@ -19,25 +19,30 @@ def main():
             processor.process_allepisodes(int(command['dbid']))
         elif command.get('mediatype'):
             processor.process_item(command['mediatype'], int(command['dbid']), mode)
+    elif command.get('command') == 'set_autoaddepisodes':
+        set_autoaddepisodes()
     else:
-        options = [None, 'settings...']
         processing = processor.processing
         if processing:
-            options[0] = 'stop current process'
+            options = ['stop current process']
         else:
-            options[0] = 'grab artwork for...'
+            options = ['add artwork for...']
         selected = xbmcgui.Dialog().select('Artwork Beef', options)
         if selected == 0:
             if processing:
                 pykodi.execute_builtin('NotifyAll(script.artwork.beef, CancelCurrent)')
             else:
-                handle_grab_artwork()
-        elif selected == 1:
-            xbmcgui.Dialog().ok('Artwork Beef', 'No can do, boss.')
+                show_add_artwork_menu()
 
-def handle_grab_artwork():
+def set_autoaddepisodes():
+    serieslist = quickjson.get_tvshows()
+    autoaddepisodes = addon.get_setting('autoaddepisodes_list')
+    selected = SeriesSelector('DialogSelect.xml', addon.path, serieslist=serieslist, selected=autoaddepisodes).prompt()
+    addon.set_setting('autoaddepisodes_list', selected)
+
+def show_add_artwork_menu():
     options = ['new items', 'all items']
-    selected = xbmcgui.Dialog().select('Artwork Beef: grab artwork for...', options)
+    selected = xbmcgui.Dialog().select('Artwork Beef: add artwork for...', options)
     if selected == 0:
         pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessNewItems)')
     if selected == 1:
