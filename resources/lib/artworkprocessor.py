@@ -24,7 +24,6 @@ PREFERRED_SIZE = 1000
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
         self.monitor = monitor or xbmc.Monitor()
-        self.dryrun = True
         self.language = None
         self.autolanguages = None
 
@@ -283,9 +282,6 @@ class ArtworkProcessor(object):
                 else:
                     seriesart[arttype] = url
 
-            if self.dryrun:
-                log((seriesart, allseasonart))
-                return
             if seriesart:
                 quickjson.set_tvshow_details(mediaitem['tvshowid'], art=seriesart)
             for seasonid, seasonart in allseasonart.iteritems():
@@ -293,17 +289,11 @@ class ArtworkProcessor(object):
 
         elif mediaitem['mediatype'] == mediatypes.MOVIE:
             movieart = {arttype: url for arttype, url in mediaitem['selected art'].iteritems()}
-            if self.dryrun:
-                log(movieart)
-                return
             if movieart:
                 quickjson.set_movie_details(mediaitem['movieid'], art=movieart)
 
         elif mediaitem['mediatype'] == mediatypes.EPISODE:
             episodeart = {arttype: url for arttype, url in mediaitem['selected art'].iteritems()}
-            if self.dryrun:
-                log(episodeart)
-                return
             if episodeart:
                 quickjson.set_episode_details(mediaitem['episodeid'], art=episodeart)
 
@@ -357,7 +347,5 @@ class ArtworkProcessor(object):
         return result, len(selectedart[0])
 
     def notifycount(self, count):
-        log(self.report)
-        self.report = {'missing': 0, 'stillmissing': 0, 'mediatype': {}, 'arttype': {}}
         if count:
             xbmcgui.Dialog().notification('{0} artwork grabbed'.format(count), "Contribute or donate to the awesomeness\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
