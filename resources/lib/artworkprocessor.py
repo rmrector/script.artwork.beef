@@ -37,36 +37,35 @@ class ArtworkProcessor(object):
             return
         if mode == MODE_GUI:
             xbmc.executebuiltin('ActivateWindow(busydialog)')
-        mediaitem = None
         if mediatype == mediatypes.TVSHOW:
             mediaitem = quickjson.get_tvshow_details(dbid, ['art', 'imdbnumber'])
         elif mediatype == mediatypes.MOVIE:
             mediaitem = quickjson.get_movie_details(dbid, ['art', 'imdbnumber'])
         elif mediatype == mediatypes.EPISODE:
             mediaitem = quickjson.get_episode_details(dbid, ['art', 'uniqueid'])
-        if not mediaitem:
+        else:
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             return
-        self.setlanguages()
-        self.add_additional_iteminfo(mediaitem)
-        artwork_requested = self.add_available_artwork(mediaitem, mode)
-        if not artwork_requested or not mediaitem.get('available art'):
-            xbmc.executebuiltin('Dialog.Close(busydialog)')
-            return
+
         if mode == MODE_GUI:
+            self.setlanguages()
+            self.add_additional_iteminfo(mediaitem)
+            artwork_requested = self.add_available_artwork(mediaitem, mode)
             xbmc.executebuiltin('Dialog.Close(busydialog)')
+            if not artwork_requested or not mediaitem.get('available art'):
+                # IDEA: notify that there is no artwork available?
+                return
             selected, count = self.prompt_for_artwork(mediaitem)
             if not selected:
                 return
             mediaitem['selected art'] = selected
+            self.add_art_to_library(mediaitem)
+            self.notifycount(count)
         else:
-            mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
-            count = len(mediaitem['selected art'])
-
-        self.add_art_to_library(mediaitem)
-        self.notifycount(count)
-        if mode == MODE_AUTO and mediatype == mediatypes.TVSHOW and addon.get_setting('autoaddepisodes_list'):
-            self.process_medialist(quickjson.get_episodes(dbid, properties=['art', 'uniqueid']))
+            medialist = [mediaitem]
+            if mediatype == mediatypes.TVSHOW and mediaitem['label'] in addon.get_setting('autoaddepisodes_list'):
+                medialist.extend(quickjson.get_episodes(dbid, properties=['art', 'uniqueid']))
+            self.process_medialist(medialist)
 
     def process_medialist(self, medialist):
         processed = {'tvshow': [], 'movie': [], 'episode': []}
