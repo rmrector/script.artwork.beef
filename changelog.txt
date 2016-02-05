@@ -1,9 +1,7 @@
-v0.0.1~dev
-- Drop it
-- Add series and movie artwork from Fanart.tv to the library
-- Add series artwork from TheTVDB
-- Add movie artwork from TheMovieDb
-- Add episode artwork from TheMovieDb
+v0.3.0 (2016-02-04)
+- Watch for library updates and automatically add artwork for new items
+- Add series, season, and movie artwork from Fanart.tv to the library
+- Add series and season artwork from TheTVDB
+- Add movie and episode (fanart/stills) artwork from The Movie Database
 - Select specific artwork for individual media items
-- Grab all missing artwork for a single item, all items, or new items added since last run
-- A service to watch for library updates and grab artwork for new items
+- Add all missing artwork for a single item, all items, or new items added since last run

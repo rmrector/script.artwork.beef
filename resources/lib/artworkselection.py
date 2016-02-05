@@ -17,7 +17,7 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
             elif season[1] != '-1':
                 # Ignore 'all' seasons artwork, as I can't set artwork for it with JSON
                 self.arttypes.append((' '.join(season), origseason))
-        self.arttypes.sort(key=lambda art: _sort_art(art[1]))
+        self.arttypes.sort(key=lambda art: sort_art(art[1]))
         self.medialabel = kwargs.get('medialabel')
         self.guilist = None
         self.selected = None
@@ -129,6 +129,11 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
             self.selected = None
             self.close()
 
-def _sort_art(string, _nsre=re.compile('([0-9]+)')):
+    def onAction(self, action):
+        if action.getId() in (xbmcgui.ACTION_NAV_BACK, xbmcgui.ACTION_PREVIOUS_MENU):
+            self.selected = None
+            self.close()
+
+def sort_art(string, naturalsortresplit=re.compile('([0-9]+)')):
     return [int(text) if text.isdigit() else text.lower()
-            for text in re.split(_nsre, string)]
+            for text in re.split(naturalsortresplit, string)]

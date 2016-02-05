@@ -5,14 +5,15 @@ from datetime import datetime, timedelta
 from devhelper import pykodi, quickjson
 from devhelper.pykodi import log
 
-addon = pykodi.Addon()
+addon = pykodi.get_main_addon()
 sys.path.append(addon.resourcelibs)
 
 from artworkprocessor import ArtworkProcessor
 from processeditems import ProcessedItems
+import mediatypes
 
-UNPROCESSED_WEEKS = 1
-ALLITEMS_WEEKS = 8
+UNPROCESSED_DAYS = 2
+ALLITEMS_DAYS = 60
 
 class ArtworkService(xbmc.Monitor):
     def __init__(self):
@@ -34,22 +35,31 @@ class ArtworkService(xbmc.Monitor):
         pykodi.execute_builtin('SetProperty(ArtworkBeef.Status, {0}, Home)'.format(value))
 
     def run(self):
+        oldsignal = 0
         while not self.really_waitforabort(5):
             if self.signal:
                 if not self.processing:
                     signal = self.signal
                     self.signal = None
+                    oldsignal = 0
                     self.processing = True
                     if signal == 'allitems':
                         self.process_allitems()
+                    elif signal == 'unprocesseditems':
+                        self.process_allitems(True)
                     elif signal == 'recentitems':
                         self.process_recentitems()
                     elif signal == 'something':
                         self.process_something()
                     self.processing = False
                 else:
-                    self.signal = None
-                    self.showprogress()
+                    if not oldsignal:
+                        self.showprogress()
+                    oldsignal += 1
+                    if oldsignal > 3:
+                        log("An old signal '{0}' had to be put down before the processor would give up, something is probably wrong".format(self.signal), xbmc.LOGWARNING)
+                        self.signal = None
+                        oldsignal = 0
 
     def abortRequested(self):
         return self.abort or super(ArtworkService, self).abortRequested()
@@ -64,15 +74,17 @@ class ArtworkService(xbmc.Monitor):
         if method.startswith('Other.') and sender != 'script.artwork.beef':
             return
         if method == 'Other.CancelCurrent':
-            if self.processing():
+            if self.processing:
                 self.abort = True
         elif method == 'Other.ShowProgress':
             self.showprogress()
         elif method == 'Other.ProcessNewItems':
-            if addon.get_setting('lastdate') == '0':
+            if addon.get_setting('lastalldate') == '0':
                 self.signal = 'allitems'
             else:
                 self.signal = 'recentitems'
+        elif method == 'Other.ProcessUnprocessedItems':
+            self.signal = 'unprocesseditems'
         elif method == 'Other.ProcessAllItems':
             self.signal = 'allitems'
         elif method == 'VideoLibrary.OnScanFinished':
@@ -85,20 +97,20 @@ class ArtworkService(xbmc.Monitor):
         # Three possible loops:
         # Recent items, filtering on Kodi dateadded - Runs several times per day, after every library update
         # - dateadded is typically based on file date, not date item was added to Kodi library, so this can miss items
-        # Unprocessed items, add all items from Kodi then filter out already processed items - Once per week (UNPROCESSED_WEEKS)
+        # Unprocessed items, list all items from Kodi then filter out already processed items - Once per week (UNPROCESSED_DAYS)
         # - this contains only new items that were missed in the recent loops
-        # All items, add all items from Kodi, and process every single one of them - Once every 2 months (ALLITEMS_WEEKS)
+        # All items, process all configured media items in Kodi - Once every 2 months (ALLITEMS_DAYS)
         # - to add any new artwork for old items that don't already have all artwork
-        if addon.get_setting('lastdate') == '0':
+        if addon.get_setting('lastalldate') == '0':
             self.process_allitems()
             return
         lastdate = addon.get_setting('lastalldate')
-        needall = lastdate < str(datetime.now() - timedelta(weeks=ALLITEMS_WEEKS))
+        needall = lastdate < str(datetime.now() - timedelta(days=ALLITEMS_DAYS))
         if needall:
             needunprocessed = False
         else:
             lastdate = addon.get_setting('lastunprocesseddate')
-            needunprocessed = lastdate < str(datetime.now() - timedelta(weeks=UNPROCESSED_WEEKS))
+            needunprocessed = lastdate < str(datetime.now() - timedelta(days=UNPROCESSED_DAYS))
         if needunprocessed:
             self.process_allitems(True)
             return
@@ -134,7 +146,7 @@ class ArtworkService(xbmc.Monitor):
                 if self.abortRequested():
                     return
         if items:
-            message = "Grabbing artwork for all {0} items" if not excludeprocessed else "Grabbing artwork for {0} unprocessed items"
+            message = "Adding artwork for all {0} items" if not excludeprocessed else "Adding artwork for {0} unprocessed items"
             pykodi.execute_builtin("Notification(Artwork Beef, {0}, 6500, -)".format(message.format(len(items))))
             processed = self.processor.process_medialist(items)
             if not excludeprocessed:
@@ -174,7 +186,7 @@ class ArtworkService(xbmc.Monitor):
                 return
 
         if newitems:
-            pykodi.execute_builtin("Notification(Artwork Beef, Grabbing artwork for {0} new items, 6500, -)".format(len(newitems)))
+            pykodi.execute_builtin("Notification(Artwork Beef, Adding artwork for {0} new items, 6500, -)".format(len(newitems)))
             processed = self.processor.process_medialist(newitems)
             self.processed.extend(processed)
             self.processed.save()
