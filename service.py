@@ -135,7 +135,7 @@ class ArtworkService(xbmc.Monitor):
                 items.append(series)
                 seriesadded.append(series['title'])
         for series in addon.get_setting('autoaddepisodes_list'):
-            episodes = quickjson.get_episodes_list(sort_method='dateadded', episodefilter={'field': 'tvshow', 'operator': 'is', 'value': series})
+            episodes = quickjson.get_episodes(sort_method='dateadded', episodefilter={'field': 'tvshow', 'operator': 'is', 'value': series})
             for episode in episodes:
                 if not excludeprocessed or episode['episodeid'] not in self.processed.episode:
                     items.append(episode)
@@ -173,11 +173,11 @@ class ArtworkService(xbmc.Monitor):
             return
         for series in serieslist:
             # series dateadded from Kodi is the date that the last episode was added, so I gotta check the first added episode
-            firstaddedepisode = quickjson.get_episodes_list(series['tvshowid'], 'dateadded', limit=1)
+            firstaddedepisode = quickjson.get_episodes(series['tvshowid'], 'dateadded', limit=1)
             if firstaddedepisode[0]['dateadded'] > lastdate:
                 newitems.append(series)
         for series in addon.get_setting('autoaddepisodes_list'):
-            newepisodes = quickjson.get_episodes_list(sort_method='dateadded', episodefilter=quickjson.filter_and({'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate}, {'field': 'tvshow', 'operator': 'is', 'value': series}))
+            newepisodes = quickjson.get_episodes(sort_method='dateadded', episodefilter=quickjson.filter_and({'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate}, {'field': 'tvshow', 'operator': 'is', 'value': series}))
             if next((True for episode in newepisodes if episode['episode'] == 1), False):
                 # Add series to process list if a new season has started
                 newitems.append(quickjson.get_tvshow_details(newepisodes[0]['tvshowid']))
