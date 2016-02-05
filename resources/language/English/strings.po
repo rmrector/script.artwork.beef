@@ -19,3 +19,7 @@ msgstr ""
 msgctxt "#32901"
 msgid "Download high quality preview images"
 msgstr ""
+
+msgctxt "#32902"
+msgid "Maximum number of fanart to add automatically"
+msgstr ""

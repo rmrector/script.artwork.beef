@@ -186,6 +186,9 @@ class ArtworkService(xbmc.Monitor):
     def showprogress(self):
         pykodi.execute_builtin("Notification(Artwork Beef, Currently processing artwork, 6500, -)")
 
+    def onSettingsChanged(self):
+        mediatypes.update_settings()
+
 if __name__ == '__main__':
     log('Service started', xbmc.LOGINFO)
     monitor = ArtworkService()
