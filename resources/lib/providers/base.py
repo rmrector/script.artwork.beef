@@ -89,4 +89,4 @@ class OneDayCache(BaseHeuristic):
 
     def warning(self, response):
         if 'cache-control' not in response.headers or not response.headers['cache-control'] or 'max-age' not in response.headers['cache-control'] and 'no-cache' not in response.headers['cache-control'] and 'no-store' not in response.headers['cache-control']:
-            return '110 - "Response is Stale"'
+            return '110 - "If this is not fresh, then it is stale."'

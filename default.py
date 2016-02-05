@@ -4,7 +4,7 @@ import xbmcgui
 from devhelper import pykodi
 from devhelper import quickjson
 
-addon = pykodi.Addon()
+addon = pykodi.get_main_addon()
 sys.path.append(addon.resourcelibs)
 
 from artworkprocessor import ArtworkProcessor
@@ -41,11 +41,13 @@ def set_autoaddepisodes():
     addon.set_setting('autoaddepisodes_list', selected)
 
 def show_add_artwork_menu():
-    options = ['new items', 'all items']
+    options = ['new items', 'unprocessed items', 'all items']
     selected = xbmcgui.Dialog().select('Artwork Beef: add artwork for...', options)
     if selected == 0:
         pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessNewItems)')
     if selected == 1:
+        pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessUnprocessedItems)')
+    if selected == 2:
         pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAllItems)')
 
 def get_command():

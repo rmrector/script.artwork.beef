@@ -61,6 +61,7 @@ class ArtworkProcessor(object):
             mediaitem['selected art'] = selected
         else:
             mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
+            count = len(mediaitem['selected art'])
 
         self.add_art_to_library(mediaitem)
         self.notifycount(count)
@@ -284,24 +285,24 @@ class ArtworkProcessor(object):
                 quickjson.set_season_details(seasonid, art=seasonart)
 
         elif mediaitem['mediatype'] == mediatypes.MOVIE:
-            movieart = {arttype: url for arttype, url in mediaitem['selected art'].iteritems()}
-            if movieart:
-                quickjson.set_movie_details(mediaitem['movieid'], art=movieart)
+            if mediaitem['selected art']:
+                quickjson.set_movie_details(mediaitem['movieid'], art=mediaitem['selected art'])
 
         elif mediaitem['mediatype'] == mediatypes.EPISODE:
-            episodeart = {arttype: url for arttype, url in mediaitem['selected art'].iteritems()}
-            if episodeart:
-                quickjson.set_episode_details(mediaitem['episodeid'], art=episodeart)
+            if mediaitem['selected art']:
+                quickjson.set_episode_details(mediaitem['episodeid'], art=mediaitem['selected art'])
 
     def _auto_filter(self, arttype, art, ignoreurls=()):
         if art['rating'].sort < 5:
             return False
         if arttype.endswith('fanart') and art['size'].sort < 1276:
             return False
-        return art['language'] in self.autolanguages and art.get('status', providers.HAPPY_IMAGE) == providers.HAPPY_IMAGE and art['url'] not in ignoreurls
+        return (art['language'] in self.autolanguages or arttype.endswith('fanart')) and art.get('status', providers.HAPPY_IMAGE) == providers.HAPPY_IMAGE and art['url'] not in ignoreurls
 
     def prompt_for_artwork(self, mediaitem):
         items = mediaitem['available art'].keys()
+        if not items:
+            return {}, 0
         typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', addon.path, existingart=mediaitem['art'], arttypes=items, medialabel=mediaitem['label'])
         selectedart = None
         hqpreview = addon.get_setting('highquality_preview')
@@ -350,4 +351,6 @@ class ArtworkProcessor(object):
 
     def notifycount(self, count):
         if count:
-            xbmcgui.Dialog().notification('{0} artwork grabbed'.format(count), "Contribute or donate to the awesomeness\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
+            xbmcgui.Dialog().notification('{0} artwork added'.format(count), "Contribute or donate to the awesomeness\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
+        else:
+            xbmcgui.Dialog().notification('No new artwork added', "Something missing? Contribute or donate to the source\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
