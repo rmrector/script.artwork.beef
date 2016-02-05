@@ -1,9 +1,13 @@
+from devhelper import pykodi
+
 TVSHOW = 'tvshow'
 MOVIE = 'movie'
 EPISODE = 'episode'
 SEASON = 'season'
 
-MULTIPLE_IMAGE_LIMIT = 5
+DEFAULT_FANART_LIMIT = 5
+
+addon = pykodi.get_main_addon()
 
 artinfo = {
     TVSHOW: {
@@ -14,7 +18,7 @@ artinfo = {
 		},
         'fanart': {
 	        'localizeid': 32121,
-	        'autolimit': MULTIPLE_IMAGE_LIMIT,
+	        'autolimit': DEFAULT_FANART_LIMIT,
 	        'multiselect': True
 		},
         'banner': {
@@ -51,7 +55,7 @@ artinfo = {
 		},
 		'fanart': {
 	        'localizeid': 32121,
-	        'autolimit': MULTIPLE_IMAGE_LIMIT,
+	        'autolimit': DEFAULT_FANART_LIMIT,
 	        'multiselect': True
 		},
 		'banner': {
@@ -111,3 +115,14 @@ artinfo = {
 		}
     }
 }
+
+def update_settings():
+    try:
+        limit = int(addon.get_setting('fanart_limit'))
+    except ValueError:
+        limit = DEFAULT_FANART_LIMIT
+        addon.set_setting('fanart_limit', DEFAULT_FANART_LIMIT)
+    artinfo[TVSHOW]['fanart']['autolimit'] = limit
+    artinfo[MOVIE]['fanart']['autolimit'] = limit
+
+update_settings()
