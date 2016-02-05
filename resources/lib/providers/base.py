@@ -32,7 +32,7 @@ class AbstractProvider(object):
         if not xbmcvfs.exists(cachepath):
             xbmcvfs.mkdirs(cachepath)
         cachepath = unicode(xbmc.translatePath(cachepath), 'utf-8')
-        self.session = CacheControl(requests.Session(), cache=FileCache(cachepath, forever=True), heuristic=OneDayCache())
+        self.session = CacheControl(requests.Session(), cache=FileCache(cachepath), heuristic=ForceDaysCache(7))
 
     def doget(self, url, params=None, headers=None):
         result = self._inget(url, params, headers)
@@ -73,6 +73,20 @@ class AbstractProvider(object):
     @abstractmethod
     def get_images(self, mediaid):
         pass
+
+class ForceDaysCache(BaseHeuristic):
+    """
+    Cache the response for exactly `days` days, overriding other caches
+    """
+    def __init__(self, days=1):
+        self.days = days
+
+    def update_headers(self, response):
+        return {'cache-control': 'max-age={0:d}'.format(self.days * 24 * 60 * 60)}
+
+    def warning(self, response):
+        return '110 - "If this is not fresh, then it is stale."'
+
 
 class OneDayCache(BaseHeuristic):
     """
