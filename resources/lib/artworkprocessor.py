@@ -345,7 +345,7 @@ class ArtworkProcessor(object):
         for url in existingart:
             result[selectedarttype + (str(count) if count else '')] = url
             count += 1
-        result.update({arttype: None for arttype in mediaitem['art'].keys() if arttype.startswith(selectedarttype) and arttype not in result.keys()})
+        result.update(dict((arttype, None) for arttype in mediaitem['art'].keys() if arttype.startswith(selectedarttype) and arttype not in result.keys()))
         return result, len(selectedart[0])
 
     def notifycount(self, count):
