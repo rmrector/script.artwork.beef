@@ -32,7 +32,7 @@ class AbstractProvider(object):
         if not xbmcvfs.exists(cachepath):
             xbmcvfs.mkdirs(cachepath)
         cachepath = unicode(xbmc.translatePath(cachepath), 'utf-8')
-        self.session = CacheControl(requests.Session(), cache=FileCache(cachepath), heuristic=ForceDaysCache(7))
+        self.session = CacheControl(requests.Session(), cache=FileCache(cachepath, use_dir_lock=True), heuristic=ForceDaysCache(7))
 
     def doget(self, url, params=None, headers=None):
         result = self._inget(url, params, headers)
