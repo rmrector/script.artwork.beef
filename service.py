@@ -47,8 +47,6 @@ class ArtworkService(xbmc.Monitor):
                         self.process_allitems()
                     elif signal == 'unprocesseditems':
                         self.process_allitems(True)
-                    elif signal == 'recentitems':
-                        self.process_recentitems()
                     elif signal == 'something':
                         self.process_something()
                     self.processing = False
@@ -82,9 +80,7 @@ class ArtworkService(xbmc.Monitor):
             if addon.get_setting('lastalldate') == '0':
                 self.signal = 'allitems'
             else:
-                self.signal = 'recentitems'
-        elif method == 'Other.ProcessUnprocessedItems':
-            self.signal = 'unprocesseditems'
+                self.signal = 'unprocesseditems'
         elif method == 'Other.ProcessAllItems':
             self.signal = 'allitems'
         elif method == 'VideoLibrary.OnScanFinished':
