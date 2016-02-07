@@ -37,7 +37,8 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
                 listitem = xbmcgui.ListItem(arttype[0])
                 listitem.setLabel2(arttype[1])
                 if self.existingart.get(arttype[1]):
-                    listitem.setArt({'icon': self.existingart[arttype[1]]})
+                    listitem.setIconImage(self.existingart[arttype[1]])
+                    # listitem.setArt({'icon': self.existingart[arttype[1]]})
                 self.guilist.addItem(listitem)
         else:
             self.selected = None
@@ -94,7 +95,8 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
                     lang = 'Unknown'
                 label = '{0}, {1}, {2}'.format(lang, image['rating'].display, image['size'].display)
             listitem = xbmcgui.ListItem(label)
-            listitem.setArt({'icon': image['url'] if self.hqpreview else image['preview']})
+            listitem.setIconImage(image['url'] if self.hqpreview else image['preview'])
+            # listitem.setArt({'icon': image['url'] if self.hqpreview else image['preview']})
             listitem.setPath(image['url'])
             if image['url'] in self.existingart:
                 listitem.select(True)

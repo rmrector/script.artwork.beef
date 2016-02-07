@@ -1,5 +1,6 @@
 v0.3.1 (2016-02-06)
 - Python 2.6 support
+- Fix preview image for Isengard
 v0.3.0 (2016-02-04)
 - Watch for library updates and automatically add artwork for new items
 - Add series, season, and movie artwork from Fanart.tv to the library
