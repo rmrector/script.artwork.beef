@@ -4,7 +4,7 @@ import xbmcgui
 
 class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
-        super(ArtworkTypeSelector, self).__init__(args, kwargs)
+        super(ArtworkTypeSelector, self).__init__()
         self.existingart = kwargs.get('existingart')
         items = kwargs.get('arttypes')[:]
         items.sort()
@@ -51,7 +51,7 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
 
 class ArtworkSelector(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
-        super(ArtworkSelector, self).__init__(args, kwargs)
+        super(ArtworkSelector, self).__init__()
         self.arttype = kwargs.get('arttype')
         if self.arttype.startswith('season'):
             if '.0.' in self.arttype:
