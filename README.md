@@ -6,21 +6,28 @@ It automatically adds artwork for new media items as they are added to your libr
 
 It fully supports series and season artwork from TheTVDB.com; movie, series, and season artwork from fanart.tv; and movie artwork from The Movie Database. For those series that really pop, [high quality fanart](http://forum.kodi.tv/showthread.php?tid=236248) for each episode can be added from The Movie Database.
 
+The full list of supported artwork for **series**: `poster`, `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `characterart`  
+For **movies**: `poster`, `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `discart`  
+And **seasons**: `poster`, `banner`, `landscape`  
+Finally, **episodes**: `fanart`
+
 ### Installing
 
-At the moment it depends on a couple of python modules not available in the official Kodi repo, and my own goofy devheper, so it will be simplest to install my [dev repository](https://github.com/rmrector/repository.rector.stuff), and then install it from there. The context items can also be installed from the repo.
+At the moment it depends on a couple of python modules not available in the official Kodi repo, and my own goofy devhelper, so it will be simplest to install my [dev repository](https://github.com/rmrector/repository.rector.stuff) ([direct](https://github.com/rmrector/repository.rector.stuff/raw/master/repository.rector.stuff/repository.rector.stuff-1.0.0.zip)), and then install from there, and Kodi will take care of downloading the dependencies. The context items can also be installed from the repo.
 
 ### Usage
 
-Install it. Tada! It's a work in progress, so there are all sorts of things that can go wrong, but that is the idea.
+Install it. Tada! It's a work in progress, so there are all sorts of things that can go wrong, but that is the idea. You can also run it from Program add-ons to trigger the automatic process for new or all items. The first run and then roughly every two months it will process all items. This takes some time, as it will hit the web services for most items.
 
 For individual media items, use context items "Select Artwork to Download" to select specific artwork, and "Download All Artwork" to download all configured artwork.
 
-Episode fanart requires using the standard TheTVDB scraper for series. Automatically adding episode fanart must be enabled per series, as they add a bundle of new API calls to The Movie Database and just aren't available for many series.
+Episode fanart requires using the standard TheTVDB scraper for series. Automatically adding episode fanart must be enabled per series through the add-on settings, as they add a bundle of new API calls to The Movie Database and just aren't available for many series.
 
 ### Skin support
 
-For the most part skins will still access images in the same way. Extrafanart has been replaced by [multi fanart](http://forum.kodi.tv/showthread.php?tid=236649), which does require skins to access them differently.
+For the most part skins will still access images in the same Kodi standard way. Extrafanart has been replaced by [multiple fanart](http://forum.kodi.tv/showthread.php?tid=236649), which does require skins to access them differently.
+
+Episode fanart may just work, depending on how your skin accesses fanart when listing episodes. `$INFO[ListItem.Art(fanart)]` pulls the episode fanart if it exists, otherwise Kodi falls back to the series fanart.
 
 ### Current gotchas
 
