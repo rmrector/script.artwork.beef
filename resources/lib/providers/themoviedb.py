@@ -4,8 +4,6 @@ import mediatypes
 from base import AbstractProvider
 from sorteddisplaytuple import SortedDisplay
 
-# TODO: I can get good sized thumbnails from tmdb with 'w780' instead of 'original' in the URL
-
 class TheMovieDBAbstractProvider(AbstractProvider):
     # pylint: disable=W0223
     __metaclass__ = ABCMeta

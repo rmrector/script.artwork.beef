@@ -7,7 +7,6 @@ import mediatypes
 from base import AbstractProvider
 from sorteddisplaytuple import SortedDisplay
 
-# TheTVDB has small thumbnails, but I may want to use them
 class TheTVDBProvider(AbstractProvider):
     name = 'thetvdb.com'
     mediatype = mediatypes.TVSHOW
