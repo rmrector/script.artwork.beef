@@ -117,7 +117,7 @@ class ArtworkProcessor(object):
             self.autolanguages = (self.language, 'en', None)
 
     def add_additional_iteminfo(self, mediaitem):
-        log('Processing {0}'.format(mediaitem['label']))
+        log('Processing {0}'.format(mediaitem['label']), xbmc.LOGINFO)
         if 'episodeid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.EPISODE
             mediaitem['dbid'] = mediaitem['episodeid']
@@ -128,8 +128,8 @@ class ArtworkProcessor(object):
             mediaitem['mediatype'] = mediatypes.MOVIE
             mediaitem['dbid'] = mediaitem['movieid']
         else:
-            log('Not sure what mediatype this is.')
-            log(mediaitem)
+            log('Not sure what mediatype this is.', xbmc.LOGWARNING)
+            log(mediaitem, xbmc.LOGWARNING)
             return False
         if mediaitem['mediatype'] == mediatypes.TVSHOW:
             mediaitem['seasons'], art = self._get_seasons_artwork(quickjson.get_seasons(mediaitem['tvshowid']))
@@ -265,7 +265,7 @@ class ArtworkProcessor(object):
                 # I don't know what this might be, I'm not even sure Kodi can do anything else at the moment, but just in case
                 log("Didn't find 'unknown' uniqueid for episode, just picked the first, from '%s'." % idsource, xbmc.LOGINFO)
             else:
-                log("Didn't find a uniqueid for episode '%s', can't look it up. I expect the ID from TheTVDB, which generally comes from the scraper." % episode['label'], xbmc.LOGINFO)
+                log("Didn't find a uniqueid for episode '%s', can't look it up. I expect the ID from TheTVDB, which generally comes from the scraper." % episode['label'], xbmc.LOGNOTICE)
             return result
 
     def add_art_to_library(self, mediaitem):
@@ -355,6 +355,7 @@ class ArtworkProcessor(object):
         return result, len(selectedart[0])
 
     def notifycount(self, count):
+        log('{0} artwork added'.format(count), xbmc.LOGINFO)
         if count:
             xbmcgui.Dialog().notification('{0} artwork added'.format(count), "Contribute or donate to the awesomeness\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
         else:
