@@ -45,6 +45,7 @@ class ArtworkProcessor(object):
             mediaitem = quickjson.get_episode_details(dbid, ['art', 'uniqueid'])
         else:
             xbmc.executebuiltin('Dialog.Close(busydialog)')
+            xbmcgui.Dialog().notification("Artwork Beef", "Media type '{0}' not currently supported.".format(mediatype), '-', 6500)
             return
 
         if mode == MODE_GUI:
