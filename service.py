@@ -37,27 +37,29 @@ class ArtworkService(xbmc.Monitor):
     def run(self):
         oldsignal = 0
         while not self.really_waitforabort(5):
-            if self.signal:
-                if not self.processing:
-                    signal = self.signal
+            if self.signal and not self.processing:
+                signal = self.signal
+                self.signal = None
+                oldsignal = 0
+                self.processing = True
+                if signal == 'allitems':
+                    self.process_allitems()
+                elif signal == 'unprocesseditems':
+                    self.process_allitems(True)
+                elif signal == 'something':
+                    # Add a delay to catch rapid fire library updates
+                    self.signal = 'something_really'
+                elif signal == 'something_really':
+                    self.process_something()
+                self.processing = False
+            elif self.signal:
+                if not oldsignal:
+                    self.showprogress()
+                oldsignal += 1
+                if oldsignal > 3:
+                    log("An old signal '{0}' had to be put down before the processor would give up, something is probably wrong".format(self.signal), xbmc.LOGWARNING)
                     self.signal = None
                     oldsignal = 0
-                    self.processing = True
-                    if signal == 'allitems':
-                        self.process_allitems()
-                    elif signal == 'unprocesseditems':
-                        self.process_allitems(True)
-                    elif signal == 'something':
-                        self.process_something()
-                    self.processing = False
-                else:
-                    if not oldsignal:
-                        self.showprogress()
-                    oldsignal += 1
-                    if oldsignal > 3:
-                        log("An old signal '{0}' had to be put down before the processor would give up, something is probably wrong".format(self.signal), xbmc.LOGWARNING)
-                        self.signal = None
-                        oldsignal = 0
 
     def abortRequested(self):
         return self.abort or super(ArtworkService, self).abortRequested()
