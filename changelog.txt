@@ -1,5 +1,7 @@
 v0.3.2~dev
 - better handle rapid fire library updates
+- Use persistent notification for progress
+
 v0.3.1 (2016-02-06)
 - Python 2.6 support
 - Fix preview image for Isengard

@@ -41,20 +41,20 @@ class ArtworkService(xbmc.Monitor):
                 signal = self.signal
                 self.signal = None
                 oldsignal = 0
+                if signal == 'something':
+                    # Add a delay to catch rapid fire library updates
+                    self.signal = 'something_really'
+                    continue
                 self.processing = True
                 if signal == 'allitems':
                     self.process_allitems()
                 elif signal == 'unprocesseditems':
                     self.process_allitems(True)
-                elif signal == 'something':
-                    # Add a delay to catch rapid fire library updates
-                    self.signal = 'something_really'
                 elif signal == 'something_really':
                     self.process_something()
                 self.processing = False
+                self.closeprogress()
             elif self.signal:
-                if not oldsignal:
-                    self.showprogress()
                 oldsignal += 1
                 if oldsignal > 3:
                     log("An old signal '{0}' had to be put down before the processor would give up, something is probably wrong".format(self.signal), xbmc.LOGWARNING)
@@ -76,19 +76,21 @@ class ArtworkService(xbmc.Monitor):
         if method == 'Other.CancelCurrent':
             if self.processing:
                 self.abort = True
-        elif method == 'Other.ShowProgress':
-            self.showprogress()
         elif method == 'Other.ProcessNewItems':
+            self.processor.progress.create("Adding extended artwork", "Listing all items")
             if addon.get_setting('lastalldate') == '0':
                 self.signal = 'allitems'
             else:
                 self.signal = 'unprocesseditems'
         elif method == 'Other.ProcessAllItems':
+            self.processor.progress.create("Adding extended artwork", "Listing all items")
             self.signal = 'allitems'
+        elif method == 'VideoLibrary.OnScanStarted':
+            if addon.get_setting('enableservice') and self.processing:
+                self.abort = True
         elif method == 'VideoLibrary.OnScanFinished':
             if addon.get_setting('enableservice'):
-                if self.processing:
-                    self.abort = True
+                self.processor.progress.create("Adding extended artwork", "Listing new items")
                 self.signal = 'something'
 
     def process_something(self):
@@ -118,7 +120,6 @@ class ArtworkService(xbmc.Monitor):
             self.process_allitems()
 
     def process_allitems(self, excludeprocessed=False):
-        pykodi.execute_builtin("Notification(Artwork Beef, Listing all media items, 5500, -)")
         currentdate = str(datetime.now())
         if not excludeprocessed:
             items = quickjson.get_movies()
@@ -144,8 +145,6 @@ class ArtworkService(xbmc.Monitor):
                 if self.abortRequested():
                     return
         if items:
-            message = "Adding artwork for all {0} items" if not excludeprocessed else "Adding artwork for {0} unprocessed items"
-            pykodi.execute_builtin("Notification(Artwork Beef, {0}, 6500, -)".format(message.format(len(items))))
             processed = self.processor.process_medialist(items)
             if not excludeprocessed:
                 self.processed.set(processed)
@@ -153,14 +152,11 @@ class ArtworkService(xbmc.Monitor):
             else:
                 self.processed.extend(processed)
             self.processed.save()
-        else:
-            pykodi.execute_builtin("Notification(Artwork Beef, No unprocessed items need artwork, 6500, -)")
         if not self.abortRequested():
             addon.set_setting('lastunprocesseddate', currentdate)
             addon.set_setting('lastdate', currentdate)
 
     def process_recentitems(self):
-        pykodi.execute_builtin("Notification(Artwork Beef, Listing new media items, 5500, -)")
         lastdate = addon.get_setting('lastdate')
         currentdate = str(datetime.now())
         if lastdate > currentdate:
@@ -184,17 +180,14 @@ class ArtworkService(xbmc.Monitor):
                 return
 
         if newitems:
-            pykodi.execute_builtin("Notification(Artwork Beef, Adding artwork for {0} new items, 6500, -)".format(len(newitems)))
             processed = self.processor.process_medialist(newitems)
             self.processed.extend(processed)
             self.processed.save()
-        else:
-            pykodi.execute_builtin("Notification(Artwork Beef, No new items need artwork, 6500, -)")
         if not self.abortRequested():
             addon.set_setting('lastdate', currentdate)
 
-    def showprogress(self):
-        pykodi.execute_builtin("Notification(Artwork Beef, Currently processing artwork, 6500, -)")
+    def closeprogress(self):
+        self.processor.progress.close()
 
     def onSettingsChanged(self):
         mediatypes.update_settings()

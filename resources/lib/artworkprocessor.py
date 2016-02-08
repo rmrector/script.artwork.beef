@@ -26,6 +26,7 @@ class ArtworkProcessor(object):
         self.monitor = monitor or xbmc.Monitor()
         self.language = None
         self.autolanguages = None
+        self.progress = xbmcgui.DialogProgressBG()
 
     @property
     def processing(self):
@@ -33,7 +34,6 @@ class ArtworkProcessor(object):
 
     def process_item(self, mediatype, dbid, mode):
         if self.processing:
-            pykodi.execute_builtin('NotifyAll(script.artwork.beef, ShowProgress)')
             return
         if mode == MODE_GUI:
             xbmc.executebuiltin('ActivateWindow(busydialog)')
@@ -66,13 +66,18 @@ class ArtworkProcessor(object):
             medialist = [mediaitem]
             if mediatype == mediatypes.TVSHOW and mediaitem['label'] in addon.get_setting('autoaddepisodes_list'):
                 medialist.extend(quickjson.get_episodes(dbid, properties=['art', 'uniqueid']))
+            self.progress.create("Adding extended artwork", "Listing all items")
             self.process_medialist(medialist)
+            self.progress.close()
 
     def process_medialist(self, medialist):
         processed = {'tvshow': [], 'movie': [], 'episode': []}
         self.setlanguages()
-        count = 0
+        artcount = 0
+        currentitem = 0
         for mediaitem in medialist:
+            self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
+            currentitem += 1
             self.add_additional_iteminfo(mediaitem)
             artwork_requested = self.add_available_artwork(mediaitem, MODE_AUTO)
             if not artwork_requested:
@@ -87,11 +92,11 @@ class ArtworkProcessor(object):
                 continue
             mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
             self.add_art_to_library(mediaitem)
-            count += len(mediaitem['selected art'])
+            artcount += len(mediaitem['selected art'])
             processed[mediaitem['mediatype']].append(mediaitem['dbid'])
             if self.monitor.waitForAbort(THROTTLE_TIME):
                 break
-        self.notifycount(count)
+        self.notifycount(artcount)
         return processed
 
     def add_available_artwork(self, mediaitem, mode):
