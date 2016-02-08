@@ -45,6 +45,8 @@ class TheTVDBProvider(AbstractProvider):
                 if response == None:
                     continue
                 response.raise_for_status()
+                if not response.from_cache:
+                    self.log('uncached!!')
 
                 generaltype = self.artmap[arttype]
                 data = response.json()

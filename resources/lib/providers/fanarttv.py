@@ -1,3 +1,4 @@
+import xbmc
 from abc import ABCMeta
 
 import mediatypes
@@ -41,6 +42,8 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         if response == None:
             return {}
         response.raise_for_status()
+        if not response.from_cache:
+            self.log('uncached!!')
         data = response.json()
         result = {}
         for arttype, artlist in data.iteritems():
@@ -53,7 +56,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                     try:
                         itype = itype % (int(image['season']) if image['season'] != 'all' else -1)
                     except ValueError:
-                        self.log("Data for '%s' from provider has a small problem: image season was set incorrectly, to \"%s\", so I can't tell which season it belongs to. The image URL is:\n%s" % (data['name'], image['season'], image['url']))
+                        self.log("Data for '%s' from provider has a small problem: image season was set incorrectly, to \"%s\", so I can't tell which season it belongs to. The image URL is:\n%s" % (data['name'], image['season'], image['url']), xbmc.LOGINFO)
                         # throw it into the 'all seasons' image pile
                         itype = itype % -1
                 if itype not in result:
@@ -115,6 +118,8 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
         if response == None:
             return {}
         response.raise_for_status()
+        if not response.from_cache:
+            self.log('uncached!!')
         data = response.json()
         result = {}
         for arttype, artlist in data.iteritems():

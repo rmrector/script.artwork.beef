@@ -46,6 +46,8 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
         if response == None:
             return {}
         response.raise_for_status()
+        if not response.from_cache:
+            self.log('uncached!!')
         if not self.baseurl:
             return {}
         data = response.json()
@@ -90,6 +92,8 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
         if response == None:
             return {}
         response.raise_for_status()
+        if not response.from_cache:
+            self.log('uncached!!')
         data = response.json()
         if not self.baseurl:
             return {}

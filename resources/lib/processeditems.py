@@ -1,5 +1,8 @@
 import json
 import os
+import xbmc
+
+from devhelper.pykodi import log
 
 class ProcessedItems(object):
     def __init__(self, directory):
@@ -33,6 +36,8 @@ class ProcessedItems(object):
                 try:
                     processed = json.load(jsonfile)
                 except ValueError:
+                    self.clear()
+                    log("Had trouble loading ProcessedItems, starting fresh.", xbmc.LOGWARNING, tag='json')
                     return
                 self.tvshow = processed.get('tvshow', [])
                 self.movie = processed.get('movie', [])
