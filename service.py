@@ -131,7 +131,7 @@ class ArtworkService(xbmc.Monitor):
         for series in serieslist:
             if not excludeprocessed or series['season'] > self.processed.tvshow.get(series['tvshowid']):
                 items.append(series)
-            if series['label'] in autoaddepisodes:
+            if series['imdbnumber'] in autoaddepisodes:
                 episodes = quickjson.get_episodes(series['tvshowid'], 'dateadded', properties=episode_properties)
                 for episode in episodes:
                     if not excludeprocessed or episode['episodeid'] not in self.processed.episode:
@@ -163,7 +163,7 @@ class ArtworkService(xbmc.Monitor):
         for series in serieslist:
             if series['season'] > self.processed.tvshow.get(series['tvshowid']):
                 newitems.append(series)
-            if series['label'] in autoaddepisodes:
+            if series['imdbnumber'] in autoaddepisodes:
                 newitems.extend(quickjson.get_episodes(series['tvshowid'], 'dateadded', properties=episode_properties, episodefilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate}))
             if self.abortRequested():
                 return

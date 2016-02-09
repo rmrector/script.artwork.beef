@@ -22,10 +22,11 @@ class SeriesSelector(xbmcgui.WindowXMLDialog):
         for series in self.serieslist:
             listitem = xbmcgui.ListItem(series['label'])
             listitem.setProperty('Addon.Summary', str(series['year']) + ' - ' + series['plot'])
+            listitem.setProperty('imdbnumber', series['imdbnumber'])
             art = series['art']
             art['thumb'] = series['art']['poster']
             listitem.setArt(art)
-            if series['label'] in self.selected:
+            if series['imdbnumber'] in self.selected:
                 listitem.select(True)
             self.guilist.addItem(listitem)
         self.setFocus(self.guilist)
@@ -35,10 +36,10 @@ class SeriesSelector(xbmcgui.WindowXMLDialog):
             item = self.guilist.getSelectedItem()
             if item.isSelected():
                 item.select(False)
-                self.selected.remove(item.getLabel())
+                self.selected.remove(item.getProperty('imdbnumber'))
             else:
                 item.select(True)
-                self.selected.append(item.getLabel())
+                self.selected.append(item.getProperty('imdbnumber'))
         elif controlid == 5:
             self.close()
         elif controlid == 7:
