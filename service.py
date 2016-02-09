@@ -8,7 +8,7 @@ from devhelper.pykodi import log
 addon = pykodi.get_main_addon()
 sys.path.append(addon.resourcelibs)
 
-from artworkprocessor import ArtworkProcessor, tvshow_properties
+from artworkprocessor import ArtworkProcessor, episode_properties, movie_properties, tvshow_properties
 from processeditems import ProcessedItems
 import mediatypes
 
@@ -121,10 +121,9 @@ class ArtworkService(xbmc.Monitor):
 
     def process_allitems(self, excludeprocessed=False):
         currentdate = str(datetime.now())
-        if not excludeprocessed:
-            items = quickjson.get_movies()
-        else:
-            items = [movie for movie in quickjson.get_movies() if movie['movieid'] not in self.processed.movie]
+        items = quickjson.get_movies(properties=movie_properties)
+        if excludeprocessed:
+            items = [movie for movie in items if movie['movieid'] not in self.processed.movie]
         serieslist = quickjson.get_tvshows(properties=tvshow_properties)
         if self.abortRequested():
             return
@@ -133,7 +132,7 @@ class ArtworkService(xbmc.Monitor):
             if not excludeprocessed or series['season'] > self.processed.tvshow.get(series['tvshowid']):
                 items.append(series)
             if series['label'] in autoaddepisodes:
-                episodes = quickjson.get_episodes(series['tvshowid'], 'dateadded')
+                episodes = quickjson.get_episodes(series['tvshowid'], 'dateadded', properties=episode_properties)
                 for episode in episodes:
                     if not excludeprocessed or episode['episodeid'] not in self.processed.episode:
                         items.append(episode)
@@ -156,7 +155,7 @@ class ArtworkService(xbmc.Monitor):
         currentdate = str(datetime.now())
         if lastdate > currentdate:
             lastdate = str(datetime.now() - timedelta(weeks=2))
-        newitems = quickjson.get_movies('dateadded', moviefilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate})
+        newitems = quickjson.get_movies('dateadded', properties=movie_properties, moviefilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate})
         serieslist = quickjson.get_tvshows('dateadded', properties=tvshow_properties, seriesfilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate})
         if self.abortRequested():
             return
@@ -165,7 +164,7 @@ class ArtworkService(xbmc.Monitor):
             if series['season'] > self.processed.tvshow.get(series['tvshowid']):
                 newitems.append(series)
             if series['label'] in autoaddepisodes:
-                newitems.extend(quickjson.get_episodes(series['tvshowid'], 'dateadded', episodefilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate}))
+                newitems.extend(quickjson.get_episodes(series['tvshowid'], 'dateadded', properties=episode_properties, episodefilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate}))
             if self.abortRequested():
                 return
 
