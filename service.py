@@ -8,7 +8,7 @@ from devhelper.pykodi import log
 addon = pykodi.get_main_addon()
 sys.path.append(addon.resourcelibs)
 
-from artworkprocessor import ArtworkProcessor
+from artworkprocessor import ArtworkProcessor, tvshow_properties
 from processeditems import ProcessedItems
 import mediatypes
 
@@ -125,25 +125,20 @@ class ArtworkService(xbmc.Monitor):
             items = quickjson.get_movies()
         else:
             items = [movie for movie in quickjson.get_movies() if movie['movieid'] not in self.processed.movie]
-        serieslist = quickjson.get_tvshows()
+        serieslist = quickjson.get_tvshows(properties=tvshow_properties)
         if self.abortRequested():
             return
-        seriesadded = []
+        autoaddepisodes = addon.get_setting('autoaddepisodes_list')
         for series in serieslist:
-            if not excludeprocessed or series['tvshowid'] not in self.processed.tvshow:
+            if not excludeprocessed or series['season'] > self.processed.tvshow.get(series['tvshowid']):
                 items.append(series)
-                seriesadded.append(series['title'])
-        for series in addon.get_setting('autoaddepisodes_list'):
-            episodes = quickjson.get_episodes(sort_method='dateadded', episodefilter={'field': 'tvshow', 'operator': 'is', 'value': series})
-            for episode in episodes:
-                if not excludeprocessed or episode['episodeid'] not in self.processed.episode:
-                    items.append(episode)
-                    # Add series to process list if a new season has been added
-                    if episode['episode'] == 1 and series not in seriesadded:
-                        items.append(quickjson.get_tvshow_details(episodes[0]['tvshowid']))
-                        seriesadded.append(series)
-                if self.abortRequested():
-                    return
+            if series['label'] in autoaddepisodes:
+                episodes = quickjson.get_episodes(series['tvshowid'], 'dateadded')
+                for episode in episodes:
+                    if not excludeprocessed or episode['episodeid'] not in self.processed.episode:
+                        items.append(episode)
+            if self.abortRequested():
+                return
         if items:
             processed = self.processor.process_medialist(items)
             if not excludeprocessed:
@@ -162,20 +157,15 @@ class ArtworkService(xbmc.Monitor):
         if lastdate > currentdate:
             lastdate = str(datetime.now() - timedelta(weeks=2))
         newitems = quickjson.get_movies('dateadded', moviefilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate})
-        serieslist = quickjson.get_tvshows('dateadded', seriesfilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate})
+        serieslist = quickjson.get_tvshows('dateadded', properties=tvshow_properties, seriesfilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate})
         if self.abortRequested():
             return
+        autoaddepisodes = addon.get_setting('autoaddepisodes_list')
         for series in serieslist:
-            # series dateadded from Kodi is the date that the last episode was added, so I gotta check the first added episode
-            firstaddedepisode = quickjson.get_episodes(series['tvshowid'], 'dateadded', limit=1)
-            if firstaddedepisode[0]['dateadded'] > lastdate:
+            if series['season'] > self.processed.tvshow.get(series['tvshowid']):
                 newitems.append(series)
-        for series in addon.get_setting('autoaddepisodes_list'):
-            newepisodes = quickjson.get_episodes(sort_method='dateadded', episodefilter=quickjson.filter_and({'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate}, {'field': 'tvshow', 'operator': 'is', 'value': series}))
-            if next((True for episode in newepisodes if episode['episode'] == 1), False):
-                # Add series to process list if a new season has started
-                newitems.append(quickjson.get_tvshow_details(newepisodes[0]['tvshowid']))
-            newitems.extend(newepisodes)
+            if series['label'] in autoaddepisodes:
+                newitems.extend(quickjson.get_episodes(series['tvshowid'], 'dateadded', episodefilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate}))
             if self.abortRequested():
                 return
 

@@ -20,6 +20,7 @@ THROTTLE_TIME = 0.15
 PREFERRED_FANART_SIZE = 1920
 PREFERRED_SIZE = 1000
 
+tvshow_properties = ['art', 'imdbnumber', 'season']
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -38,7 +39,7 @@ class ArtworkProcessor(object):
         if mode == MODE_GUI:
             xbmc.executebuiltin('ActivateWindow(busydialog)')
         if mediatype == mediatypes.TVSHOW:
-            mediaitem = quickjson.get_tvshow_details(dbid, ['art', 'imdbnumber'])
+            mediaitem = quickjson.get_tvshow_details(dbid, tvshow_properties)
         elif mediatype == mediatypes.MOVIE:
             mediaitem = quickjson.get_movie_details(dbid, ['art', 'imdbnumber'])
         elif mediatype == mediatypes.EPISODE:
@@ -71,7 +72,7 @@ class ArtworkProcessor(object):
             self.progress.close()
 
     def process_medialist(self, medialist):
-        processed = {'tvshow': [], 'movie': [], 'episode': []}
+        processed = {'tvshow': {}, 'movie': [], 'episode': []}
         self.setlanguages()
         artcount = 0
         currentitem = 0
@@ -81,19 +82,19 @@ class ArtworkProcessor(object):
             self.add_additional_iteminfo(mediaitem)
             artwork_requested = self.add_available_artwork(mediaitem, MODE_AUTO)
             if not artwork_requested:
-                processed[mediaitem['mediatype']].append(mediaitem['dbid'])
+                add_processeditem(processed, mediaitem)
                 if self.monitor.abortRequested():
                     break
                 continue
             if not mediaitem.get('available art'):
-                processed[mediaitem['mediatype']].append(mediaitem['dbid'])
+                add_processeditem(processed, mediaitem)
                 if self.monitor.waitForAbort(THROTTLE_TIME):
                     break
                 continue
             mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
             self.add_art_to_library(mediaitem)
             artcount += len(mediaitem['selected art'])
-            processed[mediaitem['mediatype']].append(mediaitem['dbid'])
+            add_processeditem(processed, mediaitem)
             if self.monitor.waitForAbort(THROTTLE_TIME):
                 break
         self.notifycount(artcount)
@@ -360,3 +361,9 @@ class ArtworkProcessor(object):
             xbmcgui.Dialog().notification('{0} artwork added'.format(count), "Contribute or donate to the awesomeness\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
         else:
             xbmcgui.Dialog().notification('No new artwork added', "Something missing? Contribute or donate to the source\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
+
+def add_processeditem(processed, mediaitem):
+    if mediaitem['mediatype'] == 'tvshow':
+        processed['tvshow'][mediaitem['dbid']] = mediaitem['season']
+    else:
+        processed[mediaitem['mediatype']].append(mediaitem['dbid'])
