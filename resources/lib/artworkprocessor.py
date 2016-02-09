@@ -21,6 +21,8 @@ PREFERRED_FANART_SIZE = 1920
 PREFERRED_SIZE = 1000
 
 tvshow_properties = ['art', 'imdbnumber', 'season']
+movie_properties = ['art', 'imdbnumber']
+episode_properties = ['art', 'uniqueid']
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -41,9 +43,9 @@ class ArtworkProcessor(object):
         if mediatype == mediatypes.TVSHOW:
             mediaitem = quickjson.get_tvshow_details(dbid, tvshow_properties)
         elif mediatype == mediatypes.MOVIE:
-            mediaitem = quickjson.get_movie_details(dbid, ['art', 'imdbnumber'])
+            mediaitem = quickjson.get_movie_details(dbid, movie_properties)
         elif mediatype == mediatypes.EPISODE:
-            mediaitem = quickjson.get_episode_details(dbid, ['art', 'uniqueid'])
+            mediaitem = quickjson.get_episode_details(dbid, episode_properties)
         else:
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             xbmcgui.Dialog().notification("Artwork Beef", "Media type '{0}' not currently supported.".format(mediatype), '-', 6500)
@@ -66,7 +68,7 @@ class ArtworkProcessor(object):
         else:
             medialist = [mediaitem]
             if mediatype == mediatypes.TVSHOW and mediaitem['label'] in addon.get_setting('autoaddepisodes_list'):
-                medialist.extend(quickjson.get_episodes(dbid, properties=['art', 'uniqueid']))
+                medialist.extend(quickjson.get_episodes(dbid, properties=episode_properties))
             self.progress.create("Adding extended artwork", "Listing all items")
             self.process_medialist(medialist)
             self.progress.close()
