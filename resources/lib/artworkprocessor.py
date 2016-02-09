@@ -67,7 +67,7 @@ class ArtworkProcessor(object):
             self.notifycount(count)
         else:
             medialist = [mediaitem]
-            if mediatype == mediatypes.TVSHOW and mediaitem['label'] in addon.get_setting('autoaddepisodes_list'):
+            if mediatype == mediatypes.TVSHOW and mediaitem['imdbnumber'] in addon.get_setting('autoaddepisodes_list'):
                 medialist.extend(quickjson.get_episodes(dbid, properties=episode_properties))
             self.progress.create("Adding extended artwork", "Listing all items")
             self.process_medialist(medialist)
