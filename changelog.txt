@@ -1,4 +1,4 @@
-v0.3.2~dev
+v0.3.2 (2016-02-09)
 - better handle rapid fire library updates
 - Use persistent notification for progress
 - Fix up new season detection
