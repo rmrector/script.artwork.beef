@@ -1,4 +1,5 @@
 import sys
+import xbmc
 import xbmcgui
 
 from devhelper import pykodi
@@ -35,8 +36,10 @@ def main():
                 show_add_artwork_menu()
 
 def set_autoaddepisodes():
+    xbmc.executebuiltin('ActivateWindow(busydialog)')
     serieslist = quickjson.get_tvshows()
     autoaddepisodes = addon.get_setting('autoaddepisodes_list')
+    xbmc.executebuiltin('Dialog.Close(busydialog)')
     selected = SeriesSelector('DialogSelect.xml', addon.path, serieslist=serieslist, selected=autoaddepisodes).prompt()
     addon.set_setting('autoaddepisodes_list', selected)
 
