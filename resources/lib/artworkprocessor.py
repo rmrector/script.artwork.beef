@@ -57,7 +57,7 @@ class ArtworkProcessor(object):
             artwork_requested = self.add_available_artwork(mediaitem, mode)
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             if not artwork_requested or not mediaitem.get('available art'):
-                # IDEA: notify that there is no artwork available?
+                xbmcgui.Dialog().notification('No artwork available', "Something missing? Contribute or donate to the source\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
                 return
             selected, count = self.prompt_for_artwork(mediaitem)
             if not selected:
