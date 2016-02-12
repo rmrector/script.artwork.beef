@@ -90,7 +90,6 @@ class ArtworkService(xbmc.Monitor):
                 self.abort = True
         elif method == 'VideoLibrary.OnScanFinished':
             if addon.get_setting('enableservice'):
-                self.processor.progress.create("Adding extended artwork", "Listing new items")
                 self.signal = 'something'
 
     def process_something(self):
@@ -101,6 +100,7 @@ class ArtworkService(xbmc.Monitor):
         # - this contains only new items that were missed in the recent loops
         # All items, process all configured media items in Kodi - Once every 2 months (ALLITEMS_DAYS)
         # - to add any new artwork for old items that don't already have all artwork
+        self.processor.progress.create("Adding extended artwork", "Listing new items")
         if addon.get_setting('lastalldate') == '0':
             self.process_allitems()
             return
