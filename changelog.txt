@@ -1,3 +1,6 @@
+v0.3.3~dev
+- Fix persistent notification being too persistent
+
 v0.3.2 (2016-02-09)
 - better handle rapid fire library updates
 - Use persistent notification for progress
