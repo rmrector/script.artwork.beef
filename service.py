@@ -127,7 +127,7 @@ class ArtworkService(xbmc.Monitor):
         serieslist = quickjson.get_tvshows(properties=tvshow_properties)
         if self.abortRequested():
             return
-        autoaddepisodes = addon.get_setting('autoaddepisodes_list')
+        autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
         for series in serieslist:
             if not excludeprocessed or series['season'] > self.processed.tvshow.get(series['tvshowid']):
                 items.append(series)
@@ -159,7 +159,7 @@ class ArtworkService(xbmc.Monitor):
         serieslist = quickjson.get_tvshows('dateadded', properties=tvshow_properties, seriesfilter={'field': 'dateadded', 'operator': 'greaterthan', 'value': lastdate})
         if self.abortRequested():
             return
-        autoaddepisodes = addon.get_setting('autoaddepisodes_list')
+        autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
         for series in serieslist:
             if series['season'] > self.processed.tvshow.get(series['tvshowid']):
                 newitems.append(series)
