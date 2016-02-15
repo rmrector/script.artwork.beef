@@ -71,12 +71,13 @@ class TheTVDBProvider(AbstractProvider):
                     if arttype in ('series', 'seasonwide'):
                         resultimage['size'] = SortedDisplay(758, '758x140')
                     elif arttype == 'season':
-                        resultimage['size'] = SortedDisplay(680, '680x1000')
+                        resultimage['size'] = SortedDisplay(1000, '680x1000')
                     else:
                         try:
-                            resultimage['size'] = SortedDisplay(int(image['resolution'].split('x')[0]), image['resolution'])
+                            sortsize = int(image['resolution'].split('x')[0 if arttype != 'poster' else 1])
+                            resultimage['size'] = SortedDisplay(sortsize, image['resolution'])
                         except ValueError:
-                            self.log('whoops, ValueError on "%s"' % image['resolution'].split('x')[0])
+                            self.log('whoops, ValueError on "%s"' % image['resolution'])
                             resultimage['size'] = SortedDisplay(0, image['resolution'])
                     result[ntype].append(resultimage)
         return result
