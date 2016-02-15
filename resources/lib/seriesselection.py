@@ -1,5 +1,14 @@
 import xbmcgui
 
+from devhelper import pykodi
+
+ACTION_SELECTSERIES = 32400
+
+addon = pykodi.Addon()
+
+def localized(messageid):
+    return addon.getLocalizedString(messageid)
+
 class SeriesSelector(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
         super(SeriesSelector, self).__init__(args, kwargs)
@@ -13,7 +22,7 @@ class SeriesSelector(xbmcgui.WindowXMLDialog):
         return self.selected
 
     def onInit(self):
-        self.getControl(1).setLabel('$LOCALIZE[32400]')
+        self.getControl(1).setLabel(localized(ACTION_SELECTSERIES))
         self.getControl(3).setVisible(False)
         self.getControl(5).setVisible(True)
         self.getControl(5).setLabel('$LOCALIZE[186]')
