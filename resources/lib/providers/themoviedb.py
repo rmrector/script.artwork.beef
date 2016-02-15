@@ -64,7 +64,8 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
                 resultimage['preview'] = self.baseurl + previewbit + image['file_path']
                 resultimage['language'] = image['iso_639_1']
                 resultimage['rating'] = self._get_rating(image)
-                resultimage['size'] = SortedDisplay(image['width'], '%sx%s' % (image['width'], image['height']))
+                sortsize = image['width' if arttype != 'posters' else 'height']
+                resultimage['size'] = SortedDisplay(sortsize, '{0}x{1}'.format(image['width'], image['height']))
                 result[generaltype].append(resultimage)
         return result
 

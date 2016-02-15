@@ -81,7 +81,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         elif arttype == 'showbackground':
             return SortedDisplay(1920, '1920x1080')
         elif arttype in ('tvposter', 'seasonposter'):
-            return SortedDisplay(1000, '1000x1426')
+            return SortedDisplay(1426, '1000x1426')
         elif arttype == 'characterart':
             return SortedDisplay(512, '512x512')
         elif arttype in ('tvthumb', 'seasonthumb'):
@@ -149,7 +149,7 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
         elif arttype == 'moviebackground':
             return SortedDisplay(1920, '1920x1080')
         elif arttype == 'movieposter':
-            return SortedDisplay(1000, '1000x1426')
+            return SortedDisplay(1426, '1000x1426')
         elif arttype == 'moviedisc':
             return SortedDisplay(1000, '1000x1000')
         elif arttype == 'moviebanner':
