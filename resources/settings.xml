@@ -3,12 +3,35 @@
 	<category label="128">
 		<setting id="enableservice" label="32900" type="bool" default="true" />
 		<setting id="highquality_preview" label="32901" type="bool" default="false" />
-		<setting id="fanart_limit" label="32902" type="slider" option="int" default="5" range="1,1,20" />
 		<setting id="set_autoaddepisodes" label="32400" type="action" action="RunScript(script.artwork.beef, command=set_autoaddepisodes)" />
 		<!-- For add-on inner workings -->
 		<setting id="lastdate" type="text" default="0" visible="false" />
 		<setting id="lastalldate" type="text" default="0" visible="false" />
 		<setting id="lastunprocesseddate" type="text" default="0" visible="false" />
 		<setting id="autoaddepisodes_list" type="text" default="" visible="false" />
+	</category>
+	<category label="TV shows">
+		<setting label="Automatically add artwork types" type="lsep" />
+		<setting id="tvshow.poster" label="poster" type="bool" default="true" />
+		<setting id="tvshow.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
+		<setting id="tvshow.banner" label="banner" type="bool" default="true" />
+		<setting id="tvshow.clearlogo" label="clearlogo" type="bool" default="true" />
+		<setting id="tvshow.landscape" label="landscape" type="bool" default="true" />
+		<setting id="tvshow.clearart" label="clearart" type="bool" default="true" />
+		<setting id="tvshow.characterart" label="characterart" type="bool" default="true" />
+		<setting id="season.poster" label="Season poster" type="bool" default="true" />
+		<setting id="season.banner" label="Season banner" type="bool" default="true" />
+		<setting id="season.landscape" label="Season landscape" type="bool" default="true" />
+		<setting id="episode.fanart" label="Episode fanart" type="bool" default="true" />
+	</category>
+	<category label="Movies">
+		<setting label="Automatically add artwork types" type="lsep" />
+		<setting id="movie.poster" label="poster" type="bool" default="true" />
+		<setting id="movie.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
+		<setting id="movie.banner" label="banner" type="bool" default="true" />
+		<setting id="movie.clearlogo" label="clearlogo" type="bool" default="true" />
+		<setting id="movie.landscape" label="landscape" type="bool" default="true" />
+		<setting id="movie.clearart" label="clearart" type="bool" default="true" />
+		<setting id="movie.discart" label="discart" type="bool" default="true" />
 	</category>
 </settings>
