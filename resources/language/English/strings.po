@@ -7,7 +7,7 @@ msgstr ""
 # Actions
 
 msgctxt "#32400"
-msgid "Select series to auto add episode artwork"
+msgid "Select series to auto add episode artwork..."
 msgstr ""
 
 # Settings
