@@ -3,18 +3,20 @@ import xbmcgui
 
 from devhelper import pykodi
 from devhelper import quickjson
-
 from devhelper.pykodi import log
 
 import mediatypes
 import providers
-
+from sorteddisplaytuple import SortedDisplay
 from artworkselection import ArtworkTypeSelector, ArtworkSelector
 
 addon = pykodi.get_main_addon()
 
 MODE_AUTO = 'auto'
 MODE_GUI = 'gui'
+
+HAPPY_IMAGE = SortedDisplay(0, 'happy')
+NOAUTO_IMAGE = SortedDisplay(0, 'noauto')
 
 THROTTLE_TIME = 0.15
 PREFERRED_FANART_SIZE = 1920
@@ -160,9 +162,15 @@ class ArtworkProcessor(object):
             if self.monitor.abortRequested():
                 return
         for arttype, imagelist in images.iteritems():
+            [self.apply_status(arttype, image) for image in imagelist] #pylint: disable=W0106
             self.sort_images(arttype, imagelist)
         return images
 
+    def apply_status(self, arttype, image):
+        image['status'] = HAPPY_IMAGE
+        if arttype == 'fanart':
+            if image.get('provider') == 'fanart.tv':
+                image['status'] = NOAUTO_IMAGE
     def sort_images(self, arttype, imagelist):
         # 1. Match the primary language, for everything but fanart
         # 2. Separate on status, like goofy images
@@ -171,7 +179,7 @@ class ArtworkProcessor(object):
         imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
         preferredsize = PREFERRED_FANART_SIZE if arttype == 'fanart' else PREFERRED_SIZE
         imagelist.sort(key=lambda image: (image['size'].sort if image['size'].sort <= preferredsize else preferredsize) // 200, reverse=True)
-        imagelist.sort(key=lambda image: image.get('status', providers.HAPPY_IMAGE).sort)
+        imagelist.sort(key=lambda image: image['status'].sort)
         if not arttype.endswith('fanart'):
             imagelist.sort(key=lambda image: (0 if image['language'] == self.language else 1, image['language']))
 
@@ -306,7 +314,7 @@ class ArtworkProcessor(object):
             return False
         if arttype.endswith('fanart') and art['size'].sort < 1276:
             return False
-        return (art['language'] in self.autolanguages or arttype.endswith('fanart')) and art.get('status', providers.HAPPY_IMAGE) == providers.HAPPY_IMAGE and art['url'] not in ignoreurls
+        return (art['language'] in self.autolanguages or arttype.endswith('fanart')) and art['status'] != NOAUTO_IMAGE and art['url'] not in ignoreurls
 
     def prompt_for_artwork(self, mediaitem):
         items = mediaitem['available art'].keys()

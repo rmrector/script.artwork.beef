@@ -2,7 +2,6 @@ import xbmc
 from abc import ABCMeta
 
 import mediatypes
-import providers
 from base import AbstractProvider
 from sorteddisplaytuple import SortedDisplay
 
@@ -66,8 +65,6 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                 resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
-                if arttype == 'showbackground': # frequent dupes with thetvdb
-                    resultimage['status'] = providers.NOAUTO_IMAGE
                 result[itype].append(resultimage)
         return result
 
@@ -94,7 +91,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
             return None
         if arttype in ('clearlogo', 'hdtvlogo', 'seasonposter', 'hdclearart', 'clearart', 'tvthumb', 'seasonthumb', 'tvbanner', 'seasonbanner'):
             return image['lang'] if image['lang'] not in ('', '00') else 'en'
-        # tvposter may or may not have a title and thus need a language, but seasonposter always does
+        # tvposter may or may not have a title and thus need a language
         return image['lang'] if image['lang'] not in ('', '00') else None
 
 class FanartTVMovieProvider(FanartTVAbstractProvider):
@@ -136,8 +133,6 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
                     resultimage['subtype'] = image['disc_type']
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
-                if arttype == 'moviebackground': # frequent dupes with themoviedb
-                    resultimage['status'] = providers.NOAUTO_IMAGE
                 result[generaltype].append(resultimage)
         return result
 
