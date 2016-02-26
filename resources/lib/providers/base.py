@@ -16,7 +16,6 @@ urllib3.disable_warnings()
 # {'url': URL, 'language': ISO alpha-2 code, 'rating': (sortable, display), 'size': (sortable, display), 'provider': self.name, 'preview': preview URL}
 # language should be None if there is no text on the image
 # subtype: disc type, BluRay or DVD or whatever.
-# - Maybe for fanart it could be 'title' if the title is on the fanart, for posters and maybe banners it could be 'graphical' (or something) if there is no title
 
 class AbstractProvider(object):
     __metaclass__ = ABCMeta

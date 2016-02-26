@@ -63,7 +63,7 @@ class TheTVDBProvider(AbstractProvider):
                     resultimage = {'provider': self.name}
                     resultimage['url'] = self.imageurl_base + image['fileName']
                     resultimage['preview'] = self.imageurl_base + image['thumbnail']
-                    resultimage['language'] = language
+                    resultimage['language'] = language if shouldset_imagelanguage(image) else None
                     if image['ratingsInfo']['average']:
                         resultimage['rating'] = SortedDisplay(image['ratingsInfo']['average'], '{0:.1f} stars'.format(image['ratingsInfo']['average']))
                     else:
@@ -86,3 +86,10 @@ class TheTVDBProvider(AbstractProvider):
         loginurl = 'https://api-beta.thetvdb.com/login'
         response = self.session.post(loginurl, json={'apikey': self.apikey}, headers={'Content-Type': 'application/json'}, timeout=15)
         self.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
+
+def shouldset_imagelanguage(image):
+    if image['keyType'] == 'series':
+        return image['subKey'] != 'blank'
+    elif image['keyType'] == 'fanart':
+        return image['subKey'] == 'text'
+    return True
