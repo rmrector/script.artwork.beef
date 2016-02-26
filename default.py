@@ -42,6 +42,9 @@ def set_autoaddepisodes():
     xbmc.executebuiltin('Dialog.Close(busydialog)')
     selected = SeriesSelector('DialogSelect.xml', addon.path, serieslist=serieslist, selected=autoaddepisodes).prompt()
     addon.set_setting('autoaddepisodes_list', selected)
+    if selected != autoaddepisodes:
+        if xbmcgui.Dialog().yesno('Add missing artwork now?', "Add missing artwork for episodes of newly selected series now?"):
+            pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAfterSettings)')
 
 def show_add_artwork_menu():
     options = ['new items', 'all items']
