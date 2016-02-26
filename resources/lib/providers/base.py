@@ -51,9 +51,9 @@ class AbstractProvider(object):
             if self.monitor.waitForAbort(wait):
                 return
             result = self._inget(url, params=params, headers=headers)
+            if result == None:
+                return
 
-        if result == None:
-            return
         if result.status_code == requests.codes.not_found:
             return
         return result
