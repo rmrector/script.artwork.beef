@@ -20,6 +20,6 @@ msgctxt "#32901"
 msgid "Prefer fanart with no title"
 msgstr ""
 
-msgctxt "#32902"
+msgctxt "#32903"
 msgid "Use high quality preview images"
 msgstr ""
