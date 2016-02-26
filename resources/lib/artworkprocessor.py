@@ -17,6 +17,7 @@ MODE_GUI = 'gui'
 
 HAPPY_IMAGE = SortedDisplay(0, 'happy')
 NOAUTO_IMAGE = SortedDisplay(0, 'noauto')
+GOOFY_IMAGE = SortedDisplay(1, 'goofy')
 
 THROTTLE_TIME = 0.15
 PREFERRED_FANART_SIZE = 1920
@@ -32,6 +33,10 @@ class ArtworkProcessor(object):
         self.language = None
         self.autolanguages = None
         self.progress = xbmcgui.DialogProgressBG()
+        self.update_settings()
+
+    def update_settings(self):
+        self.titlefree_fanart = addon.get_setting('titlefree_fanart')
 
     @property
     def processing(self):
@@ -171,6 +176,9 @@ class ArtworkProcessor(object):
         if arttype == 'fanart':
             if image.get('provider') == 'fanart.tv':
                 image['status'] = NOAUTO_IMAGE
+            if self.titlefree_fanart and image['language']:
+                image['status'] = GOOFY_IMAGE
+
     def sort_images(self, arttype, imagelist):
         # 1. Match the primary language, for everything but fanart
         # 2. Separate on status, like goofy images

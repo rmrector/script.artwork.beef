@@ -17,9 +17,9 @@ msgid "Automatically add artwork for new items"
 msgstr ""
 
 msgctxt "#32901"
-msgid "Use high quality preview images"
+msgid "Prefer fanart with no title"
 msgstr ""
 
 msgctxt "#32902"
-msgid "Maximum number of fanart to add automatically"
+msgid "Use high quality preview images"
 msgstr ""
