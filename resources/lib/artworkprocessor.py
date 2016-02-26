@@ -20,8 +20,9 @@ NOAUTO_IMAGE = SortedDisplay(0, 'noauto')
 GOOFY_IMAGE = SortedDisplay(1, 'goofy')
 
 THROTTLE_TIME = 0.15
-PREFERRED_FANART_SIZE = 1920
-PREFERRED_SIZE = 1000
+
+DEFAULT_IMAGESIZE = '1920x1080'
+imagesizes = {'1920x1080': (1920, 1080, 700), '1280x720': (1280, 720, 520)}
 
 tvshow_properties = ['art', 'imdbnumber', 'season']
 movie_properties = ['art', 'imdbnumber']
@@ -37,6 +38,14 @@ class ArtworkProcessor(object):
 
     def update_settings(self):
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
+        sizesetting = addon.get_setting('preferredsize')
+        if sizesetting in imagesizes:
+            self.preferredsize = imagesizes[sizesetting][0:2]
+            self.minimum_size = imagesizes[sizesetting][2]
+        else:
+            self.preferredsize = imagesizes[DEFAULT_IMAGESIZE][0:2]
+            self.minimum_size = imagesizes[DEFAULT_IMAGESIZE][2]
+            addon.set_setting('preferredsize', DEFAULT_IMAGESIZE)
 
     @property
     def processing(self):
@@ -182,14 +191,24 @@ class ArtworkProcessor(object):
     def sort_images(self, arttype, imagelist):
         # 1. Match the primary language, for everything but fanart
         # 2. Separate on status, like goofy images
-        # 3. Size (in 200px groups), up to PREFERRED_SIZE
+        # 3. Size (in 200px groups), up to preferredsize
         # 4. Rating
         imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
-        preferredsize = PREFERRED_FANART_SIZE if arttype == 'fanart' else PREFERRED_SIZE
-        imagelist.sort(key=lambda image: (image['size'].sort if image['size'].sort <= preferredsize else preferredsize) // 200, reverse=True)
+        imagelist.sort(key=self.size_sort, reverse=True)
         imagelist.sort(key=lambda image: image['status'].sort)
         if not arttype.endswith('fanart'):
             imagelist.sort(key=lambda image: (0 if image['language'] == self.language else 1, image['language']))
+
+    def size_sort(self, image):
+        imagesplit = image['size'].display.split('x')
+        if len(imagesplit) != 2:
+            return image['size'].sort
+        try:
+            imagesize = int(imagesplit[0]), int(imagesplit[1])
+        except ValueError:
+            return image['size'].sort
+        limitedsize = (min(imagesize[0], self.preferredsize[0]), min(imagesize[1], self.preferredsize[1]))
+        return max(limitedsize) // 200
 
     def get_top_missing_art(self, mediaitem):
         if not mediaitem.get('available art'):
@@ -320,7 +339,7 @@ class ArtworkProcessor(object):
     def _auto_filter(self, arttype, art, ignoreurls=()):
         if art['rating'].sort < 5:
             return False
-        if arttype.endswith('fanart') and art['size'].sort < 1276:
+        if arttype.endswith('fanart') and art['size'].sort < self.minimum_size:
             return False
         return (art['language'] in self.autolanguages or arttype.endswith('fanart')) and art['status'] != NOAUTO_IMAGE and art['url'] not in ignoreurls
 

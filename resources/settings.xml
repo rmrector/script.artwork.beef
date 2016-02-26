@@ -31,6 +31,7 @@
 		<setting id="movie.discart" label="discart" type="bool" default="true" />
 	</category>
 	<category label="$LOCALIZE[10038]">
+		<setting id="preferredsize" label="32902" type="labelenum" default="1920x1080" values="1920x1080|1280x720" />
 		<setting id="highquality_preview" label="32903" type="bool" default="false" />
 		<!-- For add-on inner workings -->
 		<setting id="lastdate" type="text" default="0" visible="false" />
