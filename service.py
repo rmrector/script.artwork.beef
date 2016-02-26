@@ -23,6 +23,7 @@ class ArtworkService(xbmc.Monitor):
         self.processed = ProcessedItems(addon.datapath)
         self.processed.load()
         self.signal = None
+        self.processaftersettings = False
 
     @property
     def processing(self):
@@ -85,6 +86,8 @@ class ArtworkService(xbmc.Monitor):
         elif method == 'Other.ProcessAllItems':
             self.processor.progress.create("Adding extended artwork", "Listing all items")
             self.signal = 'allitems'
+        elif method == 'Other.ProcessAfterSettings':
+            self.processaftersettings = True
         elif method == 'VideoLibrary.OnScanStarted':
             if addon.get_setting('enableservice') and self.processing:
                 self.abort = True
@@ -180,6 +183,12 @@ class ArtworkService(xbmc.Monitor):
 
     def onSettingsChanged(self):
         mediatypes.update_settings()
+        self.processor.update_settings()
+        if self.processaftersettings:
+            self.processor.progress.create("Adding extended artwork", "Listing all items")
+            xbmc.sleep(200)
+            self.processaftersettings = False
+            self.signal = 'unprocesseditems'
 
 if __name__ == '__main__':
     log('Service started', xbmc.LOGINFO)
