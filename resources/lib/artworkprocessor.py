@@ -80,17 +80,17 @@ class ArtworkProcessor(object):
                 return
             mediaitem['selected art'] = selected
             self.add_art_to_library(mediaitem)
-            self.notifycount(count)
+            notifycount(count)
         else:
             medialist = [mediaitem]
             autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
             if mediatype == mediatypes.TVSHOW and mediaitem['imdbnumber'] in autoaddepisodes:
                 medialist.extend(quickjson.get_episodes(dbid, properties=episode_properties))
-            self.progress.create("Adding extended artwork", "Listing all items")
-            self.process_medialist(medialist)
+            self.progress.create("Adding extended artwork", "")
+            self.process_medialist(medialist, True)
             self.progress.close()
 
-    def process_medialist(self, medialist):
+    def process_medialist(self, medialist, alwaysnotify=False):
         processed = {'tvshow': {}, 'movie': [], 'episode': []}
         self.setlanguages()
         artcount = 0
@@ -116,7 +116,8 @@ class ArtworkProcessor(object):
             add_processeditem(processed, mediaitem)
             if self.monitor.waitForAbort(THROTTLE_TIME):
                 break
-        self.notifycount(artcount)
+        if alwaysnotify or artcount:
+            notifycount(artcount)
         return processed
 
     def add_available_artwork(self, mediaitem, mode):
@@ -393,12 +394,12 @@ class ArtworkProcessor(object):
         result.update(dict((arttype, None) for arttype in mediaitem['art'].keys() if arttype.startswith(selectedarttype) and arttype not in result.keys()))
         return result, len(selectedart[0])
 
-    def notifycount(self, count):
-        log('{0} artwork added'.format(count), xbmc.LOGINFO)
-        if count:
-            xbmcgui.Dialog().notification('{0} artwork added'.format(count), "Contribute or donate to the awesomeness\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
-        else:
-            xbmcgui.Dialog().notification('No new artwork added', "Something missing? Contribute or donate to the source\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
+def notifycount(count):
+    log('{0} artwork added'.format(count), xbmc.LOGINFO)
+    if count:
+        xbmcgui.Dialog().notification('{0} artwork added'.format(count), "Contribute or donate to the awesomeness\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
+    else:
+        xbmcgui.Dialog().notification('No new artwork added', "Something missing? Contribute or donate to the source\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
 
 def add_processeditem(processed, mediaitem):
     if mediaitem['mediatype'] == 'tvshow':
