@@ -27,7 +27,7 @@ def main():
         if processing:
             options = ['stop current process']
         else:
-            options = ['add artwork for...']
+            options = ['add missing artwork for...']
         selected = xbmcgui.Dialog().select('Artwork Beef', options)
         if selected == 0:
             if processing:
@@ -48,7 +48,7 @@ def set_autoaddepisodes():
 
 def show_add_artwork_menu():
     options = ['new items', 'all items']
-    selected = xbmcgui.Dialog().select('Artwork Beef: add artwork for...', options)
+    selected = xbmcgui.Dialog().select('Artwork Beef: add missing artwork for...', options)
     if selected == 0:
         pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessNewItems)')
     if selected == 1:

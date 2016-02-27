@@ -19,7 +19,6 @@ urllib3.disable_warnings()
 
 class AbstractProvider(object):
     __metaclass__ = ABCMeta
-
     name = None
     mediatype = None
 
@@ -80,6 +79,7 @@ class ForceDaysCache(BaseHeuristic):
     def __init__(self, days=1):
         self.days = days
 
+    # pylint: disable=unused-argument
     def update_headers(self, response):
         return {'cache-control': 'max-age={0:d}'.format(self.days * 24 * 60 * 60)}
 

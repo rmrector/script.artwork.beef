@@ -252,7 +252,5 @@ class ArtworkService(xbmc.Monitor):
 
 if __name__ == '__main__':
     log('Service started', xbmc.LOGINFO)
-    monitor = ArtworkService()
-    monitor.run()
-    del monitor
+    ArtworkService().run()
     log('Service stopped', xbmc.LOGINFO)

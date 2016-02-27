@@ -44,6 +44,7 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
                 listitem.setLabel2(arttype[1])
                 if self.existingart.get(arttype[1]):
                     listitem.setIconImage(self.existingart[arttype[1]])
+                    # Above is deprecated in Jarvis, but still works
                     # listitem.setArt({'icon': self.existingart[arttype[1]]})
                 self.guilist.addItem(listitem)
         else:
@@ -102,6 +103,7 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
                 label = '{0}, {1}, {2}'.format(lang, image['rating'].display, image['size'].display)
             listitem = xbmcgui.ListItem(label)
             listitem.setIconImage(image['url'] if self.hqpreview else image['preview'])
+            # Above is deprecated in Jarvis, but still works
             # listitem.setArt({'icon': image['url'] if self.hqpreview else image['preview']})
             listitem.setPath(image['url'])
             if image['url'] in self.existingart:
