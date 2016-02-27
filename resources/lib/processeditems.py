@@ -1,6 +1,12 @@
-import json
-import os
+import sys
 import xbmc
+import xbmcvfs
+from contextlib import closing
+
+if sys.version_info < (2, 7):
+    import simplejson as json
+else:
+    import json
 
 from devhelper.pykodi import log
 
@@ -10,7 +16,7 @@ class ProcessedItems(object):
         self.tvshow = {}
         self.movie = []
         self.episode = []
-        self.filename = os.path.join(directory, 'processeditems.json')
+        self.filename = directory + 'processeditems.json'
 
     def extend(self, extender):
         for tvshowid, seasons in extender.get('tvshow', {}).iteritems():
@@ -30,12 +36,12 @@ class ProcessedItems(object):
         self.episode = []
 
     def save(self):
-        with open(self.filename, 'w') as jsonfile:
+        with closing(xbmcvfs.File(self.filename, 'w')) as jsonfile:
             json.dump({'tvshow': self.tvshow, 'movie': self.movie, 'episode': self.episode, 'version': self.version}, jsonfile)
 
     def load(self):
-        if os.path.exists(self.filename):
-            with open(self.filename, 'r') as jsonfile:
+        if xbmcvfs.exists(self.filename):
+            with closing(xbmcvfs.File(self.filename)) as jsonfile:
                 try:
                     processed = json.load(jsonfile)
                 except ValueError:
