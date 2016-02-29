@@ -1,7 +1,6 @@
 import re
 import xbmc
 import xbmcgui
-
 from xbmc import getLocalizedString as localized
 
 CURRENT_ART = 13512
@@ -14,15 +13,15 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
         self.existingart = kwargs.get('existingart')
         items = kwargs.get('arttypes')[:]
         items.sort()
-        seasonitems = [item for item in items if item.startswith('season')]
-        self.arttypes = [(item, item) for item in items if not item.startswith('season')]
+        seasonitems = [item for item in items if item[0].startswith('season.')]
+        self.arttypes = [(item[0], item[0], item[1]) for item in items if not item[0].startswith('season.')]
         for origseason in seasonitems:
-            season = origseason.split('.')
+            season = origseason[0].split('.')
             if season[1] == '0':
-                self.arttypes.append(('{0}: {1}'.format(localized(SPECIALS), season[2]), origseason))
+                self.arttypes.append(('{0}: {1}'.format(localized(SPECIALS), season[2]), origseason[0], origseason[1]))
             elif season[1] != '-1':
                 # Ignore 'all' seasons artwork, as I can't set artwork for it with JSON
-                self.arttypes.append(('{0}: {1}'.format(localized(SEASON_NUMBER) % int(season[1]), season[2]), origseason))
+                self.arttypes.append(('{0}: {1}'.format(localized(SEASON_NUMBER) % int(season[1]), season[2]), origseason[0], origseason[1]))
         self.arttypes.sort(key=lambda art: sort_art(art[1]))
         self.medialabel = kwargs.get('medialabel')
         self.guilist = None
@@ -41,6 +40,7 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
             self.guilist = self.getControl(6)
             for arttype in self.arttypes:
                 listitem = xbmcgui.ListItem(arttype[0])
+                listitem.setProperty('Addon.Summary', '{0} available'.format(arttype[2]))
                 listitem.setLabel2(arttype[1])
                 if self.existingart.get(arttype[1]):
                     listitem.setIconImage(self.existingart[arttype[1]])
@@ -61,7 +61,7 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
         super(ArtworkSelector, self).__init__()
         self.arttype = kwargs.get('arttype')
-        if self.arttype.startswith('season'):
+        if self.arttype.startswith('season.'):
             if '.0.' in self.arttype:
                 self.arttype = 'specials ' + self.arttype.rsplit('.', 1)[1]
             else:
@@ -96,12 +96,28 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
         for image in self.artlist:
             if 'windowlabel' in image:
                 label = image['windowlabel']
+                summary = 'Unknown source'
             else:
-                lang = xbmc.convertLanguage(image['language'], xbmc.ENGLISH_NAME) if image['language'] else 'No language'
-                if not lang: # xx
-                    lang = 'Unknown'
-                label = '{0}, {1}, {2}'.format(lang, image['rating'].display, image['size'].display)
+                lang = xbmc.convertLanguage(image['language'], xbmc.ENGLISH_NAME) if image['language'] else None
+                provider = image['provider'].display
+                if isinstance(provider, int):
+                    provider = localized(provider)
+                secondprovider = image.get('second provider')
+                if secondprovider:
+                    if isinstance(secondprovider, int):
+                        secondprovider = localized(secondprovider)
+                    provider = '{0}, {1}'.format(provider, secondprovider)
+                if image['provider'].sort.startswith('file:'):
+                    summary = ''
+                    label = provider
+                else:
+                    if lang:
+                        label = '{imagelanguage} from {provider}'.format(imagelanguage=lang, provider=provider)
+                    else:
+                        label = provider
+                    summary = '{0}\n{1}'.format(image['rating'].display, image['size'].display)
             listitem = xbmcgui.ListItem(label)
+            listitem.setProperty('Addon.Summary', summary)
             listitem.setIconImage(image['url'] if self.hqpreview else image['preview'])
             # Above is deprecated in Jarvis, but still works
             # listitem.setArt({'icon': image['url'] if self.hqpreview else image['preview']})
