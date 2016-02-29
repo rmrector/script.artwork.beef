@@ -9,7 +9,7 @@ class FanartTVAbstractProvider(AbstractProvider):
     # pylint: disable=W0223
     __metaclass__ = ABCMeta
 
-    name = 'fanart.tv'
+    name = SortedDisplay('fanart.tv', 'Fanart.TV')
     apikey = '13756cf3472ff6b3dbffee20bed9c6ec'
     apiurl = 'http://webservice.fanart.tv/v3/%s/%s'
 

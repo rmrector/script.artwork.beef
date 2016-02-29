@@ -8,7 +8,7 @@ from base import AbstractProvider
 from sorteddisplaytuple import SortedDisplay
 
 class TheTVDBProvider(AbstractProvider):
-    name = 'thetvdb.com'
+    name = SortedDisplay('thetvdb.com', 'TheTVDB.com')
     mediatype = mediatypes.TVSHOW
 
     apikey = '8357F01B3F8F1393'

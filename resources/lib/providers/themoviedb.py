@@ -8,7 +8,7 @@ class TheMovieDBAbstractProvider(AbstractProvider):
     # pylint: disable=W0223
     __metaclass__ = ABCMeta
 
-    name = 'themoviedb.org'
+    name = SortedDisplay('themoviedb.org', 'The Movie Database')
     cfgurl = 'http://api.themoviedb.org/3/configuration'
     apikey = '5a0727308f37da772002755d6c073aee'
     _baseurl = None

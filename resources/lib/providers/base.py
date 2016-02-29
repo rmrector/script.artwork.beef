@@ -12,6 +12,8 @@ from devhelper.pykodi import log
 from requests.packages import urllib3
 urllib3.disable_warnings()
 
+from sorteddisplaytuple import SortedDisplay
+
 # Result dict of lists, keyed on art type
 # {'url': URL, 'language': ISO alpha-2 code, 'rating': (sortable, display), 'size': (sortable, display), 'provider': self.name, 'preview': preview URL}
 # language should be None if there is no text on the image
@@ -19,7 +21,8 @@ urllib3.disable_warnings()
 
 class AbstractProvider(object):
     __metaclass__ = ABCMeta
-    name = None
+
+    name = SortedDisplay(0, '')
     mediatype = None
 
     monitor = xbmc.Monitor()
@@ -66,7 +69,7 @@ class AbstractProvider(object):
                 self.log('timeout {0}s x2'.format(timeout), xbmc.LOGWARNING)
 
     def log(self, message, level=xbmc.LOGDEBUG):
-        log(message, level, tag='%s.%s' % (self.name, self.mediatype))
+        log(message, level, tag='%s.%s' % (self.name.display, self.mediatype))
 
     @abstractmethod
     def get_images(self, mediaid):
