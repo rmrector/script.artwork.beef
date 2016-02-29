@@ -1,5 +1,6 @@
 v0.4.1~dev
 - Add option to prefer fanart with no title
+- Multiple characterart can be selected
 
 v0.4.0 (2016-02-15)
 - Fix persistent notification being too persistent
