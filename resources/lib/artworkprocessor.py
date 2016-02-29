@@ -350,9 +350,9 @@ class ArtworkProcessor(object):
         return (art['language'] in self.autolanguages or arttype.endswith('fanart')) and art['status'] != NOAUTO_IMAGE and art['url'] not in ignoreurls
 
     def prompt_for_artwork(self, mediaitem):
-        items = mediaitem['available art'].keys()
-        if not items:
+        if not mediaitem.get('available art'):
             return {}, 0
+        items = [(arttype, len(artlist)) for arttype, artlist in mediaitem['available art'].iteritems()]
         typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', addon.path, existingart=mediaitem['art'], arttypes=items, medialabel=mediaitem['label'])
         selectedart = None
         hqpreview = addon.get_setting('highquality_preview')
