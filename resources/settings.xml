@@ -14,7 +14,7 @@
 		<setting id="tvshow.clearlogo" label="clearlogo" type="bool" default="true" />
 		<setting id="tvshow.landscape" label="landscape" type="bool" default="true" />
 		<setting id="tvshow.clearart" label="clearart" type="bool" default="true" />
-		<setting id="tvshow.characterart" label="characterart" type="bool" default="true" />
+		<setting id="tvshow.characterart_limit" label="characterart" type="slider" option="int" default="1" range="0,1,20" />
 		<setting id="season.poster" label="Season poster" type="bool" default="true" />
 		<setting id="season.banner" label="Season banner" type="bool" default="true" />
 		<setting id="season.landscape" label="Season landscape" type="bool" default="true" />

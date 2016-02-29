@@ -7,9 +7,7 @@ MOVIE = 'movie'
 EPISODE = 'episode'
 SEASON = 'season'
 
-DEFAULT_IMAGE_LIMIT = 5
-
-settings = ('tvshow.poster', 'tvshow.fanart_limit', 'tvshow.banner', 'tvshow.clearlogo', 'tvshow.landscape', 'tvshow.clearart', 'tvshow.characterart', 'season.poster', 'season.banner', 'season.landscape', 'episode.fanart', 'movie.poster', 'movie.fanart_limit', 'movie.banner', 'movie.clearlogo', 'movie.landscape', 'movie.clearart', 'movie.discart')
+settings = ('tvshow.poster', 'tvshow.fanart_limit', 'tvshow.banner', 'tvshow.clearlogo', 'tvshow.landscape', 'tvshow.clearart', 'tvshow.characterart_limit', 'season.poster', 'season.banner', 'season.landscape', 'episode.fanart', 'movie.poster', 'movie.fanart_limit', 'movie.banner', 'movie.clearlogo', 'movie.landscape', 'movie.clearart', 'movie.discart')
 
 addon = pykodi.get_main_addon()
 
@@ -20,7 +18,7 @@ artinfo = {
             'multiselect': False
 		},
         'fanart': {
-	        'autolimit': DEFAULT_IMAGE_LIMIT,
+	        'autolimit': 5,
 	        'multiselect': True
 		},
         'banner': {
@@ -41,7 +39,7 @@ artinfo = {
 	    },
 	    'characterart': {
 	        'autolimit': 1,
-	        'multiselect': False
+	        'multiselect': True
 	    }
     },
     MOVIE: {
@@ -50,7 +48,7 @@ artinfo = {
             'multiselect': False
 		},
 		'fanart': {
-	        'autolimit': DEFAULT_IMAGE_LIMIT,
+	        'autolimit': 5,
 	        'multiselect': True
 		},
 		'banner': {
@@ -105,16 +103,15 @@ artinfo = {
 def update_settings():
     for settingid in settings:
         splitsetting = re.split(r'\.|_', settingid)
-        artinfo[splitsetting[0]][splitsetting[1]]['autolimit'] = get_autolimit(settingid)
+        try:
+            artinfo[splitsetting[0]][splitsetting[1]]['autolimit'] = get_autolimit(settingid)
+        except ValueError:
+            addon.set_setting(settingid, artinfo[splitsetting[0]][splitsetting[1]]['autolimit'])
 
 def get_autolimit(settingid):
     result = addon.get_setting(settingid)
     if settingid.endswith('_limit'):
-        try:
-            return int(result)
-        except ValueError:
-            addon.set_setting(settingid, DEFAULT_IMAGE_LIMIT)
-            return DEFAULT_IMAGE_LIMIT
+        return int(result)
     return 1 if result else 0
 
 update_settings()
