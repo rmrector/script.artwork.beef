@@ -208,8 +208,13 @@ class ArtworkProcessor(object):
             imagesize = int(imagesplit[0]), int(imagesplit[1])
         except ValueError:
             return image['size'].sort
-        limitedsize = (min(imagesize[0], self.preferredsize[0]), min(imagesize[1], self.preferredsize[1]))
-        return max(limitedsize) // 200
+        if imagesize[0] > self.preferredsize[0]:
+            shrink = self.preferredsize[0] / float(imagesize[0])
+            imagesize = self.preferredsize[0], imagesize[1] * shrink
+        if imagesize[1] > self.preferredsize[1]:
+            shrink = self.preferredsize[1] / float(imagesize[1])
+            imagesize = imagesize[0] * shrink, self.preferredsize[1]
+        return max(imagesize) // 200
 
     def get_top_missing_art(self, mediaitem):
         if not mediaitem.get('available art'):
