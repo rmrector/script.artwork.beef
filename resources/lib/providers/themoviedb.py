@@ -62,7 +62,10 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
             for image in artlist:
                 resultimage = {'url': self.baseurl + 'original' + image['file_path'], 'provider': self.name}
                 resultimage['preview'] = self.baseurl + previewbit + image['file_path']
-                resultimage['language'] = image['iso_639_1']
+                if arttype == 'backdrops':
+                    resultimage['language'] = image['iso_639_1'] if image['iso_639_1'] != 'xx' else None
+                else:
+                    resultimage['language'] = image['iso_639_1']
                 resultimage['rating'] = self._get_rating(image)
                 sortsize = image['width' if arttype != 'posters' else 'height']
                 resultimage['size'] = SortedDisplay(sortsize, '{0}x{1}'.format(image['width'], image['height']))
