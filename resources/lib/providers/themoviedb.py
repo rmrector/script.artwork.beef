@@ -15,15 +15,15 @@ class TheMovieDBAbstractProvider(AbstractProvider):
 
     def __init__(self):
         super(TheMovieDBAbstractProvider, self).__init__()
-        self.session.headers['Accept'] = 'application/json'
+        self.set_contenttype('application/json')
 
     @property
     def baseurl(self):
         if not self._baseurl:
             response = self.doget(self.cfgurl, params={'api_key': self.apikey})
-            if response != None:
-                response.raise_for_status()
-                self._baseurl = response.json()['images']['base_url']
+            if response is None:
+                return
+            self._baseurl = response.json()['images']['base_url']
         return self._baseurl
 
     def _get_rating(self, image):
@@ -35,6 +35,12 @@ class TheMovieDBAbstractProvider(AbstractProvider):
         else:
             return SortedDisplay(5, 'Not rated')
 
+    def get_data(self, url):
+        response = self.doget(url, params={'api_key': self.apikey})
+        if response is None:
+            return
+        return response.json()
+
 class TheMovieDBProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.MOVIE
 
@@ -42,15 +48,11 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
     artmap = {'backdrops': 'fanart', 'posters': 'poster'}
 
     def get_images(self, mediaid):
-        response = self.doget(self.apiurl % mediaid, params={'api_key': self.apikey})
-        if response == None:
-            return {}
-        response.raise_for_status()
-        if not response.from_cache:
-            self.log('uncached!!')
         if not self.baseurl:
             return {}
-        data = response.json()
+        data = self.get_data(self.apiurl % mediaid)
+        if data is None:
+            return {}
         result = {}
         for arttype, artlist in data.iteritems():
             generaltype = self.artmap.get(arttype)
@@ -84,22 +86,14 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
         self.session.headers['Accept'] = 'application/json'
 
     def get_images(self, mediaid):
-        response = self.doget(self.tvdbidsearch_url % mediaid, params={'api_key': self.apikey})
-        if response == None:
+        if not self.baseurl:
             return {}
-        response.raise_for_status()
-        data = response.json()
-        if not data['tv_episode_results']:
+        data = self.get_data(self.tvdbidsearch_url % mediaid)
+        if data is None or not data['tv_episode_results']:
             return {}
         data = data['tv_episode_results'][0]
-        response = self.doget(self.apiurl % (data['show_id'], data['season_number'], data['episode_number']), params={'api_key': self.apikey})
-        if response == None:
-            return {}
-        response.raise_for_status()
-        if not response.from_cache:
-            self.log('uncached!!')
-        data = response.json()
-        if not self.baseurl:
+        data = self.get_data(self.apiurl % (data['show_id'], data['season_number'], data['episode_number']))
+        if data is None:
             return {}
         result = {}
         for arttype, artlist in data.iteritems():

@@ -1,10 +1,11 @@
-import requests
+import sys
 import xbmc
 
 from devhelper import pykodi
 
 import mediatypes
 from base import AbstractProvider
+from providers import ProviderError
 from sorteddisplaytuple import SortedDisplay
 
 class TheTVDBProvider(AbstractProvider):
@@ -19,17 +20,14 @@ class TheTVDBProvider(AbstractProvider):
 
     def __init__(self):
         super(TheTVDBProvider, self).__init__()
-        self.session.headers['Accept'] = 'application/json'
+        self.set_contenttype('application/json')
 
-    def _get_response(self, mediaid, arttype, language):
+    def get_data(self, mediaid, arttype, language):
         getparams = {'params': {'keyType': arttype}, 'headers': {'Accept-Language': language}}
         response = self.doget(self.apiurl % mediaid, **getparams)
-        if response == None:
+        if response is None:
             return
-        if response.status_code == requests.codes.unauthorized:
-            self._login()
-            response = self.doget(self.apiurl % mediaid, **getparams)
-        return response
+        return response.json()
 
     def get_images(self, mediaid):
         # Bah. The new API needs a request for each art type, fanart/poster/season(poster)/seasonwide(banner)/series(banner)
@@ -41,15 +39,10 @@ class TheTVDBProvider(AbstractProvider):
             languages.append('en')
         for arttype in self.artmap.keys():
             for language in languages:
-                response = self._get_response(mediaid, arttype, language)
-                if response == None:
-                    continue
-                response.raise_for_status()
-                if not response.from_cache:
-                    self.log('uncached!!')
-
                 generaltype = self.artmap[arttype]
-                data = response.json()
+                data = self.get_data(mediaid, arttype, language)
+                if data is None:
+                    continue
                 isseason = arttype.startswith('season')
                 if not isseason:
                     if generaltype not in result:
@@ -75,17 +68,20 @@ class TheTVDBProvider(AbstractProvider):
                     else:
                         try:
                             sortsize = int(image['resolution'].split('x')[0 if arttype != 'poster' else 1])
-                            resultimage['size'] = SortedDisplay(sortsize, image['resolution'])
                         except ValueError:
                             self.log('whoops, ValueError on "%s"' % image['resolution'])
-                            resultimage['size'] = SortedDisplay(0, image['resolution'])
+                            sortsize = 0
+                        resultimage['size'] = SortedDisplay(sortsize, image['resolution'])
                     result[ntype].append(resultimage)
         return result
 
-    def _login(self):
+    def login(self):
         loginurl = 'https://api-beta.thetvdb.com/login'
         response = self.session.post(loginurl, json={'apikey': self.apikey}, headers={'Content-Type': 'application/json'}, timeout=15)
+        if not response or response.headers['Content-Type'] != 'application/json':
+            raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]
         self.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
+        return True
 
 def shouldset_imagelanguage(image):
     if image['keyType'] == 'series':
