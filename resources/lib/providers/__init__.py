@@ -1,4 +1,5 @@
 import mediatypes
+from base import ProviderError
 
 from fanarttv import FanartTVSeriesProvider, FanartTVMovieProvider
 from themoviedb import TheMovieDBProvider, TheMovieDBEpisodeProvider

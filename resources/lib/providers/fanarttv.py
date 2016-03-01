@@ -8,6 +8,7 @@ from sorteddisplaytuple import SortedDisplay
 class FanartTVAbstractProvider(AbstractProvider):
     # pylint: disable=W0223
     __metaclass__ = ABCMeta
+    api_section = None
 
     name = SortedDisplay('fanart.tv', 'Fanart.TV')
     apikey = '***REMOVED***'
@@ -15,7 +16,13 @@ class FanartTVAbstractProvider(AbstractProvider):
 
     def __init__(self):
         super(FanartTVAbstractProvider, self).__init__()
-        self.session.headers['Accept'] = 'application/json'
+        self.set_contenttype('application/json')
+
+    def get_data(self, mediaid):
+        response = self.doget(self.apiurl % (self.api_section, mediaid), headers={'api-key': self.apikey})
+        if response is None:
+            return
+        return response.json()
 
 class FanartTVSeriesProvider(FanartTVAbstractProvider):
     mediatype = mediatypes.TVSHOW
@@ -37,13 +44,9 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
     }
 
     def get_images(self, mediaid):
-        response = self.doget(self.apiurl % (self.api_section, mediaid), headers={'api-key': self.apikey})
-        if response == None:
+        data = self.get_data(mediaid)
+        if data is None:
             return {}
-        response.raise_for_status()
-        if not response.from_cache:
-            self.log('uncached!!')
-        data = response.json()
         result = {}
         for arttype, artlist in data.iteritems():
             generaltype = self.artmap.get(arttype)
@@ -111,13 +114,9 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
     }
 
     def get_images(self, mediaid):
-        response = self.doget(self.apiurl % (self.api_section, mediaid), headers={'api-key': self.apikey})
-        if response == None:
+        data = self.get_data(mediaid)
+        if data is None:
             return {}
-        response.raise_for_status()
-        if not response.from_cache:
-            self.log('uncached!!')
-        data = response.json()
         result = {}
         for arttype, artlist in data.iteritems():
             generaltype = self.artmap.get(arttype)

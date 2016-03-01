@@ -9,6 +9,7 @@ import mediatypes
 import providers
 from sorteddisplaytuple import SortedDisplay
 from artworkselection import ArtworkTypeSelector, ArtworkSelector
+from providers import ProviderError
 
 addon = pykodi.get_main_addon()
 
@@ -165,8 +166,15 @@ class ArtworkProcessor(object):
             return
         images = {}
         for provider in providers.get_providers()[mediaitem['mediatype']]:
-            for arttype, artlist in provider.get_images(mediaitem['imdbnumber']).iteritems():
-                if arttype.startswith('season'):
+            try:
+                providerimages = provider.get_images(mediaitem['imdbnumber']).iteritems()
+            except ProviderError as ex:
+                header = 'Error with provider {0}'.format(provider.name.display)
+                xbmcgui.Dialog().notification(header, ex.message, xbmcgui.NOTIFICATION_ERROR)
+                log('{0}\n{1}'.format(header, ex.message))
+                continue
+            for arttype, artlist in providerimages:
+                if arttype.startswith('season.'):
                     season = arttype.rsplit('.', 2)[1]
                     if int(season) not in mediaitem['seasons']:
                         # Don't add artwork for seasons we don't have
