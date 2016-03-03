@@ -98,7 +98,6 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
                 label = image['windowlabel']
                 summary = 'Unknown source'
             else:
-                lang = xbmc.convertLanguage(image['language'], xbmc.ENGLISH_NAME) if image['language'] else None
                 provider = image['provider'].display
                 if isinstance(provider, int):
                     provider = localized(provider)
@@ -107,15 +106,30 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
                     if isinstance(secondprovider, int):
                         secondprovider = localized(secondprovider)
                     provider = '{0}, {1}'.format(provider, secondprovider)
-                if image['provider'].sort.startswith('file:'):
-                    summary = ''
-                    label = provider
+                title = image.get('title')
+                if not title and 'subtype' in image:
+                    title = image['subtype'].display
+                language = xbmc.convertLanguage(image['language'], xbmc.ENGLISH_NAME) if image['language'] else None
+                if not title:
+                    title = language
+                if title and len(title) < 20 and not secondprovider:
+                    label = '{0} from {1}'.format(title, provider)
+                    summary = language if language != title else ''
                 else:
-                    if lang:
-                        label = '{imagelanguage} from {provider}'.format(imagelanguage=lang, provider=provider)
-                    else:
-                        label = provider
-                    summary = '{0}\n{1}'.format(image['rating'].display, image['size'].display)
+                    label = provider
+                    if language and language != title:
+                        title = language + ' ' + title
+                    summary = title if title else ''
+                rating = image.get('rating')
+                size = image.get('size')
+                if (rating or size) and summary:
+                    summary += '\n'
+                if size:
+                    summary += image['size'].display
+                if rating and size:
+                    summary += '   '
+                if rating:
+                    summary += image['rating'].display
             listitem = xbmcgui.ListItem(label)
             listitem.setProperty('Addon.Summary', summary)
             listitem.setIconImage(image['url'] if self.hqpreview else image['preview'])
