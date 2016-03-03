@@ -17,6 +17,10 @@ from artworkprocessor import ArtworkProcessor, episode_properties, movie_propert
 from processeditems import ProcessedItems
 import mediatypes
 
+STATUS_IDLE = 'idle'
+STATUS_SIGNALLED = 'signalled'
+STATUS_PROCESSING = 'processing'
+
 UNPROCESSED_DAYS = 2
 ALLITEMS_DAYS = 60
 
@@ -32,26 +36,25 @@ class ArtworkService(xbmc.Monitor):
         self.scanning = False
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
         self.stoppeditem = None
+        self.set_status('idle')
 
     @property
     def toomany_recentitems(self):
         return len(self.recentitems['movie']) + len(self.recentitems['tvshow']) + len(self.recentitems['episode']) > 100
 
-    @property
-    def processing(self):
-        return pykodi.get_conditional('StringCompare(Window(Home).Property(ArtworkBeef.Status),Processing)')
-
-    @processing.setter
-    def processing(self, value):
+    def set_status(self, value):
         self.abort = False
-        value = 'Processing' if value else 'Idle'
+        self.status = value
         pykodi.execute_builtin('SetProperty(ArtworkBeef.Status, {0}, Home)'.format(value))
+
+    def set_signal(self, value):
+        self.set_status(STATUS_SIGNALLED if value else STATUS_IDLE)
+        self.signal = value
 
     def reset_recent(self):
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
 
     def run(self):
-        oldsignal = 0
         clearstopped = False
         while not self.really_waitforabort(5):
             if self.stoppeditem:
@@ -60,29 +63,21 @@ class ArtworkService(xbmc.Monitor):
                 clearstopped = not clearstopped
             if self.scanning:
                 continue
-            if self.signal and not self.processing:
+            if self.signal:
                 signal = self.signal
                 self.signal = None
-                oldsignal = 0
                 if signal == 'something':
                     # Add a delay to catch rapid fire library updates
                     self.signal = 'something_really'
                     continue
-                self.processing = True
+                self.set_status(STATUS_PROCESSING)
                 if signal == 'allitems':
                     self.process_allitems()
                 elif signal == 'unprocesseditems':
                     self.process_allitems(True)
                 elif signal == 'something_really':
                     self.process_something()
-                self.processing = False
-                self.closeprogress()
-            elif self.signal:
-                oldsignal += 1
-                if oldsignal > 3:
-                    log("An old signal '{0}' had to be put down before the processor would give up, something is probably wrong".format(self.signal), xbmc.LOGWARNING)
-                    self.signal = None
-                    oldsignal = 0
+                self.set_status(STATUS_IDLE)
 
     def abortRequested(self):
         return self.abort or super(ArtworkService, self).abortRequested()
@@ -97,17 +92,20 @@ class ArtworkService(xbmc.Monitor):
         if method.startswith('Other.') and sender != 'script.artwork.beef':
             return
         if method == 'Other.CancelCurrent':
-            if self.processing:
+            if self.status == STATUS_PROCESSING:
                 self.abort = True
+            elif self.signal:
+                self.set_signal(None)
+                self.processor.close_progress()
         elif method == 'Other.ProcessNewItems':
-            self.processor.progress.create("Adding extended artwork", "Listing all items")
+            self.processor.create_progress()
             if addon.get_setting('lastalldate') == '0':
-                self.signal = 'allitems'
+                self.set_signal('allitems')
             else:
-                self.signal = 'unprocesseditems'
+                self.set_signal('unprocesseditems')
         elif method == 'Other.ProcessAllItems':
-            self.processor.progress.create("Adding extended artwork", "Listing all items")
-            self.signal = 'allitems'
+            self.processor.create_progress()
+            self.set_signal('allitems')
         elif method == 'Other.ProcessAfterSettings':
             self.processaftersettings = True
         elif method == 'Player.OnStop':
@@ -116,12 +114,12 @@ class ArtworkService(xbmc.Monitor):
                 self.stoppeditem = (data['item']['type'], data['item']['id'])
         elif method == 'VideoLibrary.OnScanStarted':
             self.scanning = True
-            if self.serviceenabled and self.processing:
+            if self.serviceenabled and self.status == STATUS_PROCESSING:
                 self.abort = True
         elif method == 'VideoLibrary.OnScanFinished':
             self.scanning = False
             if self.serviceenabled:
-                self.signal = 'something'
+                self.set_signal('something')
         elif method == 'VideoLibrary.OnUpdate':
             if not self.serviceenabled:
                 return
@@ -131,7 +129,7 @@ class ArtworkService(xbmc.Monitor):
             if not self.toomany_recentitems:
                 self.recentitems[data['item']['type']].append(data['item']['id'])
             if not self.scanning:
-                self.signal = 'something'
+                self.set_signal('something')
 
     def watchitem(self, data):
         return 'item' in data and data['item'].get('id') and data['item'].get('type') in self.recentitems
@@ -143,7 +141,6 @@ class ArtworkService(xbmc.Monitor):
         #  - this contains only new items that were missed in the recent loops, maybe in a shared database
         # 3. All items, once every ALLITEMS_DAYS
         #  - adds new artwork for old items missing artwork
-        self.processor.progress.create("Adding extended artwork", "Listing new items")
         lastdate = addon.get_setting('lastalldate')
         if lastdate == '0':
             self.process_allitems()
@@ -185,14 +182,13 @@ class ArtworkService(xbmc.Monitor):
                         items.append(episode)
             if self.abortRequested():
                 return
-        if items:
-            processed = self.processor.process_medialist(items)
-            if not excludeprocessed:
-                self.processed.set(processed)
-                addon.set_setting('lastalldate', currentdate)
-            else:
-                self.processed.extend(processed)
-            self.processed.save()
+        processed = self.processor.process_medialist(items)
+        if not excludeprocessed:
+            self.processed.set(processed)
+            addon.set_setting('lastalldate', currentdate)
+        else:
+            self.processed.extend(processed)
+        self.processed.save()
         if not self.abortRequested():
             addon.set_setting('lastunprocesseddate', currentdate)
 
@@ -231,23 +227,19 @@ class ArtworkService(xbmc.Monitor):
             if self.abortRequested():
                 return
         self.reset_recent()
-        if newitems:
-            processed = self.processor.process_medialist(newitems)
-            self.processed.extend(processed)
-            self.processed.save()
-
-    def closeprogress(self):
-        self.processor.progress.close()
+        processed = self.processor.process_medialist(newitems)
+        self.processed.extend(processed)
+        self.processed.save()
 
     def onSettingsChanged(self):
         self.serviceenabled = addon.get_setting('enableservice')
         mediatypes.update_settings()
         self.processor.update_settings()
         if self.processaftersettings:
-            self.processor.progress.create("Adding extended artwork", "Listing all items")
+            self.processor.create_progress()
             xbmc.sleep(200)
             self.processaftersettings = False
-            self.signal = 'unprocesseditems'
+            self.set_signal('unprocesseditems')
 
 if __name__ == '__main__':
     log('Service started', xbmc.LOGINFO)

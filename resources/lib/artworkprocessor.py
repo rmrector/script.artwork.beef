@@ -36,6 +36,7 @@ class ArtworkProcessor(object):
         self.language = None
         self.autolanguages = None
         self.progress = xbmcgui.DialogProgressBG()
+        self.visible = False
         self.update_settings()
 
     def update_settings(self):
@@ -49,12 +50,22 @@ class ArtworkProcessor(object):
             self.minimum_size = imagesizes[DEFAULT_IMAGESIZE][2]
             addon.set_setting('preferredsize', DEFAULT_IMAGESIZE)
 
+    def create_progress(self):
+        if not self.visible:
+            self.progress.create("Adding extended artwork", "")
+            self.visible = True
+
+    def close_progress(self):
+        if self.visible:
+            self.progress.close()
+            self.visible = False
+
     @property
-    def processing(self):
-        return pykodi.get_conditional('StringCompare(Window(Home).Property(ArtworkBeef.Status),Processing)')
+    def processor_busy(self):
+        return pykodi.get_conditional('!StringCompare(Window(Home).Property(ArtworkBeef.Status),idle)')
 
     def process_item(self, mediatype, dbid, mode):
-        if self.processing:
+        if self.processor_busy:
             return
         if mode == MODE_GUI:
             xbmc.executebuiltin('ActivateWindow(busydialog)')
@@ -88,18 +99,19 @@ class ArtworkProcessor(object):
             autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
             if mediatype == mediatypes.TVSHOW and mediaitem['imdbnumber'] in autoaddepisodes:
                 medialist.extend(quickjson.get_episodes(dbid, properties=episode_properties))
-            self.progress.create("Adding extended artwork", "")
             self.process_medialist(medialist, True)
-            self.progress.close()
 
     def process_medialist(self, medialist, alwaysnotify=False):
+        if len(medialist) > 10:
+            self.create_progress()
         processed = {'tvshow': {}, 'movie': [], 'episode': []}
         self.setlanguages()
         artcount = 0
         currentitem = 0
         for mediaitem in medialist:
-            self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
-            currentitem += 1
+            if self.visible:
+                self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
+                currentitem += 1
             self.add_additional_iteminfo(mediaitem)
             artwork_requested = self.add_available_artwork(mediaitem, MODE_AUTO)
             if not artwork_requested:
@@ -118,6 +130,8 @@ class ArtworkProcessor(object):
             add_processeditem(processed, mediaitem)
             if self.monitor.waitForAbort(THROTTLE_TIME):
                 break
+        if self.visible:
+            self.close_progress()
         if alwaysnotify or artcount:
             notifycount(artcount)
         return processed
