@@ -23,14 +23,14 @@ def main():
     elif command.get('command') == 'set_autoaddepisodes':
         set_autoaddepisodes()
     else:
-        processing = processor.processing
-        if processing:
+        busy = processor.processor_busy
+        if busy:
             options = ['stop current process']
         else:
             options = ['add missing artwork for...']
         selected = xbmcgui.Dialog().select('Artwork Beef', options)
         if selected == 0:
-            if processing:
+            if busy:
                 pykodi.execute_builtin('NotifyAll(script.artwork.beef, CancelCurrent)')
             else:
                 show_add_artwork_menu()
