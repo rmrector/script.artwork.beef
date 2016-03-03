@@ -1,3 +1,4 @@
+import re
 import xbmc
 import xbmcgui
 
@@ -25,9 +26,9 @@ THROTTLE_TIME = 0.15
 DEFAULT_IMAGESIZE = '1920x1080'
 imagesizes = {'1920x1080': (1920, 1080, 700), '1280x720': (1280, 720, 520)}
 
-tvshow_properties = ['art', 'imdbnumber', 'season']
-movie_properties = ['art', 'imdbnumber']
-episode_properties = ['art', 'uniqueid']
+tvshow_properties = ['art', 'imdbnumber', 'season', 'file']
+movie_properties = ['art', 'imdbnumber', 'file']
+episode_properties = ['art', 'uniqueid', 'tvshowid', 'season', 'file']
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -186,7 +187,7 @@ class ArtworkProcessor(object):
                 return
         for arttype, imagelist in images.iteritems():
             [self.apply_status(arttype, image) for image in imagelist] #pylint: disable=W0106
-            self.sort_images(arttype, imagelist)
+            self.sort_images(arttype, imagelist, mediaitem['file'])
         return images
 
     def apply_status(self, arttype, image):
@@ -197,7 +198,7 @@ class ArtworkProcessor(object):
             if self.titlefree_fanart and image['language']:
                 image['status'] = GOOFY_IMAGE
 
-    def sort_images(self, arttype, imagelist):
+    def sort_images(self, arttype, imagelist, mediapath):
         # 1. Match the primary language, for everything but fanart
         # 2. Separate on status, like goofy images
         # 3. Size (in 200px groups), up to preferredsize
@@ -205,6 +206,10 @@ class ArtworkProcessor(object):
         imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
         imagelist.sort(key=self.size_sort, reverse=True)
         imagelist.sort(key=lambda image: image['status'].sort)
+        if arttype == 'discart':
+            mediasubtype = get_media_subtype(mediapath)
+            if mediasubtype != 'unknown':
+                imagelist.sort(key=lambda image: 0 if image.get('subtype', SortedDisplay(None, '')).sort == mediasubtype else 1)
         if not arttype.endswith('fanart'):
             imagelist.sort(key=lambda image: (0 if image['language'] == self.language else 1, image['language']))
 
@@ -419,3 +424,13 @@ def add_processeditem(processed, mediaitem):
         processed['tvshow'][mediaitem['dbid']] = mediaitem['season']
     else:
         processed[mediaitem['mediatype']].append(mediaitem['dbid'])
+
+def get_media_subtype(mediapath):
+    mediapath = mediapath.lower()
+    if re.search(r'\b3d\b', mediapath):
+        return '3d'
+    if re.search(r'blu-?ray|b[rd]rip', mediapath) or mediapath.endswith('.bdmv'):
+        return 'bluray'
+    if re.search(r'\bdvd', mediapath) or mediapath.endswith('.ifo'):
+        return 'dvd'
+    return 'unknown'

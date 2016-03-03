@@ -113,6 +113,8 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
         'movieposter': 'poster'
     }
 
+    disctitles = {'dvd': 'DVD', '3d': '3D', 'bluray': 'Blu-ray'}
+
     def get_images(self, mediaid):
         data = self.get_data(mediaid)
         if data is None:
@@ -129,7 +131,8 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
                 resultimage['preview'] = image['url'].replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
                 resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 5.0, '%s likes' % image['likes'])
                 if arttype == 'moviedisc':
-                    resultimage['subtype'] = image['disc_type']
+                    display = self.disctitles.get(image['disc_type']) or image['disc_type']
+                    resultimage['subtype'] = SortedDisplay(image['disc_type'], display)
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
                 result[generaltype].append(resultimage)
