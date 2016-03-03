@@ -57,3 +57,4 @@ class ProcessedItems(object):
                 self.episode = processed.get('episode', [])
         else:
             self.clear()
+        return self
