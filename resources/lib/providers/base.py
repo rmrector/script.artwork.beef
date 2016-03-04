@@ -14,6 +14,7 @@ from devhelper.pykodi import log
 from requests.packages import urllib3
 urllib3.disable_warnings()
 
+import providers
 from sorteddisplaytuple import SortedDisplay
 
 # Result dict of lists, keyed on art type
@@ -80,11 +81,14 @@ class AbstractProvider(object):
         return result
 
     def _inget(self, url, params=None, headers=None, timeout=15):
+        finalheaders = {'User-Agent': providers.useragent}
+        if headers:
+            finalheaders.update(headers)
         try:
-            return self.session.get(url, params=params, headers=headers, timeout=timeout)
+            return self.session.get(url, params=params, headers=finalheaders, timeout=timeout)
         except Timeout:
             try:
-                return self.session.get(url, params=params, headers=headers, timeout=timeout)
+                return self.session.get(url, params=params, headers=finalheaders, timeout=timeout)
             except Timeout as ex:
                 raise ProviderError, ("Provider is not responding", ex), sys.exc_info()[2]
 

@@ -4,6 +4,7 @@ import xbmc
 from devhelper import pykodi
 
 import mediatypes
+import providers
 from base import AbstractProvider
 from providers import ProviderError
 from sorteddisplaytuple import SortedDisplay
@@ -77,7 +78,7 @@ class TheTVDBProvider(AbstractProvider):
 
     def login(self):
         loginurl = 'https://api-beta.thetvdb.com/login'
-        response = self.session.post(loginurl, json={'apikey': self.apikey}, headers={'Content-Type': 'application/json'}, timeout=15)
+        response = self.session.post(loginurl, json={'apikey': self.apikey}, headers={'Content-Type': 'application/json', 'User-Agent': providers.useragent}, timeout=15)
         if not response or response.headers['Content-Type'] != 'application/json':
             raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]
         self.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
