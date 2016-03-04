@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<tvshow> <!-- Or 'movie' or 'episodedetails' -->
+	<!-- ... -->
+	<art>
+		<!-- The tag is the exact artwork type, freely named (alphanumeric), and the content is the URL to the image -->
+		<arttype>http://example.frank/artstuff/maidbilberry/1234.jpg</arttype>
+		<banner>http://thetvdb.com/banners/graphical/110381-g5.jpg</banner>
+		<characterart>http://assets.fanart.tv/fanart/tv/110381/characterart/archer-2009-514f89ade07a7.png</characterart>
+		<characterart1>https://assets.fanart.tv/fanart/tv/110381/characterart/archer-2009-54a8d64278ea4.png</characterart1>
+		<clearart>http://assets.fanart.tv/fanart/tv/110381/hdclearart/archer-2009-54053c1930642.png</clearart>
+		<clearlogo>http://assets.fanart.tv/fanart/tv/110381/hdtvlogo/archer-2009-505429fee4b03.png</clearlogo>
+		<fanart>http://thetvdb.com/banners/fanart/original/110381-23.jpg</fanart>
+		<fanart1>http://thetvdb.com/banners/fanart/original/110381-22.jpg</fanart1>
+		<fanart2>http://thetvdb.com/banners/fanart/original/110381-18.jpg</fanart2>
+		<fanart3>http://thetvdb.com/banners/fanart/original/110381-20.jpg</fanart3>
+		<fanart4>http://thetvdb.com/banners/fanart/original/110381-16.jpg</fanart4>
+		<landscape>http://assets.fanart.tv/fanart/tv/110381/tvthumb/A_110381.jpg</landscape>
+		<poster>http://thetvdb.com/banners/posters/110381-1.jpg</poster>
+		<!-- only for 'tvshow' -->
+		<season num="0"> <!-- 0 = Specials -->
+			<!-- Also freely named -->
+			<banner>http://thetvdb.com/banners/seasonswide/110381-0.jpg</banner>
+			<landscape>http://assets.fanart.tv/fanart/tv/110381/seasonthumb/archer-2009-51484c7a15cb2.jpg</landscape>
+			<poster>http://thetvdb.com/banners/seasons/110381-0-2.jpg</poster>
+		</season>
+		<season num="1"> <!-- Repeat for each season -->
+			<banner>http://thetvdb.com/banners/seasonswide/110381-1.jpg</banner>
+			<landscape>http://assets.fanart.tv/fanart/tv/110381/seasonthumb/archer-2009-51484c8624d76.jpg</landscape>
+			<poster>http://thetvdb.com/banners/seasons/110381-1-3.jpg</poster>
+		</season>
+	</art>
+</tvshow>

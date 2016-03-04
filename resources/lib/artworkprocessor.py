@@ -41,6 +41,7 @@ class ArtworkProcessor(object):
 
     def update_settings(self):
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
+        self.only_filesystem = addon.get_setting('only_filesystem')
         sizesetting = addon.get_setting('preferredsize')
         if sizesetting in imagesizes:
             self.preferredsize = imagesizes[sizesetting][0:2]
@@ -83,7 +84,7 @@ class ArtworkProcessor(object):
         if mode == MODE_GUI:
             self.setlanguages()
             self.add_additional_iteminfo(mediaitem)
-            artwork_requested = self.add_available_artwork(mediaitem, mode)
+            artwork_requested = self.find_available_artwork(mediaitem, MODE_GUI)
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             if not artwork_requested or not mediaitem.get('available art'):
                 xbmcgui.Dialog().notification('No artwork available', "Something missing? Contribute or donate to the source\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
@@ -113,18 +114,21 @@ class ArtworkProcessor(object):
                 self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
                 currentitem += 1
             self.add_additional_iteminfo(mediaitem)
-            artwork_requested = self.add_available_artwork(mediaitem, MODE_AUTO)
+            artwork_requested = self.find_available_artwork(mediaitem, MODE_AUTO)
             if not artwork_requested:
                 add_processeditem(processed, mediaitem)
                 if self.monitor.abortRequested():
                     break
                 continue
-            if not mediaitem.get('available art'):
+            if not mediaitem.get('available art') and not mediaitem.get('selected art'):
                 add_processeditem(processed, mediaitem)
                 if self.monitor.waitForAbort(THROTTLE_TIME):
                     break
                 continue
-            mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
+            if 'selected art' in mediaitem:
+                mediaitem['selected art'].update(self.get_top_missing_art(mediaitem))
+            else:
+                mediaitem['selected art'] = self.get_top_missing_art(mediaitem)
             self.add_art_to_library(mediaitem)
             artcount += len(mediaitem['selected art'])
             add_processeditem(processed, mediaitem)
@@ -136,15 +140,31 @@ class ArtworkProcessor(object):
             notifycount(artcount)
         return processed
 
-    def add_available_artwork(self, mediaitem, mode):
+    def find_available_artwork(self, mediaitem, mode):
         if mode == MODE_AUTO:
-            if next(self.list_missing_arttypes(mediaitem), False):
-                mediaitem['available art'] = self.get_available_artwork(mediaitem)
-                return True
+            result = False
+            forcedartwork = self.get_forced_artwork(mediaitem)
+            mediaitem['selected art'] = dict((arttype, image['url']) for arttype, image in forcedartwork.iteritems())
+            result = True if mediaitem['selected art'] else False
+            if not self.only_filesystem and next(self.list_missing_arttypes(mediaitem), False):
+                mediaitem['available art'] = self.get_external_artwork(mediaitem)
+                result = True
+            return result
         else:
-            mediaitem['available art'] = self.get_available_artwork(mediaitem)
+            localart = self.get_forced_artwork(mediaitem, True)
+            mediaitem['available art'] = itemart = {}
+            for exacttype in sorted(localart.keys(), key=natural_sort):
+                arttype = exacttype.rstrip('0123456789')
+                if arttype not in itemart:
+                    itemart[arttype] = []
+                itemart[arttype].extend(localart[exacttype])
+            for arttype, artlist in self.get_external_artwork(mediaitem).iteritems():
+                if arttype not in itemart:
+                    itemart[arttype] = artlist
+                else:
+                    for art in artlist:
+                        add_external_to_itemart(itemart, arttype, art, localart)
             return True
-        return False
 
     def setlanguages(self):
         self.language = pykodi.get_language(xbmc.ISO_639_1)
@@ -176,11 +196,34 @@ class ArtworkProcessor(object):
 
         return True
 
-    def get_available_artwork(self, mediaitem):
+    def get_forced_artwork(self, mediaitem, allowmutiple=False):
         if mediaitem['mediatype'] not in (mediatypes.TVSHOW, mediatypes.MOVIE, mediatypes.EPISODE):
-            return
+            return {}
+        resultimages = {}
+        for provider in providers.forced[mediaitem['mediatype']]:
+            for arttype, image in provider.get_exact_images(mediaitem['file']).iteritems():
+                if arttype.startswith('season.'):
+                    season = arttype.rsplit('.', 2)[1]
+                    if int(season) not in mediaitem['seasons']:
+                        continue
+                if allowmutiple:
+                    if arttype not in resultimages:
+                        resultimages[arttype] = []
+                    resultimages[arttype].append(image)
+                    self.apply_status(arttype, image)
+                else:
+                    if arttype not in resultimages:
+                        resultimages[arttype] = image
+                        self.apply_status(arttype, image)
+            if self.monitor.abortRequested():
+                return resultimages
+        return resultimages
+
+    def get_external_artwork(self, mediaitem):
+        if mediaitem['mediatype'] not in (mediatypes.TVSHOW, mediatypes.MOVIE, mediatypes.EPISODE):
+            return {}
         images = {}
-        for provider in providers.get_providers()[mediaitem['mediatype']]:
+        for provider in providers.external[mediaitem['mediatype']]:
             try:
                 providerimages = provider.get_images(mediaitem['imdbnumber']).iteritems()
             except ProviderError as ex:
@@ -198,7 +241,7 @@ class ArtworkProcessor(object):
                     images[arttype] = []
                 images[arttype].extend(artlist)
             if self.monitor.abortRequested():
-                return
+                return images
         for arttype, imagelist in images.iteritems():
             [self.apply_status(arttype, image) for image in imagelist] #pylint: disable=W0106
             self.sort_images(arttype, imagelist, mediaitem['file'])
@@ -287,10 +330,10 @@ class ArtworkProcessor(object):
                     newartwork[missingart] = newart['url']
         return newartwork
 
-    def list_missing_arttypes(self, mediaitem, includenew=False):
+    def list_missing_arttypes(self, mediaitem):
         arttypes = mediaitem['art'].keys()
-        if includenew:
-            arttypes.extend(mediaitem['selected art'])
+        if mediaitem.get('selected art'):
+            arttypes.extend(mediaitem['selected art'].keys())
         fullartinfo = mediatypes.artinfo[mediaitem['mediatype']]
         for arttype, artinfo in fullartinfo.iteritems():
             if not artinfo['autolimit']:
@@ -324,7 +367,7 @@ class ArtworkProcessor(object):
         for season in seasons:
             resultseasons[season['season']] = season['seasonid']
             for arttype, url in season['art'].iteritems():
-                if not arttype.startswith(('tvshow', 'season')):
+                if not arttype.startswith(('tvshow.', 'season.')):
                     resultart['%s.%s.%s' % (mediatypes.SEASON, season['season'], arttype)] = url
         return resultseasons, resultart
 
@@ -387,17 +430,18 @@ class ArtworkProcessor(object):
         # The loop shows the first window if viewer backs out of the second
         while not selectedart:
             if singlewindow:
-                selectedarttype = items[0]
+                selectedarttype = items[0][0]
             else:
                 selectedarttype = typeselectwindow.prompt()
             if not selectedarttype:
                 return {}, 0
             artlist = mediaitem['available art'][selectedarttype]
-            if selectedarttype.startswith('season'):
+            if selectedarttype.startswith('season.'):
                 stype = selectedarttype.rsplit('.', 1)[1]
-                multi = mediatypes.artinfo[mediatypes.SEASON][stype]['multiselect']
+                stype = mediatypes.artinfo[mediatypes.SEASON].get(stype)
             else:
-                multi = mediatypes.artinfo[mediaitem['mediatype']][selectedarttype]['multiselect']
+                stype = mediatypes.artinfo[mediaitem['mediatype']].get(selectedarttype)
+            multi = stype['multiselect'] if stype else False
             if multi:
                 existingart = [pykodi.unquoteimage(url) for arttype, url in mediaitem['art'].iteritems() if arttype.startswith(selectedarttype)]
             else:
@@ -439,6 +483,9 @@ def add_processeditem(processed, mediaitem):
     else:
         processed[mediaitem['mediatype']].append(mediaitem['dbid'])
 
+def natural_sort(string, naturalsortresplit=re.compile('([0-9]+)')):
+    return [int(text) if text.isdigit() else text.lower() for text in re.split(naturalsortresplit, string)]
+
 def get_media_subtype(mediapath):
     mediapath = mediapath.lower()
     if re.search(r'\b3d\b', mediapath):
@@ -448,3 +495,12 @@ def get_media_subtype(mediapath):
     if re.search(r'\bdvd', mediapath) or mediapath.endswith('.ifo'):
         return 'dvd'
     return 'unknown'
+
+def add_external_to_itemart(itemart, arttype, art, localart):
+    itemart[arttype].append(art)
+    localmatch = next((local for ll in localart.values() for local in ll if local['url'] == art['url']), None)
+    if localmatch:
+        itemart[arttype].remove(localmatch)
+        if 'title' in localmatch:
+            art['title'] = localmatch['title']
+        art['second provider'] = localmatch['provider'].display

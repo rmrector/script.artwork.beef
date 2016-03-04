@@ -27,3 +27,7 @@ msgstr ""
 msgctxt "#32903"
 msgid "Use high quality preview images"
 msgstr ""
+
+msgctxt "#32904"
+msgid "Auto add artwork from filesystem only"
+msgstr ""

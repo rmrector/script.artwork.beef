@@ -208,7 +208,7 @@ class ArtworkService(xbmc.Monitor):
                 return
         autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
         for episodeid in self.recentitems['episode']:
-            episode = quickjson.get_episode_details(episodeid, ['art', 'uniqueid', 'tvshowid', 'season'])
+            episode = quickjson.get_episode_details(episodeid, episode_properties)
             series = None
             if episode['season'] > self.processed.tvshow.get(episode['tvshowid']) and episode['tvshowid'] not in seriesadded:
                 seriesadded.add(episode['tvshowid'])

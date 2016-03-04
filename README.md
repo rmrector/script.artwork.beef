@@ -54,9 +54,28 @@ For the most part skins will still access images in the same Kodi standard way. 
 Episode fanart may just work, depending on how your skin accesses fanart when listing episodes.
 `$INFO[ListItem.Art(fanart)]` pulls the episode fanart if it exists, otherwise Kodi falls back to the series fanart.
 
+### From NFO and image files
+
+Artwork can be added from a standard [Kodi NFO file] next to your media. Add an `art` element to the root
+`movie`/`tvshow`/`episodedetails`, and its children are individual artwork tagged with the exact artwork type and a URL
+to the image; there is a full example in `resources/example.nfo`. Kodi uses this same format when exporting the library
+to a single file.
+
+Artwork Beef also adds image files stored next to your media. Name them like basic [Kodi artwork], replacing "fanart"/"thumb"
+with the exact artwork type. Kodi names artwork in this same format when exporting the library to separate files. If you
+manage all of your artwork this way, the add-on setting "Auto add artwork from filesystem only" under "Advanced" will
+prevent the add-on from querying the web services during automatic processing, saving time and network resources, and
+avoids adding duplicates with multiple fanart.
+
+Artwork from these files aren't limited to the artwork types listed above; artwork types can be freely named, as long
+as they are alphanumeric. The artwork type should have the exact name; for instance, multiple fanart will have one
+single `fanart`, one `fanart1`, one `fanart2`, and so on.
+
+[Kodi NFO file]: http://kodi.wiki/view/NFO_files
+[basic artwork]: http://kodi.wiki/view/Artwork#Naming_conventions
+
 ### Current gotchas
 
-- It does not support local artwork, images in the filesystem next to your media.
 - Music video artwork is nowhere to be seen.
 - It uses the beta v2 API from TheTVDB.com, which can be a bit goofy.
 - Results from web services are cached for a full week.

@@ -14,7 +14,7 @@
 	<extension point="xbmc.service" start="login" library="service.py" />
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">Automatically adds extra artwork for your media.</summary>
-		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library.</description>
+		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the filesystem.</description>
 		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database</disclaimer>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
 		<forum>http://forum.kodi.tv/showthread.php?tid=258886</forum>
