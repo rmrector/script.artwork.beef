@@ -61,11 +61,11 @@ Artwork can be added from a standard [Kodi NFO file] next to your media. Add an 
 to the image; there is a full example in `resources/example.nfo`. Kodi uses this same format when exporting the library
 to a single file.
 
-Artwork Beef also adds image files stored next to your media. Name them like basic [Kodi artwork], replacing "fanart"/"thumb"
-with the exact artwork type. Kodi names artwork in this same format when exporting the library to separate files. If you
-manage all of your artwork this way, the add-on setting "Auto add artwork from filesystem only" under "Advanced" will
-prevent the add-on from querying the web services during automatic processing, saving time and network resources, and
-avoids adding duplicates with multiple fanart.
+Artwork Beef also adds artwork from image files stored next to your media. Name them like basic [Kodi artwork],
+replacing "fanart"/"thumb" with the exact artwork type. Kodi names artwork in this same format when exporting the
+library to separate files. If you manage all of your artwork this way, the add-on setting "Auto add artwork from
+filesystem only" under "Advanced" will prevent the add-on from querying the web services during automatic processing,
+saving time and network resources, and avoids adding duplicates with multiple fanart.
 
 Artwork from these files aren't limited to the artwork types listed above; artwork types can be freely named, as long
 as they are alphanumeric. The artwork type should have the exact name; for instance, multiple fanart will have one
@@ -76,6 +76,8 @@ single `fanart`, one `fanart1`, one `fanart2`, and so on.
 
 ### Current gotchas
 
+- There are still a couple of rough edges adding artwork from files. Stacked files aren't currently handled properly,
+nor are straight disc rips to VIDEO_TS/BDMV folders
 - Music video artwork is nowhere to be seen.
 - It uses the beta v2 API from TheTVDB.com, which can be a bit goofy.
 - Results from web services are cached for a full week.
