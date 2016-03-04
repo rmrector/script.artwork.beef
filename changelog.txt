@@ -1,8 +1,8 @@
-v0.4.1~dev
+v0.5.0 (2016-03-04)
 - Add artwork from NFO and image files
 - Add option to prefer fanart with no title
 - Multiple characterart can be selected
-- Better error handling for web services
+- Better web service handling
 
 v0.4.0 (2016-02-15)
 - Fix persistent notification being too persistent
