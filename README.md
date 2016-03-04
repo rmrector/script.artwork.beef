@@ -36,7 +36,7 @@ and Kodi will take care of downloading the dependencies. The context items can a
 Install it. Tada! It's a work in progress, so there are all sorts of things that can still go wrong, but that is the
 idea. The automatic operation is handled by a service that watches for library updates. You can also run it from Program
 add-ons to trigger the automatic process for new or all items. To select specific artwork for individual media items
-install the context item "Select Artwork to Download", and "Download All Artwork" to add all configured artwork. After
+install the context item "Select artwork to add", and "Add missing artwork" to add all configured artwork. After
 installation, these context items are in the context menu for movies, series, and episodes, under "Manage...".
 
 The first run and then roughly every two months it will process all items. This takes some time, as it will hit the web
