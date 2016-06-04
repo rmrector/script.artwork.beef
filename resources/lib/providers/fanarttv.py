@@ -3,7 +3,10 @@ from abc import ABCMeta
 
 import mediatypes
 from base import AbstractProvider
+from devhelper import pykodi
 from sorteddisplaytuple import SortedDisplay
+
+addon = pykodi.get_main_addon()
 
 class FanartTVAbstractProvider(AbstractProvider):
     # pylint: disable=W0223
@@ -17,9 +20,13 @@ class FanartTVAbstractProvider(AbstractProvider):
     def __init__(self):
         super(FanartTVAbstractProvider, self).__init__()
         self.set_contenttype('application/json')
+        self.clientkey = addon.get_setting('fanarttv_key')
 
     def get_data(self, mediaid):
-        response = self.doget(self.apiurl % (self.api_section, mediaid), headers={'api-key': self.apikey})
+        headers = {'api-key': self.apikey}
+        if self.clientkey:
+            headers['client-key'] = self.clientkey
+        response = self.doget(self.apiurl % (self.api_section, mediaid), headers=headers)
         if response is None:
             return
         return response.json()

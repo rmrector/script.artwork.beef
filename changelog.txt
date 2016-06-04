@@ -1,3 +1,6 @@
+v0.5.1~dev
+- Add setting to enter a fanart.tv personal API key
+
 v0.5.0 (2016-03-04)
 - Add artwork from NFO and image files
 - Add option to prefer fanart with no title
