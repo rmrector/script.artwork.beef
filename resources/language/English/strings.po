@@ -31,3 +31,7 @@ msgstr ""
 msgctxt "#32904"
 msgid "Auto add artwork from filesystem only"
 msgstr ""
+
+msgctxt "#32905"
+msgid "fanart.tv personal API key"
+msgstr ""
