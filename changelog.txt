@@ -24,7 +24,7 @@ v0.3.1 (2016-02-06)
 - Fix caching on Android
 v0.3.0 (2016-02-04)
 - Watch for library updates and automatically add artwork for new items
-- Add series, season, and movie artwork from Fanart.tv to the library
+- Add series, season, and movie artwork from fanart.tv to the library
 - Add series and season artwork from TheTVDB
 - Add movie and episode (fanart/stills) artwork from The Movie Database
 - Select specific artwork for individual media items

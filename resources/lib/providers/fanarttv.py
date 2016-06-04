@@ -13,7 +13,7 @@ class FanartTVAbstractProvider(AbstractProvider):
     __metaclass__ = ABCMeta
     api_section = None
 
-    name = SortedDisplay('fanart.tv', 'Fanart.TV')
+    name = SortedDisplay('fanart.tv', 'fanart.tv')
     apikey = '***REMOVED***'
     apiurl = 'http://webservice.fanart.tv/v3/%s/%s'
 
