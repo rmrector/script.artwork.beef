@@ -59,9 +59,11 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
         if path.count('/'):
             path, inputfilename = path.rsplit('/', 1)
             path = path + '/'
-        else:
-            path, inputfilename = path.rpslit('\\', 1)
+        elif path.count('\\'):
+            path, inputfilename = path.rsplit('\\', 1)
             path = path + '\\'
+        else:
+            return {}
         _, files = xbmcvfs.listdir(path)
         inputbase = inputfilename.rsplit('.', 1)[0]
         result = {}
@@ -94,9 +96,11 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
         if path.count('/'):
             path, inputfilename = path.rsplit('/', 1)
             path = path + '/'
-        else:
+        elif path.count('\\'):
             path, inputfilename = path.rpslit('\\', 1)
             path = path + '\\'
+        else:
+            return {}
         _, files = xbmcvfs.listdir(path)
         inputbase = inputfilename.rsplit('.', 1)[0]
         result = {}

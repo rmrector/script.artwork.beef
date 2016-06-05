@@ -29,14 +29,13 @@ class NFOFileSeriesProvider(NFOFileAbstractProvider):
 
     def get_exact_images(self, path):
         path += 'tvshow.nfo'
-        result = {}
-
         root = read_nfofile(path)
         if root is None or root.find('art') is None:
             return {}
         artlistelement = root.find('art')
         if artlistelement is None:
             return {}
+        result = {}
         for artelement in artlistelement:
             if artelement.tag == 'season':
                 num = int(artelement.attrib['num'])
@@ -54,8 +53,10 @@ class NFOFileMovieProvider(NFOFileAbstractProvider):
         longnfopath = path.rsplit('.', 1)[0] + '.nfo'
         if path.count('/'):
             nfopath = path.rsplit('/', 1)[0] + '/movie.nfo'
+        elif path.count('\\'):
+            nfopath = path.rsplit('\\', 1)[0] + '\\movie.nfo'
         else:
-            nfopath = path.rsplit('\\', 1)[0] + '/movie.nfo'
+            return {}
         result = {}
 
         root = read_nfofile(longnfopath)
