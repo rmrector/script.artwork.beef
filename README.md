@@ -72,7 +72,7 @@ as they are alphanumeric. The artwork type should have the exact name; for insta
 single `fanart`, one `fanart1`, one `fanart2`, and so on.
 
 [Kodi NFO file]: http://kodi.wiki/view/NFO_files
-[basic artwork]: http://kodi.wiki/view/Artwork#Naming_conventions
+[Kodi artwork]: http://kodi.wiki/view/Artwork#Naming_conventions
 
 ### Current gotchas
 
