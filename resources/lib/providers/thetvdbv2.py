@@ -7,7 +7,7 @@ import mediatypes
 import providers
 from base import AbstractProvider
 from providers import ProviderError
-from sorteddisplaytuple import SortedDisplay
+from utils import SortedDisplay
 
 class TheTVDBProvider(AbstractProvider):
     name = SortedDisplay('thetvdb.com', 'TheTVDB.com')

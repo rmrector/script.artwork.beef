@@ -8,7 +8,7 @@ from devhelper.pykodi import log
 
 import mediatypes
 import providers
-from sorteddisplaytuple import SortedDisplay
+from utils import SortedDisplay, natural_sort
 from artworkselection import ArtworkTypeSelector, ArtworkSelector
 from providers import ProviderError
 
@@ -482,9 +482,6 @@ def add_processeditem(processed, mediaitem):
         processed['tvshow'][mediaitem['dbid']] = mediaitem['season']
     else:
         processed[mediaitem['mediatype']].append(mediaitem['dbid'])
-
-def natural_sort(string, naturalsortresplit=re.compile('([0-9]+)')):
-    return [int(text) if text.isdigit() else text.lower() for text in re.split(naturalsortresplit, string)]
 
 def get_media_subtype(mediapath):
     mediapath = mediapath.lower()

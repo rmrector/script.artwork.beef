@@ -4,7 +4,7 @@ from abc import ABCMeta
 import mediatypes
 from base import AbstractProvider
 from devhelper import pykodi
-from sorteddisplaytuple import SortedDisplay
+from utils import SortedDisplay
 
 addon = pykodi.get_main_addon()
 

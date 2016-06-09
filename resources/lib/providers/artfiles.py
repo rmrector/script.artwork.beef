@@ -1,9 +1,10 @@
-import re
+import os
 import xbmcvfs
 from abc import ABCMeta
 
 import mediatypes
-from sorteddisplaytuple import SortedDisplay
+from utils import SortedDisplay, natural_sort
+from devhelper.utils import get_unstacked_path_list
 
 class ArtFilesAbstractProvider(object):
     __metaclass__ = ABCMeta
@@ -20,7 +21,7 @@ class ArtFilesSeriesProvider(ArtFilesAbstractProvider):
         for filename in files:
             if not filename.endswith(('.jpg', '.png', '.gif')):
                 continue
-            basefile = filename.rsplit('.', 1)[0]
+            basefile = os.path.splitext(filename)[0]
             if '.' in basefile or ' ' in basefile:
                 continue
             if basefile.startswith('season') and basefile.count('-'):
@@ -56,24 +57,18 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
     mediatype = mediatypes.MOVIE
 
     def get_exact_images(self, path):
-        if path.count('/'):
-            path, inputfilename = path.rsplit('/', 1)
-            path = path + '/'
-        elif path.count('\\'):
-            path, inputfilename = path.rsplit('\\', 1)
-            path = path + '\\'
-        else:
-            return {}
+        paths = get_unstacked_path_list(path)
+        basefilenames = [os.path.splitext(os.path.basename(p))[0] for p in paths]
+        path = os.path.dirname(paths[0]) + '/'
         _, files = xbmcvfs.listdir(path)
-        inputbase = inputfilename.rsplit('.', 1)[0]
         result = {}
         for filename in files:
             if not filename.endswith(('.jpg', '.png', '.gif')):
                 continue
-            basefile = filename.rsplit('.', 1)[0]
+            basefile = os.path.splitext(filename)[0]
             if '-' in basefile:
                 firstbit, basefile = basefile.rsplit('-', 1)
-                if firstbit != inputbase:
+                if firstbit not in basefilenames:
                     continue
             if '.' in basefile or ' ' in basefile:
                 continue
@@ -93,21 +88,15 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
     mediatype = mediatypes.EPISODE
 
     def get_exact_images(self, path):
-        if path.count('/'):
-            path, inputfilename = path.rsplit('/', 1)
-            path = path + '/'
-        elif path.count('\\'):
-            path, inputfilename = path.rpslit('\\', 1)
-            path = path + '\\'
-        else:
-            return {}
+        path, inputfilename = os.path.split(path)
+        path += '/'
         _, files = xbmcvfs.listdir(path)
-        inputbase = inputfilename.rsplit('.', 1)[0]
+        inputbase = os.path.splitext(inputfilename)[0]
         result = {}
         for filename in files:
             if not filename.endswith(('.jpg', '.png', '.gif')):
                 continue
-            basefile = filename.rsplit('.', 1)[0]
+            basefile = os.path.splitext(filename)[0]
             if '-' not in basefile:
                 continue
             else:
@@ -122,6 +111,3 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
             resultimage['language'] = 'xx'
             result[arttype] = resultimage
         return result
-
-def natural_sort(string, naturalsortresplit=re.compile('([0-9]+)')):
-    return [int(text) if text.isdigit() else text.lower() for text in re.split(naturalsortresplit, string)]
