@@ -1,3 +1,4 @@
+import os
 import sys
 import xbmcvfs
 from abc import ABCMeta
@@ -10,7 +11,8 @@ else:
     from xml.etree.ElementTree import ParseError
 
 import mediatypes
-from sorteddisplaytuple import SortedDisplay
+from utils import SortedDisplay
+from devhelper.utils import get_unstacked_path_list
 
 class NFOFileAbstractProvider(object):
     __metaclass__ = ABCMeta
@@ -50,31 +52,28 @@ class NFOFileMovieProvider(NFOFileAbstractProvider):
     mediatype = mediatypes.MOVIE
 
     def get_exact_images(self, path):
-        longnfopath = path.rsplit('.', 1)[0] + '.nfo'
-        if path.count('/'):
-            nfopath = path.rsplit('/', 1)[0] + '/movie.nfo'
-        elif path.count('\\'):
-            nfopath = path.rsplit('\\', 1)[0] + '\\movie.nfo'
-        else:
+        paths = get_unstacked_path_list(path)
+        paths = [os.path.splitext(p)[0] + '.nfo' for p in paths]
+        paths.append(os.path.dirname(paths[0]) + '\\movie.nfo')
+
+        artlist = None
+        for nfopath in paths:
+            root = read_nfofile(nfopath)
+            if root is not None and root.find('art') is not None:
+                artlist = root.find('art')
+                break
+        if artlist is None:
             return {}
         result = {}
-
-        root = read_nfofile(longnfopath)
-        if root is None or root.find('art') is None:
-            root = read_nfofile(nfopath)
-            if root is None or root.find('art') is None:
-                return {}
-        artlistelement = root.find('art')
-        if artlistelement is not None:
-            for artelement in artlistelement:
-                result[artelement.tag] = self.build_resultimage(artelement.text, artelement.tag)
+        for artelement in artlist:
+            result[artelement.tag] = self.build_resultimage(artelement.text, artelement.tag)
         return result
 
 class NFOFileEpisodeProvider(NFOFileAbstractProvider):
     mediatype = mediatypes.EPISODE
 
     def get_exact_images(self, path):
-        path = path.rsplit('.', 1)[0] + '.nfo'
+        path = os.path.splitext(path)[0] + '.nfo'
         result = {}
 
         root = read_nfofile(path)

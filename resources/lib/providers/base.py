@@ -15,7 +15,7 @@ from requests.packages import urllib3
 urllib3.disable_warnings()
 
 import providers
-from sorteddisplaytuple import SortedDisplay
+from utils import SortedDisplay
 
 # Result dict of lists, keyed on art type
 # {'url': URL, 'language': ISO alpha-2 code, 'rating': SortedDisplay, 'size': SortedDisplay, 'provider': self.name, 'preview': preview URL}

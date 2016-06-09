@@ -2,7 +2,7 @@ from abc import ABCMeta
 
 import mediatypes
 from base import AbstractProvider
-from sorteddisplaytuple import SortedDisplay
+from utils import SortedDisplay
 
 class TheMovieDBAbstractProvider(AbstractProvider):
     # pylint: disable=W0223
