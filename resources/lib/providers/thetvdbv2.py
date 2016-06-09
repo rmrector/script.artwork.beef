@@ -14,7 +14,8 @@ class TheTVDBProvider(AbstractProvider):
     mediatype = mediatypes.TVSHOW
 
     apikey = '***REMOVED***'
-    apiurl = 'https://api-beta.thetvdb.com/series/%s/images/query'
+    apiurl = 'https://api.thetvdb.com/series/%s/images/query'
+    loginurl = 'https://api.thetvdb.com/login'
     imageurl_base = 'http://thetvdb.com/banners/'
 
     artmap = {'fanart': 'fanart', 'poster': 'poster', 'season': mediatypes.SEASON + '.%s.poster', 'seasonwide': mediatypes.SEASON + '.%s.banner', 'series': 'banner'}
@@ -77,8 +78,7 @@ class TheTVDBProvider(AbstractProvider):
         return result
 
     def login(self):
-        loginurl = 'https://api-beta.thetvdb.com/login'
-        response = self.session.post(loginurl, json={'apikey': self.apikey}, headers={'Content-Type': 'application/json', 'User-Agent': providers.useragent}, timeout=15)
+        response = self.session.post(self.loginurl, json={'apikey': self.apikey}, headers={'Content-Type': 'application/json', 'User-Agent': providers.useragent}, timeout=15)
         if not response or response.headers['Content-Type'] != 'application/json':
             raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]
         self.session.headers['authorization'] = 'Bearer %s' % response.json()['token']

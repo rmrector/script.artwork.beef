@@ -78,5 +78,5 @@ single `fanart`, one `fanart1`, one `fanart2`, and so on.
 
 - Adding artwork from files for straight disc rips to VIDEO_TS/BDMV folders is currently not supported.
 - Music video artwork is nowhere to be seen.
-- It uses the beta v2 API from TheTVDB.com, which can be a bit goofy.
+- It uses the v2 API from TheTVDB.com, which has a tendency to not list all artwork.
 - Results from web services are cached for a full week.
