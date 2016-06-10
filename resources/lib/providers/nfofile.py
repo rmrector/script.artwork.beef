@@ -11,8 +11,7 @@ else:
     from xml.etree.ElementTree import ParseError
 
 import mediatypes
-from utils import SortedDisplay
-from devhelper.utils import get_unstacked_path_list
+from utils import SortedDisplay, get_movie_path_list
 
 class NFOFileAbstractProvider(object):
     __metaclass__ = ABCMeta
@@ -52,9 +51,9 @@ class NFOFileMovieProvider(NFOFileAbstractProvider):
     mediatype = mediatypes.MOVIE
 
     def get_exact_images(self, path):
-        paths = get_unstacked_path_list(path)
+        paths = get_movie_path_list(path)
         paths = [os.path.splitext(p)[0] + '.nfo' for p in paths]
-        paths.append(os.path.dirname(paths[0]) + '\\movie.nfo')
+        paths.append(os.path.dirname(paths[0]) + '/movie.nfo')
 
         artlist = None
         for nfopath in paths:
