@@ -216,7 +216,7 @@ class ArtworkProcessor(object):
                         resultimages[arttype] = image
                         self.apply_status(arttype, image)
             if self.monitor.abortRequested():
-                return resultimages
+                break
         return resultimages
 
     def get_external_artwork(self, mediaitem):
@@ -241,7 +241,7 @@ class ArtworkProcessor(object):
                     images[arttype] = []
                 images[arttype].extend(artlist)
             if self.monitor.abortRequested():
-                return images
+                break
         for arttype, imagelist in images.iteritems():
             [self.apply_status(arttype, image) for image in imagelist] #pylint: disable=W0106
             self.sort_images(arttype, imagelist, mediaitem['file'])
