@@ -2,6 +2,7 @@ v0.5.1~dev
 - Add setting to enter a fanart.tv personal API key
 - Use production API for TheTVDB API v2, rather than beta
 - Load artwork from filesystem for stacked movies and VIDEO_TS/BDMV rips
+- Localize messages
 
 v0.5.0 (2016-03-04)
 - Add artwork from NFO and image files

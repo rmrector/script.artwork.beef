@@ -4,10 +4,80 @@
 msgid ""
 msgstr ""
 
+msgctxt "#32000"
+msgid "Unknown source"
+msgstr ""
+
+msgctxt "#32001"
+msgid "Something missing?"
+msgstr ""
+
+# Messages
+
+msgctxt "#32019"
+msgid "Contribute or donate to the source: fanart.tv, thetvdb.com, themoviedb.org"
+msgstr ""
+
+msgctxt "#32020"
+msgid "Adding extended artwork"
+msgstr ""
+
+msgctxt "#32021"
+msgid "No artwork available"
+msgstr ""
+
+msgctxt "#32022"
+msgid "{0} artwork added"
+msgstr ""
+
+msgctxt "#32023"
+msgid "No new artwork added"
+msgstr ""
+
+msgctxt "#32024"
+msgid "Error with provider '{0}'"
+msgstr ""
+
+msgctxt "#32025"
+msgid "Media type '{0}' not supported"
+msgstr ""
+
+# Headings
+
+msgctxt "#32050"
+# 0: media title
+msgid "Choose art type for {0}"
+msgstr ""
+
+msgctxt "#32051"
+# 0: art type (poster/fanart/etc), 1: media title
+msgid "Choose {0} for {1}"
+msgstr ""
+
 # Actions
 
 msgctxt "#32400"
 msgid "Select series to auto add episode artwork..."
+msgstr ""
+
+msgctxt "#32401"
+msgid "Add missing artwork now?"
+msgstr ""
+
+msgctxt "#32402"
+msgid "Add missing episode artwork for newly selected series now?"
+msgstr ""
+
+msgctxt "#32403"
+msgid "stop current process"
+msgstr ""
+
+msgctxt "#32404"
+msgid "add missing artwork for new items"
+msgstr ""
+
+msgctxt "#32405"
+msgid "add missing artwork for all items"
 msgstr ""
 
 # Settings

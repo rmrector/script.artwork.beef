@@ -1,11 +1,15 @@
 import re
 import xbmc
 import xbmcgui
-from xbmc import getLocalizedString as localized
+
+from utils import localize as L
 
 CURRENT_ART = 13512
 SEASON_NUMBER = 20358
 SPECIALS = 20381
+UNKNOWN_SOURCE = 32000
+CHOOSE_TYPE_HEADER = 32050
+CHOOSE_ART_HEADER = 32051
 
 class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
@@ -18,10 +22,10 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
         for origseason in seasonitems:
             season = origseason[0].split('.')
             if season[1] == '0':
-                self.arttypes.append(('{0}: {1}'.format(localized(SPECIALS), season[2]), origseason[0], origseason[1]))
+                self.arttypes.append(('{0}: {1}'.format(L(SPECIALS), season[2]), origseason[0], origseason[1]))
             elif season[1] != '-1':
                 # Ignore 'all' seasons artwork, as I can't set artwork for it with JSON
-                self.arttypes.append(('{0}: {1}'.format(localized(SEASON_NUMBER) % int(season[1]), season[2]), origseason[0], origseason[1]))
+                self.arttypes.append(('{0}: {1}'.format(L(SEASON_NUMBER) % int(season[1]), season[2]), origseason[0], origseason[1]))
         self.arttypes.sort(key=lambda art: sort_art(art[1]))
         self.medialabel = kwargs.get('medialabel')
         self.guilist = None
@@ -34,7 +38,7 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
     def onInit(self):
         # This is called every time the window is shown
         if not self.selected:
-            self.getControl(1).setLabel('Choose art type for {0}'.format(self.medialabel))
+            self.getControl(1).setLabel(L(CHOOSE_TYPE_HEADER).format(self.medialabel))
             self.getControl(3).setVisible(False)
             self.getControl(5).setVisible(False)
             self.guilist = self.getControl(6)
@@ -75,7 +79,7 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
         self.artlist = []
         for art in self.existingart:
             if art not in urllist:
-                self.artlist.append({'url': art, 'preview': art, 'windowlabel': localized(CURRENT_ART)})
+                self.artlist.append({'url': art, 'preview': art, 'windowlabel': L(CURRENT_ART)})
         self.artlist.extend(artlist)
         self.guilist = None
         self.selected = None
@@ -87,7 +91,7 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
         return self.selected
 
     def onInit(self):
-        self.getControl(1).setLabel('Choose {0} for {1}'.format(self.arttype, self.medialabel))
+        self.getControl(1).setLabel(L(CHOOSE_ART_HEADER).format(self.arttype, self.medialabel))
         self.getControl(3).setVisible(False)
         self.getControl(5).setVisible(self.multi)
         self.getControl(5).setLabel('$LOCALIZE[186]')
@@ -96,15 +100,15 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
         for image in self.artlist:
             if 'windowlabel' in image:
                 label = image['windowlabel']
-                summary = 'Unknown source'
+                summary = L(UNKNOWN_SOURCE)
             else:
                 provider = image['provider'].display
                 if isinstance(provider, int):
-                    provider = localized(provider)
+                    provider = L(provider)
                 secondprovider = image.get('second provider')
                 if secondprovider:
                     if isinstance(secondprovider, int):
-                        secondprovider = localized(secondprovider)
+                        secondprovider = L(secondprovider)
                     provider = '{0}, {1}'.format(provider, secondprovider)
                 title = image.get('title')
                 if not title and 'subtype' in image:

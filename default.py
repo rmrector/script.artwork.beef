@@ -8,6 +8,14 @@ from devhelper import quickjson
 addon = pykodi.get_main_addon()
 sys.path.append(addon.resourcelibs)
 
+from utils import localize as L
+
+ADD_MISSING_HEADER = 32401
+ADD_MISSING_MESSAGE = 32402
+
+STOP = 32403
+ADD_MISSING_FOR_NEW = 32404
+ADD_MISSING_FOR_ALL = 32405
 from artworkprocessor import ArtworkProcessor
 from seriesselection import SeriesSelector
 
@@ -25,15 +33,13 @@ def main():
     else:
         busy = processor.processor_busy
         if busy:
-            options = ['stop current process']
+            options = [(L(STOP), 'NotifyAll(script.artwork.beef, CancelCurrent)')]
         else:
-            options = ['add missing artwork for...']
-        selected = xbmcgui.Dialog().select('Artwork Beef', options)
-        if selected == 0:
-            if busy:
-                pykodi.execute_builtin('NotifyAll(script.artwork.beef, CancelCurrent)')
-            else:
-                show_add_artwork_menu()
+            options = [(L(ADD_MISSING_FOR_NEW), 'NotifyAll(script.artwork.beef, ProcessNewItems)'),
+                (L(ADD_MISSING_FOR_ALL), 'NotifyAll(script.artwork.beef, ProcessAllItems)')]
+        selected = xbmcgui.Dialog().select('Artwork Beef', [option[0] for option in options])
+        if selected >= 0 and selected < len(options):
+            pykodi.execute_builtin(options[selected][1])
 
 def set_autoaddepisodes():
     xbmc.executebuiltin('ActivateWindow(busydialog)')
@@ -43,16 +49,8 @@ def set_autoaddepisodes():
     selected = SeriesSelector('DialogSelect.xml', addon.path, serieslist=serieslist, selected=autoaddepisodes).prompt()
     addon.set_setting('autoaddepisodes_list', selected)
     if selected != autoaddepisodes:
-        if xbmcgui.Dialog().yesno('Add missing artwork now?', "Add missing artwork for episodes of newly selected series now?"):
+        if xbmcgui.Dialog().yesno(L(ADD_MISSING_HEADER), L(ADD_MISSING_MESSAGE)):
             pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAfterSettings)')
-
-def show_add_artwork_menu():
-    options = ['new items', 'all items']
-    selected = xbmcgui.Dialog().select('Artwork Beef: add missing artwork for...', options)
-    if selected == 0:
-        pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessNewItems)')
-    if selected == 1:
-        pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAllItems)')
 
 def get_command():
     command = {}
