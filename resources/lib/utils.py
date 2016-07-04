@@ -3,8 +3,17 @@ import xbmc
 from collections import namedtuple
 from os.path import split, basename, dirname
 
-SortedDisplay = namedtuple('SortedDisplay', ['sort', 'display'])
+from devhelper import pykodi
 from devhelper.pykodi import log
+
+addon = pykodi.get_main_addon()
+
+SortedDisplay = namedtuple('SortedDisplay', ['sort', 'display'])
+
+def localize(messageid):
+    if messageid < 32000:
+        return xbmc.getLocalizedString(messageid)
+    return addon.getLocalizedString(messageid)
 
 def natural_sort(string, naturalsortresplit=re.compile('([0-9]+)')):
     return [int(text) if text.isdigit() else text.lower() for text in re.split(naturalsortresplit, string)]

@@ -8,7 +8,7 @@ from devhelper.pykodi import log
 
 import mediatypes
 import providers
-from utils import SortedDisplay, natural_sort
+from utils import SortedDisplay, natural_sort, localize as L
 from artworkselection import ArtworkTypeSelector, ArtworkSelector
 from providers import ProviderError
 
@@ -29,6 +29,15 @@ imagesizes = {'1920x1080': (1920, 1080, 700), '1280x720': (1280, 720, 520)}
 tvshow_properties = ['art', 'imdbnumber', 'season', 'file']
 movie_properties = ['art', 'imdbnumber', 'file']
 episode_properties = ['art', 'uniqueid', 'tvshowid', 'season', 'file']
+
+SOMETHING_MISSING = 32001
+FINAL_MESSAGE = 32019
+ADDING_ARTWORK_MESSAGE = 32020
+NOT_AVAILABLE_MESSAGE = 32021
+ARTWORK_ADDED_MESSAGE = 32022
+NO_ARTWORK_ADDED_MESSAGE = 32023
+PROVIDER_ERROR_MESSAGE = 32024
+NOT_SUPPORTED_MESSAGE = 32025
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -53,7 +62,7 @@ class ArtworkProcessor(object):
 
     def create_progress(self):
         if not self.visible:
-            self.progress.create("Adding extended artwork", "")
+            self.progress.create(L(ADDING_ARTWORK_MESSAGE), "")
             self.visible = True
 
     def close_progress(self):
@@ -78,7 +87,7 @@ class ArtworkProcessor(object):
             mediaitem = quickjson.get_episode_details(dbid, episode_properties)
         else:
             xbmc.executebuiltin('Dialog.Close(busydialog)')
-            xbmcgui.Dialog().notification("Artwork Beef", "Media type '{0}' not currently supported.".format(mediatype), '-', 6500)
+            xbmcgui.Dialog().notification("Artwork Beef", L(NOT_SUPPORTED_MESSAGE).format(mediatype), '-', 6500)
             return
 
         if mode == MODE_GUI:
@@ -87,7 +96,8 @@ class ArtworkProcessor(object):
             artwork_requested = self.find_available_artwork(mediaitem, MODE_GUI)
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             if not artwork_requested or not mediaitem.get('available art'):
-                xbmcgui.Dialog().notification('No artwork available', "Something missing? Contribute or donate to the source\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
+                xbmcgui.Dialog().notification(L(NOT_AVAILABLE_MESSAGE),
+                    L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
                 return
             selected, count = self.prompt_for_artwork(mediaitem)
             if not selected:
@@ -227,7 +237,7 @@ class ArtworkProcessor(object):
             try:
                 providerimages = provider.get_images(mediaitem['imdbnumber']).iteritems()
             except ProviderError as ex:
-                header = 'Error with provider {0}'.format(provider.name.display)
+                header = L(PROVIDER_ERROR_MESSAGE).format(provider.name.display)
                 xbmcgui.Dialog().notification(header, ex.message, xbmcgui.NOTIFICATION_ERROR)
                 log('{0}\n{1}'.format(header, ex.message))
                 continue
@@ -471,11 +481,12 @@ class ArtworkProcessor(object):
         return result, len(selectedart[0])
 
 def notifycount(count):
-    log('{0} artwork added'.format(count), xbmc.LOGINFO)
+    log(L(ARTWORK_ADDED_MESSAGE).format(count), xbmc.LOGINFO)
     if count:
-        xbmcgui.Dialog().notification('{0} artwork added'.format(count), "Contribute or donate to the awesomeness\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
+        xbmcgui.Dialog().notification(L(ARTWORK_ADDED_MESSAGE).format(count), L(FINAL_MESSAGE), '-', 7500)
     else:
-        xbmcgui.Dialog().notification('No new artwork added', "Something missing? Contribute or donate to the source\nfanart.tv, thetvdb.com, themoviedb.org", '-', 6500)
+        xbmcgui.Dialog().notification(L(NO_ARTWORK_ADDED_MESSAGE),
+            L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
 
 def add_processeditem(processed, mediaitem):
     if mediaitem['mediatype'] == 'tvshow':
