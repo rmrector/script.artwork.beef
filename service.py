@@ -36,7 +36,7 @@ class ArtworkService(xbmc.Monitor):
         self.scanning = False
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
         self.stoppeditem = None
-        self.set_status('idle')
+        self.set_status(STATUS_IDLE)
 
     @property
     def toomany_recentitems(self):

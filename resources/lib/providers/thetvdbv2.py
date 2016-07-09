@@ -9,6 +9,7 @@ from base import AbstractProvider
 from providers import ProviderError
 from utils import SortedDisplay
 
+# designed for version 2.1.0 of TheTVDB API
 class TheTVDBProvider(AbstractProvider):
     name = SortedDisplay('thetvdb.com', 'TheTVDB.com')
     mediatype = mediatypes.TVSHOW
@@ -32,9 +33,6 @@ class TheTVDBProvider(AbstractProvider):
         return response.json()
 
     def get_images(self, mediaid):
-        # Bah. The new API needs a request for each art type, fanart/poster/season(poster)/seasonwide(banner)/series(banner)
-        # And then double it for languages other than English, to grab fallback images in English
-        # And TheTVDB has random unrelated languages attached to some fanart, even when the image itself doesn't have any text, so I can never be sure I have a list of all artwork
         result = {}
         languages = [pykodi.get_language(xbmc.ISO_639_1)]
         if languages[0] != 'en':

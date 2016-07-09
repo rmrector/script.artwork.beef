@@ -1,9 +1,10 @@
 import xbmc
 from abc import ABCMeta
 
+from devhelper import pykodi
+
 import mediatypes
 from base import AbstractProvider
-from devhelper import pykodi
 from utils import SortedDisplay
 
 addon = pykodi.get_main_addon()
