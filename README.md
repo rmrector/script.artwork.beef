@@ -24,7 +24,7 @@ Finally, **episodes**: `fanart`
 ### Installing
 
 At the moment it depends on a couple of python modules not available in the official Kodi repo, and my own goofy
-devhelper, so it will be simplest to install my [dev repository] ([direct]), and then install from "Program add-ons",
+devhelper, so it will be simplest to install my [dev repository], ([direct]), and then install from "Program add-ons",
 and Kodi will take care of downloading the dependencies. The context items can also be installed from the repo from
 "Context menus".
 
