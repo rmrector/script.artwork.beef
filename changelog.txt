@@ -1,4 +1,4 @@
-v0.5.1~dev
+v0.6.0 (2016-07-08)
 - Add setting to enter a fanart.tv personal API key
 - Use production API for TheTVDB API v2, rather than beta
 - Load artwork from filesystem for stacked movies and VIDEO_TS/BDMV rips
