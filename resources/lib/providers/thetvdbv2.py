@@ -77,7 +77,7 @@ class TheTVDBProvider(AbstractProvider):
 
     def login(self):
         response = self.session.post(self.loginurl, json={'apikey': self.apikey}, headers={'Content-Type': 'application/json', 'User-Agent': providers.useragent}, timeout=15)
-        if not response or response.headers['Content-Type'] != 'application/json':
+        if not response or not response.headers['Content-Type'].startswith('application/json'):
             raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]
         self.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
         return True
