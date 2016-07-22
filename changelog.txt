@@ -1,3 +1,6 @@
+v0.6.1 (2016-07-22)
+- Fix error when grabbing images from TheTVDB
+
 v0.6.0 (2016-07-08)
 - Add setting to enter a fanart.tv personal API key
 - Use production API for TheTVDB API v2, rather than beta
