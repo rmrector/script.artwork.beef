@@ -30,7 +30,7 @@ class ArtworkService(xbmc.Monitor):
         self.serviceenabled = addon.get_setting('enableservice')
         self.abort = False
         self.processor = ArtworkProcessor(self)
-        self.processed = ProcessedItems(addon.datapath).load()
+        self.processed = ProcessedItems(addon.datapath)
         self.signal = None
         self.processaftersettings = False
         self.scanning = False
