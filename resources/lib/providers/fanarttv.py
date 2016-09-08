@@ -79,6 +79,8 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                 resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
+                if arttype == 'showbackground' and 'season' in image and image['season'] != 'all':
+                    resultimage['title'] = 'Season {0}'.format(image['season'])
                 result[itype].append(resultimage)
         return result
 
