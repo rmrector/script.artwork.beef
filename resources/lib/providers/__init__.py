@@ -16,9 +16,9 @@ external = {
 }
 
 forced = {
-    mediatypes.TVSHOW: (NFOFileSeriesProvider(), ArtFilesSeriesProvider()),
-    mediatypes.MOVIE: (NFOFileMovieProvider(), ArtFilesMovieProvider()),
-    mediatypes.EPISODE: (NFOFileEpisodeProvider(), ArtFilesEpisodeProvider())
+    mediatypes.TVSHOW: (ArtFilesSeriesProvider(), NFOFileSeriesProvider()),
+    mediatypes.MOVIE: (ArtFilesMovieProvider(), NFOFileMovieProvider()),
+    mediatypes.EPISODE: (ArtFilesEpisodeProvider(), NFOFileEpisodeProvider())
 }
 
 useragent = 'ArtworkBeef Kodi'
