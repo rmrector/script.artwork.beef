@@ -2,31 +2,66 @@ import re
 import xbmc
 import xbmcgui
 
+from devhelper import pykodi
+
+import mediatypes
 from utils import localize as L
 
-CURRENT_ART = 13512
 SEASON_NUMBER = 20358
 SPECIALS = 20381
 UNKNOWN_SOURCE = 32000
 CHOOSE_TYPE_HEADER = 32050
 CHOOSE_ART_HEADER = 32051
 
+def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
+    if not availableart:
+        return None, None
+
+    addon = pykodi.get_main_addon()
+    arttypes = []
+    for arttype, artlist in availableart.iteritems():
+        if arttype.startswith('season.-1.'):
+            # Ignore 'all' seasons artwork, as I can't set artwork for it with JSON
+            continue
+        label = arttype if not arttype.startswith('season.') else get_seasonlabel(arttype)
+        for image in artlist:
+            if image.get('existing'):
+                arttypes.append({'arttype': arttype, 'label': label, 'count': len(artlist), 'url': image['url']})
+                break
+        if arttype not in (at['arttype'] for at in arttypes):
+            arttypes.append({'arttype': arttype, 'label': arttype, 'count': len(artlist)})
+    arttypes.sort(key=lambda art: sort_arttype(art['arttype']))
+    typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', addon.path, arttypes=arttypes, medialabel=medialabel)
+    hqpreview = addon.get_setting('highquality_preview')
+    singletype = arttypes[0]['arttype'] if len(arttypes) == 1 else None
+    selectedarttype = None
+    selectedart = None
+    while selectedart == None and not monitor.abortRequested():
+        # The loop shows the first window if viewer backs out of the second
+        if singletype:
+            selectedarttype = singletype
+        else:
+            selectedarttype = typeselectwindow.prompt()
+        if not selectedarttype:
+            break
+        artlist = availableart[selectedarttype]
+        if selectedarttype.startswith('season.'):
+            stype = selectedarttype.rsplit('.', 1)[1]
+            stype = mediatypes.artinfo[mediatypes.SEASON].get(stype)
+        else:
+            stype = mediatypes.artinfo[mediatype].get(selectedarttype)
+        multi = stype['multiselect'] if stype else False
+        artselectwindow = ArtworkSelector('DialogSelect.xml', addon.path, artlist=artlist, arttype=selectedarttype,
+            medialabel=medialabel, multi=multi, hqpreview=hqpreview)
+        selectedart = artselectwindow.prompt()
+        if singletype and selectedart == None:
+            break
+    return selectedarttype, selectedart
+
 class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
         super(ArtworkTypeSelector, self).__init__()
-        self.existingart = kwargs.get('existingart')
-        items = kwargs.get('arttypes')[:]
-        items.sort()
-        seasonitems = [item for item in items if item[0].startswith('season.')]
-        self.arttypes = [(item[0], item[0], item[1]) for item in items if not item[0].startswith('season.')]
-        for origseason in seasonitems:
-            season = origseason[0].split('.')
-            if season[1] == '0':
-                self.arttypes.append(('{0}: {1}'.format(L(SPECIALS), season[2]), origseason[0], origseason[1]))
-            elif season[1] != '-1':
-                # Ignore 'all' seasons artwork, as I can't set artwork for it with JSON
-                self.arttypes.append(('{0}: {1}'.format(L(SEASON_NUMBER) % int(season[1]), season[2]), origseason[0], origseason[1]))
-        self.arttypes.sort(key=lambda art: sort_art(art[1]))
+        self.arttypes = kwargs.get('arttypes')
         self.medialabel = kwargs.get('medialabel')
         self.guilist = None
         self.selected = None
@@ -43,13 +78,13 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
             self.getControl(5).setVisible(False)
             self.guilist = self.getControl(6)
             for arttype in self.arttypes:
-                listitem = xbmcgui.ListItem(arttype[0])
-                listitem.setProperty('Addon.Summary', '{0} available'.format(arttype[2]))
-                listitem.setLabel2(arttype[1])
-                if self.existingart.get(arttype[1]):
-                    listitem.setIconImage(self.existingart[arttype[1]])
+                listitem = xbmcgui.ListItem(arttype['label'])
+                listitem.setProperty('Addon.Summary', '{0} available'.format(arttype['count']))
+                listitem.setLabel2(arttype['arttype'])
+                if arttype.get('url'):
+                    listitem.setIconImage(arttype['url'])
                     # Above is deprecated in Jarvis, but still works
-                    # listitem.setArt({'icon': self.existingart[arttype[1]]})
+                    # listitem.setArt({'icon': arttype.get('url')})
                 self.guilist.addItem(listitem)
         else:
             self.selected = None
@@ -73,21 +108,15 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
         self.medialabel = kwargs.get('medialabel')
         self.multi = kwargs.get('multi', False)
         self.hqpreview = kwargs.get('hqpreview', False)
-        self.existingart = kwargs.get('existingart', [])
-        artlist = kwargs.get('artlist')
-        urllist = list(item['url'] for item in artlist)
-        self.artlist = []
-        for art in self.existingart:
-            if art not in urllist:
-                self.artlist.append({'url': art, 'preview': art, 'windowlabel': L(CURRENT_ART)})
-        self.artlist.extend(artlist)
+        self.artlist = kwargs.get('artlist')
         self.guilist = None
         self.selected = None
 
     def prompt(self):
+        '''Returns a single url if not multi,
+            else a tuple with item 0 a list of added urls, 1 a list of removed urls,
+            None if cancelled'''
         self.doModal()
-        if self.multi and self.selected and not (self.selected[0] or self.selected[1]):
-            return None
         return self.selected
 
     def onInit(self):
@@ -98,49 +127,45 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
         self.guilist = self.getControl(6)
 
         for image in self.artlist:
-            if 'windowlabel' in image:
-                label = image['windowlabel']
-                summary = L(UNKNOWN_SOURCE)
+            provider = image['provider'].display
+            if isinstance(provider, int):
+                provider = L(provider)
+            secondprovider = image.get('second provider')
+            if secondprovider:
+                if isinstance(secondprovider, int):
+                    secondprovider = L(secondprovider)
+                provider = '{0}, {1}'.format(provider, secondprovider)
+            title = image.get('title')
+            if not title and 'subtype' in image:
+                title = image['subtype'].display
+            language = xbmc.convertLanguage(image['language'], xbmc.ENGLISH_NAME) if image.get('language') else None
+            if not title:
+                title = language
+            if title and len(title) < 20 and not secondprovider:
+                label = '{0} from {1}'.format(title, provider)
+                summary = language if language and language != title else ''
             else:
-                provider = image['provider'].display
-                if isinstance(provider, int):
-                    provider = L(provider)
-                secondprovider = image.get('second provider')
-                if secondprovider:
-                    if isinstance(secondprovider, int):
-                        secondprovider = L(secondprovider)
-                    provider = '{0}, {1}'.format(provider, secondprovider)
-                title = image.get('title')
-                if not title and 'subtype' in image:
-                    title = image['subtype'].display
-                language = xbmc.convertLanguage(image['language'], xbmc.ENGLISH_NAME) if image['language'] else None
-                if not title:
-                    title = language
-                if title and len(title) < 20 and not secondprovider:
-                    label = '{0} from {1}'.format(title, provider)
-                    summary = language if language != title else ''
-                else:
-                    label = provider
-                    if language and language != title:
-                        title = language + ' ' + title
-                    summary = title if title else ''
-                rating = image.get('rating')
-                size = image.get('size')
-                if (rating or size) and summary:
-                    summary += '\n'
-                if size:
-                    summary += image['size'].display
-                if rating and size:
-                    summary += '   '
-                if rating:
-                    summary += image['rating'].display
+                label = provider
+                if language and language != title:
+                    title = language + ' ' + title
+                summary = title if title else ''
+            rating = image.get('rating')
+            size = image.get('size')
+            if (rating or size) and summary:
+                summary += '\n'
+            if size:
+                summary += image['size'].display
+            if rating and size:
+                summary += '   '
+            if rating:
+                summary += image['rating'].display
             listitem = xbmcgui.ListItem(label)
             listitem.setProperty('Addon.Summary', summary)
             listitem.setIconImage(image['url'] if self.hqpreview else image['preview'])
             # Above is deprecated in Jarvis, but still works
             # listitem.setArt({'icon': image['url'] if self.hqpreview else image['preview']})
             listitem.setPath(image['url'])
-            if image['url'] in self.existingart:
+            if image.get('existing'):
                 listitem.select(True)
             self.guilist.addItem(listitem)
         self.setFocus(self.guilist)
@@ -151,33 +176,44 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
             if self.multi:
                 if self.selected == None:
                     self.selected = ([], [])
-                if item.isSelected():
-                    item.select(False)
-                    # removed
-                    if item.getfilename() in self.selected[0]:
-                        self.selected[0].remove(item.getfilename())
-                    else:
-                        self.selected[1].append(item.getfilename())
-                else:
-                    item.select(True)
-                    if item.getfilename() in self.selected[1]:
-                        self.selected[1].remove(item.getfilename())
-                    else:
-                        self.selected[0].append(item.getfilename())
+                self.toggleitemlists(item.getfilename(), item.isSelected())
+                item.select(not item.isSelected())
             else:
                 self.selected = item.getfilename()
                 self.close()
         elif controlid == 5:
+            if self.multi and self.selected == None:
+                self.selected = ([], [])
             self.close()
         elif controlid == 7:
             self.selected = None
             self.close()
+
+    def toggleitemlists(self, filename, selected):
+        removefrom = self.selected[0] if selected else self.selected[1]
+        appendto = self.selected[1] if selected else self.selected[0]
+        if filename in removefrom:
+            removefrom.remove(filename)
+        else:
+            appendto.append(filename)
 
     def onAction(self, action):
         if action.getId() in (xbmcgui.ACTION_NAV_BACK, xbmcgui.ACTION_PREVIOUS_MENU):
             self.selected = None
             self.close()
 
-def sort_art(string, naturalsortresplit=re.compile('([0-9]+)')):
-    return [int(text) if text.isdigit() else text.lower()
-            for text in re.split(naturalsortresplit, string)]
+def get_seasonlabel(arttype):
+    season = arttype.split('.')
+    if season[1] == '0':
+        return '{0}: {1}'.format(L(SPECIALS), season[2])
+    elif season[1] != '-1':
+        return '{0}: {1}'.format(L(SEASON_NUMBER) % int(season[1]), season[2])
+
+def sort_arttype(arttype, naturalsortresplit=re.compile('([0-9]+)')):
+    result = []
+    if arttype.startswith('season.0'):
+        result.append(u'\u9999')
+    elif arttype.startswith('season.'):
+        result.append(u'\u9998')
+    result.extend(int(text) if text.isdigit() else text.lower() for text in re.split(naturalsortresplit, arttype))
+    return result

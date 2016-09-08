@@ -1,5 +1,7 @@
 v0.6.2~dev
 - Fix persistent error after saved JSON is corrupted
+- Improve list processing speed if web services aren't accessed
+- Reduce load on web services during automatic processing
 - Use proper paths for local file artwork
 - Fix datetime errors
 
