@@ -3,12 +3,12 @@ import sys
 import xbmc
 import xbmcvfs
 from abc import ABCMeta, abstractmethod
-from requests.exceptions import HTTPError
-
 from cachecontrol import CacheControl
 from cachecontrol.caches import FileCache
 from cachecontrol.heuristics import BaseHeuristic
-from requests.exceptions import Timeout
+from requests import codes
+from requests.exceptions import HTTPError, Timeout
+
 from devhelper.pykodi import log
 
 from requests.packages import urllib3
@@ -49,12 +49,12 @@ class AbstractProvider(object):
         if result == None:
             return
         errcount = 0
-        if result.status_code == requests.codes.unauthorized:
+        if result.status_code == codes.unauthorized:
             if self.login():
                 result = self._inget(url, params, headers)
                 if result is None:
                     return
-        while result.status_code == requests.codes.too_many_requests:
+        while result.status_code == codes.too_many_requests:
             if errcount > 2:
                 raise ProviderError, "Too many requests", sys.exc_info()[2]
             errcount += 1
@@ -68,7 +68,7 @@ class AbstractProvider(object):
             if result == None:
                 return
 
-        if result.status_code == requests.codes.not_found:
+        if result.status_code == codes.not_found:
             return
         try:
             result.raise_for_status()
