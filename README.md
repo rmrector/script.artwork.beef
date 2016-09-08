@@ -24,18 +24,19 @@ Finally, **episodes**: `fanart`
 ### Installing
 
 At the moment it depends on a couple of python modules not available in the official Kodi repo, and my own goofy
-devhelper, so it will be simplest to install my [dev repository], ([direct]), and then install from "Program add-ons",
+devhelper, so it will be simplest to install my [dev repository], ([GitHub]), and then install from "Program add-ons",
 and Kodi will take care of downloading the dependencies. The context items can also be installed from the repo from
 "Context menus".
 
-[dev repository]: https://github.com/rmrector/repository.rector.stuff
-[direct]: https://github.com/rmrector/repository.rector.stuff/raw/master/repository.rector.stuff/repository.rector.stuff-1.0.0.zip
+[dev repository]: https://github.com/rmrector/repository.rector.stuff/raw/master/repository.rector.stuff/repository.rector.stuff-1.0.0.zip
+[GitHub]: https://github.com/rmrector/repository.rector.stuff
 
 ### Usage
 
 Install it. Tada! It will automatically run after library updates, grabbing extended
-artwork for new items. The automatic operation is handled by a service that watches
-for library updates. You can also run it from Program add-ons to trigger the automatic
+artwork for new items, much like Kodi and scrapers do for info and basic artwork.
+
+You can also run it from Program add-ons to trigger the automatic
 process for new or all items; a currently running process can also be canceled here. Finally,
 to select specific artwork for individual media items, install the context item "Select
 artwork to add", and add all configured artwork with "Add missing artwork". After
@@ -46,19 +47,11 @@ artwork, in case new artwork has been submitted to the web services. This may ta
 time, if many items are missing some artwork.
 
 Episode fanart requires using a scraper that grabs the TheTVDB ID for each episode, like the standard TheTVDB scraper.
-Automatically adding episode fanart must be enabled per series through the add-on settings, as they add a bundle of new
+You must enable adding episode fanart automatically by series through the add-on settings, as they add a bundle of new
 API calls to The Movie Database and just aren't available for many series.
 
 There are add-on settings to specify exactly which types of artwork and how many to
 download automatically.
-
-### Skin support
-
-For the most part skins will still access images in the same Kodi standard way. Extrafanart has been replaced by
-[multiple fanart](http://forum.kodi.tv/showthread.php?tid=236649), which does require skins to access them differently.
-
-Episode fanart may just work, depending on how your skin accesses fanart when listing episodes.
-`$INFO[ListItem.Art(fanart)]` pulls the episode fanart if it exists, otherwise Kodi falls back to the series fanart.
 
 ### From NFO and image files
 
@@ -73,8 +66,7 @@ library to separate files.
 
 If you manage all of your artwork with image files and/or NFO files, the add-on setting
 "Auto add artwork from filesystem only" under "Advanced" will prevent the add-on from
-querying the web services during automatic processing, saving time and network resources,
-and with image files avoids adding duplicates with multiple images of a single type.
+querying the web services during automatic processing, saving time and network resources.
 
 Artwork from these files aren't limited to the artwork types listed above; artwork types can be freely named, as long
 as they are alphanumeric. The artwork type should have the exact name; for instance, multiple fanart will have one
@@ -83,9 +75,52 @@ single `fanart`, one `fanart1`, one `fanart2`, and so on.
 [Kodi NFO file]: http://kodi.wiki/view/NFO_files
 [Kodi artwork]: http://kodi.wiki/view/Artwork#Naming_conventions
 
+### Skin support
+
+For the most part skins will still access images in the same Kodi standard way.
+Episode fanart may just work, depending on how your skin accesses fanart when listing episodes.
+`$INFO[ListItem.Art(fanart)]` pulls the episode fanart if it exists, otherwise Kodi falls back to the series fanart.
+
+Extrafanart has been replaced by [multiple fanart], which does require skins to access differently.
+[Artwork Helper] is a small add-on that skins can depend on to easily gather fanart for a `multiimage`
+control. Extrathumbs are similarly replaced, implemented in the library as `thumb1`, `thumb2`, and so on.
+Skins should not use Artwork Beef as a dependency.
+
+[multiple fanart]: http://forum.kodi.tv/showthread.php?tid=236649
+[Artwork Helper]: https://github.com/rmrector/script.artwork.helper
+
 ### Current gotchas
 
-- Music video artwork is nowhere to be seen.
+- Music video artwork is nowhere to be seen, but might at some point.
 - It uses the v2 API from TheTVDB.com, which has a tendency to not list all artwork.
-- Results from web services are cached for a full week.
 - It expects scrapers to set an IMDB number for movies, and a TVDB ID for series, like the default scrapers.
+  An identifier like this will always be required, but should support other services in the future.
+- It cannot set artwork for "all seasons" with JSON-RPC. [related trac ticket](http://trac.kodi.tv/ticket/16139)
+
+### Transition from Artwork Downloader
+
+Artwork Beef is an alternative to Artwork Downloader, and using its automatic process
+along with Artwork Downloader's full library process isn't a very good idea.
+
+* If you have artwork as files next to your media, some filenames will need changed.
+  `logo` to `clearlogo`, `disc` to `discart` (for movies), and `character` to `characterart`
+* extrafanart is not supported, they are instead integrated into the library by URL like other
+  artwork, or if you use artwork files, move them to `fanart1`, `fanart2`, and so on.
+* extrathumbs are like extrafanart (as `thumb1`/`thumb2`/etc), but Artwork Beef doesn't add them from
+  external sources, while AD resizes backdrops/fanart from TMDB.
+* It won't actually download new artwork to your media files like AD can, preferring just Kodi's cache.
+* *__More?__*
+
+### Thoughts
+
+- It doesn't download any artwork, and likely never will; it just grabs the URLs, then Kodi
+  downloads them as part of its regular caching process.
+- Extrathumbs aren't added from external sources. I don't want to use AD's method, and generating
+  the thumbs are outside the scope of this add-on. An external art/nfo manager could generate them.
+  Plugins can also set these to the ListItem, if their source provides more than one thumbnail.
+- It would be nice to have a Kodi built-in way for skins to feed multiple art to a `multiimage`,
+  maybe something like `$INFO[ListItem.MultiArt(fanart)]` to pull all `fanart` and `fanart#` together.
+  I have no idea how it could be implemented in Kodi, though.
+
+Those were my thoughts. **What are yours?** Skinners, viewers/end users, anyone, I'd like
+to hear what you think.
