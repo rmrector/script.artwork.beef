@@ -47,7 +47,9 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
     apiurl = 'http://api.themoviedb.org/3/movie/%s/images'
     artmap = {'backdrops': 'fanart', 'posters': 'poster'}
 
-    def get_images(self, mediaid):
+    def get_images(self, mediaid, types=None):
+        if types and not self.provides(types):
+            return {}
         if not self.baseurl:
             return {}
         data = self.get_data(self.apiurl % mediaid)
@@ -74,6 +76,9 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
                 result[generaltype].append(resultimage)
         return result
 
+    def provides(self, types):
+        return any(x in types for x in self.artmap.values())
+
 class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.EPISODE
 
@@ -85,7 +90,7 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
         super(TheMovieDBEpisodeProvider, self).__init__()
         self.session.headers['Accept'] = 'application/json'
 
-    def get_images(self, mediaid):
+    def get_images(self, mediaid, types=None):
         if not self.baseurl:
             return {}
         data = self.get_data(self.tvdbidsearch_url % mediaid)

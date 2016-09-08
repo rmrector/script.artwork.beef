@@ -99,7 +99,7 @@ class AbstractProvider(object):
         return False
 
     @abstractmethod
-    def get_images(self, mediaid):
+    def get_images(self, mediaid, types=None):
         pass
 
 class ForceDaysCache(BaseHeuristic):
