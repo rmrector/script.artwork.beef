@@ -59,7 +59,7 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
         paths = get_movie_path_list(path)
         result = {}
         for dirname, moviefile in (os.path.split(p) for p in paths):
-            dirname += '/'
+            dirname += '\\' if '\\' in dirname else '/'
             moviebase = os.path.splitext(moviefile)[0]
             _, files = xbmcvfs.listdir(dirname)
             for filename in files:
@@ -87,7 +87,7 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
 
     def get_exact_images(self, path):
         path, inputfilename = os.path.split(path)
-        path += '/'
+        path += '\\' if '\\' in path else '/'
         _, files = xbmcvfs.listdir(path)
         inputbase = os.path.splitext(inputfilename)[0]
         result = {}
