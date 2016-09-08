@@ -1,3 +1,4 @@
+import re
 import sys
 import xbmc
 
@@ -32,12 +33,16 @@ class TheTVDBProvider(AbstractProvider):
             return
         return response.json()
 
-    def get_images(self, mediaid):
+    def get_images(self, mediaid, types=None):
+        if types and not self.provides(types):
+            return {}
         result = {}
         languages = [pykodi.get_language(xbmc.ISO_639_1)]
         if languages[0] != 'en':
             languages.append('en')
         for arttype in self.artmap.keys():
+            if types and not typematches(self.artmap[arttype], types):
+                continue
             for language in languages:
                 generaltype = self.artmap[arttype]
                 data = self.get_data(mediaid, arttype, language)
@@ -82,9 +87,16 @@ class TheTVDBProvider(AbstractProvider):
         self.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
         return True
 
+    def provides(self, types):
+        types = set(x if not x.startswith('season') else re.sub(r'[\d]', '%s', x) for x in types)
+        return any(x in types for x in self.artmap.values())
+
 def shouldset_imagelanguage(image):
     if image['keyType'] == 'series':
         return image['subKey'] != 'blank'
     elif image['keyType'] == 'fanart':
         return image['subKey'] == 'text'
     return True
+
+def typematches(arttype, types):
+    return any(x for x in types if arttype == (x if not x.startswith('season') else re.sub(r'[\d]', '%s', x)))

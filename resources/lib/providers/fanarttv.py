@@ -1,3 +1,4 @@
+import re
 import xbmc
 from abc import ABCMeta
 
@@ -51,7 +52,9 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         'seasonposter': mediatypes.SEASON + '.%s.poster'
     }
 
-    def get_images(self, mediaid):
+    def get_images(self, mediaid, types=None):
+        if types and not self.provides(types):
+            return {}
         data = self.get_data(mediaid)
         if data is None:
             return {}
@@ -105,6 +108,10 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         # tvposter may or may not have a title and thus need a language
         return image['lang'] if image['lang'] not in ('', '00') else None
 
+    def provides(self, types):
+        types = set(x if not x.startswith('season') else re.sub(r'[\d]', '%s', x) for x in types)
+        return any(x in types for x in self.artmap.values())
+
 class FanartTVMovieProvider(FanartTVAbstractProvider):
     mediatype = mediatypes.MOVIE
 
@@ -123,7 +130,9 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
 
     disctitles = {'dvd': 'DVD', '3d': '3D', 'bluray': 'Blu-ray'}
 
-    def get_images(self, mediaid):
+    def get_images(self, mediaid, types=None):
+        if types and not self.provides(types):
+            return {}
         data = self.get_data(mediaid)
         if data is None:
             return {}
@@ -171,3 +180,6 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
             return image['lang'] if image['lang'] not in ('', '00') else 'en'
         # movieposter may or may not have a title
         return image['lang'] if image['lang'] not in ('', '00') else None
+
+    def provides(self, types):
+        return any(x in types for x in self.artmap.values())
