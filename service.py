@@ -8,14 +8,14 @@ else:
     import json
 
 from devhelper import pykodi, quickjson
-from devhelper.pykodi import log
+from devhelper.pykodi import log, datetime_now
 
 addon = pykodi.get_main_addon()
 sys.path.append(addon.resourcelibs)
 
+import mediatypes
 from artworkprocessor import ArtworkProcessor, episode_properties, movie_properties, tvshow_properties
 from processeditems import ProcessedItems
-import mediatypes
 
 STATUS_IDLE = 'idle'
 STATUS_SIGNALLED = 'signalled'
@@ -146,14 +146,14 @@ class ArtworkService(xbmc.Monitor):
             self.process_allitems()
             self.reset_recent()
             return
-        needall = lastdate < str(datetime.now() - timedelta(days=ALLITEMS_DAYS))
+        needall = lastdate < str(datetime_now() - timedelta(days=ALLITEMS_DAYS))
         if needall:
             needunprocessed = False
         else:
             needunprocessed = self.toomany_recentitems
             if not needunprocessed:
                 lastdate = addon.get_setting('lastunprocesseddate')
-                needunprocessed = lastdate < str(datetime.now() - timedelta(days=UNPROCESSED_DAYS))
+                needunprocessed = lastdate < str(datetime_now() - timedelta(days=UNPROCESSED_DAYS))
         if needunprocessed:
             self.process_allitems(True)
             self.reset_recent()
@@ -164,7 +164,7 @@ class ArtworkService(xbmc.Monitor):
             self.process_allitems()
 
     def process_allitems(self, excludeprocessed=False):
-        currentdate = str(datetime.now())
+        currentdate = str(datetime_now())
         items = quickjson.get_movies(properties=movie_properties)
         if excludeprocessed:
             items = [movie for movie in items if movie['movieid'] not in self.processed.movie]

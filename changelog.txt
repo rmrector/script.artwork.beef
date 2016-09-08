@@ -1,6 +1,7 @@
 v0.6.2~dev
 - Fix persistent error after saved JSON is corrupted
 - Use proper paths for local file artwork
+- Fix datetime errors
 
 v0.6.1 (2016-07-22)
 - Fix error when grabbing images from TheTVDB
