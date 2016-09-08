@@ -17,6 +17,7 @@ class ProcessedItems(object):
         self.movie = []
         self.episode = []
         self.filename = directory + 'processeditems.json'
+        self.load()
 
     def extend(self, extender):
         for tvshowid, seasons in extender.get('tvshow', {}).iteritems():
@@ -40,21 +41,23 @@ class ProcessedItems(object):
             json.dump({'tvshow': self.tvshow, 'movie': self.movie, 'episode': self.episode, 'version': self.version}, jsonfile)
 
     def load(self):
+        self.clear()
         if xbmcvfs.exists(self.filename):
             with closing(xbmcvfs.File(self.filename)) as jsonfile:
                 try:
                     processed = json.load(jsonfile)
                 except ValueError:
-                    self.clear()
                     log("Had trouble loading ProcessedItems, starting fresh.", xbmc.LOGWARNING, tag='json')
                     return
 
                 if processed.get('version') == self.version:
-                    self.tvshow = dict((int(tvshowid), seasons) for tvshowid, seasons in processed.get('tvshow', {}).iteritems())
-                else:
-                    self.tvshow = {}
-                self.movie = processed.get('movie', [])
-                self.episode = processed.get('episode', [])
-        else:
-            self.clear()
-        return self
+                    tvshows = processed.get('tvshow')
+                    if isinstance(tvshows, dict):
+                        self.tvshow = dict((int(tvshowid), seasons) for tvshowid, seasons
+                            in tvshows.iteritems())
+                movies = processed.get('movie')
+                if isinstance(movies, list):
+                    self.movie = movies
+                episodes = processed.get('episode')
+                if isinstance(episodes, list):
+                    self.episode = episodes
