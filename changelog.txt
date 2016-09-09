@@ -1,4 +1,4 @@
-v0.6.2~dev
+v0.6.2 (2016-09-08)
 - Fix persistent error after saved JSON is corrupted
 - Improve list processing speed if web services aren't accessed
 - Reduce load on web services during automatic processing
