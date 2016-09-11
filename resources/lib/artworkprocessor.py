@@ -115,9 +115,7 @@ class ArtworkProcessor(object):
                 if selectedarttype:
                     if mediatypes.artinfo[mediaitem['mediatype']][selectedarttype]['multiselect']:
                         existingurls = [url for exacttype, url in mediaitem['art'].iteritems() if exacttype.startswith(selectedarttype)]
-                        log(existingurls)
                         urls_toset = [url for url in existingurls if url not in selectedart[1]]
-                        log(urls_toset)
                         newurls = [url for url in selectedart[0] if url not in urls_toset]
                         count = len(newurls)
                         urls_toset.extend(newurls)
@@ -127,7 +125,6 @@ class ArtworkProcessor(object):
                             selectedart[selectedarttype + (str(i) if i else '')] = url
                             i += 1
                         selectedart.update(dict((arttype, None) for arttype in mediaitem['art'].keys() if arttype.startswith(selectedarttype) and arttype not in selectedart.keys()))
-                        log(selectedart)
                     else:
                         selectedart = {selectedarttype: selectedart}
                         count = 1
