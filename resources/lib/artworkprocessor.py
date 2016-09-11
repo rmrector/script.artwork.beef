@@ -371,7 +371,7 @@ def get_media_source(mediapath):
 
 def tag_forcedandexisting_art(availableart, forcedart, existingart):
     typeinsert = {}
-    for exacttype, artlist in sorted(forcedart.iteritems(), key=natural_sort):
+    for exacttype, artlist in sorted(forcedart.iteritems(), key=lambda arttype: natural_sort(arttype[0])):
         arttype = exacttype.rstrip('0123456789')
         if arttype not in availableart:
             availableart[arttype] = artlist
