@@ -54,6 +54,14 @@ msgctxt "#32051"
 msgid "Choose {0} for {1}"
 msgstr ""
 
+msgctxt "#32052"
+msgid "Actions"
+msgstr ""
+
+msgctxt "#32053"
+msgid "Automatically add these artwork types from web services"
+msgstr ""
+
 # Actions
 
 msgctxt "#32400"
@@ -104,4 +112,8 @@ msgstr ""
 
 msgctxt "#32905"
 msgid "fanart.tv personal API key"
+msgstr ""
+
+msgctxt "#32906"
+msgid "Identify Artwork Downloader artwork filenames"
 msgstr ""
