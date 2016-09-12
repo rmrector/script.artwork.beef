@@ -1,6 +1,6 @@
 import sys
 import xbmc
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 if sys.version_info < (2, 7):
     import simplejson as json
@@ -28,6 +28,7 @@ class ArtworkService(xbmc.Monitor):
     def __init__(self):
         super(ArtworkService, self).__init__()
         self.serviceenabled = addon.get_setting('enableservice')
+        self.only_filesystem = addon.get_setting('only_filesystem')
         self.abort = False
         self.processor = ArtworkProcessor(self)
         self.processed = ProcessedItems(addon.datapath)
@@ -139,14 +140,17 @@ class ArtworkService(xbmc.Monitor):
         # 1. Recent items, can run several times per day, after every library update, and only for small updates
         # 2. Unprocessed items, at least once every UNPROCESSED_DAYS and after larger library updates
         #  - this contains only new items that were missed in the recent loops, maybe in a shared database
-        # 3. All items, once every ALLITEMS_DAYS
+        # 3. All items, once every ALLITEMS_DAYS ( or / 4, if filesystem only)
         #  - adds new artwork for old items missing artwork
         lastdate = addon.get_setting('lastalldate')
         if lastdate == '0':
             self.process_allitems()
             self.reset_recent()
             return
-        needall = lastdate < str(datetime_now() - timedelta(days=ALLITEMS_DAYS))
+        days = ALLITEMS_DAYS
+        if self.only_filesystem:
+            days /= 4
+        needall = lastdate < str(datetime_now() - timedelta(days=days))
         if needall:
             needunprocessed = False
         else:
@@ -233,6 +237,7 @@ class ArtworkService(xbmc.Monitor):
 
     def onSettingsChanged(self):
         self.serviceenabled = addon.get_setting('enableservice')
+        self.only_filesystem = addon.get_setting('only_filesystem')
         mediatypes.update_settings()
         self.processor.update_settings()
         if self.processaftersettings:
