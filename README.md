@@ -81,12 +81,13 @@ For the most part skins will still access images in the same Kodi standard way.
 Episode fanart may just work, depending on how your skin accesses fanart when listing episodes.
 `$INFO[ListItem.Art(fanart)]` pulls the episode fanart if it exists, otherwise Kodi falls back to the series fanart.
 
-Extrafanart has been replaced by [multiple fanart], which does require skins to access differently.
-[Artwork Helper] is a small add-on that skins can depend on to easily gather fanart for a `multiimage`
-control. Extrathumbs are similarly replaced, implemented in the library as `thumb1`, `thumb2`, and so on.
-Skins should not use Artwork Beef as a dependency.
+Extrafanart has been integrated [into the library] and no longer has to be in the filesystem,
+but does require skins to access them differently. Extrathumbs are similarly integrated, implemented
+in the library as `thumb1`, `thumb2`, and so on. [Artwork Helper] is a small add-on that skins can
+depend on to easily gather fanart/thumbs for a `multiimage` control. Skins should not list
+Artwork Beef as a dependency.
 
-[multiple fanart]: http://forum.kodi.tv/showthread.php?tid=236649
+[into the library]: http://forum.kodi.tv/showthread.php?tid=236649
 [Artwork Helper]: https://github.com/rmrector/script.artwork.helper
 
 ### Current gotchas
@@ -97,25 +98,12 @@ Skins should not use Artwork Beef as a dependency.
   An identifier like this will always be required, but should support other services in the future.
 - It cannot set artwork for "all seasons" with JSON-RPC. [related trac ticket](http://trac.kodi.tv/ticket/16139)
 
-### Transition from Artwork Downloader
-
-Artwork Beef is an alternative to Artwork Downloader, and using its automatic process
-along with Artwork Downloader's full library process isn't a very good idea.
-
-* If you have artwork as files next to your media, some filenames will need changed.
-  `logo` to `clearlogo`, `disc` to `discart` (for movies), and `character` to `characterart`
-* extrafanart is not supported, they are instead integrated into the library by URL like other
-  artwork, or if you use artwork files, move them to `fanart1`, `fanart2`, and so on.
-* extrathumbs are like extrafanart (as `thumb1`/`thumb2`/etc), but Artwork Beef doesn't add them from
-  external sources, while AD resizes backdrops/fanart from TMDB.
-* It won't actually download new artwork to your media files like AD can, preferring just Kodi's cache.
-* *__More?__*
-
 ### Thoughts
 
 - It doesn't download any artwork, and likely never will; it just grabs the URLs, then Kodi
   downloads them as part of its regular caching process.
-- Extrathumbs aren't added from external sources. I don't want to use AD's method, and generating
+- Extrathumbs aren't added from external sources. I don't want to resize backdrops/fanart from TMDB
+  like Artwork Downloader (I much prefer to use those for multiple fanart), and generating
   the thumbs are outside the scope of this add-on. An external art/nfo manager could generate them.
   Plugins can also set these to the ListItem, if their source provides more than one thumbnail.
 - It would be nice to have a Kodi built-in way for skins to feed multiple art to a `multiimage`,

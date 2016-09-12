@@ -1,3 +1,6 @@
+v0.6.3
+- Identify artwork with AD filenames
+
 v0.6.2 (2016-09-08)
 - Fix persistent error after saved JSON is corrupted
 - Improve list processing speed if web services aren't accessed
