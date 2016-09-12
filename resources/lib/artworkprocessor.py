@@ -402,11 +402,7 @@ def tag_forcedandexisting_art(availableart, forcedart, existingart):
     typeinsert = {}
     for exacttype, existingurl in existingart.iteritems():
         arttype = exacttype.rstrip('0123456789')
-        if arttype not in availableart:
-            image = {'url': existingurl, 'preview': existingurl, 'title': exacttype,
-                'existing': True, 'provider': SortedDisplay('current', L(CURRENT_ART))}
-            availableart[arttype] = [image]
-        else:
+        if arttype in availableart:
             match = next((available for available in availableart[arttype] if available['url'] == existingurl), None)
             if match:
                 match['preview'] = existingurl
