@@ -162,9 +162,20 @@ class ArtworkProcessor(object):
             add_processeditem(processed, mediaitem)
             for arttype, imagelist in availableart.iteritems():
                 self.sort_images(arttype, imagelist, mediaitem['file'])
-            existingart = mediaitem['art']
-            selectedart = dict((key, artlist['url']) for key, artlist in forcedart.iteritems())
-            existingart.update(selectedart)
+            existingart = dict(mediaitem['art'])
+            selectedart = dict((key, image['url']) for key, image in forcedart.iteritems())
+            # Remove existing local artwork if it is no longer available
+            localurls = [(arttype, image['url']) for arttype, image in forcedart.iteritems() if not image['url'].startswith(('http', 'image://video'))]
+            for arttype, url in existingart.iteritems():
+                if not url.startswith(('http', 'image://video')) and (arttype, url) not in localurls and (
+                        mediaitem['mediatype'] != mediatypes.EPISODE or '.' not in arttype):
+                    selectedart[arttype] = None
+            for arttype, url in selectedart.iteritems():
+                if url:
+                    existingart[arttype] = url
+                elif arttype in existingart:
+                    del existingart[arttype]
+
             selectedart.update(self.get_top_missing_art(mediaitem['mediatype'], existingart, availableart, mediaitem.get('seasons')))
             if selectedart:
                 add_art_to_library(mediaitem['mediatype'], mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
