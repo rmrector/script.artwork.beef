@@ -91,7 +91,12 @@ msgstr ""
 # Settings
 
 msgctxt "#32900"
-msgid "Automatically add artwork for new items"
+msgid "Automatically add artwork"
+msgstr ""
+
+# subsetting of above
+msgctxt "#32904"
+msgid "from filesystem only"
 msgstr ""
 
 msgctxt "#32901"
@@ -104,10 +109,6 @@ msgstr ""
 
 msgctxt "#32903"
 msgid "Use high quality preview images"
-msgstr ""
-
-msgctxt "#32904"
-msgid "Auto add artwork from filesystem only"
 msgstr ""
 
 msgctxt "#32905"
