@@ -177,9 +177,11 @@ class ArtworkProcessor(object):
                     del existingart[arttype]
 
             selectedart.update(self.get_top_missing_art(mediaitem['mediatype'], existingart, availableart, mediaitem.get('seasons')))
+            # don't set already existing artwork
+            selectedart = dict((arttype, url) for arttype, url in selectedart.iteritems() if url != mediaitem['art'].get(arttype))
             if selectedart:
                 add_art_to_library(mediaitem['mediatype'], mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
-                artcount += len(selectedart)
+                artcount += sum(1 for url in selectedart.values() if url)
             if not services_hit:
                 if self.monitor.abortRequested():
                     break
