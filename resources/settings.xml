@@ -34,6 +34,7 @@
 		<setting id="preferredsize" label="32902" type="labelenum" default="1920x1080" values="1920x1080|1280x720" />
 		<setting id="highquality_preview" label="32903" type="bool" default="false" />
 		<setting id="only_filesystem" label="32904" type="bool" default="false" />
+		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
 		<setting id="fanarttv_key" label="32905" type="text" />
 		<!-- For add-on inner workings -->
 		<setting id="lastalldate" type="text" default="0" visible="false" />
