@@ -255,15 +255,15 @@ class ArtworkProcessor(object):
         return max(imagesize) // 200
 
     def _imagelanguage_sort(self, image, arttype):
+        primary = 0
         if arttype.endswith('fanart'):
-            if not image.get('language'):
-                return 0
-            elif image['language'] == self.language:
-                return 1 if self.titlefree_fanart else 0
+            if image['language'] == self.language:
+                primary = 1 if self.titlefree_fanart else 0
             else:
-                return image['language']
+                primary = 2 if image['language'] else 0
         else:
-            return 0 if image['language'] == self.language else image['language']
+            primary = 0 if image['language'] == self.language else 1
+        return primary, image['language']
 
     def get_top_missing_art(self, mediatype, existingart, availableart, seasons):
         if not availableart:
