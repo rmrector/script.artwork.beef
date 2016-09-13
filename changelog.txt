@@ -1,6 +1,7 @@
 v0.6.3
 - Identify artwork with AD filenames
 - Run full automatic process more often if filesystem only
+- Add option to set minimum rating for auto processing
 - Fix series banner sort
 
 v0.6.2 (2016-09-08)
