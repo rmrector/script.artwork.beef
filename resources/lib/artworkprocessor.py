@@ -117,7 +117,15 @@ class ArtworkProcessor(object):
                 selectedarttype, selectedart = prompt_for_artwork(mediaitem['mediatype'],
                     mediaitem['label'], availableart, self.monitor)
                 if selectedarttype:
-                    if mediatypes.artinfo[mediaitem['mediatype']][selectedarttype]['multiselect']:
+                    multiselect = False
+                    if selectedarttype.startswith('season.'):
+                        gentype = selectedarttype.rsplit('.', 1)[1]
+                        multiselect = mediatypes.artinfo[mediatypes.SEASON].get(gentype)
+                        if multiselect:
+                            multiselect = multiselect['multiselect']
+                    else:
+                        multiselect = mediatypes.artinfo[mediaitem['mediatype']][selectedarttype]['multiselect']
+                    if multiselect:
                         existingurls = [url for exacttype, url in mediaitem['art'].iteritems() if exacttype.startswith(selectedarttype)]
                         urls_toset = [url for url in existingurls if url not in selectedart[1]]
                         newurls = [url for url in selectedart[0] if url not in urls_toset]
