@@ -216,9 +216,14 @@ class ArtworkProcessor(object):
         if 'episodeid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.EPISODE
             mediaitem['dbid'] = mediaitem['episodeid']
+            mediaitem['imdbnumber'] = self._get_episodeid(mediaitem)
+            # Remove existing tvshow.* and season.* artwork
+            mediaitem['art'] = dict((arttype, url) for arttype, url in mediaitem['art'].iteritems() if '.' not in arttype)
         elif 'tvshowid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.TVSHOW
             mediaitem['dbid'] = mediaitem['tvshowid']
+            mediaitem['seasons'], art = self._get_seasons_artwork(quickjson.get_seasons(mediaitem['dbid']))
+            mediaitem['art'].update(art)
         elif 'movieid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.MOVIE
             mediaitem['dbid'] = mediaitem['movieid']
@@ -226,11 +231,6 @@ class ArtworkProcessor(object):
             log('Not sure what mediatype this is.', xbmc.LOGWARNING)
             log(mediaitem, xbmc.LOGWARNING)
             return False
-        if mediaitem['mediatype'] == mediatypes.TVSHOW:
-            mediaitem['seasons'], art = self._get_seasons_artwork(quickjson.get_seasons(mediaitem['dbid']))
-            mediaitem['art'].update(art)
-        elif mediaitem['mediatype'] == mediatypes.EPISODE:
-            mediaitem['imdbnumber'] = self._get_episodeid(mediaitem)
 
         mediaitem['art'] = dict((arttype, pykodi.unquoteimage(url)) for arttype, url in mediaitem['art'].iteritems())
         return True
