@@ -1,17 +1,11 @@
 import mediatypes
 import providers
-from utils import SortedDisplay
 from providers import ProviderError
 
-HAPPY_IMAGE = SortedDisplay(0, 'happy')
-NOAUTO_IMAGE = SortedDisplay(0, 'noauto')
-GOOFY_IMAGE = SortedDisplay(1, 'goofy')
-
 class Gatherer(object):
-    def __init__(self, monitor, titlefree_fanart, only_filesystem):
+    def __init__(self, monitor, only_filesystem):
         self.monitor = monitor
 
-        self.titlefree_fanart = titlefree_fanart
         self.only_filesystem = only_filesystem
 
     def getartwork(self, mediaitem, skipexisting=True):
@@ -48,11 +42,9 @@ class Gatherer(object):
                     if arttype not in resultimages:
                         resultimages[arttype] = []
                     resultimages[arttype].append(image)
-                    self.apply_status(arttype, image)
                 else:
                     if arttype not in resultimages:
                         resultimages[arttype] = image
-                        self.apply_status(arttype, image)
             if self.monitor.abortRequested():
                 break
         return resultimages
@@ -78,18 +70,7 @@ class Gatherer(object):
                 images[arttype].extend(artlist)
             if self.monitor.abortRequested():
                 break
-        for arttype, imagelist in images.iteritems():
-            for image in imagelist:
-                self.apply_status(arttype, image)
         return images, error
-
-    def apply_status(self, arttype, image):
-        image['status'] = HAPPY_IMAGE
-        if arttype == 'fanart':
-            if image['provider'] == 'fanart.tv':
-                image['status'] = NOAUTO_IMAGE
-            if self.titlefree_fanart and image['language']:
-                image['status'] = GOOFY_IMAGE
 
 def list_missing_arttypes(mediatype, seasons, existingarttypes):
     fullartinfo = mediatypes.artinfo[mediatype]

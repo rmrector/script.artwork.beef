@@ -8,7 +8,7 @@ from devhelper.pykodi import log
 
 import mediatypes
 from artworkselection import prompt_for_artwork
-from gatherer import Gatherer, list_missing_arttypes, NOAUTO_IMAGE
+from gatherer import Gatherer, list_missing_arttypes
 from utils import SortedDisplay, natural_sort, localize as L
 
 addon = pykodi.get_main_addon()
@@ -98,7 +98,7 @@ class ArtworkProcessor(object):
         if mode == MODE_GUI:
             self.init_run()
             self.add_additional_iteminfo(mediaitem)
-            gatherer = Gatherer(self.monitor, self.titlefree_fanart, self.only_filesystem)
+            gatherer = Gatherer(self.monitor, self.only_filesystem)
             forcedart, availableart, _, error = gatherer.getartwork(mediaitem, False)
             if error:
                 header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
@@ -146,7 +146,7 @@ class ArtworkProcessor(object):
         processed = {'tvshow': {}, 'movie': [], 'episode': []}
         artcount = 0
         currentitem = 0
-        gatherer = Gatherer(self.monitor, self.titlefree_fanart, self.only_filesystem)
+        gatherer = Gatherer(self.monitor, self.only_filesystem)
         for mediaitem in medialist:
             if self.visible:
                 self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
@@ -225,13 +225,11 @@ class ArtworkProcessor(object):
 
     def sort_images(self, arttype, imagelist, mediapath):
         # 1. Language, preferring fanart with no language/title if configured
-        # 2a. Match discart to media source
-        # 2. Separate on status, like goofy images
+        # 2. Match discart to media source
         # 3. Size (in 200px groups), up to preferredsize
         # 4. Rating
         imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
         imagelist.sort(key=self.size_sort, reverse=True)
-        imagelist.sort(key=lambda image: image['status'].sort)
         if arttype == 'discart':
             mediasubtype = get_media_source(mediapath)
             if mediasubtype != 'unknown':
@@ -332,7 +330,7 @@ class ArtworkProcessor(object):
             return False
         if arttype.endswith('fanart') and art['size'].sort < self.minimum_size:
             return False
-        return (art['language'] in self.autolanguages or arttype.endswith('fanart')) and art['status'] != NOAUTO_IMAGE and art['url'] not in ignoreurls
+        return art['language'] in self.autolanguages and art['url'] not in ignoreurls
 
 def add_art_to_library(mediatype, seasons, dbid, selectedart):
     if not selectedart:
