@@ -47,6 +47,10 @@ class ArtworkProcessor(object):
     def update_settings(self):
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
         self.only_filesystem = addon.get_setting('only_filesystem')
+        try:
+            self.minimum_rating = int(addon.get_setting('minimum_rating'))
+        except ValueError:
+            self.minimum_rating = 5
         sizesetting = addon.get_setting('preferredsize')
         if sizesetting in imagesizes:
             self.preferredsize = imagesizes[sizesetting][0:2]
@@ -326,7 +330,7 @@ class ArtworkProcessor(object):
             return result
 
     def _auto_filter(self, arttype, art, ignoreurls=()):
-        if art['rating'].sort < 5:
+        if art['rating'].sort < self.minimum_rating:
             return False
         if arttype.endswith('fanart') and art['size'].sort < self.minimum_size:
             return False
