@@ -42,7 +42,7 @@ to select specific artwork for individual media items, install the context item 
 artwork to add", and add all configured artwork with "Add missing artwork". After
 installation, these context items are in the context menu for movies, series, and episodes, under "Manage...".
 
-The first run and then roughly every two months it will process all items still missing
+The first run and then roughly every two months (15 days for filesystem only) it will process all items still missing
 artwork, in case new artwork has been submitted to the web services. This may take some
 time, if many items are missing some artwork.
 
@@ -94,6 +94,7 @@ Artwork Beef as a dependency.
 
 - Music video artwork is nowhere to be seen, but might at some point.
 - It uses the v2 API from TheTVDB.com, which has a tendency to not list all artwork.
+  I have an idea to take care of this, but I'll need to change up the caching.
 - It expects scrapers to set an IMDB number for movies, and a TVDB ID for series, like the default scrapers.
   An identifier like this will always be required, but should support other services in the future.
 - It cannot set artwork for "all seasons" with JSON-RPC. [related trac ticket](http://trac.kodi.tv/ticket/16139)

@@ -151,12 +151,7 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
                 if firstbit != inputbase:
                     continue
 
-            resultimage = {'url': path + filename, 'provider': self.name, 'preview': path + filename}
-            resultimage['title'] = filename
-            resultimage['rating'] = SortedDisplay(0, '')
-            resultimage['size'] = SortedDisplay(0, '')
-            resultimage['language'] = 'xx'
-            result[arttype] = resultimage
+            result[arttype] = self.buildimage(path + filename, filename)
         return result
 
 def getopentypes(existingtypes, arttype):
