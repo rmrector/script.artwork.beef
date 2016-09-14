@@ -1,4 +1,4 @@
-v0.6.3
+v0.6.3 (2016-09-13)
 - Identify artwork with AD filenames
 - Run full automatic process more often if filesystem only
 - Add option to set minimum rating for auto processing
