@@ -21,7 +21,7 @@ from utils import SortedDisplay
 # {'url': URL, 'language': ISO alpha-2 code, 'rating': SortedDisplay, 'size': SortedDisplay, 'provider': self.name, 'preview': preview URL}
 # 'title': optional image title
 # 'subtype': optional image subtype, like disc dvd/bluray/3d, SortedDisplay
-# language should be None if there is no text on the image
+# language should be None if there is no title on the image
 
 class AbstractProvider(object):
     __metaclass__ = ABCMeta

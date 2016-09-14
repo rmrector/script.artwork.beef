@@ -29,7 +29,7 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
                 arttypes.append({'arttype': arttype, 'label': label, 'count': len(artlist), 'url': image['url']})
                 break
         if arttype not in (at['arttype'] for at in arttypes):
-            arttypes.append({'arttype': arttype, 'label': arttype, 'count': len(artlist)})
+            arttypes.append({'arttype': arttype, 'label': label, 'count': len(artlist)})
     arttypes.sort(key=lambda art: sort_arttype(art['arttype']))
     typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', addon.path, arttypes=arttypes, medialabel=medialabel)
     hqpreview = addon.get_setting('highquality_preview')

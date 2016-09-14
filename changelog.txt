@@ -2,7 +2,9 @@ v0.6.3
 - Identify artwork with AD filenames
 - Run full automatic process more often if filesystem only
 - Add option to set minimum rating for auto processing
+- Remove local artwork from library if file no longer exists
 - Fix series banner sort
+- Fix a few possible errors
 
 v0.6.2 (2016-09-08)
 - Fix persistent error after saved JSON is corrupted

@@ -76,8 +76,7 @@ class ArtworkProcessor(object):
             self.create_progress()
 
     def finish_run(self):
-        if self.visible:
-            self.close_progress()
+        self.close_progress()
 
     @property
     def processor_busy(self):
@@ -136,7 +135,8 @@ class ArtworkProcessor(object):
                         for url in urls_toset:
                             selectedart[selectedarttype + (str(i) if i else '')] = url
                             i += 1
-                        selectedart.update(dict((arttype, None) for arttype in mediaitem['art'].keys() if arttype.startswith(selectedarttype) and arttype not in selectedart.keys()))
+                        selectedart.update(dict((arttype, None) for arttype in mediaitem['art'].keys()
+                            if arttype.startswith(selectedarttype) and arttype not in selectedart.keys()))
                     else:
                         selectedart = {selectedarttype: selectedart}
                         count = 1
