@@ -154,7 +154,7 @@ class ArtworkProcessor(object):
             self.process_medialist(medialist, True)
 
     def process_medialist(self, medialist, alwaysnotify=False, stop_on_error=False):
-        self.init_run(len(medialist) > 10)
+        self.init_run(True)
         processed = {'tvshow': {}, 'movie': [], 'episode': []}
         artcount = 0
         currentitem = 0
