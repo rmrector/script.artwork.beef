@@ -2,7 +2,7 @@
 <settings>
 	<category label="$LOCALIZE[128]">
 		<setting id="enableservice" label="32900" type="bool" default="true" />
-		<setting id="only_filesystem" label="32904" subsetting="true" type="bool" default="false" visible="eq(-1,true)" />
+		<setting id="only_filesystem" label="32904" type="bool" default="false" />
 		<setting label="32054" type="lsep" />
 		<setting id="titlefree_fanart" label="32901" type="bool" default="true" />
 		<setting id="preferredsize" label="32902" type="labelenum" default="1920x1080" values="1920x1080|1280x720" />
