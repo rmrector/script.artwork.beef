@@ -98,9 +98,8 @@ msgctxt "#32900"
 msgid "Automatically add artwork"
 msgstr ""
 
-# subsetting of above
 msgctxt "#32904"
-msgid "from filesystem only"
+msgid "Automatically add from filesystem only"
 msgstr ""
 
 msgctxt "#32901"
