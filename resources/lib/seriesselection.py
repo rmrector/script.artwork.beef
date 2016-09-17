@@ -29,7 +29,8 @@ class SeriesSelector(xbmcgui.WindowXMLDialog):
             listitem.setProperty('Addon.Summary', str(series['year']) + ' - ' + series['plot'])
             listitem.setProperty('imdbnumber', series['imdbnumber'])
             art = series['art']
-            art['thumb'] = series['art']['poster']
+            if 'poster' in series['art']:
+                art['thumb'] = series['art']['poster']
             listitem.setArt(art)
             if series['imdbnumber'] in self.originalselected:
                 listitem.select(True)
