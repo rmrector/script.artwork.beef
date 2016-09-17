@@ -43,7 +43,7 @@ def main():
 
 def set_autoaddepisodes():
     xbmc.executebuiltin('ActivateWindow(busydialog)')
-    serieslist = quickjson.get_tvshows()
+    serieslist = [series for series in quickjson.get_tvshows() if series.get('imdbnumber')]
     autoaddepisodes = addon.get_setting('autoaddepisodes_list')
     xbmc.executebuiltin('Dialog.Close(busydialog)')
     selected = SeriesSelector('DialogSelect.xml', addon.path, serieslist=serieslist, selected=autoaddepisodes).prompt()
