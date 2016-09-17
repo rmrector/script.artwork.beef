@@ -1,3 +1,6 @@
+v0.6.4
+- Fix error in series selection for episode artwork
+
 v0.6.3 (2016-09-13)
 - Identify artwork with AD filenames
 - Run full automatic process more often if filesystem only
