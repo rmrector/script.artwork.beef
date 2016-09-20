@@ -79,11 +79,14 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
             self.guilist = self.getControl(6)
             for arttype in self.arttypes:
                 listitem = xbmcgui.ListItem(arttype['label'])
-                listitem.setProperty('Addon.Summary', '{0} available'.format(arttype['count']))
-                listitem.setLabel2(arttype['arttype'])
+                summary = '{0} available'.format(arttype['count'])
+                listitem.setLabel2(summary)
+                # DEPRECATED: Above Krypton and higher (only), below Jarvis and lower (only)
+                listitem.setProperty('Addon.Summary', summary)
+                listitem.setPath(arttype['arttype'])
                 if arttype.get('url'):
                     listitem.setIconImage(arttype['url'])
-                    # Above is deprecated in Jarvis, but still works
+                    # DEPRECATED: Above is deprecated in Jarvis, but still works through Krypton (at least)
                     # listitem.setArt({'icon': arttype.get('url')})
                 self.guilist.addItem(listitem)
         else:
@@ -93,7 +96,9 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
     def onClick(self, controlid):
         if controlid == 6:
             item = self.guilist.getSelectedItem()
-            self.selected = item.getLabel2()
+            self.selected = item.getfilename()
+            self.close()
+        elif controlid == 7:
             self.close()
 
 class ArtworkSelector(xbmcgui.WindowXMLDialog):
@@ -160,9 +165,11 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
             if rating:
                 summary += image['rating'].display
             listitem = xbmcgui.ListItem(label)
+            listitem.setLabel2(summary)
+            # DEPRECATED: Above Krypton and higher (only), below Jarvis and lower (only)
             listitem.setProperty('Addon.Summary', summary)
             listitem.setIconImage(image['url'] if self.hqpreview else image['preview'])
-            # Above is deprecated in Jarvis, but still works
+            # DEPRECATED: Above is deprecated in Jarvis, but still works through Krypton (at least)
             # listitem.setArt({'icon': image['url'] if self.hqpreview else image['preview']})
             listitem.setPath(image['url'])
             if image.get('existing'):
