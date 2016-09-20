@@ -26,7 +26,10 @@ class SeriesSelector(xbmcgui.WindowXMLDialog):
 
         for series in self.serieslist:
             listitem = xbmcgui.ListItem(series['label'])
-            listitem.setProperty('Addon.Summary', str(series['year']) + ' - ' + series['plot'])
+            summary = str(series['year']) + ' - ' + series['plot']
+            listitem.setLabel2(summary)
+            # DEPRECATED: Above Krypton and higher (only), below Jarvis and lower (only)
+            listitem.setProperty('Addon.Summary', summary)
             listitem.setProperty('imdbnumber', series['imdbnumber'])
             art = series['art']
             if 'poster' in series['art']:
