@@ -5,7 +5,7 @@ from abc import ABCMeta
 from devhelper import pykodi
 
 import mediatypes
-from base import AbstractProvider
+from base import AbstractProvider, cache
 from utils import SortedDisplay
 
 addon = pykodi.get_main_addon()
@@ -25,13 +25,15 @@ class FanartTVAbstractProvider(AbstractProvider):
         self.clientkey = addon.get_setting('fanarttv_key')
 
     def get_data(self, mediaid):
+        return cache.cacheFunction(self._get_data, mediaid)
+
+    def _get_data(self, mediaid):
+        self.log('uncached', xbmc.LOGINFO)
         headers = {'api-key': self.apikey}
         if self.clientkey:
             headers['client-key'] = self.clientkey
         response = self.doget(self.apiurl % (self.api_section, mediaid), headers=headers)
-        if response is None:
-            return
-        return response.json()
+        return 'Empty' if response is None else response.json()
 
 class FanartTVSeriesProvider(FanartTVAbstractProvider):
     mediatype = mediatypes.TVSHOW
@@ -56,7 +58,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         if types and not self.provides(types):
             return {}
         data = self.get_data(mediaid)
-        if data is None:
+        if data == 'Empty':
             return {}
         result = {}
         for arttype, artlist in data.iteritems():
@@ -136,7 +138,7 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
         if types and not self.provides(types):
             return {}
         data = self.get_data(mediaid)
-        if data is None:
+        if data == 'Empty':
             return {}
         result = {}
         for arttype, artlist in data.iteritems():

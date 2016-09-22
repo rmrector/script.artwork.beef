@@ -1,7 +1,8 @@
+import xbmc
 from abc import ABCMeta
 
 import mediatypes
-from base import AbstractProvider
+from base import AbstractProvider, cache
 from utils import SortedDisplay
 
 class TheMovieDBAbstractProvider(AbstractProvider):
@@ -36,10 +37,12 @@ class TheMovieDBAbstractProvider(AbstractProvider):
             return SortedDisplay(5, 'Not rated')
 
     def get_data(self, url):
+        return cache.cacheFunction(self._get_data, url)
+
+    def _get_data(self, url):
+        self.log('uncached', xbmc.LOGINFO)
         response = self.doget(url, params={'api_key': self.apikey})
-        if response is None:
-            return
-        return response.json()
+        return 'Empty' if response is None else response.json()
 
 class TheMovieDBProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.MOVIE
@@ -53,7 +56,7 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
         if not self.baseurl:
             return {}
         data = self.get_data(self.apiurl % mediaid)
-        if data is None:
+        if data == 'Empty':
             return {}
         result = {}
         for arttype, artlist in data.iteritems():
@@ -94,11 +97,11 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
         if not self.baseurl:
             return {}
         data = self.get_data(self.tvdbidsearch_url % mediaid)
-        if data is None or not data['tv_episode_results']:
+        if data == 'Empty' or not data['tv_episode_results']:
             return {}
         data = data['tv_episode_results'][0]
         data = self.get_data(self.apiurl % (data['show_id'], data['season_number'], data['episode_number']))
-        if data is None:
+        if data == 'Empty':
             return {}
         result = {}
         for arttype, artlist in data.iteritems():
