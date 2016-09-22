@@ -23,10 +23,10 @@ Finally, **episodes**: `fanart`
 
 ### Installing
 
-At the moment it depends on a couple of python modules not available in the official Kodi repo, and my own goofy
-devhelper, so it will be simplest to install my [dev repository], ([GitHub]), and then install from "Program add-ons",
-and Kodi will take care of downloading the dependencies. The context items can also be installed from the repo from
-"Context menus".
+It still has one dependency not available in the official Kodi repo, so it will be simplest
+to install my [dev repository], ([GitHub]), then install Artwork Beef from "Program add-ons",
+and Kodi will take care of downloading the dependency. The context items can also be installed
+from the repo from "Context menus".
 
 [dev repository]: https://github.com/rmrector/repository.rector.stuff/raw/master/repository.rector.stuff/repository.rector.stuff-1.0.0.zip
 [GitHub]: https://github.com/rmrector/repository.rector.stuff
@@ -93,8 +93,6 @@ Artwork Beef as a dependency.
 ### Current gotchas
 
 - Music video artwork is nowhere to be seen, but might at some point.
-- It uses the v2 API from TheTVDB.com, which has a tendency to not list all artwork.
-  I have an idea to take care of this, but I'll need to change up the caching.
 - It expects scrapers to set an IMDB number for movies, and a TVDB ID for series, like the default scrapers.
   An identifier like this will always be required, but should support other services in the future.
 - It cannot set artwork for "all seasons" with JSON-RPC. [related trac ticket](http://trac.kodi.tv/ticket/16139)

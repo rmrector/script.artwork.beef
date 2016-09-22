@@ -1,11 +1,8 @@
 import requests
+import StorageServer
 import sys
 import xbmc
-import xbmcvfs
 from abc import ABCMeta, abstractmethod
-from cachecontrol import CacheControl
-from cachecontrol.caches import FileCache
-from cachecontrol.heuristics import BaseHeuristic
 from requests import codes
 from requests.exceptions import HTTPError, Timeout
 
@@ -16,6 +13,8 @@ urllib3.disable_warnings()
 
 import providers
 from utils import SortedDisplay
+
+cache = StorageServer.StorageServer('script.artwork.beef', 72)
 
 # Result dict of lists, keyed on art type
 # {'url': URL, 'language': ISO alpha-2 code, 'rating': SortedDisplay, 'size': SortedDisplay, 'provider': self.name, 'preview': preview URL}
@@ -33,12 +32,7 @@ class AbstractProvider(object):
 
     def __init__(self):
         self.contenttype = None
-        # This would be better in devhelper, maybe
-        cachepath = 'special://temp/cachecontrol/'
-        if not xbmcvfs.exists(cachepath):
-            xbmcvfs.mkdirs(cachepath)
-        cachepath = unicode(xbmc.translatePath(cachepath), 'utf-8')
-        self.session = CacheControl(requests.Session(), cache=FileCache(cachepath, use_dir_lock=True), heuristic=ForceDaysCache(7))
+        self.session = requests.Session()
 
     def set_contenttype(self, contenttype):
         self.session.headers['Accept'] = contenttype
@@ -74,8 +68,6 @@ class AbstractProvider(object):
             result.raise_for_status()
         except HTTPError:
             raise ProviderError, (sys.exc_info()[1].message, sys.exc_info()[1]), sys.exc_info()[2]
-        if not result.from_cache and result.status_code < 400:
-            self.log('uncached')
         if not result.headers['Content-Type'].startswith(self.contenttype):
             raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]
         return result
@@ -101,41 +93,6 @@ class AbstractProvider(object):
     @abstractmethod
     def get_images(self, mediaid, types=None):
         pass
-
-class ForceDaysCache(BaseHeuristic):
-    """
-    Cache the response for exactly `days` days, overriding other caches
-    """
-    def __init__(self, days=1):
-        self.days = days
-
-    # pylint: disable=unused-argument
-    def update_headers(self, response):
-        return {'cache-control': 'max-age={0:d}'.format(self.days * 24 * 60 * 60)}
-
-    def warning(self, response):
-        return '110 - "If this is not fresh, then it is stale."'
-
-
-class OneDayCache(BaseHeuristic):
-    """
-    Cache the response by setting max-age to 1 day, if other caching isn't specified.
-    """
-    def __init__(self, days=1):
-        self.days = days
-
-    def update_headers(self, response):
-        headers = {}
-
-        if 'cache-control' not in response.headers or not response.headers['cache-control']:
-            headers['cache-control'] = 'max-age={0:d}'.format(self.days * 24 * 60 * 60)
-        elif 'max-age' not in response.headers['cache-control'] and 'no-cache' not in response.headers['cache-control'] and 'no-store' not in response.headers['cache-control']:
-            headers['cache-control'] = response.headers['cache-control'] + ', max-age={0:d}'.format(self.days * 24 * 60 * 60)
-        return headers
-
-    def warning(self, response):
-        if 'cache-control' not in response.headers or not response.headers['cache-control'] or 'max-age' not in response.headers['cache-control'] and 'no-cache' not in response.headers['cache-control'] and 'no-store' not in response.headers['cache-control']:
-            return '110 - "If this is not fresh, then it is stale."'
 
 class ProviderError(Exception):
     def __init__(self, message, cause=None):

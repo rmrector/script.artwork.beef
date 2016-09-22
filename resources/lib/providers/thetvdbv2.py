@@ -6,7 +6,7 @@ from devhelper import pykodi
 
 import mediatypes
 import providers
-from base import AbstractProvider
+from base import AbstractProvider, cache
 from providers import ProviderError
 from utils import SortedDisplay
 
@@ -27,11 +27,13 @@ class TheTVDBProvider(AbstractProvider):
         self.set_contenttype('application/json')
 
     def get_data(self, mediaid, arttype, language):
+        return cache.cacheFunction(self._get_data, mediaid, arttype, language)
+
+    def _get_data(self, mediaid, arttype, language):
+        self.log('uncached', xbmc.LOGINFO)
         getparams = {'params': {'keyType': arttype}, 'headers': {'Accept-Language': language}}
         response = self.doget(self.apiurl % mediaid, **getparams)
-        if response is None:
-            return
-        return response.json()
+        return 'Empty' if response is None else response.json()
 
     def get_images(self, mediaid, types=None):
         if types and not self.provides(types):
@@ -40,13 +42,17 @@ class TheTVDBProvider(AbstractProvider):
         languages = [pykodi.get_language(xbmc.ISO_639_1)]
         if languages[0] != 'en':
             languages.append('en')
+        # Useful fanart can be hidden by the language filter, try a few of the most frequently used
+        flanguages = ['en', 'de', 'fr', 'es', 'ru']
+        if languages[0] not in flanguages:
+            flanguages.append(languages[0])
         for arttype in self.artmap.keys():
             if types and not typematches(self.artmap[arttype], types):
                 continue
-            for language in languages:
+            for language in languages if arttype != 'fanart' else flanguages:
                 generaltype = self.artmap[arttype]
                 data = self.get_data(mediaid, arttype, language)
-                if data is None:
+                if data == 'Empty':
                     continue
                 isseason = arttype.startswith('season')
                 if not isseason:
