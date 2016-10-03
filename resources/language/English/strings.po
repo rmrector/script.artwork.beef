@@ -95,7 +95,7 @@ msgstr ""
 # Settings
 
 msgctxt "#32900"
-msgid "Automatically add artwork"
+msgid "Automatically add artwork for new items"
 msgstr ""
 
 msgctxt "#32904"
