@@ -2,6 +2,8 @@ v0.7.0
 - Clean up series and artwork selection GUIs for Kodi 17 Krypton
 - Drop extra dependencies CacheControl and lockfile, use common plugin cache
 - Make more requests of TheTVDB to grab more fanart
+- Fix non-working season landscape images (encode URLs from fanart.tv)
+ - Includes a button to fix existing URLs manually
 
 v0.6.4 (2016-09-18)
 - Fix error in series selection for episode artwork
