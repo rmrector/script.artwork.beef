@@ -1,4 +1,5 @@
 import re
+import urllib
 import xbmc
 from abc import ABCMeta
 
@@ -76,8 +77,9 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                         itype = itype % -1
                 if itype not in result:
                     result[itype] = []
-                resultimage = {'url': image['url'], 'provider': self.name}
-                resultimage['preview'] = image['url'].replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
+                url = urllib.quote(image['url'], safe="%/:=&?~#+!$,;'@()*[]")
+                resultimage = {'url': url, 'provider': self.name}
+                resultimage['preview'] = url.replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
                 resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
@@ -148,8 +150,9 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
             if artlist and generaltype not in result:
                 result[generaltype] = []
             for image in artlist:
-                resultimage = {'url': image['url'], 'provider': self.name}
-                resultimage['preview'] = image['url'].replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
+                url = urllib.quote(image['url'], safe="%/:=&?~#+!$,;'@()*[]")
+                resultimage = {'url': url, 'provider': self.name}
+                resultimage['preview'] = url.replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
                 resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 5.0, '%s likes' % image['likes'])
                 if arttype == 'moviedisc':
                     display = self.disctitles.get(image['disc_type']) or image['disc_type']

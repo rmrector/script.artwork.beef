@@ -1,4 +1,5 @@
 import sys
+import urllib
 import xbmc
 import xbmcgui
 
@@ -30,6 +31,8 @@ def main():
             processor.process_item(command['mediatype'], int(command['dbid']), mode)
     elif command.get('command') == 'set_autoaddepisodes':
         set_autoaddepisodes()
+    elif command.get('command') == 'fix_urlswithspaces':
+        fix_urlswithspaces()
     else:
         busy = processor.processor_busy
         if busy:
@@ -51,6 +54,22 @@ def set_autoaddepisodes():
     if selected != autoaddepisodes:
         if xbmcgui.Dialog().yesno(L(ADD_MISSING_HEADER), L(ADD_MISSING_MESSAGE)):
             pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAfterSettings)')
+
+def fix_urlswithspaces():
+    # DEPRECATED: This doesn't need to stay around long.
+    # This happens to season landscapes from fanart.tv in versions before 0.7.0
+    progress = xbmcgui.DialogProgressBG()
+    progress.create("Fixing season landscape image URLs", "Gathering all seasons")
+    seasons = quickjson.get_seasons()
+    fixcount = 0
+    for i, season in enumerate(seasons):
+        progress.update(i * 100 // len(seasons), message="Updating URLs")
+        url = pykodi.unquoteimage(season['art'].get('landscape', ''))
+        if 'landscape' in season['art'] and url.startswith('http') and ' ' in url:
+            fixcount += 1
+            quickjson.set_season_details(season['seasonid'], art={'landscape': urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")})
+    progress.close()
+    xbmcgui.Dialog().notification('', "Fixed {0} image URLs".format(fixcount))
 
 def get_command():
     command = {}

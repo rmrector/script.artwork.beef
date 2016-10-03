@@ -5,7 +5,7 @@
 		<import addon="xbmc.json" version="6.20.0" />
 		<import addon="script.module.simplejson" version="3.3.0" />
 		<import addon="script.module.requests" version="2.9.1" />
-		<import addon="script.module.devhelper" version="0.1.4" />
+		<import addon="script.module.devhelper" version="0.1.5" />
 		<import addon="script.common.plugin.cache" version="2.5.8" />
 	</requires>
 	<extension point="xbmc.python.script" library="default.py">
