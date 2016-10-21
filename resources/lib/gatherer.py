@@ -15,7 +15,7 @@ class Gatherer(object):
         error = None
         if mediaitem['mediatype'] in (mediatypes.TVSHOW, mediatypes.MOVIE, mediatypes.EPISODE):
             forcedartwork = self.get_forced_artwork(mediaitem['mediatype'], mediaitem['file'], mediaitem.get('seasons'), not skipexisting)
-            existingtypes = mediaitem['art'].keys()
+            existingtypes = [key for key, url in mediaitem['art'].iteritems() if url]
             existingtypes.extend(forcedartwork.keys())
             if skipexisting:
                 if not self.only_filesystem and next(list_missing_arttypes(mediaitem['mediatype'],

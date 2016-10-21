@@ -183,11 +183,7 @@ class ArtworkProcessor(object):
                 if not url.startswith(('http', 'image://video')) and (arttype, url) not in localurls and (
                         mediaitem['mediatype'] != mediatypes.EPISODE or '.' not in arttype):
                     selectedart[arttype] = None
-            for arttype, url in selectedart.iteritems():
-                if url:
-                    existingart[arttype] = url
-                elif arttype in existingart:
-                    del existingart[arttype]
+            existingart.update(selectedart)
 
             selectedart.update(self.get_top_missing_art(mediaitem['mediatype'], existingart, availableart, mediaitem.get('seasons')))
             # don't set already existing artwork
@@ -280,7 +276,8 @@ class ArtworkProcessor(object):
         if not availableart:
             return {}
         newartwork = {}
-        for missingart in list_missing_arttypes(mediatype, seasons, existingart.keys()):
+        existingkeys = [key for key, url in existingart.iteritems() if url]
+        for missingart in list_missing_arttypes(mediatype, seasons, existingkeys):
             if missingart.startswith(mediatypes.SEASON):
                 itemtype = mediatypes.SEASON
                 artkey = missingart.rsplit('.', 1)[1]
