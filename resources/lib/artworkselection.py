@@ -55,6 +55,7 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
             medialabel=medialabel, multi=multi, hqpreview=hqpreview)
         selectedart = artselectwindow.prompt()
         if singletype and selectedart == None:
+            selectedarttype = None
             break
     return selectedarttype, selectedart
 
