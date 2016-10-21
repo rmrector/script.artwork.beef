@@ -154,11 +154,12 @@ class ArtworkProcessor(object):
             self.process_medialist(medialist, True)
 
     def process_medialist(self, medialist, alwaysnotify=False, stop_on_error=False):
-        self.init_run(True)
+        self.init_run(len(medialist) > 0)
         processed = {'tvshow': {}, 'movie': [], 'episode': []}
         artcount = 0
         currentitem = 0
-        gatherer = Gatherer(self.monitor, self.only_filesystem)
+        if medialist:
+            gatherer = Gatherer(self.monitor, self.only_filesystem)
         for mediaitem in medialist:
             if self.visible:
                 self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])

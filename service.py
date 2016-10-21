@@ -186,12 +186,13 @@ class ArtworkService(xbmc.Monitor):
                         items.append(episode)
             if self.abortRequested():
                 return
+
         processed = self.processor.process_medialist(items)
-        if not excludeprocessed:
+        if excludeprocessed:
+            self.processed.extend(processed)
+        else:
             self.processed.set(processed)
             addon.set_setting('lastalldate', currentdate)
-        else:
-            self.processed.extend(processed)
         self.processed.save()
         if not self.abortRequested():
             addon.set_setting('lastunprocesseddate', currentdate)
@@ -230,6 +231,7 @@ class ArtworkService(xbmc.Monitor):
                     ignoreepisodesfrom.add(episode['tvshowid'])
             if self.abortRequested():
                 return
+
         self.reset_recent()
         processed = self.processor.process_medialist(newitems)
         self.processed.extend(processed)
