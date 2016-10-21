@@ -36,7 +36,8 @@ class ArtFilesAbstractProvider(object):
         files.sort(key=natural_sort)
         result = {}
         for filename in files:
-            if not filename.endswith(('.jpg', '.png', '.gif')):
+            check_filename = filename.lower()
+            if not check_filename.endswith(('.jpg', '.png', '.gif')):
                 continue
             popped = missing.pop(0) if missing else None
             nexttype = popped if popped else arttype + (str(nextno) if nextno else '')
@@ -55,29 +56,32 @@ class ArtFilesSeriesProvider(ArtFilesAbstractProvider):
         files.sort(key=natural_sort)
         result = {}
         for filename in files:
-            if not filename.endswith(('.jpg', '.png', '.gif')):
+            check_filename = filename.lower()
+            if not check_filename.endswith(('.jpg', '.png', '.gif')):
                 continue
-            basefile = os.path.splitext(filename)[0]
+            basefile = os.path.splitext(check_filename)[0]
             if '.' in basefile or ' ' in basefile:
                 continue
             if basefile.startswith('season') and basefile.count('-'):
                 seasonsplit = basefile.split('-')
                 if len(seasonsplit) == 3:
+                    if seasonsplit[1] not in ('specials', 'all'):
+                        continue
                     number = 0 if seasonsplit[1] == 'specials' else -1
                     arttype = seasonsplit[2]
                 elif len(seasonsplit) == 2:
                     try:
                         number = int(seasonsplit[0].replace('season', ''))
                     except ValueError:
-                        number = -1
+                        continue
                     arttype = seasonsplit[1]
                 else:
                     continue
+                if not arttype.isalnum():
+                    continue
                 arttype = 'season.{0}.{1}'.format(number, arttype)
             else:
-                if '-' in filename:
-                    continue
-                if len(basefile) > 20:
+                if not basefile.isalnum() or len(basefile) > 20:
                     continue
                 arttype = basefile
                 if self.identifyalternatives and arttype in self.alttypes.keys():
@@ -103,17 +107,18 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
         sep = '\\' if '\\' in path else '/'
         for dirname, moviefile in (os.path.split(p) for p in paths):
             dirname += sep
-            moviebase = os.path.splitext(moviefile)[0]
+            check_moviebase = os.path.splitext(moviefile)[0].lower()
             dirs, files = xbmcvfs.listdir(dirname)
             for filename in files:
-                if not filename.endswith(('.jpg', '.png', '.gif')):
+                check_filename = filename.lower()
+                if not check_filename.endswith(('.jpg', '.png', '.gif')):
                     continue
-                imagefile = os.path.splitext(filename)[0]
+                imagefile = os.path.splitext(check_filename)[0]
                 if '-' in imagefile:
                     firstbit, imagefile = imagefile.rsplit('-', 1)
-                    if firstbit != moviebase:
+                    if firstbit != check_moviebase:
                         continue
-                if '.' in imagefile or ' ' in imagefile or len(imagefile) > 20:
+                if not imagefile.isalnum() or len(imagefile) > 20:
                     continue
                 arttype = imagefile
                 if self.identifyalternatives and arttype in self.alttypes.keys():
@@ -138,18 +143,18 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
         path, inputfilename = os.path.split(path)
         path += '\\' if '\\' in path else '/'
         _, files = xbmcvfs.listdir(path)
-        inputbase = os.path.splitext(inputfilename)[0]
+        check_inputbase = os.path.splitext(inputfilename)[0].lower()
         result = {}
         for filename in files:
-            if not filename.endswith(('.jpg', '.png', '.gif')):
+            check_filename = filename.lower()
+            if not check_filename.endswith(('.jpg', '.png', '.gif')):
                 continue
-            basefile = os.path.splitext(filename)[0]
+            basefile = os.path.splitext(check_filename)[0]
             if '-' not in basefile:
                 continue
-            else:
-                firstbit, arttype = basefile.rsplit('-', 1)
-                if firstbit != inputbase:
-                    continue
+            firstbit, arttype = basefile.rsplit('-', 1)
+            if firstbit != check_inputbase or not arttype.isalnum():
+                continue
 
             result[arttype] = self.buildimage(path + filename, filename)
         return result

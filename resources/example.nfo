@@ -2,7 +2,7 @@
 <tvshow> <!-- Or 'movie' or 'episodedetails' -->
 	<!-- ... -->
 	<art>
-		<!-- The tag is the exact artwork type, freely named (alphanumeric), and the content is the URL to the image -->
+		<!-- The tag is the exact artwork type, freely named (lowercase alphanumeric), and the content is the URL to the image -->
 		<arttype>http://example.frank/artstuff/maidbilberry/1234.jpg</arttype>
 		<banner>http://thetvdb.com/banners/graphical/110381-g5.jpg</banner>
 		<characterart>http://assets.fanart.tv/fanart/tv/110381/characterart/archer-2009-514f89ade07a7.png</characterart>
