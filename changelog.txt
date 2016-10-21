@@ -1,3 +1,6 @@
+v0.7.1~dev
+- Cleanup and avoid errors when adding artwork from files
+
 v0.7.0 (2016-10-03)
 - Clean up series and artwork selection GUIs for Kodi 17 Krypton
 - Drop extra dependencies CacheControl and lockfile, use common plugin cache

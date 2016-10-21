@@ -1,5 +1,6 @@
 import os
 import sys
+import urllib
 import xbmcvfs
 from abc import ABCMeta
 from contextlib import closing
@@ -18,6 +19,7 @@ class NFOFileAbstractProvider(object):
     name = SortedDisplay('file:nfo', 'NFO file')
 
     def build_resultimage(self, url, title):
+        url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
         resultimage = {'url': url, 'provider': self.name, 'preview': url}
         resultimage['title'] = '<{0}>'.format(title)
         resultimage['rating'] = SortedDisplay(0, '')
@@ -33,18 +35,28 @@ class NFOFileSeriesProvider(NFOFileAbstractProvider):
         root = read_nfofile(path)
         if root is None or root.find('art') is None:
             return {}
+
         artlistelement = root.find('art')
-        if artlistelement is None:
-            return {}
         result = {}
         for artelement in artlistelement:
-            if artelement.tag == 'season':
-                num = int(artelement.attrib['num'])
+            arttype = artelement.tag.lower()
+            if arttype == 'season':
+                num = artelement.get('num')
+                if num is None:
+                    continue
+                try:
+                    num = int(num)
+                except ValueError:
+                    continue
+                if num < -1:
+                    continue
                 for seasonartelement in artelement:
-                    arttype = 'season.{0}.{1}'.format(num, seasonartelement.tag)
-                    result[arttype] = self.build_resultimage(seasonartelement.text, arttype)
-            else:
-                result[artelement.tag] = self.build_resultimage(artelement.text, artelement.tag)
+                    url = seasonartelement.text.strip()
+                    if seasonartelement.tag.isalnum() and url:
+                        seasonarttype = 'season.{0}.{1}'.format(num, seasonartelement.tag.lower())
+                        result[seasonarttype] = self.build_resultimage(url, seasonarttype)
+            elif arttype.isalnum() and artelement.text.strip():
+                result[arttype] = self.build_resultimage(artelement.text.strip(), arttype)
         return result
 
 class NFOFileMovieProvider(NFOFileAbstractProvider):
@@ -61,11 +73,16 @@ class NFOFileMovieProvider(NFOFileAbstractProvider):
             if root is not None and root.find('art') is not None:
                 artlist = root.find('art')
                 break
+
         if artlist is None:
             return {}
+
         result = {}
         for artelement in artlist:
-            result[artelement.tag] = self.build_resultimage(artelement.text, artelement.tag)
+            arttype = artelement.tag.lower()
+            url = artelement.text.strip()
+            if arttype.isalnum() and url:
+                result[arttype] = self.build_resultimage(url, arttype)
         return result
 
 class NFOFileEpisodeProvider(NFOFileAbstractProvider):
@@ -73,14 +90,17 @@ class NFOFileEpisodeProvider(NFOFileAbstractProvider):
 
     def get_exact_images(self, path):
         path = os.path.splitext(path)[0] + '.nfo'
-        result = {}
-
         root = read_nfofile(path)
         if root is None or root.find('art') is None:
             return {}
+
+        result = {}
         artlistelement = root.find('art')
         for artelement in artlistelement:
-            result[artelement.tag] = self.build_resultimage(artelement.text, artelement.tag)
+            arttype = artelement.tag.lower()
+            url = artelement.text.strip()
+            if arttype.isalnum() and url:
+                result[arttype] = self.build_resultimage(url, arttype)
         return result
 
 def read_nfofile(filename):
@@ -94,9 +114,9 @@ def read_nfofile(filename):
         # maybe it's all XML except the last line, like the wiki suggests for XML + URL
         nfofile.seek(0, 0)
         lines = nfofile.read().split('\n')
-        while lines and not lines[-1]:
-            del lines[-1]
-        if lines:
+        while lines and not lines[-1].strip():
+            del lines[-1] # Remove final blank lines
+        if lines: # Remove the line that possibly contains the URL
             del lines[-1]
         if lines:
             try:
