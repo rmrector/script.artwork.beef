@@ -133,7 +133,8 @@ class ArtworkService(xbmc.Monitor):
                 self.set_signal('something')
 
     def watchitem(self, data):
-        return 'item' in data and data['item'].get('id') and data['item'].get('type') in self.recentitems
+        return 'item' in data and data['item'].get('id') and 'playcount' not in data \
+            and data['item'].get('type') in self.recentitems
 
     def process_something(self):
         # Three possible loops:
