@@ -176,13 +176,15 @@ class ArtworkProcessor(object):
             for arttype, imagelist in availableart.iteritems():
                 self.sort_images(arttype, imagelist, mediaitem['file'])
             existingart = dict(mediaitem['art'])
-            selectedart = dict((key, image['url']) for key, image in forcedart.iteritems())
+            selectedart = {}
             # Remove existing local artwork if it is no longer available
             localurls = [(arttype, image['url']) for arttype, image in forcedart.iteritems() if not image['url'].startswith(('http', 'image://video'))]
             for arttype, url in existingart.iteritems():
-                if not url.startswith(('http', 'image://video')) and (arttype, url) not in localurls and (
-                        mediaitem['mediatype'] != mediatypes.EPISODE or '.' not in arttype):
+                if ('.' not in arttype or arttype.startswith('season.')) and \
+                        not url.startswith(('http', 'image://video')) and \
+                        (arttype, url) not in localurls:
                     selectedart[arttype] = None
+            selectedart.update(dict((key, image['url']) for key, image in forcedart.iteritems()))
             existingart.update(selectedart)
 
             selectedart.update(self.get_top_missing_art(mediaitem['mediatype'], existingart, availableart, mediaitem.get('seasons')))
