@@ -172,7 +172,8 @@ class ArtworkProcessor(object):
                 log('{0}\n{1}'.format(header, error['message']))
                 if stop_on_error:
                     break
-            add_processeditem(processed, mediaitem)
+            else:
+                add_processeditem(processed, mediaitem)
             for arttype, imagelist in availableart.iteritems():
                 self.sort_images(arttype, imagelist, mediaitem['file'])
             existingart = dict(mediaitem['art'])
