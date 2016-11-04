@@ -1,6 +1,7 @@
 v0.7.1~dev
 - Cleanup and avoid errors when adding artwork from files
 - Retry failed items sooner than 2 months
+- Prefer English over other non-matching languages on non-English systems
 
 v0.7.0 (2016-10-03)
 - Clean up series and artwork selection GUIs for Kodi 17 Krypton
