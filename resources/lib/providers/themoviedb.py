@@ -16,7 +16,7 @@ class TheMovieDBAbstractProvider(AbstractProvider):
 
     def __init__(self):
         super(TheMovieDBAbstractProvider, self).__init__()
-        self.set_contenttype('application/json')
+        self.set_accepted_contenttype('application/json')
 
     @property
     def baseurl(self):
