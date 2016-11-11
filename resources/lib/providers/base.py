@@ -34,7 +34,7 @@ class AbstractProvider(object):
         self.contenttype = None
         self.session = requests.Session()
 
-    def set_contenttype(self, contenttype):
+    def set_accepted_contenttype(self, contenttype):
         self.session.headers['Accept'] = contenttype
         self.contenttype = contenttype
 

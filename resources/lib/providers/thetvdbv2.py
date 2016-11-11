@@ -24,7 +24,7 @@ class TheTVDBProvider(AbstractProvider):
 
     def __init__(self):
         super(TheTVDBProvider, self).__init__()
-        self.set_contenttype('application/json')
+        self.set_accepted_contenttype('application/json')
 
     def get_data(self, mediaid, arttype, language):
         return cache.cacheFunction(self._get_data, mediaid, arttype, language)
