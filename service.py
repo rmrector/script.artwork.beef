@@ -34,7 +34,6 @@ class ArtworkService(xbmc.Monitor):
         self.processed = ProcessedItems(addon.datapath)
         self.signal = None
         self.processaftersettings = False
-        self.scanning = False
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
         self.stoppeditem = None
         self.set_status(STATUS_IDLE)
@@ -42,6 +41,10 @@ class ArtworkService(xbmc.Monitor):
     @property
     def toomany_recentitems(self):
         return len(self.recentitems['movie']) + len(self.recentitems['tvshow']) + len(self.recentitems['episode']) > 100
+
+    @property
+    def scanning(self):
+        return pykodi.get_conditional('Library.IsScanningVideo | Library.IsScanningMusic')
 
     def set_status(self, value):
         self.abort = False
@@ -114,11 +117,9 @@ class ArtworkService(xbmc.Monitor):
             if self.watchitem(data):
                 self.stoppeditem = (data['item']['type'], data['item']['id'])
         elif method == 'VideoLibrary.OnScanStarted':
-            self.scanning = True
             if self.serviceenabled and self.status == STATUS_PROCESSING:
                 self.abort = True
         elif method == 'VideoLibrary.OnScanFinished':
-            self.scanning = False
             if self.serviceenabled:
                 self.set_signal('something')
         elif method == 'VideoLibrary.OnUpdate':
