@@ -35,7 +35,7 @@ class ArtworkService(xbmc.Monitor):
         self.signal = None
         self.processaftersettings = False
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
-        self.stoppeditem = None
+        self.stoppeditems = set()
         self.set_status(STATUS_IDLE)
 
     @property
@@ -59,12 +59,7 @@ class ArtworkService(xbmc.Monitor):
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
 
     def run(self):
-        clearstopped = False
         while not self.really_waitforabort(5):
-            if self.stoppeditem:
-                if clearstopped:
-                    self.stoppeditem = None
-                clearstopped = not clearstopped
             if self.scanning:
                 continue
             if self.signal:
@@ -113,9 +108,10 @@ class ArtworkService(xbmc.Monitor):
         elif method == 'Other.ProcessAfterSettings':
             self.processaftersettings = True
         elif method == 'Player.OnStop':
-            data = json.loads(data)
-            if self.watchitem(data):
-                self.stoppeditem = (data['item']['type'], data['item']['id'])
+            if self.serviceenabled:
+                data = json.loads(data)
+                if self.watchitem(data):
+                    self.stoppeditems.add((data['item']['type'], data['item']['id']))
         elif method == 'VideoLibrary.OnScanStarted':
             if self.serviceenabled and self.status == STATUS_PROCESSING:
                 self.abort = True
@@ -126,7 +122,10 @@ class ArtworkService(xbmc.Monitor):
             if not self.serviceenabled:
                 return
             data = json.loads(data)
-            if not self.watchitem(data) or self.stoppeditem == (data['item']['type'], data['item']['id']):
+            if not self.watchitem(data):
+                return
+            if (data['item']['type'], data['item']['id']) in self.stoppeditems:
+                self.stoppeditems.remove((data['item']['type'], data['item']['id']))
                 return
             if not self.toomany_recentitems:
                 self.recentitems[data['item']['type']].append(data['item']['id'])
