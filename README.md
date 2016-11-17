@@ -18,7 +18,7 @@ added from The Movie Database.
 
 The full list of supported artwork types for **movies**: `poster`, `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `discart`  
 For **series**: `poster`, `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `characterart`  
-And **seasons**: `poster`, `banner`, `landscape`  
+And **seasons**: `poster`, `fanart`, `banner`, `landscape`  
 Finally, **episodes**: `fanart`
 
 ### Installing
@@ -78,8 +78,9 @@ single `fanart`, one `fanart1`, one `fanart2`, and so on.
 ### Skin support
 
 For the most part skins will still access images in the same Kodi standard way.
-Episode fanart may just work, depending on how your skin accesses fanart when listing episodes.
-`$INFO[ListItem.Art(fanart)]` pulls the episode fanart if it exists, otherwise Kodi falls back to the series fanart.
+Episode and season backdrops may just work, depending on how your skin accesses them when listing
+episodes or seasons. `$INFO[ListItem.Art(fanart)]` pulls the episode or season backdrop if it exists,
+otherwise Kodi falls back to the series backdrop.
 
 Extrafanart has been integrated [into the library] and no longer has to be in the filesystem,
 but does require skins to access them differently. Extrathumbs are similarly integrated, implemented

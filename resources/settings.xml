@@ -22,6 +22,7 @@
 		<setting id="season.poster" label="$LOCALIZE[20373] poster" type="bool" default="true" />
 		<setting id="season.banner" label="$LOCALIZE[20373] banner" type="bool" default="true" />
 		<setting id="season.landscape" label="$LOCALIZE[20373] landscape" type="bool" default="true" />
+		<setting id="season.fanart" label="$LOCALIZE[20373] fanart" type="bool" default="true" />
 		<setting id="episode.fanart" label="$LOCALIZE[20359] fanart" type="bool" default="true" />
 	</category>
 	<category label="$LOCALIZE[20342]">

@@ -52,7 +52,8 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         'tvposter': 'poster',
         'seasonthumb': mediatypes.SEASON + '.%s.landscape',
         'seasonbanner': mediatypes.SEASON + '.%s.banner',
-        'seasonposter': mediatypes.SEASON + '.%s.poster'
+        'seasonposter': mediatypes.SEASON + '.%s.poster',
+        'showbackground-season': mediatypes.SEASON + '.%s.fanart'
     }
 
     def get_images(self, mediaid, types=None):
@@ -68,13 +69,10 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                 continue
             for image in artlist:
                 itype = generaltype
-                if arttype in ('seasonthumb', 'seasonbanner', 'seasonposter'):
-                    try:
-                        itype = itype % (int(image['season']) if image['season'] != 'all' else -1)
-                    except ValueError:
-                        self.log("Data for '%s' from provider has a small problem: image season was set incorrectly, to \"%s\", so I can't tell which season it belongs to. The image URL is:\n%s" % (data['name'], image['season'], image['url']), xbmc.LOGINFO)
-                        # throw it into the 'all seasons' image pile
-                        itype = itype % -1
+                isseasonimage = arttype in ('seasonthumb', 'seasonbanner', 'seasonposter')
+                seasonnum = self._get_seasonnum(image, data['name'], not isseasonimage)
+                if isseasonimage:
+                    itype = itype % seasonnum
                 if itype not in result:
                     result[itype] = []
                 url = urllib.quote(image['url'], safe="%/:=&?~#+!$,;'@()*[]")
@@ -83,8 +81,14 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                 resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
-                if arttype == 'showbackground' and 'season' in image and image['season'] != 'all':
-                    resultimage['title'] = 'Season {0}'.format(image['season'])
+                if arttype == 'showbackground' and seasonnum is not None:
+                    resultimage['hasseason'] = True
+                    if seasonnum >= 0:
+                        resultimage['title'] = 'Season {0}'.format(seasonnum if seasonnum else 'specials')
+                    seasonfanarttype = 'season.{0}.fanart'.format(seasonnum)
+                    if seasonfanarttype not in result:
+                        result[seasonfanarttype] = []
+                    result[seasonfanarttype].append(resultimage)
                 result[itype].append(resultimage)
         return result
 
@@ -113,6 +117,17 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
             return image['lang'] if image['lang'] not in ('', '00') else 'en'
         # tvposter may or may not have a title and thus need a language
         return image['lang'] if image['lang'] not in ('', '00') else None
+
+    def _get_seasonnum(self, image, itemname, ignoreall=False):
+        allitem = None if ignoreall else -1
+        if 'season' not in image:
+            return None
+        try:
+            return int(image['season']) if image['season'] != 'all' else allitem
+        except ValueError:
+            self.log("Image season was set incorrectly for '%s', to \"%s\", so I can't tell which season it belongs to. The image URL is:\n%s" % (itemname, image['season'], image['url']), xbmc.LOGINFO)
+            # throw it into the 'all seasons' image pile
+            return allitem
 
     def provides(self, types):
         types = set(x if not x.startswith('season') else re.sub(r'[\d]', '%s', x) for x in types)
