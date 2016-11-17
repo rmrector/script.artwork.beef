@@ -9,7 +9,6 @@
 		<setting id="minimum_rating" label="32907" type="slider" option="int" default="5" range="0,1,10" />
 		<setting label="32052" type="lsep" />
 		<setting label="32400" type="action" action="RunScript(script.artwork.beef, command=set_autoaddepisodes)" />
-		<setting label="Fix season landscape image URLs with spaces (for upgrades from pre v0.7.0)" type="action" action="RunScript(script.artwork.beef, command=fix_urlswithspaces)" />
 	</category>
 	<category label="$LOCALIZE[20343]">
 		<setting label="32053" type="lsep" />
@@ -39,6 +38,8 @@
 		<setting id="highquality_preview" label="32903" type="bool" default="false" />
 		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
 		<setting id="fanarttv_key" label="32905" type="text" />
+		<setting label="32055" type="lsep" />
+		<setting label="32406" type="action" action="RunScript(script.artwork.beef, command=clean_arturls)" />
 		<!-- For add-on inner workings -->
 		<setting id="lastalldate" type="text" default="0" visible="false" />
 		<setting id="lastunprocesseddate" type="text" default="0" visible="false" />
