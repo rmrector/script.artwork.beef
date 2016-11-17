@@ -1,38 +1,37 @@
 import sys
-import urllib
 import xbmc
 import xbmcgui
 
 from devhelper import pykodi
 from devhelper import quickjson
+from devhelper.pykodi import log
 
 addon = pykodi.get_main_addon()
 sys.path.append(addon.resourcelibs)
 
+import cleaner
+from artworkprocessor import ArtworkProcessor, update_cleaned_artwork
 from utils import localize as L
+from seriesselection import SeriesSelector
 
 ADD_MISSING_HEADER = 32401
 ADD_MISSING_MESSAGE = 32402
-
 STOP = 32403
 ADD_MISSING_FOR_NEW = 32404
 ADD_MISSING_FOR_ALL = 32405
-from artworkprocessor import ArtworkProcessor
-from seriesselection import SeriesSelector
+CLEAN_ART_URLS = 32406
+FIXED_URL_COUNT = 32026
 
 def main():
     command = get_command()
     processor = ArtworkProcessor()
-    if command.get('dbid'):
+    if command.get('dbid') and command.get('mediatype'):
         mode = command.get('mode', 'auto')
-        if mode == 'autoepisodes':
-            processor.process_allepisodes(int(command['dbid']))
-        elif command.get('mediatype'):
-            processor.process_item(command['mediatype'], int(command['dbid']), mode)
+        processor.process_item(command['mediatype'], int(command['dbid']), mode)
     elif command.get('command') == 'set_autoaddepisodes':
         set_autoaddepisodes()
-    elif command.get('command') == 'fix_urlswithspaces':
-        fix_urlswithspaces()
+    elif command.get('command') == 'clean_arturls':
+        clean_arturls()
     else:
         busy = processor.processor_busy
         if busy:
@@ -55,21 +54,38 @@ def set_autoaddepisodes():
         if xbmcgui.Dialog().yesno(L(ADD_MISSING_HEADER), L(ADD_MISSING_MESSAGE)):
             pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAfterSettings)')
 
-def fix_urlswithspaces():
-    # DEPRECATED: This doesn't need to stay around long.
-    # This happens to season landscapes from fanart.tv in versions before 0.7.0
+def clean_arturls():
     progress = xbmcgui.DialogProgressBG()
-    progress.create("Fixing season landscape image URLs", "Gathering all seasons")
-    seasons = quickjson.get_seasons()
-    fixcount = 0
-    for i, season in enumerate(seasons):
-        progress.update(i * 100 // len(seasons), message="Updating URLs")
-        url = pykodi.unquoteimage(season['art'].get('landscape', ''))
-        if 'landscape' in season['art'] and url.startswith('http') and ' ' in url:
-            fixcount += 1
-            quickjson.set_season_details(season['seasonid'], art={'landscape': urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")})
+    def clean_items(items, start):
+        fixedcount = 0
+        for i, item in enumerate(items):
+            progress.update(start + i * 25 // len(items))
+            itemart = dict((arttype, pykodi.unquoteimage(url)) for arttype, url in item['art'].iteritems())
+            if 'episodeid' in item:
+                itemart = dict((arttype, url) for arttype, url in itemart.iteritems() if '.' not in arttype)
+
+            cleaned = cleaner.cleanartwork(itemart)
+            if cleaned != itemart:
+                fixedcount += count_changedkeys(itemart, cleaned)
+                update_cleaned_artwork(item, cleaned)
+        return fixedcount
+
+    progress.create(L(CLEAN_ART_URLS), "Listing all movies")
+    fixcount = clean_items(quickjson.get_movies(), 0)
+    progress.update(25, message="Listing all series")
+    fixcount += clean_items(quickjson.get_tvshows(), 25)
+    progress.update(50, message="Listing all seasons")
+    fixcount += clean_items(quickjson.get_seasons(), 50)
+    progress.update(75, message="Listing all episodes")
+    fixcount += clean_items(quickjson.get_episodes(), 75)
     progress.close()
-    xbmcgui.Dialog().notification('', "Fixed {0} image URLs".format(fixcount))
+    log(L(FIXED_URL_COUNT).format(fixcount), xbmc.LOGINFO)
+    xbmcgui.Dialog().notification('Artwork Beef', L(FIXED_URL_COUNT).format(fixcount))
+
+def count_changedkeys(d1, d2):
+    result = sum(1 for key in d1 if d2.get(key) != d1[key])
+    result += sum(1 for key in d2 if key not in d1)
+    return result
 
 def get_command():
     command = {}

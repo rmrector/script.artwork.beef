@@ -6,6 +6,7 @@ from devhelper import pykodi
 from devhelper import quickjson
 from devhelper.pykodi import log
 
+import cleaner
 import mediatypes
 from artworkselection import prompt_for_artwork
 from gatherer import Gatherer, list_missing_arttypes
@@ -101,6 +102,9 @@ class ArtworkProcessor(object):
         if mode == MODE_GUI:
             self.init_run()
             self.add_additional_iteminfo(mediaitem)
+            cleaned = cleaner.cleanartwork(mediaitem['art'])
+            if cleaned != mediaitem['art']:
+                update_cleaned_artwork(mediaitem, cleaned)
             gatherer = Gatherer(self.monitor, self.only_filesystem)
             forcedart, availableart, _, error = gatherer.getartwork(mediaitem, False)
             if error:
@@ -165,6 +169,9 @@ class ArtworkProcessor(object):
                 self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
                 currentitem += 1
             self.add_additional_iteminfo(mediaitem)
+            cleaned = cleaner.cleanartwork(mediaitem['art'])
+            if cleaned != mediaitem['art']:
+                update_cleaned_artwork(mediaitem, cleaned)
             forcedart, availableart, services_hit, error = gatherer.getartwork(mediaitem)
             if error:
                 header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
@@ -366,6 +373,11 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
         quickjson.set_movie_details(dbid, art=selectedart)
     elif mediatype == mediatypes.EPISODE:
         quickjson.set_episode_details(dbid, art=selectedart)
+
+def update_cleaned_artwork(mediaitem, cleaned):
+    add_art_to_library(mediaitem['mediatype'], mediaitem.get('seasons'), mediaitem['dbid'], cleaned)
+    mediaitem['art'].update(cleaned)
+    mediaitem['art'] = dict(item for item in mediaitem['art'].iteritems() if item[1])
 
 def notifycount(count):
     log(L(ARTWORK_ADDED_MESSAGE).format(count), xbmc.LOGINFO)

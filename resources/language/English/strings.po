@@ -42,6 +42,10 @@ msgctxt "#32025"
 msgid "Media type '{0}' not supported"
 msgstr ""
 
+msgctxt "#32026"
+msgid "Fixed {0} image URLs"
+msgstr ""
+
 # Headings
 
 msgctxt "#32050"
@@ -64,6 +68,10 @@ msgstr ""
 
 msgctxt "#32054"
 msgid "Sorting and auto filters"
+msgstr ""
+
+msgctxt "#32055"
+msgid "Maintenance actions"
 msgstr ""
 
 # Actions
@@ -90,6 +98,10 @@ msgstr ""
 
 msgctxt "#32405"
 msgid "add missing artwork for all items"
+msgstr ""
+
+msgctxt "#32406"
+msgid "Clean artwork URLs"
 msgstr ""
 
 # Settings
