@@ -247,7 +247,7 @@ class ArtworkProcessor(object):
             log(mediaitem, xbmc.LOGWARNING)
             return False
 
-        mediaitem['art'] = dict((arttype, pykodi.unquoteimage(url)) for arttype, url in mediaitem['art'].iteritems())
+        mediaitem['art'] = dict((arttype.lower(), pykodi.unquoteimage(url)) for arttype, url in mediaitem['art'].iteritems())
         return True
 
     def sort_images(self, arttype, imagelist, mediapath):
