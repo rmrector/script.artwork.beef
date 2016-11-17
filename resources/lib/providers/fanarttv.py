@@ -78,7 +78,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                 url = urllib.quote(image['url'], safe="%/:=&?~#+!$,;'@()*[]")
                 resultimage = {'url': url, 'provider': self.name}
                 resultimage['preview'] = url.replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
-                resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
+                resultimage['rating'] = SortedDisplay(6 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
                 resultimage['size'] = self._get_imagesize(arttype)
                 resultimage['language'] = self._get_imagelanguage(arttype, image)
                 if arttype == 'showbackground' and seasonnum is not None:
@@ -168,7 +168,7 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
                 url = urllib.quote(image['url'], safe="%/:=&?~#+!$,;'@()*[]")
                 resultimage = {'url': url, 'provider': self.name}
                 resultimage['preview'] = url.replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
-                resultimage['rating'] = SortedDisplay(5 + int(image['likes']) / 5.0, '%s likes' % image['likes'])
+                resultimage['rating'] = SortedDisplay(6 + int(image['likes']) / 5.0, '%s likes' % image['likes'])
                 if arttype == 'moviedisc':
                     display = self.disctitles.get(image['disc_type']) or image['disc_type']
                     resultimage['subtype'] = SortedDisplay(image['disc_type'], display)
