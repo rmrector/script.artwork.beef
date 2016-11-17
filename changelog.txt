@@ -1,4 +1,5 @@
 v0.7.1~dev
+- Add season fanart from fanart.tv
 - Cleanup and avoid errors when adding artwork from files
 - Check existing URLs for problems
 - Retry failed items sooner than 2 months

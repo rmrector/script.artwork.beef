@@ -116,6 +116,14 @@ class ArtworkProcessor(object):
                 self.sort_images(arttype, imagelist, mediaitem['file'])
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             if availableart:
+                if 'seasons' in mediaitem and 'fanart' in availableart:
+                    for season in mediaitem['seasons'].keys():
+                        unseasoned_backdrops = [dict(art) for art in availableart['fanart'] if not art.get('hasseason')]
+                        key = 'season.{0}.fanart'.format(season)
+                        if key in availableart:
+                            availableart[key].extend(unseasoned_backdrops)
+                        else:
+                            availableart[key] = unseasoned_backdrops
                 tag_forcedandexisting_art(availableart, forcedart, mediaitem['art'])
                 selectedarttype, selectedart = prompt_for_artwork(mediaitem['mediatype'],
                     mediaitem['label'], availableart, self.monitor)
@@ -229,8 +237,8 @@ class ArtworkProcessor(object):
         elif 'tvshowid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.TVSHOW
             mediaitem['dbid'] = mediaitem['tvshowid']
-            mediaitem['seasons'], art = self._get_seasons_artwork(quickjson.get_seasons(mediaitem['dbid']))
-            mediaitem['art'].update(art)
+            mediaitem['seasons'], seasonart = self._get_seasons_artwork(quickjson.get_seasons(mediaitem['dbid']))
+            mediaitem['art'].update(seasonart)
         elif 'movieid' in mediaitem:
             mediaitem['mediatype'] = mediatypes.MOVIE
             mediaitem['dbid'] = mediaitem['movieid']

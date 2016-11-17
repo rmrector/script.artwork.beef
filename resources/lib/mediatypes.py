@@ -77,11 +77,10 @@ artinfo = {
             'autolimit': 1,
             'multiselect': False
 		},
-		# I want season fanart! From press shots or whatever released for/during a season. New characters added, old characters removed, season specific sets and objects. Anthology series like 'True Detective' and 'American Horror Story' will have fanart that is nearly always specific to a season.
-		# 'fanart': {
-        #     'autolimit': MULTIPLE_IMAGE_LIMIT,
-        #     'multiselect': True
-		# },
+		'fanart': {
+            'autolimit': 1,
+            'multiselect': False
+		},
 		'banner': {
 	        'autolimit': 1,
 	        'multiselect': False
