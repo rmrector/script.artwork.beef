@@ -88,8 +88,14 @@ class ArtworkService(xbmc.Monitor):
         return super(ArtworkService, self).waitForAbort(timeout)
 
     def onNotification(self, sender, method, data):
-        if method.startswith('Other.') and sender != 'script.artwork.beef':
-            return
+        if method.startswith('Other.'):
+            if sender == 'script.artwork.beef':
+                message = 'Received notification "{0}"'.format(method)
+                if data != 'null':
+                    message += " - data:\n" + data
+                log(message, xbmc.LOGINFO)
+            else:
+                return
         if method == 'Other.CancelCurrent':
             if self.status == STATUS_PROCESSING:
                 self.abort = True
