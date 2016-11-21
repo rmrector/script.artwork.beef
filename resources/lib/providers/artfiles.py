@@ -105,6 +105,7 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
         paths = get_movie_path_list(path)
         result = {}
         sep = '\\' if '\\' in path else '/'
+        path = os.path.dirname(path) + sep
         for dirname, moviefile in (os.path.split(p) for p in paths):
             dirname += sep
             check_moviebase = os.path.splitext(moviefile)[0].lower()
@@ -127,12 +128,11 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
                         continue
                 result[arttype] = self.buildimage(dirname + filename, filename)
 
-        if self.identifyalternatives and dirs:
-            path = os.path.dirname(path) + sep
-            if 'extrafanart' in dirs:
-                result.update(self.getextra(path, result.keys()))
-            if 'extrathumbs' in dirs:
-                result.update(self.getextra(path, result.keys(), True))
+            if self.identifyalternatives and dirs:
+                if 'extrafanart' in dirs:
+                    result.update(self.getextra(path, result.keys()))
+                if 'extrathumbs' in dirs:
+                    result.update(self.getextra(path, result.keys(), True))
 
         return result
 
