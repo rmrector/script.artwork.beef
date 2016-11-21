@@ -8,6 +8,7 @@ msgctxt "#32000"
 msgid "Unknown source"
 msgstr ""
 
+# Prefixed to 32019 if no artwork found or updated
 msgctxt "#32001"
 msgid "Something missing?"
 msgstr ""
@@ -94,7 +95,7 @@ msgid "Add missing artwork now?"
 msgstr ""
 
 msgctxt "#32402"
-msgid "Add missing episode artwork for newly selected series now?"
+msgid "Add missing episode artwork for newly selected series after add-on settings are closed?"
 msgstr ""
 
 msgctxt "#32403"

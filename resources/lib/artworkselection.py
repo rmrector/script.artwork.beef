@@ -54,7 +54,7 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
         artselectwindow = ArtworkSelector('DialogSelect.xml', addon.path, artlist=artlist, arttype=selectedarttype,
             medialabel=medialabel, multi=multi, hqpreview=hqpreview)
         selectedart = artselectwindow.prompt()
-        if singletype and selectedart == None:
+        if singletype and selectedart is None:
             selectedarttype = None
             break
     return selectedarttype, selectedart

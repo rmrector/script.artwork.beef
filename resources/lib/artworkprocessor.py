@@ -107,7 +107,7 @@ class ArtworkProcessor(object):
             forcedart, availableart, _, error = gatherer.getartwork(mediaitem, False)
             if error:
                 header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
-                xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_ERROR)
+                xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
                 log('{0}\n{1}'.format(header, error['message']))
 
             for arttype, imagelist in availableart.iteritems():
@@ -178,7 +178,7 @@ class ArtworkProcessor(object):
             forcedart, availableart, services_hit, error = gatherer.getartwork(mediaitem)
             if error:
                 header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
-                xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_ERROR)
+                xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
                 log('{0}\n{1}'.format(header, error['message']))
                 if stop_on_error:
                     break
