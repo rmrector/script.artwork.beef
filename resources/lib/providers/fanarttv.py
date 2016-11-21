@@ -106,7 +106,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         elif arttype == 'characterart':
             return SortedDisplay(512, '512x512')
         elif arttype in ('tvthumb', 'seasonthumb'):
-            return SortedDisplay(500, '500x281')
+            return SortedDisplay(500, '500x281 or 1000x562')
         else:
             return SortedDisplay(0, '')
 
