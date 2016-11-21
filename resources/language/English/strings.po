@@ -27,11 +27,11 @@ msgid "No artwork available"
 msgstr ""
 
 msgctxt "#32022"
-msgid "{0} artwork added"
+msgid "{0} artwork updated"
 msgstr ""
 
 msgctxt "#32023"
-msgid "No new artwork added"
+msgid "No artwork updated"
 msgstr ""
 
 msgctxt "#32024"

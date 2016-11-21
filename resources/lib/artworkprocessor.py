@@ -31,8 +31,8 @@ SOMETHING_MISSING = 32001
 FINAL_MESSAGE = 32019
 ADDING_ARTWORK_MESSAGE = 32020
 NOT_AVAILABLE_MESSAGE = 32021
-ARTWORK_ADDED_MESSAGE = 32022
-NO_ARTWORK_ADDED_MESSAGE = 32023
+ARTWORK_UPDATED_MESSAGE = 32022
+NO_ARTWORK_UPDATED_MESSAGE = 32023
 PROVIDER_ERROR_MESSAGE = 32024
 NOT_SUPPORTED_MESSAGE = 32025
 CURRENT_ART = 13512
@@ -202,7 +202,7 @@ class ArtworkProcessor(object):
             selectedart = mediainfo.get_artwork_updates(mediaitem['art'], selectedart)
             if selectedart:
                 add_art_to_library(mediaitem['mediatype'], mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
-                artcount += sum(1 for url in selectedart.values() if url)
+                artcount += len(selectedart)
             if not services_hit:
                 if self.monitor.abortRequested():
                     break
@@ -353,11 +353,11 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
         mediainfo.update_art_in_library(mediatype, dbid, selectedart)
 
 def notifycount(count):
-    log(L(ARTWORK_ADDED_MESSAGE).format(count), xbmc.LOGINFO)
+    log(L(ARTWORK_UPDATED_MESSAGE).format(count), xbmc.LOGINFO)
     if count:
-        xbmcgui.Dialog().notification(L(ARTWORK_ADDED_MESSAGE).format(count), L(FINAL_MESSAGE), '-', 7500)
+        xbmcgui.Dialog().notification(L(ARTWORK_UPDATED_MESSAGE).format(count), L(FINAL_MESSAGE), '-', 7500)
     else:
-        xbmcgui.Dialog().notification(L(NO_ARTWORK_ADDED_MESSAGE),
+        xbmcgui.Dialog().notification(L(NO_ARTWORK_UPDATED_MESSAGE),
             L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
 
 def add_processeditem(processed, mediaitem):
