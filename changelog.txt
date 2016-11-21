@@ -1,4 +1,4 @@
-v0.8.0~dev
+v0.8.0 (2016-11-21)
 - Add season fanart from fanart.tv
 - Add button to remove extra artwork not enabled in add-on settings
 - Cleanup and avoid errors when adding artwork from files
