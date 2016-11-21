@@ -8,7 +8,8 @@ services [fanart.tv], [TheTVDB.com], and [The Movie Database].
 [TheTVDB.com]: http://thetvdb.com/
 [The Movie Database]: https://www.themoviedb.org/
 
-[Support and discussion thread](http://forum.kodi.tv/showthread.php?tid=258886) on the Kodi forums.
+[Support and discussion thread](http://forum.kodi.tv/showthread.php?tid=258886) on the Kodi forums.  
+[Source](https://github.com/rmrector/script.artwork.beef) hosted on GitHub.
 
 It fully supports series and season artwork from TheTVDB.com; movie, series, and season artwork from fanart.tv; and
 movie artwork from The Movie Database. For those series that really pop, [high quality fanart] for each episode can be
@@ -23,13 +24,17 @@ Finally, **episodes**: `fanart`
 
 ### Installing
 
-It still has one dependency not available in the official Kodi repo, so it will be simplest
-to install my [dev repository], ([GitHub]), then install Artwork Beef from "Program add-ons",
+It still has one dependency not available in the official Kodi repo, and the context items
+are available as separate add-ons so it will be simplest
+to install my [dev repository], then install Artwork Beef from "Program add-ons",
 and Kodi will take care of downloading the dependency. The context items can also be installed
 from the repo from "Context menus".
 
+Artwork Helper can be installed with this single [installable zip], but it's only necessary if a
+skin depends on it.
+
 [dev repository]: https://github.com/rmrector/repository.rector.stuff/raw/master/repository.rector.stuff/repository.rector.stuff-1.0.0.zip
-[GitHub]: https://github.com/rmrector/repository.rector.stuff
+[installable zip]: https://github.com/rmrector/repository.rector.stuff/raw/master/script.artwork.helper/script.artwork.helper-0.7.1.zip
 
 ### Usage
 
@@ -64,13 +69,17 @@ Artwork Beef also adds artwork from image files stored next to your media. Name 
 replacing "fanart"/"thumb" with the exact artwork type. Kodi names artwork in this same format when exporting the
 library to separate files.
 
+Artwork from these files aren't limited to the artwork types listed above; artwork types must be
+lowercase and alphanumeric, but can otherwise be freely named. The artwork type should have the exact
+name; for instance, multiple fanart will have one single `fanart`, one `fanart1`, one `fanart2`, and so on.
+
+It will also pull in artwork files that match Artwork Downloader file names, in cases where they
+are different than the art types used in Kodi, for instance `character.jpg` is added as
+`characterart` and extrafanart are added as `fanart#`.
+
 If you manage all of your artwork with image files and/or NFO files, the add-on setting
 "Auto add artwork from filesystem only" under "Advanced" will prevent the add-on from
 querying the web services during automatic processing, saving time and network resources.
-
-Artwork from these files aren't limited to the artwork types listed above; artwork types can be freely named, as long
-as they are alphanumeric. The artwork type should have the exact name; for instance, multiple fanart will have one
-single `fanart`, one `fanart1`, one `fanart2`, and so on.
 
 [Kodi NFO file]: http://kodi.wiki/view/NFO_files
 [Kodi artwork]: http://kodi.wiki/view/Artwork#Naming_conventions
@@ -93,14 +102,13 @@ Artwork Beef as a dependency.
 
 ### Current gotchas
 
-- Music video artwork is nowhere to be seen, but might at some point.
+- Music video and set artwork will require a new search function, which will come at some point in the future.
 - It expects scrapers to set an IMDB number for movies, and a TVDB ID for series, like the default scrapers.
-  An identifier like this will always be required, but should support other services in the future.
 - It cannot set artwork for "all seasons" with JSON-RPC. [related trac ticket](http://trac.kodi.tv/ticket/16139)
 
 ### Thoughts
 
-- It doesn't download any artwork, and likely never will; it just grabs the URLs, then Kodi
+- It doesn't download any artwork, and likely never will; it just adds the URLs to Kodi's database, then Kodi
   downloads them as part of its regular caching process.
 - Extrathumbs aren't added from external sources. I don't want to resize backdrops/fanart from TMDB
   like Artwork Downloader (I much prefer to use those for multiple fanart), and generating
@@ -110,5 +118,5 @@ Artwork Beef as a dependency.
   maybe something like `$INFO[ListItem.MultiArt(fanart)]` to pull all `fanart` and `fanart#` together.
   I have no idea how it could be implemented in Kodi, though.
 
-Those were my thoughts. **What are yours?** Skinners, viewers/end users, anyone, I'd like
+Those were my thoughts. **What are yours?** Skinners, viewers/end users, developers, anyone, I'd like
 to hear what you think.

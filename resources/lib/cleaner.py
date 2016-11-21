@@ -16,7 +16,6 @@ def clean_artwork(mediaitem):
 
 def remove_otherartwork(mediaitem):
     ''' Remove artwork not enabled in add-on settings. '''
-    # REVIEW: Should this also remove fanart for episodes from series without episode artwork enabled?
     keep_types = pykodi.get_main_addon().get_setting('save_additional_arttypes')
     keep_types = [addon.strip() for addon in keep_types.split(',')]
     keep_types = dict(arttype.split(':', 2) if ':' in arttype else (arttype, sys.maxsize) for arttype in keep_types)

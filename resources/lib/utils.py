@@ -11,12 +11,14 @@ addon = pykodi.get_main_addon()
 SortedDisplay = namedtuple('SortedDisplay', ['sort', 'display'])
 
 def localize(messageid):
-    if messageid < 32000:
-        return xbmc.getLocalizedString(messageid)
-    return addon.getLocalizedString(messageid)
+    if isinstance(messageid, basestring):
+        return messageid
+    if messageid >= 32000 and messageid < 33000:
+        return addon.getLocalizedString(messageid)
+    return xbmc.getLocalizedString(messageid)
 
-def natural_sort(string, naturalsortresplit=re.compile('([0-9]+)')):
-    return [int(text) if text.isdigit() else text.lower() for text in re.split(naturalsortresplit, string)]
+def natural_sort(string, split_regex=re.compile(r'([0-9]+)')):
+    return [int(text) if text.isdigit() else text.lower() for text in re.split(split_regex, string)]
 
 # TODO: Load from advancedsettings.xml
 moviestacking = [re.compile(r'(.*?)([ _.-]*(?:cd|dvd|p(?:ar)?t|dis[ck])[ _.-]*[0-9]+)(.*?)(\.[^.]+)$', re.IGNORECASE),
