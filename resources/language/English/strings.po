@@ -46,6 +46,15 @@ msgctxt "#32026"
 msgid "Fixed {0} image URLs"
 msgstr ""
 
+msgctxt "#32027"
+msgid "Removed {0} images"
+msgstr ""
+
+# 0: media type - movie/series/seasons/episodes
+msgctxt "#32028"
+msgid "Listing all {0}"
+msgstr ""
+
 # Headings
 
 msgctxt "#32050"
@@ -71,7 +80,7 @@ msgid "Sorting and auto filters"
 msgstr ""
 
 msgctxt "#32055"
-msgid "Maintenance actions"
+msgid "Maintenance actions [I](save any changes first)[/I]"
 msgstr ""
 
 # Actions
@@ -102,6 +111,10 @@ msgstr ""
 
 msgctxt "#32406"
 msgid "Clean artwork URLs"
+msgstr ""
+
+msgctxt "#32407"
+msgid "Remove extra artwork not configured in the add-on"
 msgstr ""
 
 # Settings
@@ -136,4 +149,9 @@ msgstr ""
 
 msgctxt "#32906"
 msgid "Identify Artwork Downloader artwork filenames"
+msgstr ""
+
+# subsetting of action #32407
+msgctxt "#32908"
+msgid "Additional artwork types to keep"
 msgstr ""

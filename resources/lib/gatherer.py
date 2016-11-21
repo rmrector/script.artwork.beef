@@ -1,5 +1,6 @@
 import mediatypes
 import providers
+from mediainfo import arttype_matches_base
 from providers import ProviderError
 
 class Gatherer(object):
@@ -81,7 +82,7 @@ def list_missing_arttypes(mediatype, seasons, existingarttypes):
             if arttype not in existingarttypes:
                 yield arttype
         else:
-            artcount = sum(1 for art in existingarttypes if art.startswith(arttype))
+            artcount = sum(1 for art in existingarttypes if arttype_matches_base(art, arttype))
             if artcount < artinfo['autolimit']:
                 yield arttype
 
@@ -96,6 +97,6 @@ def list_missing_arttypes(mediatype, seasons, existingarttypes):
                     if arttype not in existingarttypes:
                         yield arttype
                 else:
-                    artcount = sum(1 for art in existingarttypes if art.startswith(arttype))
+                    artcount = sum(1 for art in existingarttypes if arttype_matches_base(art, arttype))
                     if artcount < artinfo['autolimit']:
                         yield arttype

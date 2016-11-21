@@ -130,8 +130,8 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
             return allitem
 
     def provides(self, types):
-        types = set(x if not x.startswith('season') else re.sub(r'[\d]', '%s', x) for x in types)
-        return any(x in types for x in self.artmap.values())
+        types = set(x if not x.startswith('season.') else re.sub(r'[\d]', '%s', x) for x in types)
+        return any(x in types for x in self.artmap.itervalues())
 
 class FanartTVMovieProvider(FanartTVAbstractProvider):
     mediatype = mediatypes.MOVIE
