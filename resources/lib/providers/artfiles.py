@@ -1,11 +1,11 @@
 import os
-import re
 import xbmcvfs
 from abc import ABCMeta
 
 from devhelper import pykodi
 
 import mediatypes
+from mediainfo import arttype_matches_base, format_arttype
 from utils import SortedDisplay, natural_sort, get_movie_path_list
 
 addon = pykodi.get_main_addon()
@@ -40,7 +40,7 @@ class ArtFilesAbstractProvider(object):
             if not check_filename.endswith(('.jpg', '.png', '.gif')):
                 continue
             popped = missing.pop(0) if missing else None
-            nexttype = popped if popped else arttype + (str(nextno) if nextno else '')
+            nexttype = popped if popped else format_arttype(arttype, nextno)
             result[nexttype] = self.buildimage(path + filename, extradir + sep + filename)
             if not popped:
                 nextno += 1
@@ -160,14 +160,15 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
         return result
 
 def getopentypes(existingtypes, arttype):
-    keys = [exact for exact in sorted(existingtypes, key=natural_sort) if re.match(r'{0}\d*$'.format(arttype), exact)]
+    keys = [exact for exact in sorted(existingtypes, key=natural_sort)
+        if arttype_matches_base(arttype, exact)]
     missing = []
     nextstart = 0
     for count in xrange(100):
         if not keys:
             nextstart = count
             break
-        exact = arttype + (str(count) if count else '')
+        exact = format_arttype(arttype, count)
         if exact in keys:
             keys.remove(exact)
         else:

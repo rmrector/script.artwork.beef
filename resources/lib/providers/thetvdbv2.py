@@ -94,8 +94,8 @@ class TheTVDBProvider(AbstractProvider):
         return True
 
     def provides(self, types):
-        types = set(x if not x.startswith('season') else re.sub(r'[\d]', '%s', x) for x in types)
-        return any(x in types for x in self.artmap.values())
+        types = set(x if not x.startswith('season.') else re.sub(r'[\d]', '%s', x) for x in types)
+        return any(x in types for x in self.artmap.itervalues())
 
 def shouldset_imagelanguage(image):
     if image['keyType'] == 'series':
@@ -105,4 +105,4 @@ def shouldset_imagelanguage(image):
     return True
 
 def typematches(arttype, types):
-    return any(x for x in types if arttype == (x if not x.startswith('season') else re.sub(r'[\d]', '%s', x)))
+    return any(x for x in types if arttype == (x if not x.startswith('season.') else re.sub(r'[\d]', '%s', x)))
