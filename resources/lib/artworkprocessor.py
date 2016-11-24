@@ -7,7 +7,7 @@ from devhelper import quickjson
 from devhelper.pykodi import log
 
 import cleaner
-import mediainfo
+import mediainfo as info
 import mediatypes
 from artworkselection import prompt_for_artwork
 from gatherer import Gatherer, list_missing_arttypes
@@ -132,15 +132,15 @@ class ArtworkProcessor(object):
                     else:
                         multiselect = mediatypes.artinfo[mediaitem['mediatype']][selectedarttype]['multiselect']
                     if multiselect:
-                        existingurls = [url for exacttype, url in mediaitem['art'].iteritems() \
-                            if mediainfo.arttype_matches_base(exacttype, selectedarttype)]
+                        existingurls = [url for exacttype, url in mediaitem['art'].iteritems()
+                            if info.arttype_matches_base(exacttype, selectedarttype)]
                         urls_toset = [url for url in existingurls if url not in selectedart[1]]
                         urls_toset.extend([url for url in selectedart[0] if url not in urls_toset])
-                        selectedart = dict(mediainfo.iter_renumbered_artlist(selectedart, selectedarttype, mediaitem['art'].keys()))
+                        selectedart = dict(info.iter_renumbered_artlist(selectedart, selectedarttype, mediaitem['art'].keys()))
                     else:
                         selectedart = {selectedarttype: selectedart}
 
-                    selectedart = mediainfo.get_artwork_updates(mediaitem['art'], selectedart)
+                    selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
                     if selectedart:
                         add_art_to_library(mediaitem['mediatype'], mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
                     notifycount(len(selectedart))
@@ -163,14 +163,14 @@ class ArtworkProcessor(object):
         if medialist:
             gatherer = Gatherer(self.monitor, self.only_filesystem)
         for mediaitem in medialist:
-            if not mediainfo.is_known_mediatype(mediaitem):
+            if not info.is_known_mediatype(mediaitem):
                 continue
             log('Processing {0}'.format(mediaitem['label']), xbmc.LOGINFO)
             if self.visible:
                 self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
                 currentitem += 1
             self.add_additional_iteminfo(mediaitem)
-            cleaned = mediaitem.get_artwork_updates(cleaner.clean_artwork(mediaitem), mediaitem['art'])
+            cleaned = info.get_artwork_updates(cleaner.clean_artwork(mediaitem), mediaitem['art'])
             if cleaned:
                 add_art_to_library(mediaitem['mediatype'], mediaitem.get('seasons'), mediaitem['dbid'], cleaned)
                 mediaitem['art'].update(cleaned)
@@ -188,18 +188,18 @@ class ArtworkProcessor(object):
                 self.sort_images(arttype, imagelist, mediaitem['file'])
             existingart = dict(mediaitem['art'])
             # Remove existing local artwork if it is no longer available
-            localart = [(arttype, image['url']) for arttype, image in forcedart.iteritems() \
+            localart = [(arttype, image['url']) for arttype, image in forcedart.iteritems()
                 if not image['url'].startswith('http')]
-            selectedart = dict((arttype, None) for arttype, url in existingart.iteritems() \
+            selectedart = dict((arttype, None) for arttype, url in existingart.iteritems()
                 if not url.startswith('http') and (arttype, url) not in localart)
 
             selectedart.update((key, image['url']) for key, image in forcedart.iteritems())
-            selectedart = mediainfo.renumber_all_artwork(selectedart)
+            selectedart = info.renumber_all_artwork(selectedart)
 
             existingart.update(selectedart)
             selectedart.update(self.get_top_missing_art(mediaitem['mediatype'], existingart, availableart, mediaitem.get('seasons')))
 
-            selectedart = mediainfo.get_artwork_updates(mediaitem['art'], selectedart)
+            selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
             if selectedart:
                 add_art_to_library(mediaitem['mediatype'], mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
                 artcount += len(selectedart)
@@ -221,7 +221,7 @@ class ArtworkProcessor(object):
             self.autolanguages = (self.language, 'en', None)
 
     def add_additional_iteminfo(self, mediaitem):
-        mediainfo.prepare_mediaitem(mediaitem)
+        info.prepare_mediaitem(mediaitem)
         if 'episodeid' in mediaitem:
             mediaitem['imdbnumber'] = self._get_episodeid(mediaitem)
             # Remove existing tvshow.* and season.* artwork
@@ -287,7 +287,7 @@ class ArtworkProcessor(object):
                 existingurls = []
                 existingartnames = []
                 for art, url in existingart.iteritems():
-                    if mediainfo.arttype_matches_base(art, missingart) and url:
+                    if info.arttype_matches_base(art, missingart) and url:
                         existingurls.append(url)
                         existingartnames.append(art)
 
@@ -345,12 +345,12 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
         return
     if mediatype == mediatypes.TVSHOW:
         for season, season_id in seasons.iteritems():
-            mediainfo.update_art_in_library(mediatypes.SEASON, season_id, dict((arttype, url) \
+            info.update_art_in_library(mediatypes.SEASON, season_id, dict((arttype, url)
                 for arttype, url in selectedart.iteritems() if arttype.startswith('season.{0}.'.format(season))))
-        mediainfo.update_art_in_library(mediatype, dbid, dict((arttype, url) \
+        info.update_art_in_library(mediatype, dbid, dict((arttype, url)
             for arttype, url in selectedart.iteritems() if '.' not in arttype))
     else:
-        mediainfo.update_art_in_library(mediatype, dbid, selectedart)
+        info.update_art_in_library(mediatype, dbid, selectedart)
 
 def notifycount(count):
     log(L(ARTWORK_UPDATED_MESSAGE).format(count), xbmc.LOGINFO)
@@ -379,7 +379,7 @@ def get_media_source(mediapath):
 def tag_forcedandexisting_art(availableart, forcedart, existingart):
     typeinsert = {}
     for exacttype, artlist in sorted(forcedart.iteritems(), key=lambda arttype: natural_sort(arttype[0])):
-        arttype = mediainfo.get_basetype(exacttype)
+        arttype = info.get_basetype(exacttype)
         if arttype not in availableart:
             availableart[arttype] = artlist
         else:
@@ -395,7 +395,7 @@ def tag_forcedandexisting_art(availableart, forcedart, existingart):
 
     typeinsert = {}
     for exacttype, existingurl in existingart.iteritems():
-        arttype = mediainfo.get_basetype(exacttype)
+        arttype = info.get_basetype(exacttype)
         if arttype in availableart:
             match = next((available for available in availableart[arttype] if available['url'] == existingurl), None)
             if match:
