@@ -1,3 +1,6 @@
+v0.8.1 (2016-11-23)
+- Fix silly bug in 0.8.0
+
 v0.8.0 (2016-11-21)
 - Add season fanart from fanart.tv
 - Add button to remove extra artwork not enabled in add-on settings
