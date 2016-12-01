@@ -1,3 +1,6 @@
+v0.8.2 (2016-12-01)
+- Fix manually selecting new fanart
+
 v0.8.1 (2016-11-23)
 - Fix silly bug in 0.8.0
 
