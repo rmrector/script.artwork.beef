@@ -1,3 +1,4 @@
+
 import re
 import xbmc
 import xbmcgui
@@ -136,7 +137,7 @@ class ArtworkProcessor(object):
                             if info.arttype_matches_base(exacttype, selectedarttype)]
                         urls_toset = [url for url in existingurls if url not in selectedart[1]]
                         urls_toset.extend([url for url in selectedart[0] if url not in urls_toset])
-                        selectedart = dict(info.iter_renumbered_artlist(selectedart, selectedarttype, mediaitem['art'].keys()))
+                        selectedart = dict(info.iter_renumbered_artlist(urls_toset, selectedarttype, mediaitem['art'].keys()))
                     else:
                         selectedart = {selectedarttype: selectedart}
 
