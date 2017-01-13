@@ -4,7 +4,7 @@ import xbmc
 import xbmcgui
 
 from devhelper import pykodi
-from devhelper.pykodi import log
+from devhelper.pykodi import localize as L, log
 
 from lib.libs import quickjson
 
@@ -13,7 +13,7 @@ import mediainfo as info
 import mediatypes
 from artworkselection import prompt_for_artwork
 from gatherer import Gatherer, list_missing_arttypes
-from utils import SortedDisplay, natural_sort, localize as L
+from utils import SortedDisplay, natural_sort
 
 addon = pykodi.get_main_addon()
 

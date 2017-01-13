@@ -10,13 +10,6 @@ addon = pykodi.get_main_addon()
 
 SortedDisplay = namedtuple('SortedDisplay', ['sort', 'display'])
 
-def localize(messageid):
-    if isinstance(messageid, basestring):
-        return messageid
-    if messageid >= 32000 and messageid < 33000:
-        return addon.getLocalizedString(messageid)
-    return xbmc.getLocalizedString(messageid)
-
 def natural_sort(string, split_regex=re.compile(r'([0-9]+)')):
     return [int(text) if text.isdigit() else text.lower() for text in re.split(split_regex, string)]
 
