@@ -3,8 +3,9 @@ import xbmc
 import xbmcgui
 
 from devhelper import pykodi
-from devhelper import quickjson
 from devhelper.pykodi import log
+
+from lib.libs import quickjson
 
 addon = pykodi.get_main_addon()
 sys.path.append(addon.resourcelibs)
@@ -57,7 +58,7 @@ def main():
 
 def set_autoaddepisodes():
     xbmc.executebuiltin('ActivateWindow(busydialog)')
-    serieslist = [series for series in quickjson.get_tvshows() if series.get('imdbnumber')]
+    serieslist = [series for series in quickjson.get_tvshows(True) if series.get('imdbnumber')]
     autoaddepisodes = addon.get_setting('autoaddepisodes_list')
     xbmc.executebuiltin('Dialog.Close(busydialog)')
     selected = SeriesSelector('DialogSelect.xml', addon.path, serieslist=serieslist, selected=autoaddepisodes).prompt()

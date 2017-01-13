@@ -4,8 +4,9 @@ import xbmc
 import xbmcgui
 
 from devhelper import pykodi
-from devhelper import quickjson
 from devhelper.pykodi import log
+
+from lib.libs import quickjson
 
 import cleaner
 import mediainfo as info
@@ -23,10 +24,6 @@ THROTTLE_TIME = 0.15
 
 DEFAULT_IMAGESIZE = '1920x1080'
 imagesizes = {'1920x1080': (1920, 1080, 700), '1280x720': (1280, 720, 520)}
-
-tvshow_properties = ['art', 'imdbnumber', 'season', 'file']
-movie_properties = ['art', 'imdbnumber', 'file']
-episode_properties = ['art', 'uniqueid', 'tvshowid', 'season', 'file']
 
 SOMETHING_MISSING = 32001
 FINAL_MESSAGE = 32019
@@ -91,11 +88,11 @@ class ArtworkProcessor(object):
         if mode == MODE_GUI:
             xbmc.executebuiltin('ActivateWindow(busydialog)')
         if mediatype == mediatypes.TVSHOW:
-            mediaitem = quickjson.get_tvshow_details(dbid, tvshow_properties)
+            mediaitem = quickjson.get_tvshow_details(dbid)
         elif mediatype == mediatypes.MOVIE:
-            mediaitem = quickjson.get_movie_details(dbid, movie_properties)
+            mediaitem = quickjson.get_movie_details(dbid)
         elif mediatype == mediatypes.EPISODE:
-            mediaitem = quickjson.get_episode_details(dbid, episode_properties)
+            mediaitem = quickjson.get_episode_details(dbid)
         else:
             xbmc.executebuiltin('Dialog.Close(busydialog)')
             xbmcgui.Dialog().notification("Artwork Beef", L(NOT_SUPPORTED_MESSAGE).format(mediatype), '-', 6500)
@@ -153,7 +150,7 @@ class ArtworkProcessor(object):
             medialist = [mediaitem]
             autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
             if mediatype == mediatypes.TVSHOW and mediaitem['imdbnumber'] in autoaddepisodes:
-                medialist.extend(quickjson.get_episodes(dbid, properties=episode_properties))
+                medialist.extend(quickjson.get_episodes(dbid))
             self.process_medialist(medialist, True)
 
     def process_medialist(self, medialist, alwaysnotify=False, stop_on_error=False):

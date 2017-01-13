@@ -6,15 +6,16 @@ if sys.version_info < (2, 7):
     import simplejson as json
 else:
     import json
+from devhelper import pykodi
 
-from devhelper import pykodi, quickjson
 from devhelper.pykodi import log, datetime_now
+from lib.libs import quickjson
 
 addon = pykodi.get_main_addon()
 sys.path.append(addon.resourcelibs)
 
 import mediatypes
-from artworkprocessor import ArtworkProcessor, episode_properties, movie_properties, tvshow_properties
+from artworkprocessor import ArtworkProcessor
 from processeditems import ProcessedItems
 
 STATUS_IDLE = 'idle'
@@ -176,10 +177,10 @@ class ArtworkService(xbmc.Monitor):
 
     def process_allitems(self, excludeprocessed=False):
         currentdate = str(datetime_now())
-        items = quickjson.get_movies(properties=movie_properties)
+        items = quickjson.get_movies()
         if excludeprocessed:
             items = [movie for movie in items if movie['movieid'] not in self.processed.movie]
-        serieslist = quickjson.get_tvshows(properties=tvshow_properties)
+        serieslist = quickjson.get_tvshows()
         if self.abortRequested():
             return
         autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
@@ -187,7 +188,7 @@ class ArtworkService(xbmc.Monitor):
             if not excludeprocessed or series['season'] > self.processed.tvshow.get(series['tvshowid']):
                 items.append(series)
             if series['imdbnumber'] in autoaddepisodes:
-                episodes = quickjson.get_episodes(series['tvshowid'], 'dateadded', properties=episode_properties)
+                episodes = quickjson.get_episodes(series['tvshowid'])
                 for episode in episodes:
                     if not excludeprocessed or episode['episodeid'] not in self.processed.episode:
                         items.append(episode)
@@ -210,27 +211,27 @@ class ArtworkService(xbmc.Monitor):
         seriesadded = set()
         newitems = []
         for movieid in self.recentitems['movie']:
-            newitems.append(quickjson.get_movie_details(movieid, movie_properties))
+            newitems.append(quickjson.get_movie_details(movieid))
             if self.abortRequested():
                 return
         for seriesid in self.recentitems['tvshow']:
             seriesadded.add(seriesid)
-            newitems.append(quickjson.get_tvshow_details(seriesid, tvshow_properties))
+            newitems.append(quickjson.get_tvshow_details(seriesid))
             if self.abortRequested():
                 return
         autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
         for episodeid in self.recentitems['episode']:
-            episode = quickjson.get_episode_details(episodeid, episode_properties)
+            episode = quickjson.get_episode_details(episodeid)
             series = None
             if episode['season'] > self.processed.tvshow.get(episode['tvshowid']) and episode['tvshowid'] not in seriesadded:
                 seriesadded.add(episode['tvshowid'])
-                series = quickjson.get_tvshow_details(episode['tvshowid'], tvshow_properties)
+                series = quickjson.get_tvshow_details(episode['tvshowid'])
                 newitems.append(series)
             if episode['tvshowid'] in addepisodesfrom:
                 newitems.append(episode)
             elif episode['tvshowid'] not in ignoreepisodesfrom:
                 if not series:
-                    series = quickjson.get_tvshow_details(episode['tvshowid'], tvshow_properties)
+                    series = quickjson.get_tvshow_details(episode['tvshowid'])
                 if series['imdbnumber'] in autoaddepisodes:
                     addepisodesfrom.add(episode['tvshowid'])
                     newitems.append(episode)
