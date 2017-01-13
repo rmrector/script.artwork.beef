@@ -2,9 +2,8 @@ import re
 
 from devhelper import pykodi
 
-from lib.libs import quickjson
-
 import mediatypes
+import quickjson
 from utils import natural_sort
 
 def is_known_mediatype(mediaitem):
@@ -66,7 +65,7 @@ def get_artwork_updates(originalart, newart):
 def prepare_mediaitem(mediaitem):
     mediaitem['mediatype'], mediaitem['dbid'] = get_mediatype_id(mediaitem)
 
-    mediaitem['art'] = dict((arttype.lower(), pykodi.unquoteimage(url)) for \
+    mediaitem['art'] = dict((arttype.lower(), pykodi.unquoteimage(url)) for
         arttype, url in mediaitem['art'].iteritems() if '.' not in arttype and not url.startswith('image://video'))
 
 
