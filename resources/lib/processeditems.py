@@ -1,14 +1,8 @@
-import sys
 import xbmc
 import xbmcvfs
 from contextlib import closing
 
-if sys.version_info < (2, 7):
-    import simplejson as json
-else:
-    import json
-
-from devhelper.pykodi import log
+from devhelper.pykodi import json, log
 
 class ProcessedItems(object):
     version = 1
