@@ -1,18 +1,12 @@
-import sys
 import xbmc
 from datetime import timedelta
 
 from devhelper import pykodi
 from devhelper.pykodi import log, datetime_now, json
 
-from lib.libs import quickjson
-
-addon = pykodi.get_main_addon()
-sys.path.append(addon.resourcelibs)
-
-import mediatypes
-from artworkprocessor import ArtworkProcessor
-from processeditems import ProcessedItems
+from lib import mediatypes, quickjson
+from lib.artworkprocessor import ArtworkProcessor
+from lib.processeditems import ProcessedItems
 
 STATUS_IDLE = 'idle'
 STATUS_SIGNALLED = 'signalled'
@@ -20,6 +14,8 @@ STATUS_PROCESSING = 'processing'
 
 UNPROCESSED_DAYS = 2
 ALLITEMS_DAYS = 60
+
+addon = pykodi.get_main_addon()
 
 class ArtworkService(xbmc.Monitor):
     def __init__(self):

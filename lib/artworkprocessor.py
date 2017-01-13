@@ -6,11 +6,10 @@ import xbmcgui
 from devhelper import pykodi
 from devhelper.pykodi import localize as L, log
 
-from lib.libs import quickjson
-
 import cleaner
 import mediainfo as info
 import mediatypes
+import quickjson
 from artworkselection import prompt_for_artwork
 from gatherer import Gatherer, list_missing_arttypes
 from utils import SortedDisplay, natural_sort

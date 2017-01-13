@@ -1,9 +1,9 @@
 import xbmc
 from abc import ABCMeta
 
-import mediatypes
 from base import AbstractProvider, cache
-from utils import SortedDisplay
+from lib import mediatypes
+from lib.utils import SortedDisplay
 
 class TheMovieDBAbstractProvider(AbstractProvider):
     # pylint: disable=W0223

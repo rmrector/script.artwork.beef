@@ -6,13 +6,24 @@ from abc import ABCMeta, abstractmethod
 from requests import codes
 from requests.exceptions import HTTPError, Timeout
 
+from devhelper import pykodi, quickjson
 from devhelper.pykodi import log
 
 from requests.packages import urllib3
 urllib3.disable_warnings()
 
-import providers
-from utils import SortedDisplay
+from lib.utils import SortedDisplay
+
+useragent = 'ArtworkBeef Kodi'
+
+def update_useragent():
+    global useragent
+    beefversion = pykodi.get_main_addon().version
+    props = quickjson.get_application_properties(['name', 'version'])
+    appversion = '{0}.{1}'.format(props['version']['major'], props['version']['minor'])
+    useragent = 'ArtworkBeef/{0} {1}/{2}'.format(beefversion, props['name'], appversion)
+
+update_useragent()
 
 cache = StorageServer.StorageServer('script.artwork.beef', 72)
 
@@ -73,7 +84,7 @@ class AbstractProvider(object):
         return result
 
     def _inget(self, url, params=None, headers=None, timeout=15):
-        finalheaders = {'User-Agent': providers.useragent}
+        finalheaders = {'User-Agent': useragent}
         if headers:
             finalheaders.update(headers)
         try:

@@ -11,8 +11,8 @@ if sys.version_info < (2, 7):
 else:
     from xml.etree.ElementTree import ParseError
 
-import mediatypes
-from utils import SortedDisplay, get_movie_path_list
+from lib import mediatypes
+from lib.utils import SortedDisplay, get_movie_path_list
 
 class NFOFileAbstractProvider(object):
     __metaclass__ = ABCMeta

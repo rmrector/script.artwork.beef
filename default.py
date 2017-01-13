@@ -5,15 +5,11 @@ import xbmcgui
 from devhelper import pykodi
 from devhelper.pykodi import localize as L, log
 
-from lib.libs import quickjson
+from lib import cleaner, mediainfo, quickjson
+from lib.artworkprocessor import ArtworkProcessor
+from lib.seriesselection import SeriesSelector
 
 addon = pykodi.get_main_addon()
-sys.path.append(addon.resourcelibs)
-
-import cleaner
-import mediainfo
-from artworkprocessor import ArtworkProcessor
-from seriesselection import SeriesSelector
 
 class M(object):
     ADD_MISSING_HEADER = 32401
