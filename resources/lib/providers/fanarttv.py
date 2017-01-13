@@ -26,7 +26,8 @@ class FanartTVAbstractProvider(AbstractProvider):
         self.clientkey = addon.get_setting('fanarttv_key')
 
     def get_data(self, mediaid):
-        return cache.cacheFunction(self._get_data, mediaid)
+        result = cache.cacheFunction(self._get_data, mediaid)
+        return result if result != 'Empty' else None
 
     def _get_data(self, mediaid):
         self.log('uncached', xbmc.LOGINFO)
@@ -60,7 +61,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         if types and not self.provides(types):
             return {}
         data = self.get_data(mediaid)
-        if data == 'Empty':
+        if not data:
             return {}
         result = {}
         for arttype, artlist in data.iteritems():
@@ -155,7 +156,7 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
         if types and not self.provides(types):
             return {}
         data = self.get_data(mediaid)
-        if data == 'Empty':
+        if not data:
             return {}
         result = {}
         for arttype, artlist in data.iteritems():

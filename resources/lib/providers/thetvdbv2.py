@@ -27,7 +27,8 @@ class TheTVDBProvider(AbstractProvider):
         self.set_accepted_contenttype('application/json')
 
     def get_data(self, mediaid, arttype, language):
-        return cache.cacheFunction(self._get_data, mediaid, arttype, language)
+        result = cache.cacheFunction(self._get_data, mediaid, arttype, language)
+        return result if result != 'Empty' else None
 
     def _get_data(self, mediaid, arttype, language):
         self.log('uncached', xbmc.LOGINFO)
@@ -52,7 +53,7 @@ class TheTVDBProvider(AbstractProvider):
             for language in languages if arttype != 'fanart' else flanguages:
                 generaltype = self.artmap[arttype]
                 data = self.get_data(mediaid, arttype, language)
-                if data == 'Empty':
+                if not data:
                     continue
                 isseason = arttype.startswith('season')
                 if not isseason:

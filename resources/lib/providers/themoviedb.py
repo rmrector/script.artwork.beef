@@ -37,7 +37,8 @@ class TheMovieDBAbstractProvider(AbstractProvider):
             return SortedDisplay(5, 'Not rated')
 
     def get_data(self, url):
-        return cache.cacheFunction(self._get_data, url)
+        result = cache.cacheFunction(self._get_data, url)
+        return result if result != 'Empty' else None
 
     def _get_data(self, url):
         self.log('uncached', xbmc.LOGINFO)
@@ -56,7 +57,7 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
         if not self.baseurl:
             return {}
         data = self.get_data(self.apiurl % mediaid)
-        if data == 'Empty':
+        if not data:
             return {}
         result = {}
         for arttype, artlist in data.iteritems():
@@ -97,11 +98,11 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
         if not self.baseurl:
             return {}
         data = self.get_data(self.tvdbidsearch_url % mediaid)
-        if data == 'Empty' or not data['tv_episode_results']:
+        if not data or not data['tv_episode_results']:
             return {}
         data = data['tv_episode_results'][0]
         data = self.get_data(self.apiurl % (data['show_id'], data['season_number'], data['episode_number']))
-        if data == 'Empty':
+        if not data:
             return {}
         result = {}
         for arttype, artlist in data.iteritems():
