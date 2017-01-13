@@ -1,7 +1,8 @@
 import re
 
 from devhelper import pykodi
-from devhelper import quickjson
+
+from lib.libs import quickjson
 
 import mediatypes
 from utils import natural_sort
