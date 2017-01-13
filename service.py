@@ -2,13 +2,9 @@ import sys
 import xbmc
 from datetime import timedelta
 
-if sys.version_info < (2, 7):
-    import simplejson as json
-else:
-    import json
 from devhelper import pykodi
+from devhelper.pykodi import log, datetime_now, json
 
-from devhelper.pykodi import log, datetime_now
 from lib.libs import quickjson
 
 addon = pykodi.get_main_addon()
