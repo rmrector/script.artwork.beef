@@ -3,7 +3,7 @@ import xbmc
 import xbmcgui
 
 from devhelper import pykodi
-from devhelper.pykodi import log
+from devhelper.pykodi import localize as L, log
 
 from lib.libs import quickjson
 
@@ -13,7 +13,6 @@ sys.path.append(addon.resourcelibs)
 import cleaner
 import mediainfo
 from artworkprocessor import ArtworkProcessor
-from utils import localize as L
 from seriesselection import SeriesSelector
 
 class M(object):
