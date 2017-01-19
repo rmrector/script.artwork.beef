@@ -6,7 +6,7 @@ from devhelper import pykodi
 
 from lib import mediatypes
 from lib.mediainfo import arttype_matches_base, format_arttype
-from lib.utils import SortedDisplay, natural_sort, get_movie_path_list
+from lib.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep
 
 addon = pykodi.get_main_addon()
 
@@ -29,7 +29,7 @@ class ArtFilesAbstractProvider(object):
     def getextra(self, path, exacttypes, thumbs=False):
         arttype = 'thumb' if thumbs else 'fanart'
         extradir = 'extrathumbs' if thumbs else 'extrafanart'
-        sep = '\\' if '\\' in path else '/'
+        sep = get_pathsep(path)
         missing, nextno = getopentypes(exacttypes, arttype)
         path += extradir + sep
         _, files = xbmcvfs.listdir(path)
@@ -104,7 +104,7 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
     def get_exact_images(self, path):
         paths = get_movie_path_list(path)
         result = {}
-        sep = '\\' if '\\' in path else '/'
+        sep = get_pathsep(path)
         path = os.path.dirname(path) + sep
         for dirname, moviefile in (os.path.split(p) for p in paths):
             dirname += sep
@@ -141,7 +141,7 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
 
     def get_exact_images(self, path):
         path, inputfilename = os.path.split(path)
-        path += '\\' if '\\' in path else '/'
+        path += get_pathsep(path)
         _, files = xbmcvfs.listdir(path)
         check_inputbase = os.path.splitext(inputfilename)[0].lower()
         result = {}

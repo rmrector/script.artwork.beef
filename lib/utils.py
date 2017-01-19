@@ -10,6 +10,10 @@ SortedDisplay = namedtuple('SortedDisplay', ['sort', 'display'])
 def natural_sort(string, split_regex=re.compile(r'([0-9]+)')):
     return [int(text) if text.isdigit() else text.lower() for text in re.split(split_regex, string)]
 
+def get_pathsep(path):
+    # The path separator can go either way on Windows, C:\Videos or smb://SERVER/Videos
+    return '\\' if '\\' in path else '/'
+
 # TODO: Load from advancedsettings.xml
 moviestacking = [re.compile(r'(.*?)([ _.-]*(?:cd|dvd|p(?:ar)?t|dis[ck])[ _.-]*[0-9]+)(.*?)(\.[^.]+)$', re.IGNORECASE),
     re.compile(r'(.*?)([ _.-]*(?:cd|dvd|p(?:ar)?t|dis[ck])[ _.-]*[a-d])(.*?)(\.[^.]+)$', re.IGNORECASE),
