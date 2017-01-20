@@ -1,7 +1,7 @@
-import mediatypes
 import providers
-from mediainfo import arttype_matches_base
 from providers import ProviderError
+from libs import mediatypes
+from libs.mediainfo import arttype_matches_base
 
 class Gatherer(object):
     def __init__(self, monitor, only_filesystem):

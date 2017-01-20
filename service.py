@@ -4,9 +4,9 @@ from datetime import timedelta
 from devhelper import pykodi
 from devhelper.pykodi import log, datetime_now, json
 
-from lib import mediatypes, quickjson
 from lib.artworkprocessor import ArtworkProcessor
-from lib.processeditems import ProcessedItems
+from lib.libs import mediatypes, quickjson
+from lib.libs.oldprocesseditems import ProcessedItems
 from lib.libs.processeditems import ProcessedItems as NewProcessedItems
 
 STATUS_IDLE = 'idle'

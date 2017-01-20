@@ -4,9 +4,9 @@ from abc import ABCMeta
 
 from devhelper import pykodi
 
-from lib import mediatypes
-from lib.mediainfo import arttype_matches_base, format_arttype
-from lib.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep
+from lib.libs import mediatypes
+from lib.libs.mediainfo import arttype_matches_base, format_arttype
+from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep
 
 addon = pykodi.get_main_addon()
 
