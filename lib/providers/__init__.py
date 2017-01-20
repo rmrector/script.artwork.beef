@@ -2,7 +2,7 @@
 from requests import Session
 
 import search
-from lib import mediatypes
+from lib.libs import mediatypes
 from base import ProviderError
 
 from artfiles import ArtFilesSeriesProvider, ArtFilesMovieProvider, ArtFilesEpisodeProvider

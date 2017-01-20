@@ -8,7 +8,7 @@ from requests.exceptions import HTTPError, Timeout
 from devhelper import pykodi, quickjson
 from devhelper.pykodi import log
 
-from lib.utils import SortedDisplay
+from lib.libs.utils import SortedDisplay
 
 from requests.packages import urllib3
 urllib3.disable_warnings()

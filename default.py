@@ -5,7 +5,8 @@ import xbmcgui
 from devhelper import pykodi
 from devhelper.pykodi import localize as L, log
 
-from lib import cleaner, mediainfo, mediatypes, quickjson
+from lib import cleaner
+from lib.libs import mediainfo, mediatypes, quickjson
 from lib.artworkprocessor import ArtworkProcessor
 from lib.seriesselection import SeriesSelector
 from lib.libs.processeditems import ProcessedItems
