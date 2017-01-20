@@ -22,8 +22,8 @@ class TheTVDBProvider(AbstractProvider):
 
     artmap = {'fanart': 'fanart', 'poster': 'poster', 'season': mediatypes.SEASON + '.%s.poster', 'seasonwide': mediatypes.SEASON + '.%s.banner', 'series': 'banner'}
 
-    def __init__(self):
-        super(TheTVDBProvider, self).__init__()
+    def __init__(self, *args):
+        super(TheTVDBProvider, self).__init__(*args)
         self.set_accepted_contenttype('application/json')
 
     def get_data(self, mediaid, arttype, language):

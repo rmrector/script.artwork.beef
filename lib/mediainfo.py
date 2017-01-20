@@ -6,14 +6,25 @@ import mediatypes
 import quickjson
 from utils import natural_sort
 
+# get_mediatype_id must evaluate these in order, as episodes have tvshowid
+idmap = (('episodeid', mediatypes.EPISODE),
+    ('seasonid', mediatypes.SEASON),
+    ('tvshowid', mediatypes.TVSHOW),
+    ('movieid', mediatypes.MOVIE),
+    ('setid', mediatypes.MOVIESET))
+idkeys = [x[0] for x in idmap]
+
+typemap = {mediatypes.EPISODE: quickjson.set_episode_details,
+    mediatypes.SEASON: quickjson.set_season_details,
+    mediatypes.TVSHOW: quickjson.set_tvshow_details,
+    mediatypes.MOVIE: quickjson.set_movie_details,
+    mediatypes.MOVIESET: quickjson.set_movieset_details}
+
 def is_known_mediatype(mediaitem):
-    return any(x in mediaitem for x in ('episodeid', 'seasonid', 'tvshowid', 'movieid'))
+    return any(x in mediaitem for x in idkeys)
 
 def get_mediatype_id(mediaitem):
-    if 'episodeid' in mediaitem: return mediatypes.EPISODE, mediaitem['episodeid']
-    elif 'seasonid' in mediaitem: return mediatypes.SEASON, mediaitem['seasonid']
-    elif 'tvshowid' in mediaitem: return mediatypes.TVSHOW, mediaitem['tvshowid']
-    elif 'movieid' in mediaitem: return mediatypes.MOVIE, mediaitem['movieid']
+    return next(((value, mediaitem[key]) for key, value in idmap if key in mediaitem))
 
 def arttype_matches_base(arttype, basetype):
     return re.match(r'{0}\d*$'.format(basetype), arttype)
@@ -71,11 +82,5 @@ def prepare_mediaitem(mediaitem):
 
 def update_art_in_library(mediatype, dbid, updatedart):
     if updatedart:
-        if mediatype == mediatypes.TVSHOW:
-            quickjson.set_tvshow_details(dbid, art=updatedart)
-        elif mediatype == mediatypes.SEASON:
-            quickjson.set_season_details(dbid, art=updatedart)
-        elif mediatype == mediatypes.EPISODE:
-            quickjson.set_episode_details(dbid, art=updatedart)
-        elif mediatype == mediatypes.MOVIE:
-            quickjson.set_movie_details(dbid, art=updatedart)
+        if mediatype in typemap:
+            typemap[mediatype](dbid, art=updatedart)

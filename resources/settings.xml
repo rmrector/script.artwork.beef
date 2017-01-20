@@ -34,6 +34,13 @@
 		<setting id="movie.landscape" label="landscape" type="bool" default="true" />
 		<setting id="movie.clearart" label="clearart" type="bool" default="true" />
 		<setting id="movie.discart" label="discart" type="bool" default="true" />
+		<setting id="set.poster" label="$LOCALIZE[20457] poster" type="bool" default="true" />
+		<setting id="set.fanart_limit" label="$LOCALIZE[20457] fanart" type="slider" option="int" default="5" range="0,1,20" />
+		<setting id="set.banner" label="$LOCALIZE[20457] banner" type="bool" default="true" />
+		<setting id="set.clearlogo" label="$LOCALIZE[20457] clearlogo" type="bool" default="true" />
+		<setting id="set.landscape" label="$LOCALIZE[20457] landscape" type="bool" default="true" />
+		<setting id="set.clearart" label="$LOCALIZE[20457] clearart" type="bool" default="true" />
+		<setting id="set.discart" label="$LOCALIZE[20457] discart" type="bool" default="true" />
 	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="highquality_preview" label="32903" type="bool" default="false" />

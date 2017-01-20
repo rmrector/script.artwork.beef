@@ -20,8 +20,8 @@ class FanartTVAbstractProvider(AbstractProvider):
     apikey = '***REMOVED***'
     apiurl = 'http://webservice.fanart.tv/v3/%s/%s'
 
-    def __init__(self):
-        super(FanartTVAbstractProvider, self).__init__()
+    def __init__(self, *args):
+        super(FanartTVAbstractProvider, self).__init__(*args)
         self.set_accepted_contenttype('application/json')
         self.clientkey = addon.get_setting('fanarttv_key')
 
@@ -134,8 +134,8 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         types = set(x if not x.startswith('season.') else re.sub(r'[\d]', '%s', x) for x in types)
         return any(x in types for x in self.artmap.itervalues())
 
-class FanartTVMovieProvider(FanartTVAbstractProvider):
-    mediatype = mediatypes.MOVIE
+class FanartTVAbstractMovieProvider(FanartTVAbstractProvider):
+    __metaclass__ = ABCMeta
 
     api_section = 'movies'
     artmap = {
@@ -206,3 +206,10 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
 
     def provides(self, types):
         return any(x in types for x in self.artmap.values())
+
+# Arg
+class FanartTVMovieProvider(FanartTVAbstractMovieProvider):
+    mediatype = mediatypes.MOVIE
+
+class FanartTVMovieSetProvider(FanartTVAbstractMovieProvider):
+    mediatype = mediatypes.MOVIESET

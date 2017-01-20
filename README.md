@@ -11,13 +11,15 @@ services [fanart.tv], [TheTVDB.com], and [The Movie Database].
 [Support and discussion thread](http://forum.kodi.tv/showthread.php?tid=258886) on the Kodi forums.  
 [Source](https://github.com/rmrector/script.artwork.beef) hosted on GitHub.
 
-It fully supports series and season artwork from TheTVDB.com; movie, series, and season artwork from fanart.tv; and
-movie artwork from The Movie Database. For those series that really pop, [high quality fanart] for each episode can be
+It fully supports series and season artwork from TheTVDB.com; movie, movie set, series,
+and season artwork from fanart.tv; and movie and movie set artwork from The Movie Database.
+For those series that really pop, [high quality fanart] for each episode can be
 added from The Movie Database.
 
 [high quality fanart]: http://forum.kodi.tv/showthread.php?tid=236248
 
-The full list of supported artwork types for **movies**: `poster`, `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `discart`  
+The full list of supported artwork types for **movies** and **movie sets**: `poster`,
+  `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `discart`  
 For **series**: `poster`, `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `characterart`  
 And **seasons**: `poster`, `fanart`, `banner`, `landscape`  
 Finally, **episodes**: `fanart`
@@ -74,8 +76,9 @@ lowercase and alphanumeric, but can otherwise be freely named. The artwork type 
 name; for instance, multiple fanart will have one single `fanart`, one `fanart1`, one `fanart2`, and so on.
 
 It will also pull in artwork files that match Artwork Downloader file names, in cases where they
-are different than the art types used in Kodi, for instance `character.jpg` is added as
-`characterart` and extrafanart are added as `fanart#`.
+are different than the art types used in Kodi, for instance `character.png` is added as
+`characterart` and extrafanart are added as `fanart#`. Ditto MSAA, but only for the default
+filenames (`logo.png` to `clearlogo`, `folder.jpg` to `thumb`).
 
 If you manage all of your artwork with image files and/or NFO files, the add-on setting
 "Auto add artwork from filesystem only" under "Advanced" will prevent the add-on from
@@ -102,7 +105,6 @@ Artwork Beef as a dependency.
 
 ### Current gotchas
 
-- Music video and set artwork will require a new search function, which will come at some point in the future.
 - It expects scrapers to set an IMDB number for movies, and a TVDB ID for series, like the default scrapers.
 - It cannot set artwork for "all seasons" with JSON-RPC. [related trac ticket](http://trac.kodi.tv/ticket/16139)
 

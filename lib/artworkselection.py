@@ -12,6 +12,7 @@ SPECIALS = 20381
 UNKNOWN_SOURCE = 32000
 CHOOSE_TYPE_HEADER = 32050
 CHOOSE_ART_HEADER = 32051
+REFRESH_ITEM = 32409
 
 def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
     if not availableart:
@@ -31,17 +32,21 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
         if arttype not in (at['arttype'] for at in arttypes):
             arttypes.append({'arttype': arttype, 'label': label, 'count': len(artlist)})
     arttypes.sort(key=lambda art: sort_arttype(art['arttype']))
-    typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', addon.path, arttypes=arttypes, medialabel=medialabel)
+    typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', addon.path, arttypes=arttypes,
+        medialabel=medialabel, show_refresh=mediatype == mediatypes.MOVIESET)
     hqpreview = addon.get_setting('highquality_preview')
     singletype = arttypes[0]['arttype'] if len(arttypes) == 1 else None
     selectedarttype = None
     selectedart = None
+    typelist = [at['arttype'] for at in arttypes]
     while selectedart == None and not monitor.abortRequested():
         # The loop shows the first window if viewer backs out of the second
         if singletype:
             selectedarttype = singletype
         else:
             selectedarttype = typeselectwindow.prompt()
+            if selectedarttype not in typelist:
+                return selectedarttype, None
         if not selectedarttype:
             break
         artlist = availableart[selectedarttype]
@@ -64,6 +69,7 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
         super(ArtworkTypeSelector, self).__init__()
         self.arttypes = kwargs.get('arttypes')
         self.medialabel = kwargs.get('medialabel')
+        self.show_refresh = kwargs.get('show_refresh')
         self.guilist = None
         self.selected = None
 
@@ -76,7 +82,8 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
         if not self.selected:
             self.getControl(1).setLabel(L(CHOOSE_TYPE_HEADER).format(self.medialabel))
             self.getControl(3).setVisible(False)
-            self.getControl(5).setVisible(False)
+            self.getControl(5).setVisible(self.show_refresh)
+            self.getControl(5).setLabel(L(REFRESH_ITEM))
             self.guilist = self.getControl(6)
             for arttype in self.arttypes:
                 listitem = xbmcgui.ListItem(arttype['label'])
@@ -95,7 +102,10 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
         self.setFocus(self.guilist)
 
     def onClick(self, controlid):
-        if controlid == 6:
+        if controlid == 5:
+            self.selected = "!!-Refresh"
+            self.close()
+        elif controlid == 6:
             item = self.guilist.getSelectedItem()
             self.selected = item.getfilename()
             self.close()
