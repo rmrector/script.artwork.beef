@@ -14,12 +14,6 @@ idmap = (('episodeid', mediatypes.EPISODE),
     ('setid', mediatypes.MOVIESET))
 idkeys = [x[0] for x in idmap]
 
-typemap = {mediatypes.EPISODE: quickjson.set_episode_details,
-    mediatypes.SEASON: quickjson.set_season_details,
-    mediatypes.TVSHOW: quickjson.set_tvshow_details,
-    mediatypes.MOVIE: quickjson.set_movie_details,
-    mediatypes.MOVIESET: quickjson.set_movieset_details}
-
 def is_known_mediatype(mediaitem):
     return any(x in mediaitem for x in idkeys)
 
@@ -82,5 +76,4 @@ def prepare_mediaitem(mediaitem):
 
 def update_art_in_library(mediatype, dbid, updatedart):
     if updatedart:
-        if mediatype in typemap:
-            typemap[mediatype](dbid, art=updatedart)
+        quickjson.set_details(dbid, mediatype, art=updatedart)

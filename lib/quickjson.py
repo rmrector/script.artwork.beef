@@ -116,46 +116,13 @@ def get_seasons(tvshow_id=-1):
     else:
         return []
 
-def set_tvshow_details(tvshow_id, **tvshow_details):
-    json_request = get_base_json_request('VideoLibrary.SetTVShowDetails')
-    json_request['params'] = tvshow_details
-    json_request['params']['tvshowid'] = tvshow_id
+def set_details(dbid, mediatype, **details):
+    assert mediatype in typemap
 
-    json_result = pykodi.execute_jsonrpc(json_request)
-    if not check_json_result(json_result, 'OK', json_request):
-        log(json_result)
-
-def set_season_details(season_id, **season_details):
-    json_request = get_base_json_request('VideoLibrary.SetSeasonDetails')
-    json_request['params'] = season_details
-    json_request['params']['seasonid'] = season_id
-
-    json_result = pykodi.execute_jsonrpc(json_request)
-    if not check_json_result(json_result, 'OK', json_request):
-        log(json_result)
-
-def set_episode_details(episode_id, **episode_details):
-    json_request = get_base_json_request('VideoLibrary.SetEpisodeDetails')
-    json_request['params'] = episode_details
-    json_request['params']['episodeid'] = episode_id
-
-    json_result = pykodi.execute_jsonrpc(json_request)
-    if not check_json_result(json_result, 'OK', json_request):
-        log(json_result)
-
-def set_movie_details(movie_id, **movie_details):
-    json_request = get_base_json_request('VideoLibrary.SetMovieDetails')
-    json_request['params'] = movie_details
-    json_request['params']['movieid'] = movie_id
-
-    json_result = pykodi.execute_jsonrpc(json_request)
-    if not check_json_result(json_result, 'OK', json_request):
-        log(json_result)
-
-def set_movieset_details(set_id, **movieset_details):
-    json_request = get_base_json_request('VideoLibrary.SetMovieSetDetails')
-    json_request['params'] = movieset_details
-    json_request['params']['setid'] = set_id
+    mapped = typemap[mediatype]
+    json_request = get_base_json_request('VideoLibrary.Set{0}Details'.format(mapped[0]))
+    json_request['params'] = details
+    json_request['params'][mediatype + 'id'] = dbid
 
     json_result = pykodi.execute_jsonrpc(json_request)
     if not check_json_result(json_result, 'OK', json_request):
