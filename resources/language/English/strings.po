@@ -56,6 +56,10 @@ msgctxt "#32028"
 msgid "Listing all {0}"
 msgstr ""
 
+msgctxt "#32029"
+msgid "All sets identified. Hurray!"
+msgstr ""
+
 # Headings
 
 msgctxt "#32050"
@@ -66,6 +70,14 @@ msgstr ""
 msgctxt "#32051"
 # 0: art type (poster/fanart/etc), 1: media title
 msgid "Choose {0} for {1}"
+msgstr ""
+
+msgctxt "#32056"
+msgid "Unmatched sets"
+msgstr ""
+
+msgctxt "#32057"
+msgid "Enter TheMovieDB collection name"
 msgstr ""
 
 msgctxt "#32052"
@@ -110,12 +122,20 @@ msgctxt "#32405"
 msgid "add missing artwork for all items"
 msgstr ""
 
+msgctxt "#32408"
+msgid "identify unmatched sets with TheMovieDB"
+msgstr ""
+
 msgctxt "#32406"
 msgid "Clean artwork URLs"
 msgstr ""
 
 msgctxt "#32407"
 msgid "Remove extra artwork not configured in the add-on"
+msgstr ""
+
+msgctxt "#32409"
+msgid "Search for set"
 msgstr ""
 
 # Settings

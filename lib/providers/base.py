@@ -1,4 +1,3 @@
-import requests
 import StorageServer
 import sys
 import xbmc
@@ -9,10 +8,10 @@ from requests.exceptions import HTTPError, Timeout
 from devhelper import pykodi, quickjson
 from devhelper.pykodi import log
 
+from lib.utils import SortedDisplay
+
 from requests.packages import urllib3
 urllib3.disable_warnings()
-
-from lib.utils import SortedDisplay
 
 useragent = 'ArtworkBeef Kodi'
 
@@ -26,6 +25,7 @@ def update_useragent():
 update_useragent()
 
 cache = StorageServer.StorageServer('script.artwork.beef', 72)
+monitor = xbmc.Monitor()
 
 # Result dict of lists, keyed on art type
 # {'url': URL, 'language': ISO alpha-2 code, 'rating': SortedDisplay, 'size': SortedDisplay, 'provider': self.name, 'preview': preview URL}
@@ -39,26 +39,55 @@ class AbstractProvider(object):
     name = SortedDisplay(0, '')
     mediatype = None
 
-    monitor = xbmc.Monitor()
+    def __init__(self, session):
+        self.session = session
+        self.getter = Getter(session, self.login)
 
-    def __init__(self):
+    def set_accepted_contenttype(self, contenttype):
+        self.getter.set_accepted_contenttype(contenttype)
+
+    def doget(self, url, params=None, headers=None):
+        return self.getter.get(url, params, headers)
+
+    def log(self, message, level=xbmc.LOGDEBUG):
+        log(message, level, tag='%s.%s' % (self.name.sort, self.mediatype))
+
+    def login(self):
+        return False
+
+    @abstractmethod
+    def get_images(self, mediaid, types=None):
+        pass
+
+class Getter(object):
+    def __init__(self, session, login):
+        self.session = session
+        self.login = login
         self.contenttype = None
-        self.session = requests.Session()
 
     def set_accepted_contenttype(self, contenttype):
         self.session.headers['Accept'] = contenttype
         self.contenttype = contenttype
 
-    def doget(self, url, params=None, headers=None):
+    def get(self, url, params=None, headers=None):
         result = self._inget(url, params, headers)
-        if result == None:
+        if result is None:
             return
         errcount = 0
+        while result.status_code in (codes.bad_gateway, codes.internal_server_error, 520):
+            if errcount > 2:
+                message = sys.exc_info()[1].message if sys.exc_info()[1] else ''
+                raise ProviderError, (message, sys.exc_info()[1]), sys.exc_info()[2]
+            errcount += 1
+            if monitor.waitForAbort(2):
+                return
+            result = self._inget(url, params, headers)
         if result.status_code == codes.unauthorized:
             if self.login():
                 result = self._inget(url, params, headers)
                 if result is None:
                     return
+        errcount = 0
         while result.status_code == codes.too_many_requests:
             if errcount > 2:
                 raise ProviderError, "Too many requests", sys.exc_info()[2]
@@ -67,10 +96,10 @@ class AbstractProvider(object):
                 wait = int(result.headers.get('Retry-After')) + 1
             except ValueError:
                 wait = 10
-            if self.monitor.waitForAbort(wait):
+            if monitor.waitForAbort(wait):
                 return
             result = self._inget(url, params, headers)
-            if result == None:
+            if result is None:
                 return
 
         if result.status_code == codes.not_found:
@@ -94,16 +123,6 @@ class AbstractProvider(object):
                 return self.session.get(url, params=params, headers=finalheaders, timeout=timeout)
             except Timeout as ex:
                 raise ProviderError, ("Provider is not responding", ex), sys.exc_info()[2]
-
-    def log(self, message, level=xbmc.LOGDEBUG):
-        log(message, level, tag='%s.%s' % (self.name.sort, self.mediatype))
-
-    def login(self):
-        return False
-
-    @abstractmethod
-    def get_images(self, mediaid, types=None):
-        pass
 
 class ProviderError(Exception):
     def __init__(self, message, cause=None):

@@ -7,6 +7,7 @@ from devhelper.pykodi import log, datetime_now, json
 from lib import mediatypes, quickjson
 from lib.artworkprocessor import ArtworkProcessor
 from lib.processeditems import ProcessedItems
+from lib.libs.processeditems import ProcessedItems as NewProcessedItems
 
 STATUS_IDLE = 'idle'
 STATUS_SIGNALLED = 'signalled'
@@ -25,6 +26,7 @@ class ArtworkService(xbmc.Monitor):
         self.abort = False
         self.processor = ArtworkProcessor(self)
         self.processed = ProcessedItems(addon.datapath)
+        self.newprocessed = NewProcessedItems()
         self.signal = None
         self.processaftersettings = False
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
@@ -170,8 +172,11 @@ class ArtworkService(xbmc.Monitor):
     def process_allitems(self, excludeprocessed=False):
         currentdate = str(datetime_now())
         items = quickjson.get_movies()
+        sets = quickjson.get_moviesets()
         if excludeprocessed:
             items = [movie for movie in items if movie['movieid'] not in self.processed.movie]
+            sets = [mset for mset in sets if self.newprocessed.should_update(mset['setid'], mediatypes.MOVIESET)]
+        items.extend(sets)
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
             return

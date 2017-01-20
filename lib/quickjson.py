@@ -2,9 +2,18 @@ from devhelper import pykodi
 from devhelper.pykodi import log
 from devhelper.quickjson import get_base_json_request, check_json_result
 
+import mediatypes
+
+# [0] method part
+typemap = {mediatypes.MOVIE: ('Movie',),
+    mediatypes.MOVIESET: ('MovieSet',),
+    mediatypes.TVSHOW: ('TVShow',),
+    mediatypes.EPISODE: ('Episode',),
+    mediatypes.SEASON: ('Season',)}
 tvshow_properties = ['art', 'imdbnumber', 'season', 'file']
 more_tvshow_properties = ['art', 'imdbnumber', 'season', 'file', 'plot', 'year']
 movie_properties = ['art', 'imdbnumber', 'file']
+movieset_properties = ['art']
 episode_properties = ['art', 'uniqueid', 'tvshowid', 'season', 'file']
 
 def get_movie_details(movie_id):
@@ -16,6 +25,17 @@ def get_movie_details(movie_id):
 
     if check_json_result(json_result, 'moviedetails', json_request):
         return json_result['result']['moviedetails']
+
+def get_movieset_details(movieset_id):
+    json_request = get_base_json_request('VideoLibrary.GetMovieSetDetails')
+    json_request['params']['setid'] = movieset_id
+    json_request['params']['properties'] = movieset_properties
+    json_request['params']['movies'] = {'properties': ['art', 'file']}
+
+    json_result = pykodi.execute_jsonrpc(json_request)
+
+    if check_json_result(json_result, 'setdetails', json_request):
+        return json_result['result']['setdetails']
 
 def get_tvshow_details(tvshow_id):
     json_request = get_base_json_request('VideoLibrary.GetTVShowDetails')
@@ -45,6 +65,17 @@ def get_movies():
     json_result = pykodi.execute_jsonrpc(json_request)
     if check_json_result(json_result, 'movies', json_request):
         return json_result['result']['movies']
+    else:
+        return []
+
+def get_moviesets():
+    json_request = get_base_json_request('VideoLibrary.GetMovieSets')
+    json_request['params']['properties'] = movieset_properties
+    json_request['params']['sort'] = {'method': 'sorttitle', 'order': 'ascending'}
+
+    json_result = pykodi.execute_jsonrpc(json_request)
+    if check_json_result(json_result, 'sets', json_request):
+        return json_result['result']['sets']
     else:
         return []
 
@@ -116,6 +147,15 @@ def set_movie_details(movie_id, **movie_details):
     json_request = get_base_json_request('VideoLibrary.SetMovieDetails')
     json_request['params'] = movie_details
     json_request['params']['movieid'] = movie_id
+
+    json_result = pykodi.execute_jsonrpc(json_request)
+    if not check_json_result(json_result, 'OK', json_request):
+        log(json_result)
+
+def set_movieset_details(set_id, **movieset_details):
+    json_request = get_base_json_request('VideoLibrary.SetMovieSetDetails')
+    json_request['params'] = movieset_details
+    json_request['params']['setid'] = set_id
 
     json_result = pykodi.execute_jsonrpc(json_request)
     if not check_json_result(json_result, 'OK', json_request):

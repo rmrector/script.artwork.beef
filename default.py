@@ -5,9 +5,10 @@ import xbmcgui
 from devhelper import pykodi
 from devhelper.pykodi import localize as L, log
 
-from lib import cleaner, mediainfo, quickjson
+from lib import cleaner, mediainfo, mediatypes, quickjson
 from lib.artworkprocessor import ArtworkProcessor
 from lib.seriesselection import SeriesSelector
+from lib.libs.processeditems import ProcessedItems
 
 addon = pykodi.get_main_addon()
 
@@ -17,16 +18,20 @@ class M(object):
     STOP = 32403
     ADD_MISSING_FOR_NEW = 32404
     ADD_MISSING_FOR_ALL = 32405
+    IDENTIFY_UNMATCHED_SETS = 32408
     CLEAN_ART_URLS = 32406
     REMOVE_EXTRA_ARTWORK = 32407
     FIXED_URL_COUNT = 32026
     REMOVED_ART_COUNT = 32027
+    NO_UNMATCHED_SETS = 32029
+    UNMATCHED_SETS = 32056
 
     LISTING_ALL = 32028
     MOVIES = 36901
     SERIES = 36903
     SEASONS = 36905
     EPISODES = 36907
+    MOVIESETS = 20434
 
 def main():
     command = get_command()
@@ -46,10 +51,31 @@ def main():
             options = [(L(M.STOP), 'NotifyAll(script.artwork.beef, CancelCurrent)')]
         else:
             options = [(L(M.ADD_MISSING_FOR_NEW), 'NotifyAll(script.artwork.beef, ProcessNewItems)'),
-                (L(M.ADD_MISSING_FOR_ALL), 'NotifyAll(script.artwork.beef, ProcessAllItems)')]
+                (L(M.ADD_MISSING_FOR_ALL), 'NotifyAll(script.artwork.beef, ProcessAllItems)'),
+                (L(M.IDENTIFY_UNMATCHED_SETS), identify_unmatched_sets)]
         selected = xbmcgui.Dialog().select('Artwork Beef', [option[0] for option in options])
         if selected >= 0 and selected < len(options):
-            pykodi.execute_builtin(options[selected][1])
+            action = options[selected][1]
+            if isinstance(action, basestring):
+                pykodi.execute_builtin(action)
+            else:
+                action()
+
+def identify_unmatched_sets():
+    xbmc.executebuiltin('ActivateWindow(busydialog)')
+    processed = ProcessedItems()
+    unmatched = [mset for mset in quickjson.get_moviesets() if not processed.get_uniqueid(mset['setid'], 'set')]
+    xbmc.executebuiltin('Dialog.Close(busydialog)')
+    if unmatched:
+        selected = xbmcgui.Dialog().select(L(M.UNMATCHED_SETS), [mset['label'] for mset in unmatched])
+        if selected < 0:
+            return # Cancelled
+        mediaitem = unmatched[selected]
+        processor = ArtworkProcessor()
+        if processor.identify_movieset(mediaitem):
+            processor.process_item(mediatypes.MOVIESET, mediaitem['setid'], 'auto')
+    else:
+        xbmcgui.Dialog().notification("Artwork Beef", L(M.NO_UNMATCHED_SETS), xbmcgui.NOTIFICATION_INFO)
 
 def set_autoaddepisodes():
     xbmc.executebuiltin('ActivateWindow(busydialog)')
@@ -70,6 +96,7 @@ def runon_allmedia(heading, countmessage, function):
     steps_to_run = ((quickjson.get_movies, L(M.LISTING_ALL).format(L(M.MOVIES))),
             (quickjson.get_tvshows, L(M.LISTING_ALL).format(L(M.SERIES))),
             (quickjson.get_seasons, L(M.LISTING_ALL).format(L(M.SEASONS))),
+            (quickjson.get_moviesets, L(M.LISTING_ALL).format(L(M.MOVIESETS))),
             (quickjson.get_episodes, L(M.LISTING_ALL).format(L(M.EPISODES))))
     stepsize = 100 // len(steps_to_run)
 

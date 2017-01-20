@@ -6,7 +6,6 @@ from providers import ProviderError
 class Gatherer(object):
     def __init__(self, monitor, only_filesystem):
         self.monitor = monitor
-
         self.only_filesystem = only_filesystem
 
     def getartwork(self, mediaitem, skipexisting=True):
@@ -14,26 +13,28 @@ class Gatherer(object):
         availableartwork = {}
         services_hit = False
         error = None
-        if mediaitem['mediatype'] in (mediatypes.TVSHOW, mediatypes.MOVIE, mediatypes.EPISODE):
-            forcedartwork = self.get_forced_artwork(mediaitem['mediatype'], mediaitem['file'], mediaitem.get('seasons'), not skipexisting)
-            existingtypes = [key for key, url in mediaitem['art'].iteritems() if url]
-            existingtypes.extend(forcedartwork.keys())
-            if skipexisting:
-                if not self.only_filesystem and next(list_missing_arttypes(mediaitem['mediatype'],
-                        mediaitem.get('seasons'), existingtypes), False):
-                    availableartwork, error = self.get_external_artwork(mediaitem['mediatype'], mediaitem.get('seasons'),
-                        existingtypes, mediaitem['imdbnumber'])
-                    services_hit = True
-            else:
+        forcedartwork = self.get_forced_artwork(mediaitem['mediatype'], mediaitem.get('file'),
+            mediaitem.get('seasons'), not skipexisting)
+        existingtypes = [key for key, url in mediaitem['art'].iteritems() if url]
+        existingtypes.extend(forcedartwork.keys())
+        if skipexisting:
+            if not self.only_filesystem and 'imdbnumber' in mediaitem and next(list_missing_arttypes(
+                    mediaitem['mediatype'], mediaitem.get('seasons'), existingtypes), False):
                 availableartwork, error = self.get_external_artwork(mediaitem['mediatype'], mediaitem.get('seasons'),
-                    existingtypes, mediaitem['imdbnumber'], False)
+                    existingtypes, mediaitem['imdbnumber'])
                 services_hit = True
+        elif 'imdbnumber' in mediaitem:
+            availableartwork, error = self.get_external_artwork(mediaitem['mediatype'], mediaitem.get('seasons'),
+                existingtypes, mediaitem['imdbnumber'], False)
+            services_hit = True
         # REVIEW: This 4 value return is bugging me
         return forcedartwork, availableartwork, services_hit, error
 
     def get_forced_artwork(self, mediatype, mediafile, seasons, allowmutiple=False):
+        if not mediafile:
+            return {}
         resultimages = {}
-        for provider in providers.forced[mediatype]:
+        for provider in providers.forced.get(mediatype, ()):
             for arttype, image in provider.get_exact_images(mediafile).iteritems():
                 if arttype.startswith('season.'):
                     season = arttype.rsplit('.', 2)[1]
@@ -54,7 +55,7 @@ class Gatherer(object):
         missing = list(list_missing_arttypes(mediatype, seasons, existingarttypes)) if skipmissing else None
         images = {}
         error = None
-        for provider in providers.external[mediatype]:
+        for provider in providers.external.get(mediatype, ()):
             try:
                 providerimages = provider.get_images(imdbnumber, missing)
             except ProviderError as ex:

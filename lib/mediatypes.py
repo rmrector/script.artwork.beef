@@ -6,8 +6,13 @@ TVSHOW = 'tvshow'
 MOVIE = 'movie'
 EPISODE = 'episode'
 SEASON = 'season'
+MOVIESET = 'set'
 
-settings = ('tvshow.poster', 'tvshow.fanart_limit', 'tvshow.banner', 'tvshow.clearlogo', 'tvshow.landscape', 'tvshow.clearart', 'tvshow.characterart_limit', 'season.poster', 'season.banner', 'season.landscape', 'episode.fanart', 'movie.poster', 'movie.fanart_limit', 'movie.banner', 'movie.clearlogo', 'movie.landscape', 'movie.clearart', 'movie.discart')
+settings = ('tvshow.poster', 'tvshow.fanart_limit', 'tvshow.banner', 'tvshow.clearlogo', 'tvshow.landscape',
+    'tvshow.clearart', 'tvshow.characterart_limit', 'season.poster', 'season.banner', 'season.landscape',
+    'episode.fanart', 'movie.poster', 'movie.fanart_limit', 'movie.banner', 'movie.clearlogo', 'movie.landscape',
+    'movie.clearart', 'movie.discart', 'set.poster', 'set.fanart_limit', 'set.banner', 'set.clearlogo',
+    'set.landscape', 'set.clearart', 'set.discart')
 
 addon = pykodi.get_main_addon()
 
@@ -43,6 +48,36 @@ artinfo = {
 	    }
     },
     MOVIE: {
+		'poster': {
+            'autolimit': 1,
+            'multiselect': False
+		},
+		'fanart': {
+	        'autolimit': 5,
+	        'multiselect': True
+		},
+		'banner': {
+	        'autolimit': 1,
+	        'multiselect': False
+		},
+		'clearlogo': {
+	        'autolimit': 1,
+	        'multiselect': False
+		},
+		'landscape': {
+	        'autolimit': 1,
+	        'multiselect': False
+	    },
+		'clearart': {
+	        'autolimit': 1,
+	        'multiselect': False
+	    },
+	    'discart': {
+	        'autolimit': 1,
+	        'multiselect': False
+	    }
+	},
+    MOVIESET: {
 		'poster': {
             'autolimit': 1,
             'multiselect': False

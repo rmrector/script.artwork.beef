@@ -1,27 +1,31 @@
 import xbmc
 from abc import ABCMeta
 
-from base import AbstractProvider, cache
+from devhelper.pykodi import log
+
+from base import AbstractProvider, cache, Getter
 from lib import mediatypes
 from lib.utils import SortedDisplay
+
+apikey = '5a0727308f37da772002755d6c073aee'
+cfgurl = 'http://api.themoviedb.org/3/configuration'
 
 class TheMovieDBAbstractProvider(AbstractProvider):
     # pylint: disable=W0223
     __metaclass__ = ABCMeta
 
     name = SortedDisplay('themoviedb.org', 'The Movie Database')
-    cfgurl = 'http://api.themoviedb.org/3/configuration'
-    apikey = '5a0727308f37da772002755d6c073aee'
     _baseurl = None
+    artmap = None
 
-    def __init__(self):
-        super(TheMovieDBAbstractProvider, self).__init__()
+    def __init__(self, *args):
+        super(TheMovieDBAbstractProvider, self).__init__(*args)
         self.set_accepted_contenttype('application/json')
 
     @property
     def baseurl(self):
         if not self._baseurl:
-            response = self.doget(self.cfgurl, params={'api_key': self.apikey})
+            response = self.doget(cfgurl, params={'api_key': apikey})
             if response is None:
                 return
             self._baseurl = response.json()['images']['base_url']
@@ -42,23 +46,10 @@ class TheMovieDBAbstractProvider(AbstractProvider):
 
     def _get_data(self, url):
         self.log('uncached', xbmc.LOGINFO)
-        response = self.doget(url, params={'api_key': self.apikey})
+        response = self.doget(url, params={'api_key': apikey})
         return 'Empty' if response is None else response.json()
 
-class TheMovieDBProvider(TheMovieDBAbstractProvider):
-    mediatype = mediatypes.MOVIE
-
-    apiurl = 'http://api.themoviedb.org/3/movie/%s/images'
-    artmap = {'backdrops': 'fanart', 'posters': 'poster'}
-
-    def get_images(self, mediaid, types=None):
-        if types and not self.provides(types):
-            return {}
-        if not self.baseurl:
-            return {}
-        data = self.get_data(self.apiurl % mediaid)
-        if not data:
-            return {}
+    def process_data(self, data):
         result = {}
         for arttype, artlist in data.iteritems():
             generaltype = self.artmap.get(arttype)
@@ -66,7 +57,7 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
                 continue
             if artlist and generaltype not in result:
                 result[generaltype] = []
-            previewbit = 'w300' if arttype == 'backdrops' else 'w342'
+            previewbit = 'w300' if arttype in ('backdrops', 'stills') else 'w342'
             for image in artlist:
                 resultimage = {'url': self.baseurl + 'original' + image['file_path'], 'provider': self.name}
                 resultimage['preview'] = self.baseurl + previewbit + image['file_path']
@@ -80,6 +71,23 @@ class TheMovieDBProvider(TheMovieDBAbstractProvider):
                 result[generaltype].append(resultimage)
         return result
 
+class TheMovieDBMovieProvider(TheMovieDBAbstractProvider):
+    mediatype = mediatypes.MOVIE
+
+    apiurl = 'http://api.themoviedb.org/3/movie/%s/images'
+    artmap = {'backdrops': 'fanart', 'posters': 'poster'}
+
+    def get_images(self, mediaid, types=None):
+        if types and not self.provides(types):
+            return {}
+        if not self.baseurl:
+            return {}
+        data = self.get_data(self.apiurl % mediaid)
+        if not data:
+            return {}
+
+        return self.process_data(data)
+
     def provides(self, types):
         return any(x in types for x in self.artmap.values())
 
@@ -89,10 +97,6 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
     tvdbidsearch_url = 'http://api.themoviedb.org/3/find/%s?external_source=tvdb_id'
     apiurl = 'http://api.themoviedb.org/3/tv/%s/season/%s/episode/%s/images'
     artmap = {'stills': 'fanart'}
-
-    def __init__(self):
-        super(TheMovieDBEpisodeProvider, self).__init__()
-        self.session.headers['Accept'] = 'application/json'
 
     def get_images(self, mediaid, types=None):
         if not self.baseurl:
@@ -104,18 +108,72 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
         data = self.get_data(self.apiurl % (data['show_id'], data['season_number'], data['episode_number']))
         if not data:
             return {}
-        result = {}
-        for arttype, artlist in data.iteritems():
-            generaltype = self.artmap.get(arttype)
-            if not generaltype:
-                continue
-            if artlist and generaltype not in result:
-                result[generaltype] = []
-            for image in artlist:
-                resultimage = {'url': self.baseurl + 'original' + image['file_path'], 'provider': self.name}
-                resultimage['preview'] = self.baseurl + 'w300' + image['file_path']
-                resultimage['language'] = image['iso_639_1']
-                resultimage['rating'] = self._get_rating(image)
-                resultimage['size'] = SortedDisplay(image['width'], '%sx%s' % (image['width'], image['height']))
-                result[generaltype].append(resultimage)
-        return result
+
+        return self.process_data(data)
+
+class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
+    mediatype = mediatypes.MOVIESET
+
+    apiurl = 'http://api.themoviedb.org/3/collection/%s/images'
+    artmap = {'backdrops': 'fanart', 'posters': 'poster'}
+
+    def get_images(self, mediaid, types=None):
+        # mediaid = TMDB ID
+        if types and not self.provides(types):
+            return {}
+        if not self.baseurl:
+            return {}
+        data = self.get_data(self.apiurl % mediaid)
+        if not data:
+            return {}
+
+        return self.process_data(data)
+
+    def provides(self, types):
+        return any(x in types for x in self.artmap.values())
+
+class TheMovieDBSearch(object):
+    searchurl = 'http://api.themoviedb.org/3/search/{0}'
+    typemap = {mediatypes.MOVIESET: 'collection'}
+    _baseurl = None
+
+    def __init__(self, session):
+        self.getter = Getter(session, lambda: True)
+        self.getter.set_accepted_contenttype('application/json')
+
+    def log(self, message, level=xbmc.LOGDEBUG):
+        log(message, level, 'themoviedb.org:search')
+
+    @property
+    def baseurl(self):
+        if not self._baseurl:
+            response = self.getter.get(cfgurl, params={'api_key': apikey})
+            if response is None:
+                return
+            self._baseurl = response.json()['images']['base_url']
+        return self._baseurl
+
+    def get_data(self, url, params=None):
+        result = cache.cacheFunction(self._get_data, url, params)
+        return result if result != 'Empty' else None
+
+    def _get_data(self, url, params=None):
+        self.log('uncached', xbmc.LOGINFO)
+        if params is None:
+            params = {'api_key': apikey}
+        else:
+            params = dict(params, api_key=apikey)
+        response = self.getter.get(url, params=params)
+        return 'Empty' if response is None else response.json()
+
+    def search(self, query, mediatype):
+        if mediatype not in self.typemap:
+            return []
+        if not self.baseurl:
+            return []
+        url = self.searchurl.format(self.typemap[mediatype])
+        data = self.get_data(url, {'query': query})
+        if not data or 'results' not in data:
+            return []
+
+        return [{'label': item['name'], 'id': item['id']} for item in data['results']]
