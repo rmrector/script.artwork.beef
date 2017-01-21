@@ -33,9 +33,9 @@ class TheMovieDBAbstractProvider(AbstractProvider):
 
     def _get_rating(self, image):
         if image['vote_count']:
-            # Reweigh ratings, as themoviedb weighs each single rating very lowly
+            # Reweigh ratings, increase difference from 5
             rating = image['vote_average']
-            rating = 5 + (rating - 5) * 3
+            rating = 5 + (rating - 5) * 2
             return SortedDisplay(rating, '{0:.1f} stars'.format(image['vote_average']))
         else:
             return SortedDisplay(5, 'Not rated')

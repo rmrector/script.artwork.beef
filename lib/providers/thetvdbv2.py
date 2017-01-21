@@ -1,6 +1,7 @@
 import re
 import sys
 import xbmc
+from math import pi, sin
 
 from devhelper import pykodi
 
@@ -36,6 +37,17 @@ class TheTVDBProvider(AbstractProvider):
         response = self.doget(self.apiurl % mediaid, **getparams)
         return 'Empty' if response is None else response.json()
 
+    def _get_rating(self, image):
+        if image['ratingsInfo']['count']:
+            info = image['ratingsInfo']
+            rating = info['average']
+            if info['count'] < 5:
+                # Reweigh ratings, decrease difference from 5
+                rating = 5 + (rating - 5) * sin(info['count'] / pi)
+            return SortedDisplay(rating, '{0:.1f} stars'.format(info['average']))
+        else:
+            return SortedDisplay(5, 'Not rated')
+
     def get_images(self, mediaid, types=None):
         if types and not self.provides(types):
             return {}
@@ -69,10 +81,7 @@ class TheTVDBProvider(AbstractProvider):
                     resultimage['url'] = self.imageurl_base + image['fileName']
                     resultimage['preview'] = self.imageurl_base + image['thumbnail']
                     resultimage['language'] = language if shouldset_imagelanguage(image) else None
-                    if image['ratingsInfo']['average']:
-                        resultimage['rating'] = SortedDisplay(image['ratingsInfo']['average'], '{0:.1f} stars'.format(image['ratingsInfo']['average']))
-                    else:
-                        resultimage['rating'] = SortedDisplay(5, 'Not rated')
+                    resultimage['rating'] = self._get_rating(image)
                     if arttype in ('series', 'seasonwide'):
                         resultimage['size'] = SortedDisplay(758, '758x140')
                     elif arttype == 'season':
