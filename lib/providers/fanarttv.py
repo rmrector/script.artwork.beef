@@ -23,6 +23,7 @@ class FanartTVAbstractProvider(AbstractProvider):
     def __init__(self, *args):
         super(FanartTVAbstractProvider, self).__init__(*args)
         self.set_accepted_contenttype('application/json')
+        self.getter.retryon_servererror = True
         self.clientkey = addon.get_setting('fanarttv_key')
 
     def get_data(self, mediaid):
