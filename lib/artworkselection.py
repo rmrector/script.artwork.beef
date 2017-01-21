@@ -2,10 +2,8 @@ import re
 import xbmc
 import xbmcgui
 
-from devhelper import pykodi
-from devhelper.pykodi import localize as L
-
-from libs import mediatypes
+from libs import mediatypes, pykodi
+from libs.pykodi import localize as L
 
 SEASON_NUMBER = 20358
 SPECIALS = 20381

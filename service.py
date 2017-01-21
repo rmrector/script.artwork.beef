@@ -1,13 +1,11 @@
 import xbmc
 from datetime import timedelta
 
-from devhelper import pykodi
-from devhelper.pykodi import log, datetime_now, json
-
 from lib.artworkprocessor import ArtworkProcessor
-from lib.libs import mediatypes, quickjson
+from lib.libs import mediatypes, pykodi, quickjson
 from lib.libs.oldprocesseditems import ProcessedItems
 from lib.libs.processeditems import ProcessedItems as NewProcessedItems
+from lib.libs.pykodi import log, datetime_now, json
 
 STATUS_IDLE = 'idle'
 STATUS_SIGNALLED = 'signalled'

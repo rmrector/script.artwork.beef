@@ -5,9 +5,8 @@ from abc import ABCMeta, abstractmethod
 from requests import codes
 from requests.exceptions import HTTPError, Timeout
 
-from devhelper import pykodi, quickjson
-from devhelper.pykodi import log
-
+from lib.libs import pykodi, quickjson
+from lib.libs.pykodi import log
 from lib.libs.utils import SortedDisplay
 
 from requests.packages import urllib3

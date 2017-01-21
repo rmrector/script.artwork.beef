@@ -1,6 +1,6 @@
 import re
 
-from devhelper import pykodi
+import pykodi
 
 TVSHOW = 'tvshow'
 MOVIE = 'movie'

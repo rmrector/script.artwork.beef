@@ -3,7 +3,7 @@ import xbmc
 from collections import namedtuple
 from os.path import split, basename, dirname
 
-from devhelper.pykodi import log
+from pykodi import log
 
 SortedDisplay = namedtuple('SortedDisplay', ['sort', 'display'])
 
