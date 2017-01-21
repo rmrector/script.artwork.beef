@@ -138,7 +138,7 @@ class TheMovieDBSearch(object):
     _baseurl = None
 
     def __init__(self, session):
-        self.getter = Getter(session, lambda: True)
+        self.getter = Getter(session)
         self.getter.set_accepted_contenttype('application/json')
 
     def log(self, message, level=xbmc.LOGDEBUG):

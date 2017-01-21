@@ -60,10 +60,12 @@ class AbstractProvider(object):
         pass
 
 class Getter(object):
-    def __init__(self, session, login):
+    retryable_errors = (codes['bad_gateway'], codes['internal_server_error'], 520)
+    def __init__(self, session, login=lambda: False):
         self.session = session
         self.login = login
         self.contenttype = None
+        self.retryon_servererror = False
 
     def set_accepted_contenttype(self, contenttype):
         self.session.headers['Accept'] = contenttype
@@ -74,21 +76,23 @@ class Getter(object):
         if result is None:
             return
         errcount = 0
-        while result.status_code in (codes.bad_gateway, codes.internal_server_error, 520):
+        while self.retryon_servererror and result.status_code in self.retryable_errors:
+            message = sys.exc_info()[1].message if sys.exc_info()[1] else 'HTTP 520' if \
+                result.status_code == 520 else ''
             if errcount > 2:
-                message = sys.exc_info()[1].message if sys.exc_info()[1] else ''
                 raise ProviderError, (message, sys.exc_info()[1]), sys.exc_info()[2]
+            log('HTTP 5xx error, retrying in 2s: ' + message + '\n' + url)
             errcount += 1
             if monitor.waitForAbort(2):
                 return
             result = self._inget(url, params, headers)
-        if result.status_code == codes.unauthorized:
+        if result.status_code == codes['unauthorized']:
             if self.login():
                 result = self._inget(url, params, headers)
                 if result is None:
                     return
         errcount = 0
-        while result.status_code == codes.too_many_requests:
+        while result.status_code == codes['too_many_requests']:
             if errcount > 2:
                 raise ProviderError, "Too many requests", sys.exc_info()[2]
             errcount += 1
@@ -102,13 +106,13 @@ class Getter(object):
             if result is None:
                 return
 
-        if result.status_code == codes.not_found:
+        if result.status_code == codes['not_found']:
             return
         try:
             result.raise_for_status()
         except HTTPError:
             raise ProviderError, (sys.exc_info()[1].message, sys.exc_info()[1]), sys.exc_info()[2]
-        if not result.headers['Content-Type'].startswith(self.contenttype):
+        if self.contenttype and not result.headers['Content-Type'].startswith(self.contenttype):
             raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]
         return result
 
