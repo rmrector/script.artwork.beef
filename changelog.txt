@@ -1,5 +1,7 @@
 v0.9.0~beta1
 - Support movie set artwork
+- Reduce TheMovieDB image rating sort adjustment
+- Adjust TVDB image rating sort, so that an image with one rating of 10 doesn't end up at the top
 
 v0.8.2 (2016-12-01)
 - Fix manually selecting new fanart
