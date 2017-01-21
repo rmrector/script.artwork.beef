@@ -2,7 +2,7 @@ import sqlite3
 import xbmc
 import xbmcvfs
 
-from devhelper.pykodi import Addon
+from pykodi import Addon
 
 # Next check date so that a random amount of time can be baked in, and won't be given multiple attempts
 #   to pass the random delay

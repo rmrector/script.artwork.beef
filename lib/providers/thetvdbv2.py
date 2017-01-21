@@ -3,11 +3,9 @@ import sys
 import xbmc
 from math import pi, sin
 
-from devhelper import pykodi
-
 import base
 from base import AbstractProvider, cache
-from lib.libs import mediatypes
+from lib.libs import mediatypes, pykodi
 from lib.providers import ProviderError
 from lib.libs.utils import SortedDisplay
 

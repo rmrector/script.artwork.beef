@@ -2,14 +2,12 @@ import sys
 import xbmc
 import xbmcgui
 
-from devhelper import pykodi
-from devhelper.pykodi import localize as L, log
-
 from lib import cleaner
-from lib.libs import mediainfo, mediatypes, quickjson
 from lib.artworkprocessor import ArtworkProcessor
 from lib.seriesselection import SeriesSelector
+from lib.libs import mediainfo, mediatypes, pykodi, quickjson
 from lib.libs.processeditems import ProcessedItems
+from lib.libs.pykodi import localize as L, log
 
 addon = pykodi.get_main_addon()
 

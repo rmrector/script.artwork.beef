@@ -2,9 +2,7 @@ import os
 import xbmcvfs
 from abc import ABCMeta
 
-from devhelper import pykodi
-
-from lib.libs import mediatypes
+from lib.libs import mediatypes, pykodi
 from lib.libs.mediainfo import arttype_matches_base, format_arttype
 from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep
 

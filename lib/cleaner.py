@@ -1,9 +1,7 @@
 import sys
 import urllib
 
-from devhelper import pykodi
-
-from libs import mediatypes
+from libs import mediatypes, pykodi
 from libs.mediainfo import arttype_matches_base, iter_base_arttypes, iter_urls_for_arttype
 
 def clean_artwork(mediaitem):

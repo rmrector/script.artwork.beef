@@ -3,10 +3,8 @@ import urllib
 import xbmc
 from abc import ABCMeta
 
-from devhelper import pykodi
-
 from base import AbstractProvider, cache
-from lib.libs import mediatypes
+from lib.libs import mediatypes, pykodi
 from lib.libs.utils import SortedDisplay
 
 addon = pykodi.get_main_addon()

@@ -2,7 +2,7 @@ import xbmc
 import xbmcvfs
 from contextlib import closing
 
-from devhelper.pykodi import json, log
+from pykodi import json, log
 
 class ProcessedItems(object):
     version = 1
