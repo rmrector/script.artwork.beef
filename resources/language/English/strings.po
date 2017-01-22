@@ -138,6 +138,22 @@ msgctxt "#32409"
 msgid "Search for set"
 msgstr ""
 
+msgctxt "#32410"
+msgid "Add missing artwork"
+msgstr ""
+
+msgctxt "#32411"
+msgid "Select artwork..."
+msgstr ""
+
+msgctxt "#32412"
+msgid "Disable Artwork Beef context items [I](per skin)[/I]"
+msgstr ""
+
+msgctxt "#32413"
+msgid "Enable Artwork Beef context items [I](per skin)[/I]"
+msgstr ""
+
 # Settings
 
 msgctxt "#32900"
