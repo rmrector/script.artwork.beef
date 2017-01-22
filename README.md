@@ -26,17 +26,16 @@ Finally, **episodes**: `fanart`
 
 ### Installing
 
-It still has one dependency not available in the official Kodi repo, and the context items
-are available as separate add-ons so it will be simplest
-to install my [dev repository], then install Artwork Beef from "Program add-ons",
-and Kodi will take care of downloading the dependency. The context items can also be installed
-from the repo from "Context menus".
+Install my [dev repository] to get updates delivered to you automatically. After the repo is
+installed, Artwork Beef can be installed from "Program add-ons". On Kodi 16 Jarvis and above,
+Artwork Beef can also be installed with a [single zip file].
 
 Artwork Helper can be installed with this single [installable zip], but it's only necessary if a
 skin depends on it.
 
-[dev repository]: https://github.com/rmrector/repository.rector.stuff/raw/master/repository.rector.stuff/repository.rector.stuff-1.0.0.zip
-[installable zip]: https://github.com/rmrector/repository.rector.stuff/raw/master/script.artwork.helper/script.artwork.helper-0.7.1.zip
+[dev repository]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/repository.rector.stuff-latest.zip
+[single zip file]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.beef-latest.zip
+[installable zip]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.helper-latest.zip
 
 ### Usage
 
@@ -44,10 +43,9 @@ Install it. Tada! It will automatically run after library updates, grabbing exte
 artwork for new items, much like Kodi and scrapers do for info and basic artwork.
 
 You can also run it from Program add-ons to trigger the automatic
-process for new or all items; a currently running process can also be canceled here. Finally,
-to select specific artwork for individual media items, install the context item "Select
-artwork to add", and add all configured artwork with "Add missing artwork". After
-installation, these context items are in the context menu for movies, series, and episodes, under "Manage...".
+process for new or all items; a currently running process can also be canceled here. To operate on single
+media items, open the context menu, then under "Manage..." there are options to "Add missing artwork" or
+"Selete artwork...".
 
 The first run and then roughly every two months (15 days for filesystem only) it will process all items still missing
 artwork, in case new artwork has been submitted to the web services. This may take some

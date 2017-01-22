@@ -3,6 +3,10 @@
 	<category label="$LOCALIZE[128]">
 		<setting id="enableservice" label="32900" type="bool" default="true" />
 		<setting id="only_filesystem" label="32904" type="bool" default="false" />
+		<setting label="32412" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)"
+			visible="!Skin.HasSetting(disablecontext:script.artwork.beef)" />
+		<setting label="32413" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)"
+			visible="Skin.HasSetting(disablecontext:script.artwork.beef)" />
 		<setting label="32054" type="lsep" />
 		<setting id="titlefree_fanart" label="32901" type="bool" default="true" />
 		<setting id="preferredsize" label="32902" type="labelenum" default="1920x1080" values="1920x1080|1280x720" />
