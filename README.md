@@ -61,29 +61,41 @@ download automatically.
 ### From NFO and image files
 
 Artwork can be added from a standard [Kodi NFO file] next to your media. Add an `art` element to the root
-`movie`/`tvshow`/`episodedetails`, and its children are individual artwork tagged with the exact artwork type and a URL
+`movie`/`tvshow`/`episodedetails`/`set`, and its children are individual artwork tagged with the exact artwork type and a URL
 to the image; there is a full example in `resources/example.nfo`. Kodi uses this same format when exporting the library
-to a single file.
+to a single file, except sets.
 
 Artwork Beef also adds artwork from image files stored next to your media. Name them like basic [Kodi artwork],
 replacing "fanart"/"thumb" with the exact artwork type. Kodi names artwork in this same format when exporting the
 library to separate files.
 
+Movie set artwork can be pulled from a central directory (configured in the add-on settings),
+containing artwork named `[set name]-[art type].[ext]`, and NFO file named `[set name].nfo`.
+This central directory can also contain subdirectories named exactly as the sets, with images inside
+named `[art type].[ext]`, NFO file named `set.nfo`. Finally, Artwork Beef can also
+be configured to pull set artwork from a parent directory of movies, if the directory name exactly matches
+the set name, with artwork named `[art type].[ext]`, NFO file named `set.nfo`. This should match artwork
+arranged for [Movie Set Artwork Automator].
+
 Artwork from these files aren't limited to the artwork types listed above; artwork types must be
 lowercase and alphanumeric, but can otherwise be freely named. The artwork type should have the exact
-name; for instance, multiple fanart will have one single `fanart`, one `fanart1`, one `fanart2`, and so on.
+name to be set in Kodi; for instance, multiple fanart will have one single `fanart`,
+one `fanart1`, one `fanart2`, and so on.
 
 It will also pull in artwork files that match Artwork Downloader file names, in cases where they
 are different than the art types used in Kodi, for instance `character.png` is added as
 `characterart` and extrafanart are added as `fanart#`. Ditto MSAA, but only for the default
 filenames (`logo.png` to `clearlogo`, `folder.jpg` to `thumb`).
 
+If you are using NFO and/or image files, use a [separate directory] for each movie.
 If you manage all of your artwork with image files and/or NFO files, the add-on setting
 "Auto add artwork from filesystem only" under "Advanced" will prevent the add-on from
 querying the web services during automatic processing, saving time and network resources.
 
 [Kodi NFO file]: http://kodi.wiki/view/NFO_files
 [Kodi artwork]: http://kodi.wiki/view/Artwork#Naming_conventions
+[Movie Set Artwork Automator]: http://forum.kodi.tv/showthread.php?tid=153502
+[separate directory]: http://kodi.wiki/view/Movies_(Video_Library)
 
 ### Skin support
 

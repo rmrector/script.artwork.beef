@@ -8,6 +8,8 @@ from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get
 
 addon = pykodi.get_main_addon()
 
+ARTWORK_EXTS = ('.jpg', '.png', '.gif')
+
 class ArtFilesAbstractProvider(object):
     __metaclass__ = ABCMeta
     # 13514 = Local art
@@ -35,7 +37,7 @@ class ArtFilesAbstractProvider(object):
         result = {}
         for filename in files:
             check_filename = filename.lower()
-            if not check_filename.endswith(('.jpg', '.png', '.gif')):
+            if not check_filename.endswith(ARTWORK_EXTS):
                 continue
             popped = missing.pop(0) if missing else None
             nexttype = popped if popped else format_arttype(arttype, nextno)
@@ -55,7 +57,7 @@ class ArtFilesSeriesProvider(ArtFilesAbstractProvider):
         result = {}
         for filename in files:
             check_filename = filename.lower()
-            if not check_filename.endswith(('.jpg', '.png', '.gif')):
+            if not check_filename.endswith(ARTWORK_EXTS):
                 continue
             basefile = os.path.splitext(check_filename)[0]
             if '.' in basefile or ' ' in basefile:
@@ -103,14 +105,14 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
         paths = get_movie_path_list(path)
         result = {}
         sep = get_pathsep(path)
-        path = os.path.dirname(path) + sep
+        path = os.path.dirname(paths[0]) + sep
         for dirname, moviefile in (os.path.split(p) for p in paths):
             dirname += sep
             check_moviebase = os.path.splitext(moviefile)[0].lower()
             dirs, files = xbmcvfs.listdir(dirname)
             for filename in files:
                 check_filename = filename.lower()
-                if not check_filename.endswith(('.jpg', '.png', '.gif')):
+                if not check_filename.endswith(ARTWORK_EXTS):
                     continue
                 imagefile = os.path.splitext(check_filename)[0]
                 if '-' in imagefile:
@@ -134,6 +136,63 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
 
         return result
 
+class ArtFilesMovieSetProvider(ArtFilesAbstractProvider):
+    mediatype = mediatypes.MOVIESET
+
+    alttypes = {'logo': 'clearlogo', 'folder': 'thumb'}
+
+    def get_exact_images(self, path):
+        path, inputfilename = os.path.split(path)
+        sep = get_pathsep(path)
+        path += sep
+        dirs, files = xbmcvfs.listdir(path)
+        check_inputbase = os.path.splitext(inputfilename)[0].lower() if inputfilename else ''
+        result = {}
+        if inputfilename:
+            dirname = next((name for name in dirs if name.lower() == check_inputbase), None)
+            if dirname:
+                dirname = path + dirname + sep
+                _, dfiles = xbmcvfs.listdir(dirname)
+                for filename in dfiles:
+                    check_filename = filename.lower()
+                    if not check_filename.endswith(ARTWORK_EXTS):
+                        continue
+                    basefile = os.path.splitext(check_filename)[0]
+                    if not basefile.isalnum() or len(basefile) > 20:
+                        continue
+                    arttype = basefile
+                    if self.identifyalternatives and arttype in self.alttypes.keys():
+                        arttype = self.alttypes[arttype]
+                        if arttype in result.keys():
+                            continue
+
+                    result[arttype] = self.buildimage(dirname + filename, filename)
+
+        if not result:
+            for filename in files:
+                check_filename = filename.lower()
+                if not check_filename.endswith(ARTWORK_EXTS):
+                    continue
+                basefile = os.path.splitext(check_filename)[0]
+                if check_inputbase:
+                    if '-' not in basefile:
+                        continue
+                    firstbit, arttype = basefile.rsplit('-', 1)
+                    if firstbit != check_inputbase or not arttype.isalnum():
+                        continue
+                else:
+                    if not basefile.isalnum() or len(basefile) > 20:
+                        continue
+                    arttype = basefile
+
+                if self.identifyalternatives and arttype in self.alttypes.keys():
+                    arttype = self.alttypes[arttype]
+                    if arttype in result.keys():
+                        continue
+
+                result[arttype] = self.buildimage(path + filename, filename)
+        return result
+
 class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
     mediatype = mediatypes.EPISODE
 
@@ -145,7 +204,7 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
         result = {}
         for filename in files:
             check_filename = filename.lower()
-            if not check_filename.endswith(('.jpg', '.png', '.gif')):
+            if not check_filename.endswith(ARTWORK_EXTS):
                 continue
             basefile = os.path.splitext(check_filename)[0]
             if '-' not in basefile:

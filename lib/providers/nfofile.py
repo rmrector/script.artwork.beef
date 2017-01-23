@@ -85,6 +85,32 @@ class NFOFileMovieProvider(NFOFileAbstractProvider):
                 result[arttype] = self.build_resultimage(url, arttype)
         return result
 
+class NFOFileMovieSetProvider(NFOFileAbstractProvider):
+    mediatype = mediatypes.MOVIESET
+
+    def get_exact_images(self, path):
+        if os.path.basename(path):
+            paths = [os.path.splitext(path)[0] + '.nfo', os.path.splitext(path)[0] + '/set.nfo']
+        else:
+            paths = [path + 'set.nfo']
+        artlist = None
+        for nfopath in paths:
+            root = read_nfofile(nfopath)
+            if root is not None and root.find('art') is not None:
+                artlist = root.find('art')
+                break
+
+        if artlist is None:
+            return {}
+
+        result = {}
+        for artelement in artlist:
+            arttype = artelement.tag.lower()
+            url = artelement.text.strip()
+            if arttype.isalnum() and url:
+                result[arttype] = self.build_resultimage(url, arttype)
+        return result
+
 class NFOFileEpisodeProvider(NFOFileAbstractProvider):
     mediatype = mediatypes.EPISODE
 

@@ -47,9 +47,11 @@
 		<setting id="set.discart" label="$LOCALIZE[20457] discart" type="bool" default="true" />
 	</category>
 	<category label="$LOCALIZE[10038]">
-		<setting id="highquality_preview" label="32903" type="bool" default="false" />
-		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
 		<setting id="fanarttv_key" label="32905" type="text" />
+		<setting id="setartwork_dir" label="32909" type="folder" />
+		<setting id="setartwork_fromparent" label="32910" type="bool" default="false" />
+		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
+		<setting id="highquality_preview" label="32903" type="bool" default="false" />
 		<setting label="32055" type="lsep" />
 		<setting label="32407" type="action" action="RunScript(script.artwork.beef, command=remove_otherartwork)" />
 		<setting id="save_additional_arttypes" subsetting="true" label="32908" type="text" default="thumb:5, animatedfanart:1, animatedposter:1" />

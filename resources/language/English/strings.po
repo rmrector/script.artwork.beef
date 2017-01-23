@@ -185,10 +185,18 @@ msgid "fanart.tv personal API key"
 msgstr ""
 
 msgctxt "#32906"
-msgid "Identify Artwork Downloader artwork filenames"
+msgid "Identify alternate Artwork Downloader and MSAA artwork filenames"
 msgstr ""
 
 # subsetting of action #32407
 msgctxt "#32908"
 msgid "Additional artwork types to keep"
+msgstr ""
+
+msgctxt "#32909"
+msgid "movie set artwork directory"
+msgstr ""
+
+msgctxt "#32910"
+msgid "grab movie set artwork from movie parent folder"
 msgstr ""
