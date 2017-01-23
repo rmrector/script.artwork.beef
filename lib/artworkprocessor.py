@@ -4,11 +4,10 @@ import xbmcgui
 from datetime import timedelta
 
 import cleaner
-import libs.mediainfo as info
 from artworkselection import prompt_for_artwork
-from gatherer import Gatherer, list_missing_arttypes
+from gatherer import Gatherer
 from providers import search
-from libs import mediatypes, pykodi, quickjson
+from libs import mediainfo as info, mediatypes, pykodi, quickjson
 from libs.processeditems import ProcessedItems
 from libs.pykodi import datetime_now, localize as L, log
 from libs.utils import SortedDisplay, natural_sort, get_pathsep
@@ -48,6 +47,7 @@ class ArtworkProcessor(object):
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
         self.only_filesystem = addon.get_setting('only_filesystem')
         self.setartwork_dir = addon.get_setting('setartwork_dir')
+        self.setartwork_fromparent = addon.get_setting('setartwork_fromparent')
         try:
             self.minimum_rating = int(addon.get_setting('minimum_rating'))
         except ValueError:
@@ -281,7 +281,8 @@ class ArtworkProcessor(object):
 
             mediaitem['imdbnumber'] = uniqueid
             new = not self.processed.exists(mediaitem['dbid'], mediaitem['mediatype'])
-            prepare_movieset(mediaitem, new)
+            if self.setartwork_fromparent or new:
+                prepare_movieset(mediaitem, new, self.setartwork_fromparent)
 
             if 'file' not in mediaitem and self.setartwork_dir:
                 mediaitem['file'] = self.setartwork_dir + mediaitem['label'] + '.ext'
@@ -433,11 +434,11 @@ def get_media_source(mediapath):
         return 'dvd'
     return 'unknown'
 
-def prepare_movieset(mediaitem, new):
+def prepare_movieset(mediaitem, new, setfile):
     if 'movies' not in mediaitem:
         mediaitem['movies'] = quickjson.get_movieset_details(mediaitem['dbid'])['movies']
     for movie in mediaitem['movies']:
-        if 'file' not in mediaitem:
+        if setfile and 'file' not in mediaitem:
             # Identify set folder among movie ancestor dirs
             pathsep = get_pathsep(movie['file'])
             setmatch = pathsep + mediaitem['label'] + pathsep
@@ -452,7 +453,7 @@ def prepare_movieset(mediaitem, new):
                 pykodi.unquoteimage(movie['art'].get('fanart', '')):
             del mediaitem['art']['fanart']
 
-        if 'file' in mediaitem and (not new or 'poster' not in mediaitem['art'] and
+        if (not setfile or 'file' in mediaitem) and (not new or 'poster' not in mediaitem['art'] and
                 'fanart' not in mediaitem['art']):
             break
 
