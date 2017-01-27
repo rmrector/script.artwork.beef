@@ -194,9 +194,13 @@ msgid "Additional artwork types to keep"
 msgstr ""
 
 msgctxt "#32909"
-msgid "movie set artwork directory"
+msgid "grab movie set artwork from central artwork directory"
 msgstr ""
 
 msgctxt "#32910"
-msgid "grab movie set artwork from movie parent folder"
+msgid "central movie set artwork directory"
+msgstr ""
+
+msgctxt "#32911"
+msgid "grab movie set artwork from movie parent directory"
 msgstr ""

@@ -1,5 +1,5 @@
 import pykodi
-from pykodi import json, log
+from pykodi import get_kodi_version, json, log
 
 import mediatypes
 
@@ -9,21 +9,28 @@ typemap = {mediatypes.MOVIE: ('Movie',),
     mediatypes.TVSHOW: ('TVShow',),
     mediatypes.EPISODE: ('Episode',),
     mediatypes.SEASON: ('Season',)}
-tvshow_properties = ['art', 'imdbnumber', 'season', 'file']
-more_tvshow_properties = ['art', 'imdbnumber', 'season', 'file', 'plot', 'year']
-movie_properties = ['art', 'imdbnumber', 'file']
+tvshow_properties = ['art', 'imdbnumber', 'season', 'file', 'premiered']
+more_tvshow_properties = ['art', 'imdbnumber', 'season', 'file', 'premiered', 'plot', 'year']
+movie_properties = ['art', 'imdbnumber', 'file', 'premiered']
 movieset_properties = ['art']
 episode_properties = ['art', 'uniqueid', 'tvshowid', 'season', 'file']
 
 def get_movie_details(movie_id):
     json_request = get_base_json_request('VideoLibrary.GetMovieDetails')
     json_request['params']['movieid'] = movie_id
-    json_request['params']['properties'] = movie_properties
+    if get_kodi_version() >= 17:
+        json_request['params']['properties'] = movie_properties
+    else:
+        json_request['params']['properties'] = ['art', 'imdbnumber', 'file', 'year']
 
     json_result = pykodi.execute_jsonrpc(json_request)
 
     if check_json_result(json_result, 'moviedetails', json_request):
-        return json_result['result']['moviedetails']
+        movie = json_result['result']['moviedetails']
+        if get_kodi_version() < 17:
+            movie['premiered'] = '{0}-01-01'.format(movie['year'])
+            del movie['year']
+        return movie
 
 def get_movieset_details(movieset_id):
     json_request = get_base_json_request('VideoLibrary.GetMovieSetDetails')
@@ -58,11 +65,18 @@ def get_episode_details(episode_id):
 
 def get_movies():
     json_request = get_base_json_request('VideoLibrary.GetMovies')
-    json_request['params']['properties'] = movie_properties
     json_request['params']['sort'] = {'method': 'sorttitle', 'order': 'ascending'}
+    if get_kodi_version() >= 17:
+        json_request['params']['properties'] = movie_properties
+    else:
+        json_request['params']['properties'] = ['art', 'imdbnumber', 'file', 'year']
 
     json_result = pykodi.execute_jsonrpc(json_request)
     if check_json_result(json_result, 'movies', json_request):
+        if get_kodi_version() < 17:
+            for movie in json_result['result']['movies']:
+                movie['premiered'] = '{0}-01-01'.format(movie['year'])
+                del movie['year']
         return json_result['result']['movies']
     else:
         return []

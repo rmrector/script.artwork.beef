@@ -1,4 +1,4 @@
-import re
+import random
 import xbmc
 import xbmcgui
 from datetime import timedelta
@@ -40,12 +40,14 @@ class ArtworkProcessor(object):
         self.autolanguages = None
         self.progress = xbmcgui.DialogProgressBG()
         self.visible = False
+        self.freshstart = "0"
         self.processed = ProcessedItems()
         self.update_settings()
 
     def update_settings(self):
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
         self.only_filesystem = addon.get_setting('only_filesystem')
+        self.setartwork_fromcentral = addon.get_setting('setartwork_fromcentral')
         self.setartwork_dir = addon.get_setting('setartwork_dir')
         self.setartwork_fromparent = addon.get_setting('setartwork_fromparent')
         try:
@@ -73,6 +75,7 @@ class ArtworkProcessor(object):
 
     def init_run(self, show_progress=False):
         self.setlanguages()
+        self.freshstart = str(datetime_now() - timedelta(days=365))
         if show_progress:
             self.create_progress()
 
@@ -101,27 +104,12 @@ class ArtworkProcessor(object):
             xbmcgui.Dialog().notification("Artwork Beef", L(NOT_SUPPORTED_MESSAGE).format(mediatype), '-', 6500)
             return
 
+        self.init_run()
         if mode == MODE_GUI:
-            self.init_run()
-            self.add_additional_iteminfo(mediaitem)
-            if not mediaitem['imdbnumber']:
-                xbmc.executebuiltin('Dialog.Close(busydialog)')
-                xbmcgui.Dialog().notification("Artwork Beef: Could not find on TheMovieDB", "movie set '{0}'"
-                    .format(mediaitem['label']), xbmcgui.NOTIFICATION_INFO)
-                if not self.identify_movieset(mediaitem):
-                    self.finish_run()
-                    return
-            gatherer = Gatherer(self.monitor, self.only_filesystem)
-            forcedart, availableart, _, error = gatherer.getartwork(mediaitem, False)
-            if error:
-                header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
-                xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
-                log('{0}\n{1}'.format(header, error['message']))
-
-            for arttype, imagelist in availableart.iteritems():
-                self.sort_images(arttype, imagelist, mediaitem.get('file'))
+            self._process_item(Gatherer(self.monitor, self.only_filesystem), mediaitem, True, False)
             xbmc.executebuiltin('Dialog.Close(busydialog)')
-            if availableart:
+            if 'available art' in mediaitem:
+                availableart = mediaitem['available art']
                 if 'seasons' in mediaitem and 'fanart' in availableart:
                     for season in mediaitem['seasons'].keys():
                         unseasoned_backdrops = [dict(art) for art in availableart['fanart'] if not art.get('hasseason')]
@@ -130,9 +118,9 @@ class ArtworkProcessor(object):
                             availableart[key].extend(unseasoned_backdrops)
                         else:
                             availableart[key] = unseasoned_backdrops
-                tag_forcedandexisting_art(availableart, forcedart, mediaitem['art'])
-                selectedarttype, selectedart = prompt_for_artwork(mediaitem['mediatype'],
-                    mediaitem['label'], availableart, self.monitor)
+                tag_forcedandexisting_art(availableart, mediaitem['forced art'], mediaitem['art'])
+                selectedarttype, selectedart = prompt_for_artwork(mediatype, mediaitem['label'],
+                    availableart, self.monitor)
                 if selectedarttype and selectedarttype not in availableart:
                     self.identify_movieset(mediaitem)
                     return
@@ -141,7 +129,7 @@ class ArtworkProcessor(object):
                         gentype = selectedarttype.rsplit('.', 1)[1]
                         multiselect = mediatypes.artinfo[mediatypes.SEASON].get(gentype, {}).get('multiselect', False)
                     else:
-                        multiselect = mediatypes.artinfo[mediaitem['mediatype']][selectedarttype]['multiselect']
+                        multiselect = mediatypes.artinfo[mediatype][selectedarttype]['multiselect']
                     if multiselect:
                         existingurls = [url for exacttype, url in mediaitem['art'].iteritems()
                             if info.arttype_matches_base(exacttype, selectedarttype)]
@@ -153,65 +141,95 @@ class ArtworkProcessor(object):
 
                     selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
                     if selectedart:
-                        add_art_to_library(mediaitem['mediatype'], mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
+                        add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
                     notifycount(len(selectedart))
             else:
                 xbmcgui.Dialog().notification(L(NOT_AVAILABLE_MESSAGE),
                     L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
             self.finish_run()
         else:
-            medialist = [mediaitem]
             autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
             if mediatype == mediatypes.TVSHOW and mediaitem['imdbnumber'] in autoaddepisodes:
+                medialist = [mediaitem]
                 medialist.extend(quickjson.get_episodes(dbid))
-            self.process_medialist(medialist, True)
+                self.process_medialist(medialist)
+            else:
+                self._process_item(Gatherer(self.monitor, self.only_filesystem), mediaitem, True)
+                notifycount(len(mediaitem.get('updated art', ())))
 
-    def process_medialist(self, medialist, singleshot=False, stop_on_error=False):
+    def process_medialist(self, medialist):
         self.init_run(len(medialist) > 0)
         processed = {'tvshow': {}, 'movie': [], 'episode': []}
         artcount = 0
         currentitem = 0
         if medialist:
             gatherer = Gatherer(self.monitor, self.only_filesystem)
-        error = None
         for mediaitem in medialist:
-            if not info.is_known_mediatype(mediaitem):
-                continue
-            log('Processing {0}'.format(mediaitem['label']), xbmc.LOGINFO)
             if self.visible:
                 self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
                 currentitem += 1
-            self.add_additional_iteminfo(mediaitem)
-            if not mediaitem['imdbnumber'] and not self.only_filesystem:
-                xbmcgui.Dialog().notification("Artwork Beef: Could not find on TheMovieDB", "movie set '{0}'"
-                    .format(mediaitem['label']), xbmcgui.NOTIFICATION_INFO, 2500)
-                if singleshot:
-                    if not self.identify_movieset(mediaitem):
-                        error = True
-                        continue
-                else:
+            if not info.is_known_mediatype(mediaitem):
+                continue
+            services_hit = self._process_item(gatherer, mediaitem)
+            if 'updated art' in mediaitem:
+                artcount += len(mediaitem['updated art'])
+
+            if not services_hit:
+                if self.monitor.abortRequested():
+                    break
+            elif self.monitor.waitForAbort(THROTTLE_TIME):
+                break
+
+        self.finish_run()
+        if artcount:
+            notifycount(artcount)
+        return processed
+
+    def _process_item(self, gatherer, mediaitem, singleitem=False, auto=True):
+        log('Processing {0}'.format(mediaitem['label']), xbmc.LOGINFO)
+        self.add_additional_iteminfo(mediaitem)
+        mediatype = mediaitem['mediatype']
+        if not mediaitem['imdbnumber'] and (singleitem or not self.only_filesystem):
+            if mediatype == mediatypes.MOVIESET:
+                header = "Could not find set on TheMovieDB, can't process"
+                message = "movie set '{0}'".format(mediaitem['label'])
+                xbmcgui.Dialog().notification("Artwork Beef: " + header, message, xbmcgui.NOTIFICATION_INFO)
+            else:
+                header = "No default uniqueid available, can't process"
+                message = "{0} '{1}'".format(mediatype, mediaitem['label'])
+                if singleitem:
+                    xbmcgui.Dialog().notification("Artwork Beef: " + header, message, xbmcgui.NOTIFICATION_INFO)
+
+            if not singleitem or (mediatype == mediatypes.MOVIESET and not self.identify_movieset(mediaitem)):
+                mediaitem['error'] = header
+                if auto:
                     # Set nextdate to avoid repeated querying when no match is found
-                    self.processed.set_nextdate(mediaitem['dbid'], mediaitem['mediatype'], datetime_now() + timedelta(days=15))
-                    continue
+                    self.processed.set_nextdate(mediaitem['dbid'], mediatype, datetime_now() +
+                        timedelta(days=plus_some(15, 5)))
+                return False
+
+        if auto:
             cleaned = info.get_artwork_updates(cleaner.clean_artwork(mediaitem), mediaitem['art'])
             if cleaned:
-                add_art_to_library(mediaitem['mediatype'], mediaitem.get('seasons'), mediaitem['dbid'], cleaned)
+                add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], cleaned)
                 mediaitem['art'].update(cleaned)
                 mediaitem['art'] = dict(item for item in mediaitem['art'].iteritems() if item[1])
-            forcedart, availableart, services_hit, error = gatherer.getartwork(mediaitem)
-            if error:
-                header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
-                xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
-                log('{0}\n{1}'.format(header, error['message']))
-                if stop_on_error:
-                    break
-            else:
-                add_processeditem(processed, mediaitem)
-                self.processed.set_nextdate(mediaitem['dbid'], mediaitem['mediatype'], datetime_now() + timedelta(days=60))
-            for arttype, imagelist in availableart.iteritems():
-                self.sort_images(arttype, imagelist, mediaitem.get('file'))
-            existingart = dict(mediaitem['art'])
+                mediaitem['cleaned art'] = cleaned.keys()
+
+        existingkeys = [key for key, url in mediaitem['art'].iteritems() if url]
+        mediaitem['missing art'] = list(info.iter_missing_arttypes(mediatype,
+            mediaitem.get('seasons'), existingkeys))
+
+        forcedart, availableart, services_hit, error = gatherer.getartwork(mediaitem, auto)
+        mediaitem['forced art'] = forcedart
+
+        for arttype, imagelist in availableart.iteritems():
+            self.sort_images(arttype, imagelist, mediaitem.get('file'))
+        mediaitem['available art'] = availableart
+
+        if auto:
             # Remove existing local artwork if it is no longer available
+            existingart = dict(mediaitem['art'])
             localart = [(arttype, image['url']) for arttype, image in forcedart.iteritems()
                 if not image['url'].startswith('http')]
             selectedart = dict((arttype, None) for arttype, url in existingart.iteritems()
@@ -221,21 +239,37 @@ class ArtworkProcessor(object):
             selectedart = info.renumber_all_artwork(selectedart)
 
             existingart.update(selectedart)
-            selectedart.update(self.get_top_missing_art(mediaitem['mediatype'], existingart, availableart, mediaitem.get('seasons')))
-
+            existingkeys = [key for key, url in existingart.iteritems() if url]
+            selectedart.update(self.get_top_missing_art(info.iter_missing_arttypes(mediatype,
+                mediaitem.get('seasons'), existingkeys), mediatype, existingart, availableart))
             selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
             if selectedart:
-                add_art_to_library(mediaitem['mediatype'], mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
-                artcount += len(selectedart)
-            if not services_hit:
-                if self.monitor.abortRequested():
-                    break
-            elif self.monitor.waitForAbort(THROTTLE_TIME):
-                break
-        self.finish_run()
-        if singleshot and not error or artcount:
-            notifycount(artcount)
-        return processed
+                mediaitem['updated art'] = selectedart.keys()
+                add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
+
+        if error:
+            header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
+            msg = '{0}: {1}'.format(header, error['message'])
+            mediaitem['error'] = msg
+            log(msg)
+            xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
+        elif auto:
+            self.processed.set_nextdate(mediaitem['dbid'], mediatype,
+                datetime_now() + timedelta(days=self.get_nextcheckdelay(mediaitem)))
+            if mediatype == mediatypes.TVSHOW:
+                self.processed.set_data(mediaitem['dbid'], mediatype, mediaitem['season'])
+        return services_hit
+
+    def get_nextcheckdelay(self, mediaitem):
+        if self.only_filesystem:
+            return plus_some(5, 3)
+        elif not mediaitem.get('missing art'):
+            return plus_some(120, 25)
+        elif mediaitem['mediatype'] in (mediatypes.MOVIE, mediatypes.TVSHOW) and \
+                mediaitem['premiered'] > self.freshstart:
+            return plus_some(30, 10)
+        else:
+            return plus_some(60, 15)
 
     def identify_movieset(self, mediaitem):
         self.add_additional_iteminfo(mediaitem)
@@ -250,7 +284,7 @@ class ArtworkProcessor(object):
                 return False # Cancelled
             uniqueid = options[selected]['id']
         mediaitem['imdbnumber'] = uniqueid
-        self.processed.set_uniqueid(mediaitem['setid'], mediatypes.MOVIESET, uniqueid)
+        self.processed.set_data(mediaitem['setid'], mediatypes.MOVIESET, uniqueid)
         return True
 
     def setlanguages(self):
@@ -270,21 +304,20 @@ class ArtworkProcessor(object):
             mediaitem['seasons'], seasonart = self._get_seasons_artwork(quickjson.get_seasons(mediaitem['dbid']))
             mediaitem['art'].update(seasonart)
         elif mediaitem['mediatype'] == mediatypes.MOVIESET:
-            uniqueid = self.processed.get_uniqueid(mediaitem['dbid'], mediaitem['mediatype'])
-            if not uniqueid:
-                if not self.only_filesystem:
-                    uniqueid = search.for_id(mediaitem['label'], mediatypes.MOVIESET)
-                    if uniqueid:
-                        self.processed.set_uniqueid(mediaitem['dbid'], mediaitem['mediatype'], uniqueid)
-                    else:
-                        log("Could not find set '{0}' on TheMovieDB".format(mediaitem['label']), xbmc.LOGNOTICE)
+            uniqueid = self.processed.get_data(mediaitem['dbid'], mediaitem['mediatype'])
+            if not uniqueid and not self.only_filesystem:
+                uniqueid = search.for_id(mediaitem['label'], mediatypes.MOVIESET)
+                if uniqueid:
+                    self.processed.set_data(mediaitem['dbid'], mediatypes.MOVIESET, uniqueid)
+                else:
+                    log("Could not find set '{0}' on TheMovieDB".format(mediaitem['label']), xbmc.LOGNOTICE)
 
             mediaitem['imdbnumber'] = uniqueid
             new = not self.processed.exists(mediaitem['dbid'], mediaitem['mediatype'])
             if self.setartwork_fromparent or new:
                 prepare_movieset(mediaitem, new, self.setartwork_fromparent)
 
-            if 'file' not in mediaitem and self.setartwork_dir:
+            if 'file' not in mediaitem and self.setartwork_fromcentral and self.setartwork_dir:
                 mediaitem['file'] = self.setartwork_dir + mediaitem['label'] + '.ext'
 
     def sort_images(self, arttype, imagelist, mediapath):
@@ -295,7 +328,7 @@ class ArtworkProcessor(object):
         imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
         imagelist.sort(key=self.size_sort, reverse=True)
         if arttype == 'discart':
-            mediasubtype = get_media_source(mediapath)
+            mediasubtype = info.get_media_source(mediapath)
             if mediasubtype != 'unknown':
                 imagelist.sort(key=lambda image: 0 if image.get('subtype', SortedDisplay(None, '')).sort == mediasubtype else 1)
         imagelist.sort(key=lambda image: self._imagelanguage_sort(image, arttype))
@@ -325,12 +358,11 @@ class ArtworkProcessor(object):
 
         return primarysort, image['language']
 
-    def get_top_missing_art(self, mediatype, existingart, availableart, seasons):
+    def get_top_missing_art(self, missingarts, mediatype, existingart, availableart):
         if not availableart:
             return {}
         newartwork = {}
-        existingkeys = [key for key, url in existingart.iteritems() if url]
-        for missingart in list_missing_arttypes(mediatype, seasons, existingkeys):
+        for missingart in missingarts:
             if missingart.startswith('season.'):
                 itemtype = mediatypes.SEASON
                 artkey = missingart.rsplit('.', 1)[1]
@@ -416,46 +448,31 @@ def notifycount(count):
         xbmcgui.Dialog().notification(L(NO_ARTWORK_UPDATED_MESSAGE),
             L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
 
-def add_processeditem(processed, mediaitem):
-    if mediaitem['mediatype'] == 'tvshow':
-        processed['tvshow'][mediaitem['dbid']] = mediaitem['season']
-    elif mediaitem['mediatype'] in processed:
-        processed[mediaitem['mediatype']].append(mediaitem['dbid'])
-
-def get_media_source(mediapath):
-    if not mediapath:
-        return 'unknown'
-    mediapath = mediapath.lower()
-    if re.search(r'\b3d\b', mediapath):
-        return '3d'
-    if re.search(r'blu-?ray|b[rd]-?rip', mediapath) or mediapath.endswith('.bdmv'):
-        return 'bluray'
-    if re.search(r'\bdvd', mediapath) or mediapath.endswith('.ifo'):
-        return 'dvd'
-    return 'unknown'
+def plus_some(start, rng):
+    rng *= 3
+    return start + (random.randrange(-rng, rng + 1) / 3.0)
 
 def prepare_movieset(mediaitem, new, setfile):
-    if 'movies' not in mediaitem:
-        mediaitem['movies'] = quickjson.get_movieset_details(mediaitem['dbid'])['movies']
-    for movie in mediaitem['movies']:
-        if setfile and 'file' not in mediaitem:
-            # Identify set folder among movie ancestor dirs
+    if new:
+        # Remove poster/fanart Kodi automatically sets from a movie
+        if not set(key for key in mediaitem['art']).difference('poster', 'fanart'):
+            if 'poster' in mediaitem['art']:
+                del mediaitem['art']['poster']
+            if 'fanart' in mediaitem['art']:
+                del mediaitem['art']['fanart']
+
+    if setfile:
+        # Identify set folder among movie parent dirs
+        if 'movies' not in mediaitem:
+            mediaitem['movies'] = quickjson.get_movieset_details(mediaitem['dbid'])['movies']
+        for movie in mediaitem['movies']:
             pathsep = get_pathsep(movie['file'])
             setmatch = pathsep + mediaitem['label'] + pathsep
             if setmatch in movie['file']:
                 mediaitem['file'] = movie['file'].split(setmatch)[0] + setmatch
 
-        # Remove poster/fanart Kodi automatically sets from a movie
-        if new and 'poster' in mediaitem['art'] and mediaitem['art']['poster'] == \
-                pykodi.unquoteimage(movie['art'].get('poster', '')):
-            del mediaitem['art']['poster']
-        if new and 'fanart' in mediaitem['art'] and mediaitem['art']['fanart'] == \
-                pykodi.unquoteimage(movie['art'].get('fanart', '')):
-            del mediaitem['art']['fanart']
-
-        if (not setfile or 'file' in mediaitem) and (not new or 'poster' not in mediaitem['art'] and
-                'fanart' not in mediaitem['art']):
-            break
+            if 'file' in mediaitem:
+                break
 
 def tag_forcedandexisting_art(availableart, forcedart, existingart):
     typeinsert = {}

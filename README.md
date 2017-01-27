@@ -47,9 +47,8 @@ process for new or all items; a currently running process can also be canceled h
 media items, open the context menu, then under "Manage..." there are options to "Add missing artwork" or
 "Selete artwork...".
 
-The first run and then roughly every two months (15 days for filesystem only) it will process all items still missing
-artwork, in case new artwork has been submitted to the web services. This may take some
-time, if many items are missing some artwork.
+Over time it will reprocess media items still missing artwork, checking for new artwork from
+web services and the file system.
 
 Episode fanart requires using a scraper that grabs the TheTVDB ID for each episode, like the standard TheTVDB scraper.
 You must enable adding episode fanart automatically by series through the add-on settings, as they add a bundle of new

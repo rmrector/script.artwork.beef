@@ -12,8 +12,9 @@ class ProcessedItems(object):
         if not xbmcvfs.exists(dbpath):
             xbmcvfs.mkdir(dbpath)
         dbpath = xbmc.translatePath(dbpath + 'processeditems.db')
+        # data is uniqueid for sets, last known season for TV shows
         create_table_scripts = ["""CREATE TABLE IF NOT EXISTS processeditems (mediaid INTEGER NOT NULL, mediatype TEXT NOT NULL,
-            nextdate DATETIME, uniqueid TEXT, PRIMARY KEY (mediaid, mediatype))"""]
+            nextdate DATETIME, data TEXT, PRIMARY KEY (mediaid, mediatype))"""]
         self.db = Database(dbpath, create_table_scripts)
 
     def should_update(self, mediaid, mediatype):
@@ -28,16 +29,16 @@ class ProcessedItems(object):
             else "INSERT INTO processeditems (nextdate, mediaid, mediatype) VALUES ({0}, ?, ?)"
         self.db.execute(script.format(scriptbit), (mediaid, mediatype))
 
-    def get_uniqueid(self, mediaid, mediatype):
+    def get_data(self, mediaid, mediatype):
         result = self.db.fetchone("SELECT * FROM processeditems WHERE mediaid=? AND mediatype=?", (mediaid, mediatype))
         if result:
-            return result['uniqueid']
+            return result['data']
 
-    def set_uniqueid(self, mediaid, mediatype, uniqueid):
+    def set_data(self, mediaid, mediatype, data):
         exists = self.exists(mediaid, mediatype)
-        script = "UPDATE processeditems SET uniqueid=? WHERE mediaid=? AND mediatype=?" if exists \
-            else "INSERT INTO processeditems (uniqueid, mediaid, mediatype) VALUES (?, ?, ?)"
-        self.db.execute(script, (uniqueid, mediaid, mediatype))
+        script = "UPDATE processeditems SET data=? WHERE mediaid=? AND mediatype=?" if exists \
+            else "INSERT INTO processeditems (data, mediaid, mediatype) VALUES (?, ?, ?)"
+        self.db.execute(script, (data, mediaid, mediatype))
 
     def exists(self, mediaid, mediatype):
         return True if self.db.fetchone("SELECT * FROM processeditems WHERE mediaid=? AND mediatype=?",

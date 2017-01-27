@@ -48,8 +48,9 @@
 	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="fanarttv_key" label="32905" type="text" />
-		<setting id="setartwork_dir" label="32909" type="folder" />
-		<setting id="setartwork_fromparent" label="32910" type="bool" default="false" />
+		<setting id="setartwork_fromcentral" label="32909" type="bool" default="false" />
+		<setting id="setartwork_dir" label="32910" type="folder" visible="eq(-1,true)" />
+		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" />
 		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
 		<setting id="highquality_preview" label="32903" type="bool" default="false" />
 		<setting label="32055" type="lsep" />
@@ -57,8 +58,7 @@
 		<setting id="save_additional_arttypes" subsetting="true" label="32908" type="text" default="thumb:5, animatedfanart:1, animatedposter:1" />
 		<setting label="32406" type="action" action="RunScript(script.artwork.beef, command=clean_arturls)" />
 		<!-- For add-on inner workings -->
-		<setting id="lastalldate" type="text" default="0" visible="false" />
-		<setting id="lastunprocesseddate" type="text" default="0" visible="false" />
+		<setting id="lastdate" type="text" default="0" visible="false" />
 		<setting id="autoaddepisodes_list" type="text" default="" visible="false" />
 	</category>
 </settings>

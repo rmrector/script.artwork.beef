@@ -1,6 +1,7 @@
 import collections
 import os
 import sys
+import time
 import urllib
 import xbmc
 import xbmcaddon
@@ -46,6 +47,17 @@ def is_addon_watched():
 
     return _watch_addon
 
+_kodiversion = None
+def get_kodi_version():
+    global _kodiversion
+    if _kodiversion is None:
+        json_request = {'jsonrpc': '2.0', 'method': 'Application.GetProperties', 'params': {}, 'id': 1}
+        json_request['params']['properties'] = ['version']
+        json_result = execute_jsonrpc(json_request)
+        if 'result' in json_result:
+            _kodiversion = json_result['result']['version']['major']
+    return _kodiversion
+
 def localize(messageid):
     if isinstance(messageid, basestring):
         return messageid
@@ -65,6 +77,16 @@ def datetime_now():
     except ImportError:
         xbmc.sleep(50)
         return datetime_now()
+
+def datetime_strptime(date_string, format_string):
+    try:
+        return datetime.strptime(date_string, format_string)
+    except TypeError:
+        try:
+            return datetime(*(time.strptime(date_string, format_string)[0:6]))
+        except ImportError:
+            xbmc.sleep(50)
+            return datetime_strptime(date_string, format_string)
 
 def execute_jsonrpc(jsonrpc_command):
     if isinstance(jsonrpc_command, dict):

@@ -3,16 +3,15 @@ from datetime import timedelta
 
 from lib.artworkprocessor import ArtworkProcessor
 from lib.libs import mediatypes, pykodi, quickjson
-from lib.libs.oldprocesseditems import ProcessedItems
-from lib.libs.processeditems import ProcessedItems as NewProcessedItems
+from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import log, datetime_now, json
+from lib.maintenance import check_upgrades
 
 STATUS_IDLE = 'idle'
 STATUS_SIGNALLED = 'signalled'
 STATUS_PROCESSING = 'processing'
 
-UNPROCESSED_DAYS = 2
-ALLITEMS_DAYS = 60
+UNPROCESSED_DAYS = 1
 
 addon = pykodi.get_main_addon()
 
@@ -23,8 +22,7 @@ class ArtworkService(xbmc.Monitor):
         self.only_filesystem = addon.get_setting('only_filesystem')
         self.abort = False
         self.processor = ArtworkProcessor(self)
-        self.processed = ProcessedItems(addon.datapath)
-        self.newprocessed = NewProcessedItems()
+        self.processed = ProcessedItems()
         self.signal = None
         self.processaftersettings = False
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
@@ -52,6 +50,7 @@ class ArtworkService(xbmc.Monitor):
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
 
     def run(self):
+        check_upgrades()
         while not self.really_waitforabort(5):
             if self.scanning:
                 continue
@@ -97,10 +96,7 @@ class ArtworkService(xbmc.Monitor):
                 self.processor.close_progress()
         elif method == 'Other.ProcessNewItems':
             self.processor.create_progress()
-            if addon.get_setting('lastalldate') == '0':
-                self.set_signal('allitems')
-            else:
-                self.set_signal('unprocesseditems')
+            self.set_signal('unprocesseditems')
         elif method == 'Other.ProcessAllItems':
             self.processor.create_progress()
             self.set_signal('allitems')
@@ -132,73 +128,50 @@ class ArtworkService(xbmc.Monitor):
                 self.set_signal('something')
 
     def watchitem(self, data):
-        return 'item' in data and data['item'].get('id') and 'playcount' not in data \
-            and data['item'].get('type') in self.recentitems
+        usabledata = 'item' in data and data['item'].get('id') and data['item'].get('id') != -1
+        return usabledata and 'playcount' not in data and data['item'].get('type') in self.recentitems
 
     def process_something(self):
-        # Three possible loops:
         # 1. Recent items, can run several times per day, after every library update, and only for small updates
-        # 2. Unprocessed items, at least once every UNPROCESSED_DAYS and after larger library updates
-        #  - this contains only new items that were missed in the recent loops, maybe in a shared database
-        # 3. All items, once every ALLITEMS_DAYS ( or / 4, if filesystem only)
-        #  - adds new artwork for old items missing artwork
-        lastdate = addon.get_setting('lastalldate')
-        if lastdate == '0':
-            self.process_allitems()
-            self.reset_recent()
-            return
-        days = ALLITEMS_DAYS
-        if self.only_filesystem:
-            days /= 4
-        needall = lastdate < str(datetime_now() - timedelta(days=days))
-        if needall:
-            needunprocessed = False
-        else:
-            needunprocessed = self.toomany_recentitems
-            if not needunprocessed:
-                lastdate = addon.get_setting('lastunprocesseddate')
-                needunprocessed = lastdate < str(datetime_now() - timedelta(days=UNPROCESSED_DAYS))
-        if needunprocessed:
+        # 2. Deep dive, at least once every UNPROCESSED_DAYS and after larger library updates
+        #  - this contains new items that were missed in the recent loops, maybe in a shared database
+        #    and items that are due to be rechecked for artwork
+        lastdate = addon.get_setting('lastdate')
+        if self.toomany_recentitems or lastdate < str(datetime_now() - timedelta(days=UNPROCESSED_DAYS)):
             self.process_allitems(True)
             self.reset_recent()
-            return
-
-        self.process_recentitems()
-        if not self.abortRequested() and needall:
-            self.process_allitems()
+        else:
+            self.process_recentitems()
 
     def process_allitems(self, excludeprocessed=False):
         currentdate = str(datetime_now())
         items = quickjson.get_movies()
         sets = quickjson.get_moviesets()
         if excludeprocessed:
-            items = [movie for movie in items if movie['movieid'] not in self.processed.movie]
-            sets = [mset for mset in sets if self.newprocessed.should_update(mset['setid'], mediatypes.MOVIESET)]
+            items = [movie for movie in items if self.processed.should_update(movie['movieid'], mediatypes.MOVIE)]
+            sets = [mset for mset in sets if self.processed.should_update(mset['setid'], mediatypes.MOVIESET)]
         items.extend(sets)
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
             return
         autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
         for series in serieslist:
-            if not excludeprocessed or series['season'] > self.processed.tvshow.get(series['tvshowid']):
+            pseason = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW)
+            if not excludeprocessed or self.processed.should_update(series['tvshowid'], mediatypes.TVSHOW) or \
+                    not pseason or series['season'] > int(pseason):
                 items.append(series)
             if series['imdbnumber'] in autoaddepisodes:
                 episodes = quickjson.get_episodes(series['tvshowid'])
-                for episode in episodes:
-                    if not excludeprocessed or episode['episodeid'] not in self.processed.episode:
-                        items.append(episode)
+                if not excludeprocessed:
+                    items.extend(episodes)
+                else:
+                    items.extend(ep for ep in episodes if self.processed.should_update(ep['episodeid'], mediatypes.EPISODE))
             if self.abortRequested():
                 return
 
-        processed = self.processor.process_medialist(items)
-        if excludeprocessed:
-            self.processed.extend(processed)
-        else:
-            self.processed.set(processed)
-            addon.set_setting('lastalldate', currentdate)
-        self.processed.save()
+        self.processor.process_medialist(items)
         if not self.abortRequested():
-            addon.set_setting('lastunprocesseddate', currentdate)
+            addon.set_setting('lastdate', currentdate)
 
     def process_recentitems(self):
         ignoreepisodesfrom = set()
@@ -218,7 +191,8 @@ class ArtworkService(xbmc.Monitor):
         for episodeid in self.recentitems['episode']:
             episode = quickjson.get_episode_details(episodeid)
             series = None
-            if episode['season'] > self.processed.tvshow.get(episode['tvshowid']) and episode['tvshowid'] not in seriesadded:
+            if episode['tvshowid'] not in seriesadded and (episode['season'] >
+                    self.processed.get_data(episode['tvshowid'], mediatypes.TVSHOW)):
                 seriesadded.add(episode['tvshowid'])
                 series = quickjson.get_tvshow_details(episode['tvshowid'])
                 newitems.append(series)
@@ -236,9 +210,7 @@ class ArtworkService(xbmc.Monitor):
                 return
 
         self.reset_recent()
-        processed = self.processor.process_medialist(newitems)
-        self.processed.extend(processed)
-        self.processed.save()
+        self.processor.process_medialist(newitems)
 
     def onSettingsChanged(self):
         self.serviceenabled = addon.get_setting('enableservice')
