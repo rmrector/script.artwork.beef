@@ -1,8 +1,7 @@
-import xbmc
 import xbmcvfs
 from contextlib import closing
 
-from pykodi import json, log
+from pykodi import json
 
 class ProcessedItems(object):
     version = 1
@@ -11,37 +10,21 @@ class ProcessedItems(object):
         self.movie = []
         self.episode = []
         self.filename = directory + 'processeditems.json'
-        self.load()
 
-    def extend(self, extender):
-        for tvshowid, seasons in extender.get('tvshow', {}).iteritems():
-            if seasons > self.tvshow.get(tvshowid):
-                self.tvshow[tvshowid] = seasons
-        self.movie.extend(extender.get('movie', ()))
-        self.episode.extend(extender.get('episode', ()))
+    @property
+    def exists(self):
+        return xbmcvfs.exists(self.filename)
 
-    def set(self, setter):
-        self.tvshow = setter.get('tvshow', {})
-        self.movie = setter.get('movie', [])
-        self.episode = setter.get('episode', [])
-
-    def clear(self):
-        self.tvshow = {}
-        self.movie = []
-        self.episode = []
-
-    def save(self):
-        with closing(xbmcvfs.File(self.filename, 'w')) as jsonfile:
-            json.dump({'tvshow': self.tvshow, 'movie': self.movie, 'episode': self.episode, 'version': self.version}, jsonfile)
+    def delete(self):
+        if self.exists:
+            xbmcvfs.delete(self.filename)
 
     def load(self):
-        self.clear()
-        if xbmcvfs.exists(self.filename):
+        if self.exists:
             with closing(xbmcvfs.File(self.filename)) as jsonfile:
                 try:
                     processed = json.load(jsonfile)
                 except ValueError:
-                    log("Had trouble loading ProcessedItems, starting fresh.", xbmc.LOGWARNING, tag='json')
                     return
 
                 if processed.get('version') == self.version:

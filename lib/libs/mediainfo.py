@@ -45,6 +45,34 @@ def iter_renumbered_artlist(urllist, basetype, original_arttypes):
         if type_base == basetype and index >= i:
             yield arttype, None
 
+def iter_missing_arttypes(mediatype, seasons, existingarttypes):
+    fullartinfo = mediatypes.artinfo[mediatype]
+    for arttype, artinfo in fullartinfo.iteritems():
+        if not artinfo['autolimit']:
+            continue
+        elif artinfo['autolimit'] == 1:
+            if arttype not in existingarttypes:
+                yield arttype
+        else:
+            artcount = sum(1 for art in existingarttypes if arttype_matches_base(art, arttype))
+            if artcount < artinfo['autolimit']:
+                yield arttype
+
+    if mediatype == mediatypes.TVSHOW:
+        seasonartinfo = mediatypes.artinfo.get(mediatypes.SEASON)
+        for season in seasons.iteritems():
+            for arttype, artinfo in seasonartinfo.iteritems():
+                arttype = '%s.%s.%s' % (mediatypes.SEASON, season[0], arttype)
+                if not artinfo['autolimit']:
+                    continue
+                elif artinfo['autolimit'] == 1:
+                    if arttype not in existingarttypes:
+                        yield arttype
+                else:
+                    artcount = sum(1 for art in existingarttypes if arttype_matches_base(art, arttype))
+                    if artcount < artinfo['autolimit']:
+                        yield arttype
+
 def get_basetype(arttype):
     return arttype.rstrip('0123456789')
 
@@ -76,3 +104,15 @@ def prepare_mediaitem(mediaitem):
 def update_art_in_library(mediatype, dbid, updatedart):
     if updatedart:
         quickjson.set_details(dbid, mediatype, art=updatedart)
+
+def get_media_source(mediapath):
+    if not mediapath:
+        return 'unknown'
+    mediapath = mediapath.lower()
+    if re.search(r'\b3d\b', mediapath):
+        return '3d'
+    if re.search(r'blu-?ray|b[rd]-?rip', mediapath) or mediapath.endswith('.bdmv'):
+        return 'bluray'
+    if re.search(r'\bdvd', mediapath) or mediapath.endswith('.ifo'):
+        return 'dvd'
+    return 'unknown'

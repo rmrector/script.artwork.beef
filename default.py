@@ -63,7 +63,7 @@ def main():
 def identify_unmatched_sets():
     xbmc.executebuiltin('ActivateWindow(busydialog)')
     processed = ProcessedItems()
-    unmatched = [mset for mset in quickjson.get_moviesets() if not processed.get_uniqueid(mset['setid'], 'set')]
+    unmatched = [mset for mset in quickjson.get_moviesets() if not processed.get_data(mset['setid'], 'set')]
     xbmc.executebuiltin('Dialog.Close(busydialog)')
     if unmatched:
         selected = xbmcgui.Dialog().select(L(M.UNMATCHED_SETS), [mset['label'] for mset in unmatched])

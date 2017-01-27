@@ -3,6 +3,7 @@ v0.9.0~beta1
 - Improve error handling for certain HTTP 5xx errors from fanart.tv
 - Merge context items into main add-on
 - Rearrange libs, drop last dependency not available in official Kodi repo
+- Spread out checking for new artwork so they don't happen all at once (after the first run)
 - Reduce TheMovieDB image rating sort adjustment
 - Adjust TVDB image rating sort, so that an image with one rating of 10 doesn't end up at the top
 

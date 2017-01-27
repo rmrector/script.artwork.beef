@@ -1,7 +1,5 @@
 import providers
 from providers import ProviderError
-from libs import mediatypes
-from libs.mediainfo import arttype_matches_base
 
 class Gatherer(object):
     def __init__(self, monitor, only_filesystem):
@@ -18,14 +16,13 @@ class Gatherer(object):
         existingtypes = [key for key, url in mediaitem['art'].iteritems() if url]
         existingtypes.extend(forcedartwork.keys())
         if skipexisting:
-            if not self.only_filesystem and 'imdbnumber' in mediaitem and next(list_missing_arttypes(
-                    mediaitem['mediatype'], mediaitem.get('seasons'), existingtypes), False):
+            if not self.only_filesystem and 'imdbnumber' in mediaitem and mediaitem['missing art']:
                 availableartwork, error = self.get_external_artwork(mediaitem['mediatype'], mediaitem.get('seasons'),
-                    existingtypes, mediaitem['imdbnumber'])
+                    mediaitem['imdbnumber'], mediaitem['missing art'])
                 services_hit = True
         elif 'imdbnumber' in mediaitem:
             availableartwork, error = self.get_external_artwork(mediaitem['mediatype'], mediaitem.get('seasons'),
-                existingtypes, mediaitem['imdbnumber'], False)
+                mediaitem['imdbnumber'])
             services_hit = True
         # REVIEW: This 4 value return is bugging me
         return forcedartwork, availableartwork, services_hit, error
@@ -51,8 +48,7 @@ class Gatherer(object):
                 break
         return resultimages
 
-    def get_external_artwork(self, mediatype, seasons, existingarttypes, imdbnumber, skipmissing=True):
-        missing = list(list_missing_arttypes(mediatype, seasons, existingarttypes)) if skipmissing else None
+    def get_external_artwork(self, mediatype, seasons, imdbnumber, missing=None):
         images = {}
         error = None
         for provider in providers.external.get(mediatype, ()):
@@ -73,31 +69,3 @@ class Gatherer(object):
             if self.monitor.abortRequested():
                 break
         return images, error
-
-def list_missing_arttypes(mediatype, seasons, existingarttypes):
-    fullartinfo = mediatypes.artinfo[mediatype]
-    for arttype, artinfo in fullartinfo.iteritems():
-        if not artinfo['autolimit']:
-            continue
-        elif artinfo['autolimit'] == 1:
-            if arttype not in existingarttypes:
-                yield arttype
-        else:
-            artcount = sum(1 for art in existingarttypes if arttype_matches_base(art, arttype))
-            if artcount < artinfo['autolimit']:
-                yield arttype
-
-    if mediatype == mediatypes.TVSHOW:
-        seasonartinfo = mediatypes.artinfo.get(mediatypes.SEASON)
-        for season in seasons.iteritems():
-            for arttype, artinfo in seasonartinfo.iteritems():
-                arttype = '%s.%s.%s' % (mediatypes.SEASON, season[0], arttype)
-                if not artinfo['autolimit']:
-                    continue
-                elif artinfo['autolimit'] == 1:
-                    if arttype not in existingarttypes:
-                        yield arttype
-                else:
-                    artcount = sum(1 for art in existingarttypes if arttype_matches_base(art, arttype))
-                    if artcount < artinfo['autolimit']:
-                        yield arttype
