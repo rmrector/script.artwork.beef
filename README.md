@@ -9,7 +9,7 @@ services [fanart.tv], [TheTVDB.com], and [The Movie Database].
 [The Movie Database]: https://www.themoviedb.org/
 
 The current version works with Kodi 17 Krypton and 16 Jarvis. 15 Isengard should mostly still work,
-but it's really time to update.
+but it's really time to update.  
 [Support and feedback thread](http://forum.kodi.tv/showthread.php?tid=258886) on the Kodi forums.  
 [Source](https://github.com/rmrector/script.artwork.beef) hosted on GitHub.
 
@@ -46,8 +46,8 @@ artwork for new items, much like Kodi and scrapers do for info and basic artwork
 
 You can also run it from Program add-ons to trigger the automatic
 process for new or all items; a currently running process can also be canceled here. To operate on single
-media items, open the context menu, then under "Manage..." there are options to "Add missing artwork" or
-"Selete artwork...".
+media items, open the context menu, then under "Manage..." there are options to automatically "Add missing artwork"
+or manually "Select artwork...".
 
 Over time it will reprocess media items still missing artwork, checking for new artwork from
 web services and the file system.
