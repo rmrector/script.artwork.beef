@@ -19,7 +19,8 @@ class TheTVDBProvider(AbstractProvider):
     loginurl = 'https://api.thetvdb.com/login'
     imageurl_base = 'http://thetvdb.com/banners/'
 
-    artmap = {'fanart': 'fanart', 'poster': 'poster', 'season': mediatypes.SEASON + '.%s.poster', 'seasonwide': mediatypes.SEASON + '.%s.banner', 'series': 'banner'}
+    artmap = {'fanart': 'fanart', 'poster': 'poster', 'season': mediatypes.SEASON + '.%s.poster',
+        'seasonwide': mediatypes.SEASON + '.%s.banner', 'series': 'banner'}
 
     def __init__(self, *args):
         super(TheTVDBProvider, self).__init__(*args)

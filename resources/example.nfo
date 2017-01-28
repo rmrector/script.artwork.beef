@@ -16,7 +16,7 @@
 		<fanart4>http://thetvdb.com/banners/fanart/original/110381-16.jpg</fanart4>
 		<landscape>http://assets.fanart.tv/fanart/tv/110381/tvthumb/A_110381.jpg</landscape>
 		<poster>http://thetvdb.com/banners/posters/110381-1.jpg</poster>
-		<!-- only for 'tvshow' -->
+		<!-- 'season' elements only for 'tvshow' -->
 		<season num="0"> <!-- 0 = Specials -->
 			<!-- Also freely named -->
 			<banner>http://thetvdb.com/banners/seasonswide/110381-0.jpg</banner>
