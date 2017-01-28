@@ -125,7 +125,9 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         try:
             return int(image['season']) if image['season'] != 'all' else allitem
         except ValueError:
-            self.log("Image season was set incorrectly for '%s', to \"%s\", so I can't tell which season it belongs to. The image URL is:\n%s" % (itemname, image['season'], image['url']), xbmc.LOGINFO)
+            if not ignoreall:
+                self.log("Image season was set incorrectly for '%s', to \"%s\", so I can't tell which season "
+                    "it belongs to. The image URL is:\n%s" % (itemname, image['season'], image['url']), xbmc.LOGINFO)
             # throw it into the 'all seasons' image pile
             return allitem
 
