@@ -60,10 +60,12 @@ def get_kodi_version():
 
 def localize(messageid):
     if isinstance(messageid, basestring):
-        return messageid
-    if messageid >= 32000 and messageid < 33000:
-        return get_main_addon().getLocalizedString(messageid)
-    return xbmc.getLocalizedString(messageid)
+        result = messageid
+    elif messageid >= 32000 and messageid < 33000:
+        result = get_main_addon().getLocalizedString(messageid)
+    else:
+        result = xbmc.getLocalizedString(messageid)
+    return result.encode('utf-8') if isinstance(result, unicode) else result
 
 def get_conditional(conditional):
     return xbmc.getCondVisibility(conditional)
