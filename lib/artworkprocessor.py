@@ -65,7 +65,7 @@ class ArtworkProcessor(object):
 
     def create_progress(self):
         if not self.visible:
-            self.progress.create(L(ADDING_ARTWORK_MESSAGE), "")
+            self.progress.create("Artwork Beef: " + L(ADDING_ARTWORK_MESSAGE), "")
             self.visible = True
 
     def close_progress(self):
@@ -303,6 +303,9 @@ class ArtworkProcessor(object):
         elif mediaitem['mediatype'] == mediatypes.TVSHOW:
             mediaitem['seasons'], seasonart = self._get_seasons_artwork(quickjson.get_seasons(mediaitem['dbid']))
             mediaitem['art'].update(seasonart)
+        elif mediaitem['mediatype'] == mediatypes.MOVIE:
+            if not mediaitem.get('imdbnumber'):
+                mediaitem['imdbnumber'] = 'tt0073650'
         elif mediaitem['mediatype'] == mediatypes.MOVIESET:
             uniqueid = self.processed.get_data(mediaitem['dbid'], mediaitem['mediatype'])
             if not uniqueid and not self.only_filesystem:
@@ -443,9 +446,9 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
 def notifycount(count):
     log(L(ARTWORK_UPDATED_MESSAGE).format(count), xbmc.LOGINFO)
     if count:
-        xbmcgui.Dialog().notification(L(ARTWORK_UPDATED_MESSAGE).format(count), L(FINAL_MESSAGE), '-', 7500)
+        xbmcgui.Dialog().notification("Artwork Beef: " + L(ARTWORK_UPDATED_MESSAGE).format(count), L(FINAL_MESSAGE), '-', 7500)
     else:
-        xbmcgui.Dialog().notification(L(NO_ARTWORK_UPDATED_MESSAGE),
+        xbmcgui.Dialog().notification("Artwork Beef: " + L(NO_ARTWORK_UPDATED_MESSAGE),
             L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
 
 def plus_some(start, rng):
