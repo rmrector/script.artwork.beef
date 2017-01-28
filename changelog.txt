@@ -1,4 +1,4 @@
-v0.9.0
+v0.9.0 (2017-01-27)
 - Support movie set artwork
 - Merge context items into main add-on
 - Rearrange libs, drop last dependency not available in official Kodi repo
