@@ -25,8 +25,16 @@
 	<extension point="xbmc.service" start="login" library="service.py" />
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">Automatically adds extra artwork for your media.</summary>
-		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the filesystem.</description>
+		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the file system.</description>
 		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database</disclaimer>
+		<news>v0.9.0
+- Support movie set artwork
+- Merge context items into main add-on
+  - [B]Upgrade action![/B] Uninstall context menu add-ons "Select artwork to add" and "Add missing artwork"
+- Rearrange libs, drop last dependency not available in official Kodi repo
+  - [B]Upgrade action![/B] Uninstall add-on dependency "Development Helper"
+- Spread out checking for new artwork so they don't happen all at once (after the first run)
+- Fix error when displaying non-ASCII characters in GUI</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
 		<forum>http://forum.kodi.tv/showthread.php?tid=258886</forum>
 		<license>The MIT License</license>

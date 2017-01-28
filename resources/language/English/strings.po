@@ -93,7 +93,7 @@ msgid "Sorting and auto filters"
 msgstr ""
 
 msgctxt "#32055"
-msgid "Maintenance actions [I](save any changes first)[/I]"
+msgid "Maintenance actions [I](save all changes to add-on settings first)[/I]"
 msgstr ""
 
 # Actions
@@ -185,7 +185,7 @@ msgid "fanart.tv personal API key"
 msgstr ""
 
 msgctxt "#32906"
-msgid "Identify alternate Artwork Downloader and MSAA artwork filenames"
+msgid "Identify alternate Artwork Downloader and MSAA artwork file names"
 msgstr ""
 
 # subsetting of action #32407

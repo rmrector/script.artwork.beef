@@ -8,7 +8,9 @@ services [fanart.tv], [TheTVDB.com], and [The Movie Database].
 [TheTVDB.com]: http://thetvdb.com/
 [The Movie Database]: https://www.themoviedb.org/
 
-[Support and discussion thread](http://forum.kodi.tv/showthread.php?tid=258886) on the Kodi forums.  
+The current version works with Kodi 17 Krypton and 16 Jarvis. 15 Isengard should mostly still work,
+but it's really time to update.
+[Support and feedback thread](http://forum.kodi.tv/showthread.php?tid=258886) on the Kodi forums.  
 [Source](https://github.com/rmrector/script.artwork.beef) hosted on GitHub.
 
 It fully supports series and season artwork from TheTVDB.com; movie, movie set, series,
@@ -27,8 +29,8 @@ Finally, **episodes**: `fanart`
 ### Installing
 
 Install my [dev repository] to get updates delivered to you automatically. After the repo is
-installed, Artwork Beef can be installed from "Program add-ons". On Kodi 16 Jarvis and above,
-Artwork Beef can also be installed with a [single zip file].
+installed, Artwork Beef can be installed from "Program add-ons". Artwork Beef can also
+be installed with a [single zip file], but you will have to return here for updates.
 
 Artwork Helper can be installed with this single [installable zip], but it's only necessary if a
 skin depends on it.
@@ -56,6 +58,11 @@ API calls to The Movie Database and just aren't available for many series.
 
 There are add-on settings to specify exactly which types of artwork and how many to
 download automatically.
+
+If you have multiple Kodi installations sharing a database, only enable the automatic
+processing on one of them. Don't use Artwork Beef's automatic processing with Artwork Downloader's
+full library mode. The results won't be terrible, but they'll step all over each
+other and take up time and network resources.
 
 ### From NFO and image files
 
@@ -103,8 +110,8 @@ Episode and season backdrops may just work, depending on how your skin accesses 
 episodes or seasons. `$INFO[ListItem.Art(fanart)]` pulls the episode or season backdrop if it exists,
 otherwise Kodi falls back to the series backdrop.
 
-Extrafanart has been integrated [into the library] and no longer has to be in the filesystem,
-but does require skins to access them differently. Extrathumbs are similarly integrated, implemented
+Extrafanart has been integrated [into the library] and no longer has to be in the file system,
+but does require skins to access them differently. Extrathumbs can be similarly integrated, implemented
 in the library as `thumb1`, `thumb2`, and so on. [Artwork Helper] is a small add-on that skins can
 depend on to easily gather fanart/thumbs for a `multiimage` control. Skins should not list
 Artwork Beef as a dependency.
