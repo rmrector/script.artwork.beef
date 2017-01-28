@@ -159,7 +159,7 @@ class Addon(xbmcaddon.Addon):
             self.resourcespath = None
 
     def get_setting(self, settingid):
-        result = self.getSetting(settingid)
+        result = str(self.getSetting(settingid))
         if result == 'true':
             result = True
         elif result == 'false':
