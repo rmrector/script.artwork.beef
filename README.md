@@ -15,10 +15,10 @@ but it's really time to update.
 
 It fully supports series and season artwork from TheTVDB.com; movie, movie set, series,
 and season artwork from fanart.tv; and movie and movie set artwork from The Movie Database.
-For those series that really pop, [high quality fanart] for each episode can be
+For those series that really pop, [high-quality fanart] for each episode can be
 added from The Movie Database.
 
-[high quality fanart]: http://forum.kodi.tv/showthread.php?tid=236248
+[high-quality fanart]: http://forum.kodi.tv/showthread.php?tid=236248
 
 The full list of supported artwork types for **movies** and **movie sets**: `poster`,
   `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `discart`  
@@ -45,16 +45,23 @@ Install it. Tada! It will automatically run after library updates, grabbing exte
 artwork for new items, much like Kodi and scrapers do for info and basic artwork.
 
 You can also run it from Program add-ons to trigger the automatic
-process for new or all items; a currently running process can also be canceled here. To operate on single
-media items, open the context menu, then under "Manage..." there are options to automatically "Add missing artwork"
-or manually "Select artwork...".
+process for new or all items; a currently running process can also be canceled here. To operate on a single
+media item, open the context menu on that item, then under "Manage..." there are options
+to automatically "Add missing artwork" or manually "Select artwork...".
 
 Over time it will reprocess media items still missing artwork, checking for new artwork from
 web services and the file system.
 
-Episode fanart requires using a scraper that grabs the TheTVDB ID for each episode, like the standard TheTVDB scraper.
+**Episode fanart** requires using a scraper that grabs the TheTVDB ID for each episode, like the standard TheTVDB scraper.
 You must enable adding episode fanart automatically by series through the add-on settings, as they add a bundle of new
 API calls to The Movie Database and just aren't available for many series.
+
+Grabbing **movie set artwork** from web services may not work automatically if the set name in
+Kodi doesn't exactly match the set name on TheMovieDB. After your sets are processed for the
+first time, run Artwork Beef from Program Add-ons and select "identify unmatched sets with TheMovieDB"
+to show a list of all still-unmatched movies sets, then select one and enter the name of the set
+exactly as it is on TheMovieDB. If a set was matched incorrectly, navigate to the set in the video
+library and choose "Select artwork..." from the "Manage" menu of the context menu, then choose "Search for set".
 
 There are add-on settings to specify exactly which types of artwork and how many to
 download automatically.
@@ -75,7 +82,7 @@ Artwork Beef also adds artwork from image files stored next to your media. Name 
 replacing "fanart"/"thumb" with the exact artwork type. Kodi names artwork in this same format when exporting the
 library to separate files.
 
-Movie set artwork can be pulled from a central directory (configured in the add-on settings),
+**Movie set artwork** can be pulled from a central directory (configured in the add-on settings),
 containing artwork named `[set name]-[art type].[ext]`, and NFO file named `[set name].nfo`.
 This central directory can also contain subdirectories named exactly as the sets, with images inside
 named `[art type].[ext]`, NFO file named `set.nfo`. Finally, Artwork Beef can also
@@ -89,8 +96,8 @@ name to be set in Kodi; for instance, multiple fanart will have one single `fana
 one `fanart1`, one `fanart2`, and so on.
 
 It will also pull in artwork files that match Artwork Downloader file names, in cases where they
-are different than the art types used in Kodi, for instance `character.png` is added as
-`characterart` and extrafanart are added as `fanart#`. Ditto MSAA, but only for the default
+are different than the art types used in Kodi; for instance, `character.png` is added as
+`characterart` and extrafanart are added as `fanart#`. Ditto MSAA, but only for its default
 filenames (`logo.png` to `clearlogo`, `folder.jpg` to `thumb`).
 
 If you are using NFO and/or image files, use a [separate directory] for each movie.
@@ -105,10 +112,10 @@ querying the web services during automatic processing, saving time and network r
 
 ### Skin support
 
-For the most part skins will still access images in the same Kodi standard way.
+For the most part, skins will still access images in the same Kodi standard way.
 Episode and season backdrops may just work, depending on how your skin accesses them when listing
 episodes or seasons. `$INFO[ListItem.Art(fanart)]` pulls the episode or season backdrop if it exists,
-otherwise Kodi falls back to the series backdrop.
+otherwise, Kodi falls back to the series backdrop.
 
 Extrafanart has been integrated [into the library] and no longer has to be in the file system,
 but does require skins to access them differently. Extrathumbs can be similarly integrated, implemented
