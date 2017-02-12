@@ -16,6 +16,7 @@ def get_mediatype(listitem):
     try:
         return listitem.getVideoInfoTag().getMediaType()
     except AttributeError:
+        # DEPRECATED: Before Krypton
         pass
     count = 0
     mediatype = xbmc.getInfoLabel('ListItem.DBTYPE')
@@ -31,6 +32,7 @@ def get_dbid(listitem):
     try:
         return listitem.getVideoInfoTag().getDbId()
     except AttributeError:
+        # DEPRECATED: Before Krypton
         pass
     infolabel = xbmc.getInfoLabel('ListItem.Label')
     truelabel = listitem.getLabel()
