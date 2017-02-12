@@ -433,7 +433,7 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
         return
     if mediatype == mediatypes.TVSHOW:
         for season, season_id in seasons.iteritems():
-            info.update_art_in_library(mediatypes.SEASON, season_id, dict((arttype, url)
+            info.update_art_in_library(mediatypes.SEASON, season_id, dict((arttype.split('.')[2], url)
                 for arttype, url in selectedart.iteritems() if arttype.startswith('season.{0}.'.format(season))))
         info.update_art_in_library(mediatype, dbid, dict((arttype, url)
             for arttype, url in selectedart.iteritems() if '.' not in arttype))
