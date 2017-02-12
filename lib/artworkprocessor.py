@@ -303,9 +303,6 @@ class ArtworkProcessor(object):
         elif mediaitem['mediatype'] == mediatypes.TVSHOW:
             mediaitem['seasons'], seasonart = self._get_seasons_artwork(quickjson.get_seasons(mediaitem['dbid']))
             mediaitem['art'].update(seasonart)
-        elif mediaitem['mediatype'] == mediatypes.MOVIE:
-            if not mediaitem.get('imdbnumber'):
-                mediaitem['imdbnumber'] = 'tt0073650'
         elif mediaitem['mediatype'] == mediatypes.MOVIESET:
             uniqueid = self.processed.get_data(mediaitem['dbid'], mediaitem['mediatype'])
             if not uniqueid and not self.only_filesystem:
