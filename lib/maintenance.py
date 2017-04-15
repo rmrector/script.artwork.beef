@@ -1,10 +1,10 @@
 import random
 from datetime import timedelta
 
-from libs import mediatypes, pykodi
-from libs.oldprocesseditems import ProcessedItems as OldProcessedItems
-from libs.processeditems import ProcessedItems
-from libs.pykodi import datetime_strptime, log
+from lib.libs import mediatypes, pykodi
+from lib.libs.oldprocesseditems import ProcessedItems as OldProcessedItems
+from lib.libs.processeditems import ProcessedItems
+from lib.libs.pykodi import datetime_strptime, log
 
 def check_upgrades():
     check_processeditems_upgrade()

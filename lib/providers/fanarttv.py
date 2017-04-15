@@ -3,7 +3,7 @@ import urllib
 import xbmc
 from abc import ABCMeta
 
-from base import AbstractProvider, cache
+from lib.providers.base import AbstractProvider, cache
 from lib.libs import mediatypes, pykodi
 from lib.libs.utils import SortedDisplay
 

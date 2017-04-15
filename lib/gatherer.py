@@ -1,5 +1,5 @@
-import providers
-from providers import ProviderError
+from lib import providers
+from lib.providers import ProviderError
 
 class Gatherer(object):
     def __init__(self, monitor, only_filesystem):

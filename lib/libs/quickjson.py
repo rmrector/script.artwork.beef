@@ -1,7 +1,7 @@
-import pykodi
-from pykodi import get_kodi_version, json, log
+from lib.libs import pykodi
+from lib.libs.pykodi import get_kodi_version, json, log
 
-import mediatypes
+from lib.libs import mediatypes
 
 # [0] method part
 typemap = {mediatypes.MOVIE: ('Movie',),

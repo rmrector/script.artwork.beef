@@ -3,8 +3,8 @@ import sys
 import xbmc
 from math import pi, sin
 
-import base
-from base import AbstractProvider, cache
+from lib.providers import base
+from lib.providers.base import AbstractProvider, cache
 from lib.libs import mediatypes, pykodi
 from lib.providers import ProviderError
 from lib.libs.utils import SortedDisplay
