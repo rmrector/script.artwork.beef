@@ -26,7 +26,7 @@ def remove_otherartwork(mediaitem):
             except ValueError:
                 max_allowed = sys.maxsize
         else:
-            max_allowed = mediatypes.artinfo[mediaitem['mediatype']].get(basetype, {}).get('autolimit', 0)
+            max_allowed = mediatypes.get_artinfo(mediaitem['mediatype'], basetype)['autolimit']
         finalart.update(_arrange_multiart(mediaitem['art'], basetype, limit=max_allowed))
 
     finalart.update((arttype, None) for arttype in mediaitem['art'] if arttype not in finalart)

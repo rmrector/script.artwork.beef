@@ -16,6 +16,18 @@ settings = ('tvshow.poster', 'tvshow.fanart_limit', 'tvshow.banner', 'tvshow.cle
 
 addon = pykodi.get_main_addon()
 
+def get_artinfo(mediatype, arttype):
+    mediatype, arttype = hack_mediaarttype(mediatype, arttype)
+    return artinfo[mediatype].get(arttype, default_artinfo)
+
+def hack_mediaarttype(mediatype, arttype):
+    # Seasons were implemented oddly and need special help
+    if arttype.startswith('season.'):
+        return SEASON, arttype.rsplit('.', 1)[1]
+    else:
+        return mediatype, arttype
+
+default_artinfo = {'autolimit': 0, 'multiselect': False}
 artinfo = {
     TVSHOW: {
         'poster': {

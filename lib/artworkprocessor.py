@@ -125,12 +125,7 @@ class ArtworkProcessor(object):
                     self.identify_movieset(mediaitem)
                     return
                 if selectedarttype and selectedart:
-                    if selectedarttype.startswith('season.'):
-                        gentype = selectedarttype.rsplit('.', 1)[1]
-                        multiselect = mediatypes.artinfo[mediatypes.SEASON].get(gentype, {}).get('multiselect', False)
-                    else:
-                        multiselect = mediatypes.artinfo[mediatype][selectedarttype]['multiselect']
-                    if multiselect:
+                    if mediatypes.get_artinfo(mediatype, selectedarttype)['multiselect']:
                         existingurls = [url for exacttype, url in mediaitem['art'].iteritems()
                             if info.arttype_matches_base(exacttype, selectedarttype)]
                         urls_toset = [url for url in existingurls if url not in selectedart[1]]
@@ -363,15 +358,11 @@ class ArtworkProcessor(object):
             return {}
         newartwork = {}
         for missingart in missingarts:
-            if missingart.startswith('season.'):
-                itemtype = mediatypes.SEASON
-                artkey = missingart.rsplit('.', 1)[1]
-            else:
-                itemtype = mediatype
-                artkey = missingart
             if missingart not in availableart:
                 continue
-            if mediatypes.artinfo[itemtype][artkey]['multiselect']:
+            itemtype, artkey = mediatypes.hack_mediaarttype(mediatype, missingart)
+            artinfo = mediatypes.get_artinfo(itemtype, artkey)
+            if artinfo['multiselect']:
                 existingurls = []
                 existingartnames = []
                 for art, url in existingart.iteritems():
@@ -383,7 +374,7 @@ class ArtworkProcessor(object):
                 if not newart:
                     continue
                 newartcount = 0
-                for i in range(0, mediatypes.artinfo[itemtype][artkey]['autolimit']):
+                for i in range(0, artinfo['autolimit']):
                     exacttype = '%s%s' % (artkey, i if i else '')
                     if exacttype not in existingartnames:
                         if newartcount >= len(newart):
