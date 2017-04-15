@@ -1,9 +1,9 @@
 import re
 
-import mediatypes
-import pykodi
-import quickjson
-from utils import natural_sort
+from lib.libs import mediatypes
+from lib.libs import pykodi
+from lib.libs import quickjson
+from lib.libs.utils import natural_sort
 
 # get_mediatype_id must evaluate these in order, as episodes have tvshowid
 idmap = (('episodeid', mediatypes.EPISODE),

@@ -1,7 +1,7 @@
 import xbmcvfs
 from contextlib import closing
 
-from pykodi import json
+from lib.libs.pykodi import json
 
 class ProcessedItems(object):
     version = 1

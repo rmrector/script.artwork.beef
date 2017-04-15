@@ -3,14 +3,14 @@ import xbmc
 import xbmcgui
 from datetime import timedelta
 
-import cleaner
-from artworkselection import prompt_for_artwork
-from gatherer import Gatherer
-from providers import search
-from libs import mediainfo as info, mediatypes, pykodi, quickjson
-from libs.processeditems import ProcessedItems
-from libs.pykodi import datetime_now, localize as L, log
-from libs.utils import SortedDisplay, natural_sort, get_pathsep
+from lib import cleaner
+from lib.artworkselection import prompt_for_artwork
+from lib.gatherer import Gatherer
+from lib.providers import search
+from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
+from lib.libs.processeditems import ProcessedItems
+from lib.libs.pykodi import datetime_now, localize as L, log
+from lib.libs.utils import SortedDisplay, natural_sort, get_pathsep
 
 addon = pykodi.get_main_addon()
 

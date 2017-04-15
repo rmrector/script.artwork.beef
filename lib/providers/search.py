@@ -1,4 +1,4 @@
-from themoviedb import TheMovieDBSearch
+from lib.providers.themoviedb import TheMovieDBSearch
 
 searcher = None
 

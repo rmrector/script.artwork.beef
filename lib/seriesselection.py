@@ -1,6 +1,6 @@
 import xbmcgui
 
-from libs.pykodi import localize as L
+from lib.libs.pykodi import localize as L
 
 ACTION_SELECTSERIES = 32400
 

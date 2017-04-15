@@ -1,8 +1,8 @@
 import sys
 import urllib
 
-from libs import mediatypes, pykodi
-from libs.mediainfo import arttype_matches_base, iter_base_arttypes, iter_urls_for_arttype
+from lib.libs import mediatypes, pykodi
+from lib.libs.mediainfo import arttype_matches_base, iter_base_arttypes, iter_urls_for_arttype
 
 def clean_artwork(mediaitem):
     updated_art = dict(_get_clean_art(*art) for art in mediaitem['art'].iteritems())

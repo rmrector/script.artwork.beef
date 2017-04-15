@@ -2,7 +2,7 @@ import xbmc
 from abc import ABCMeta
 
 
-from base import AbstractProvider, cache, Getter
+from lib.providers.base import AbstractProvider, cache, Getter
 from lib.libs import mediatypes
 from lib.libs.pykodi import log
 from lib.libs.utils import SortedDisplay
