@@ -79,8 +79,8 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                 resultimage = {'url': url, 'provider': self.name}
                 resultimage['preview'] = url.replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
                 resultimage['rating'] = SortedDisplay(6 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
-                resultimage['size'] = self._get_imagesize(arttype)
-                resultimage['language'] = self._get_imagelanguage(arttype, image)
+                resultimage['size'] = _get_imagesize(arttype)
+                resultimage['language'] = _get_imagelanguage(arttype, image)
                 if arttype == 'showbackground' and seasonnum is not None:
                     resultimage['hasseason'] = True
                     if seasonnum >= 0:
@@ -91,32 +91,6 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                     result[seasonfanarttype].append(resultimage)
                 result[itype].append(resultimage)
         return result
-
-    def _get_imagesize(self, arttype):
-        if arttype in ('hdtvlogo', 'hdclearart'):
-            return SortedDisplay(400, 'HD')
-        elif arttype in ('clearlogo', 'clearart'):
-            return SortedDisplay(10, 'SD')
-        elif arttype in ('tvbanner', 'seasonbanner'):
-            return SortedDisplay(1000, '1000x185')
-        elif arttype == 'showbackground':
-            return SortedDisplay(1920, '1920x1080')
-        elif arttype in ('tvposter', 'seasonposter'):
-            return SortedDisplay(1426, '1000x1426')
-        elif arttype == 'characterart':
-            return SortedDisplay(512, '512x512')
-        elif arttype in ('tvthumb', 'seasonthumb'):
-            return SortedDisplay(500, '500x281 or 1000x562')
-        else:
-            return SortedDisplay(0, '')
-
-    def _get_imagelanguage(self, arttype, image):
-        if arttype in ('showbackground', 'characterart'):
-            return None
-        if arttype in ('clearlogo', 'hdtvlogo', 'seasonposter', 'hdclearart', 'clearart', 'tvthumb', 'seasonthumb', 'tvbanner', 'seasonbanner'):
-            return image['lang'] if image['lang'] not in ('', '00') else 'en'
-        # tvposter may or may not have a title and thus need a language
-        return image['lang'] if image['lang'] not in ('', '00') else None
 
     def _get_seasonnum(self, image, itemname, ignoreall=False):
         allitem = None if ignoreall else -1
@@ -174,36 +148,10 @@ class FanartTVAbstractMovieProvider(FanartTVAbstractProvider):
                 if arttype == 'moviedisc':
                     display = self.disctitles.get(image['disc_type']) or image['disc_type']
                     resultimage['subtype'] = SortedDisplay(image['disc_type'], display)
-                resultimage['size'] = self._get_imagesize(arttype)
-                resultimage['language'] = self._get_imagelanguage(arttype, image)
+                resultimage['size'] = _get_imagesize(arttype)
+                resultimage['language'] = _get_imagelanguage(arttype, image)
                 result[generaltype].append(resultimage)
         return result
-
-    def _get_imagesize(self, arttype):
-        if arttype in ('hdmovielogo', 'hdmovieclearart'):
-            return SortedDisplay(400, 'HD')
-        elif arttype in ('movielogo', 'movieart'):
-            return SortedDisplay(10, 'SD')
-        elif arttype == 'moviebackground':
-            return SortedDisplay(1920, '1920x1080')
-        elif arttype == 'movieposter':
-            return SortedDisplay(1426, '1000x1426')
-        elif arttype == 'moviedisc':
-            return SortedDisplay(1000, '1000x1000')
-        elif arttype == 'moviebanner':
-            return SortedDisplay(1000, '1000x185')
-        elif arttype == 'moviethumb':
-            return SortedDisplay(1000, '1000x562')
-        else:
-            return SortedDisplay(0, '')
-
-    def _get_imagelanguage(self, arttype, image):
-        if arttype == 'moviebackground':
-            return None
-        if arttype in ('movielogo', 'hdmovielogo', 'hdmovieclearart', 'movieart', 'moviebanner', 'moviethumb', 'moviedisc'):
-            return image['lang'] if image['lang'] not in ('', '00') else 'en'
-        # movieposter may or may not have a title
-        return image['lang'] if image['lang'] not in ('', '00') else None
 
     def provides(self, types):
         return any(x in types for x in self.artmap.values())
@@ -214,3 +162,35 @@ class FanartTVMovieProvider(FanartTVAbstractMovieProvider):
 
 class FanartTVMovieSetProvider(FanartTVAbstractMovieProvider):
     mediatype = mediatypes.MOVIESET
+
+def _get_imagesize(arttype):
+    if arttype in ('hdtvlogo', 'hdclearart', 'hdmovielogo', 'hdmovieclearart'):
+        return SortedDisplay(400, 'HD')
+    elif arttype in ('clearlogo', 'clearart', 'movielogo', 'movieart'):
+        return SortedDisplay(10, 'SD')
+    elif arttype in ('tvbanner', 'seasonbanner', 'moviebanner'):
+        return SortedDisplay(1000, '1000x185')
+    elif arttype in ('showbackground', 'moviebackground'):
+        return SortedDisplay(1920, '1920x1080')
+    elif arttype in ('tvposter', 'seasonposter', 'movieposter'):
+        return SortedDisplay(1426, '1000x1426')
+    elif arttype in ('tvthumb', 'seasonthumb'):
+        return SortedDisplay(500, '500x281 or 1000x562')
+    elif arttype == 'characterart':
+        return SortedDisplay(512, '512x512')
+    elif arttype == 'moviethumb':
+        return SortedDisplay(1000, '1000x562')
+    elif arttype == 'moviedisc':
+        return SortedDisplay(1000, '1000x1000')
+    else:
+        return SortedDisplay(0, '')
+
+def _get_imagelanguage(arttype, image):
+    if arttype in ('showbackground', 'characterart', 'moviebackground'):
+        return None
+    if arttype in ('clearlogo', 'hdtvlogo', 'seasonposter', 'hdclearart', 'clearart', 'tvthumb', 'seasonthumb',
+            'tvbanner', 'seasonbanner', 'movielogo', 'hdmovielogo', 'hdmovieclearart', 'movieart', 'moviebanner',
+            'moviethumb', 'moviedisc'):
+        return image['lang'] if image['lang'] not in ('', '00') else 'en'
+    # tvposter and movieposter may or may not have a title and thus need a language
+    return image['lang'] if image['lang'] not in ('', '00') else None
