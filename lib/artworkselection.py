@@ -47,15 +47,9 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
                 return selectedarttype, None
         if not selectedarttype:
             break
-        artlist = availableart[selectedarttype]
-        if selectedarttype.startswith('season.'):
-            stype = selectedarttype.rsplit('.', 1)[1]
-            stype = mediatypes.artinfo[mediatypes.SEASON].get(stype)
-        else:
-            stype = mediatypes.artinfo[mediatype].get(selectedarttype)
-        multi = stype['multiselect'] if stype else False
-        artselectwindow = ArtworkSelector('DialogSelect.xml', addon.path, artlist=artlist, arttype=selectedarttype,
-            medialabel=medialabel, multi=multi, hqpreview=hqpreview)
+        multi = mediatypes.get_artinfo(mediatype, selectedarttype)['multiselect']
+        artselectwindow = ArtworkSelector('DialogSelect.xml', addon.path, artlist=availableart[selectedarttype],
+            arttype=selectedarttype, medialabel=medialabel, multi=multi, hqpreview=hqpreview)
         selectedart = artselectwindow.prompt()
         if singletype and selectedart is None:
             selectedarttype = None
