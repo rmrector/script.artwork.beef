@@ -18,9 +18,7 @@ class M(object):
     ADD_MISSING_FOR_NEW = 32404
     ADD_MISSING_FOR_ALL = 32405
     IDENTIFY_UNMATCHED_SETS = 32408
-    CLEAN_ART_URLS = 32406
     REMOVE_EXTRA_ARTWORK = 32407
-    FIXED_URL_COUNT = 32026
     REMOVED_ART_COUNT = 32027
     NO_UNMATCHED_SETS = 32029
     UNMATCHED_SETS = 32056
@@ -40,8 +38,6 @@ def main():
     elif 'command' in command:
         if command['command'] == 'set_autoaddepisodes':
             set_autoaddepisodes()
-        elif command['command'] == 'clean_arturls':
-            runon_allmedia(L(M.CLEAN_ART_URLS), L(M.FIXED_URL_COUNT), cleaner.clean_artwork)
         elif command['command'] == 'remove_otherartwork':
             runon_allmedia(L(M.REMOVE_EXTRA_ARTWORK), L(M.REMOVED_ART_COUNT), cleaner.remove_otherartwork)
     else:

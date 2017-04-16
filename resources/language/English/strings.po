@@ -43,9 +43,7 @@ msgctxt "#32025"
 msgid "Media type '{0}' not supported"
 msgstr ""
 
-msgctxt "#32026"
-msgid "Fixed {0} image URLs"
-msgstr ""
+# Unused "#32026"
 
 msgctxt "#32027"
 msgid "Removed {0} images"
@@ -126,9 +124,7 @@ msgctxt "#32408"
 msgid "identify unmatched sets with TheMovieDB"
 msgstr ""
 
-msgctxt "#32406"
-msgid "Clean artwork URLs"
-msgstr ""
+# unused "#32406"
 
 msgctxt "#32407"
 msgid "Remove extra artwork not configured in the add-on"
