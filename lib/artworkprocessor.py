@@ -156,9 +156,9 @@ class ArtworkProcessor(object):
 
     def process_medialist(self, medialist):
         self.init_run(len(medialist) > 0)
-        processed = {'tvshow': {}, 'movie': [], 'episode': []}
         artcount = 0
         currentitem = 0
+        aborted = False
         if medialist:
             gatherer = Gatherer(self.monitor, self.only_filesystem)
         for mediaitem in medialist:
@@ -173,14 +173,16 @@ class ArtworkProcessor(object):
 
             if not services_hit:
                 if self.monitor.abortRequested():
+                    aborted = True
                     break
             elif self.monitor.waitForAbort(THROTTLE_TIME):
+                aborted = True
                 break
 
         self.finish_run()
         if artcount:
             notifycount(artcount)
-        return processed
+        return not aborted
 
     def _process_item(self, gatherer, mediaitem, singleitem=False, auto=True):
         log('Processing {0}'.format(mediaitem['label']), xbmc.LOGINFO)
@@ -443,8 +445,7 @@ def notifycount(count):
             L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
 
 def plus_some(start, rng):
-    rng *= 3
-    return start + (random.randrange(-rng, rng + 1) / 3.0)
+    return start + (random.randrange(-rng, rng + 1))
 
 def prepare_movieset(mediaitem, new, setfile):
     if new:

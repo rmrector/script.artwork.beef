@@ -17,6 +17,7 @@ class M(object):
     ADD_MISSING_MESSAGE = 32402
     STOP = 32403
     ADD_MISSING_FOR_NEW = 32404
+    ADD_MISSING_FOR_OLD = 32406
     ADD_MISSING_FOR_ALL = 32405
     IDENTIFY_UNMATCHED_SETS = 32408
     REMOVE_EXTRA_ARTWORK = 32407
@@ -48,7 +49,8 @@ def main():
         if processor.processor_busy:
             options = [(L(M.STOP), 'NotifyAll(script.artwork.beef, CancelCurrent)')]
         else:
-            options = [(L(M.ADD_MISSING_FOR_NEW), 'NotifyAll(script.artwork.beef, ProcessNewItems)'),
+            options = [(L(M.ADD_MISSING_FOR_NEW), 'NotifyAll(script.artwork.beef, ProcessUnprocessedItems)'),
+                (L(M.ADD_MISSING_FOR_OLD), 'NotifyAll(script.artwork.beef, ProcessOldItems)'),
                 (L(M.ADD_MISSING_FOR_ALL), 'NotifyAll(script.artwork.beef, ProcessAllItems)'),
                 (L(M.IDENTIFY_UNMATCHED_SETS), identify_unmatched_sets),
                 (L(M.REMOVE_SPECIFIC_TYPES), remove_specific_arttypes)]

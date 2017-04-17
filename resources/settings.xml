@@ -2,6 +2,8 @@
 <settings>
 	<category label="$LOCALIZE[128]">
 		<setting id="enableservice" label="32900" type="bool" default="true" />
+		<setting id="enable_olditem_updates" subsetting="true" label="32912" type="bool"
+			default="true" visible="eq(-1,true)" />
 		<setting id="only_filesystem" label="32904" type="bool" default="false" />
 		<setting label="32412" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)"
 			visible="!Skin.HasSetting(disablecontext:script.artwork.beef)" />
@@ -57,7 +59,7 @@
 		<setting label="32407" type="action" action="RunScript(script.artwork.beef, command=remove_otherartwork)" />
 		<setting id="save_additional_arttypes" subsetting="true" label="32908" type="text" default="thumb:5, animatedfanart:1, animatedposter:1" />
 		<!-- For add-on inner workings -->
-		<setting id="lastdate" type="text" default="0" visible="false" />
+		<setting id="last_itemupdate" type="text" default="0" visible="false" />
 		<setting id="autoaddepisodes_list" type="text" default="" visible="false" />
 	</category>
 </settings>
