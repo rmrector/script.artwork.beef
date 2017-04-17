@@ -17,7 +17,7 @@ class ProcessedItems(object):
             nextdate DATETIME, data TEXT, PRIMARY KEY (mediaid, mediatype))"""]
         self.db = Database(dbpath, create_table_scripts)
 
-    def should_update(self, mediaid, mediatype):
+    def is_stale(self, mediaid, mediatype):
         result = self.db.fetchone("""SELECT * FROM processeditems WHERE mediaid=? AND mediatype=?
             AND nextdate > datetime('now')""", (mediaid, mediatype))
         return True if not result else False
@@ -43,6 +43,9 @@ class ProcessedItems(object):
     def exists(self, mediaid, mediatype):
         return True if self.db.fetchone("SELECT * FROM processeditems WHERE mediaid=? AND mediatype=?",
             (mediaid, mediatype)) else False
+
+    def does_not_exist(self, mediaid, mediatype):
+        return not self.exists(mediaid, mediatype)
 
 class Database(object):
     def __init__(self, path, create_table_scripts):

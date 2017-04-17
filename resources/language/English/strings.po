@@ -120,11 +120,13 @@ msgctxt "#32405"
 msgid "add missing artwork for all items"
 msgstr ""
 
+msgctxt "#32406"
+msgid "add missing artwork for old items"
+msgstr ""
+
 msgctxt "#32408"
 msgid "identify unmatched sets with TheMovieDB"
 msgstr ""
-
-# unused "#32406"
 
 msgctxt "#32407"
 msgid "Remove extra artwork not configured in the add-on"
@@ -158,6 +160,10 @@ msgstr ""
 
 msgctxt "#32900"
 msgid "Automatically add artwork for new items"
+msgstr ""
+
+msgctxt "#32912"
+msgid "Update artwork for old items daily"
 msgstr ""
 
 msgctxt "#32904"

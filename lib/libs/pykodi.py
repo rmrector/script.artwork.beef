@@ -71,6 +71,9 @@ def localize(messageid):
 def get_conditional(conditional):
     return xbmc.getCondVisibility(conditional)
 
+def get_infolabel(infolabel):
+    return xbmc.getInfoLabel(infolabel)
+
 def execute_builtin(builtin_command):
     xbmc.executebuiltin(builtin_command)
 

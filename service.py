@@ -1,10 +1,9 @@
 import xbmc
-from datetime import timedelta
 
 from lib.artworkprocessor import ArtworkProcessor
 from lib.libs import mediatypes, pykodi, quickjson
 from lib.libs.processeditems import ProcessedItems
-from lib.libs.pykodi import log, datetime_now, json
+from lib.libs.pykodi import log, json
 from lib.maintenance import check_upgrades
 
 STATUS_IDLE = 'idle'
@@ -23,28 +22,46 @@ class ArtworkService(xbmc.Monitor):
         self.abort = False
         self.processor = ArtworkProcessor(self)
         self.processed = ProcessedItems()
-        self.signal = None
         self.processaftersettings = False
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
         self.stoppeditems = set()
-        self.set_status(STATUS_IDLE)
-
-    @property
-    def toomany_recentitems(self):
-        return len(self.recentitems['movie']) + len(self.recentitems['tvshow']) + len(self.recentitems['episode']) > 100
+        self._signal = None
+        self._status = None
+        self.enable_olditem_updates = addon.get_setting('enable_olditem_updates')
+        self._last_itemupdate = addon.get_setting('last_itemupdate')
+        self.status = STATUS_IDLE
 
     @property
     def scanning(self):
         return pykodi.get_conditional('Library.IsScanningVideo | Library.IsScanningMusic')
 
-    def set_status(self, value):
+    @property
+    def last_itemupdate(self):
+        return self._last_itemupdate
+
+    @last_itemupdate.setter
+    def last_itemupdate(self, value):
+        addon.set_setting('last_itemupdate', value)
+        self._last_itemupdate = value
+
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, value):
+        self._status = value
         self.abort = False
-        self.status = value
         pykodi.execute_builtin('SetProperty(ArtworkBeef.Status, {0}, Home)'.format(value))
 
-    def set_signal(self, value):
-        self.set_status(STATUS_SIGNALLED if value else STATUS_IDLE)
-        self.signal = value
+    @property
+    def signal(self):
+        return self._signal
+
+    @signal.setter
+    def signal(self, value):
+        self._signal = value
+        self.status = STATUS_SIGNALLED if value else STATUS_IDLE
 
     def reset_recent(self):
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
@@ -56,19 +73,22 @@ class ArtworkService(xbmc.Monitor):
                 continue
             if self.signal:
                 signal = self.signal
-                self.signal = None
-                if signal == 'something':
-                    # Add a delay to catch rapid fire library updates
-                    self.signal = 'something_really'
+                self._signal = None
+                if signal == 'recentitems':
+                    # Add a delay to catch rapid fire VideoLibrary.OnUpdate
+                    self.signal = 'recentitems_really'
                     continue
-                self.set_status(STATUS_PROCESSING)
+                self.status = STATUS_PROCESSING
                 if signal == 'allitems':
                     self.process_allitems()
                 elif signal == 'unprocesseditems':
-                    self.process_allitems(True)
-                elif signal == 'something_really':
-                    self.process_something()
-                self.set_status(STATUS_IDLE)
+                    self.process_unprocesseditems()
+                elif signal == 'olditems':
+                    if self.process_oldandunprocesseditems():
+                        self.last_itemupdate = get_date()
+                elif signal == 'recentitems_really':
+                    self.process_recentitems()
+                self.status = STATUS_IDLE
 
     def abortRequested(self):
         return self.abort or super(ArtworkService, self).abortRequested()
@@ -80,26 +100,23 @@ class ArtworkService(xbmc.Monitor):
         return super(ArtworkService, self).waitForAbort(timeout)
 
     def onNotification(self, sender, method, data):
-        if method.startswith('Other.'):
-            if sender == 'script.artwork.beef':
-                message = 'Received notification "{0}"'.format(method)
-                if data != 'null':
-                    message += " - data:\n" + data
-                log(message, xbmc.LOGINFO)
-            else:
-                return
+        if method.startswith('Other.') and sender != 'script.artwork.beef':
+            return
         if method == 'Other.CancelCurrent':
             if self.status == STATUS_PROCESSING:
                 self.abort = True
             elif self.signal:
-                self.set_signal(None)
+                self.signal = None
                 self.processor.close_progress()
-        elif method == 'Other.ProcessNewItems':
+        elif method == 'Other.ProcessUnprocessedItems':
             self.processor.create_progress()
-            self.set_signal('unprocesseditems')
+            self.signal = 'unprocesseditems'
+        elif method == 'Other.ProcessOldItems':
+            self.processor.create_progress()
+            self.signal = 'olditems'
         elif method == 'Other.ProcessAllItems':
             self.processor.create_progress()
-            self.set_signal('allitems')
+            self.signal = 'allitems'
         elif method == 'Other.ProcessAfterSettings':
             self.processaftersettings = True
         elif method == 'Player.OnStop':
@@ -112,7 +129,8 @@ class ArtworkService(xbmc.Monitor):
                 self.abort = True
         elif method == 'VideoLibrary.OnScanFinished':
             if self.serviceenabled:
-                self.set_signal('something')
+                scan_olditems = self.enable_olditem_updates and get_date() > self.last_itemupdate
+                self.signal = 'olditems' if scan_olditems else 'unprocesseditems'
         elif method == 'VideoLibrary.OnUpdate':
             if not self.serviceenabled:
                 return
@@ -122,56 +140,41 @@ class ArtworkService(xbmc.Monitor):
             if (data['item']['type'], data['item']['id']) in self.stoppeditems:
                 self.stoppeditems.remove((data['item']['type'], data['item']['id']))
                 return
-            if not self.toomany_recentitems:
-                self.recentitems[data['item']['type']].append(data['item']['id'])
             if not self.scanning:
-                self.set_signal('something')
+                self.recentitems[data['item']['type']].append(data['item']['id'])
+                self.signal = 'recentitems'
 
     def watchitem(self, data):
-        usabledata = 'item' in data and data['item'].get('id') and data['item'].get('id') != -1
-        return usabledata and 'playcount' not in data and data['item'].get('type') in self.recentitems
+        can_use_data = 'item' in data and data['item'].get('id') and data['item'].get('id') != -1
+        return can_use_data and 'playcount' not in data and data['item'].get('type') in self.recentitems
 
-    def process_something(self):
-        # 1. Recent items, can run several times per day, after every library update, and only for small updates
-        # 2. Deep dive, at least once every UNPROCESSED_DAYS and after larger library updates
-        #  - this contains new items that were missed in the recent loops, maybe in a shared database
-        #    and items that are due to be rechecked for artwork
-        lastdate = addon.get_setting('lastdate')
-        if self.toomany_recentitems or lastdate < str(datetime_now() - timedelta(days=UNPROCESSED_DAYS)):
-            self.process_allitems(True)
-            self.reset_recent()
-        else:
-            self.process_recentitems()
+    def process_unprocesseditems(self):
+        return self.process_allitems(self.processed.does_not_exist)
 
-    def process_allitems(self, excludeprocessed=False):
-        currentdate = str(datetime_now())
-        items = quickjson.get_movies()
-        sets = quickjson.get_moviesets()
-        if excludeprocessed:
-            items = [movie for movie in items if self.processed.should_update(movie['movieid'], mediatypes.MOVIE)]
-            sets = [mset for mset in sets if self.processed.should_update(mset['setid'], mediatypes.MOVIESET)]
-        items.extend(sets)
+    def process_oldandunprocesseditems(self):
+        return self.process_allitems(self.processed.is_stale)
+
+    def process_allitems(self, shouldinclude_fn=lambda id, type: True):
+        items = [movie for movie in quickjson.get_movies() if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE)]
+        items.extend([mset for mset in quickjson.get_moviesets()
+            if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET)])
+
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
-            return
+            return False
         autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
         for series in serieslist:
-            pseason = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW)
-            if not excludeprocessed or self.processed.should_update(series['tvshowid'], mediatypes.TVSHOW) or \
-                    not pseason or series['season'] > int(pseason):
+            processed_season = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW)
+            if not processed_season or series['season'] > int(processed_season) or \
+                    shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW):
                 items.append(series)
             if series['imdbnumber'] in autoaddepisodes:
                 episodes = quickjson.get_episodes(series['tvshowid'])
-                if not excludeprocessed:
-                    items.extend(episodes)
-                else:
-                    items.extend(ep for ep in episodes if self.processed.should_update(ep['episodeid'], mediatypes.EPISODE))
+                items.extend(ep for ep in episodes if shouldinclude_fn(ep['episodeid'], mediatypes.EPISODE))
             if self.abortRequested():
-                return
+                return False
 
-        self.processor.process_medialist(items)
-        if not self.abortRequested():
-            addon.set_setting('lastdate', currentdate)
+        return self.processor.process_medialist(items)
 
     def process_recentitems(self):
         ignoreepisodesfrom = set()
@@ -214,14 +217,17 @@ class ArtworkService(xbmc.Monitor):
 
     def onSettingsChanged(self):
         self.serviceenabled = addon.get_setting('enableservice')
-        self.only_filesystem = addon.get_setting('only_filesystem')
+        self.enable_olditem_updates = addon.get_setting('enable_olditem_updates')
         mediatypes.update_settings()
         self.processor.update_settings()
         if self.processaftersettings:
             self.processor.create_progress()
             xbmc.sleep(200)
             self.processaftersettings = False
-            self.set_signal('unprocesseditems')
+            self.signal = 'unprocesseditems'
+
+def get_date():
+    return pykodi.get_infolabel('System.Date(yyyy-mm-dd)')
 
 if __name__ == '__main__':
     log('Service started', xbmc.LOGINFO)

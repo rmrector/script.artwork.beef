@@ -44,12 +44,12 @@ skin depends on it.
 Install it. Tada! It will automatically run after library updates, grabbing extended
 artwork for new items, much like Kodi and scrapers do for info and basic artwork.
 
-You can also run it from Program add-ons to trigger the automatic
-process for new or all items; a currently running process can also be canceled here. To operate on a single
+You can also run it from Program add-ons to trigger the automatic process for new or all items, or existing
+items that need an update; a currently running process can also be canceled here. To operate on a single
 media item, open the context menu on that item, then under "Manage..." there are options
 to automatically "Add missing artwork" or manually "Select artwork...".
 
-Over time it will reprocess media items still missing artwork, checking for new artwork from
+Over time it will re-process media items still missing artwork, checking for new artwork from
 web services and the file system.
 
 **Episode fanart** requires using a scraper that grabs the TheTVDB ID for each episode, like the standard TheTVDB scraper.
