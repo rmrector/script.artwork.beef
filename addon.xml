@@ -27,7 +27,14 @@
 		<summary lang="en">Automatically adds extra artwork for your media.</summary>
 		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the file system.</description>
 		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database</disclaimer>
-		<news>v0.9.0
+		<news>v0.10.0
+- Automatically find new artwork for old items only once per day, or disable altogether
+- Remove movie thumbnail Kodi automatically creates if your scraper is not configured to add a poster
+
+v0.9.1 (2017-02-11)
+- Fix setting season artwork
+
+v0.9.0 (2017-01-27)
 - Support movie set artwork
 - Merge context items into main add-on
   - [B]Upgrade action![/B] Uninstall context menu add-ons "Select artwork to add" and "Add missing artwork"

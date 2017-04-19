@@ -1,9 +1,9 @@
 import re
 
 from lib.libs import mediatypes
-from lib.libs import pykodi
-from lib.libs import quickjson
 from lib.libs.utils import natural_sort
+from lib.libs.pykodi import unquoteimage
+from lib.libs import quickjson
 
 # get_mediatype_id must evaluate these in order, as episodes have tvshowid
 idmap = (('episodeid', mediatypes.EPISODE),
@@ -97,8 +97,8 @@ def get_artwork_updates(originalart, newart):
 def prepare_mediaitem(mediaitem):
     mediaitem['mediatype'], mediaitem['dbid'] = get_mediatype_id(mediaitem)
 
-    mediaitem['art'] = dict((arttype.lower(), pykodi.unquoteimage(url)) for
-        arttype, url in mediaitem['art'].iteritems() if '.' not in arttype and not url.startswith('image://video'))
+    mediaitem['art'] = dict((arttype.lower(), unquoteimage(url)) for
+        arttype, url in mediaitem['art'].iteritems() if '.' not in arttype)
 
 
 def update_art_in_library(mediatype, dbid, updatedart):
