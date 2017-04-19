@@ -12,6 +12,13 @@ def clean_artwork(mediaitem):
 
     return updated_art
 
+def clean_artwork_beforesave(mediaitem):
+    if mediaitem['mediatype'] == mediatypes.MOVIE and 'thumb' not in mediaitem.get('selected art', {}) and \
+            mediaitem['art'].get('thumb', '').startswith('image://video@') and \
+            (mediaitem.get('available art', {}).get('poster') or mediaitem['art'].get('poster')):
+        # Remove movie thumb that Kodi generates if a poster isn't added by the scraper
+        mediaitem['selected art']['thumb'] = None
+
 def remove_otherartwork(mediaitem):
     ''' Remove artwork not enabled in add-on settings. '''
     keep_types = pykodi.get_main_addon().get_setting('save_additional_arttypes')

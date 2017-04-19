@@ -1,5 +1,7 @@
 v0.10.0
 - Remove explicit action "clean URLs", this happens automatically as items are processed
+- Remove movie thumbnail Kodi automatically creates if your scraper is not configured to add a poster
+
 v0.9.1 (2017-02-11)
 - Fix setting season artwork
 
