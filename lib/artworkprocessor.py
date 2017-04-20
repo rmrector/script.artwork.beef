@@ -90,7 +90,8 @@ class ArtworkProcessor(object):
         if self.processor_busy:
             return
         if mode == MODE_GUI:
-            xbmc.executebuiltin('ActivateWindow(busydialog)')
+            busy = pykodi.get_busydialog()
+            busy.create()
         if mediatype == mediatypes.TVSHOW:
             mediaitem = quickjson.get_tvshow_details(dbid)
         elif mediatype == mediatypes.MOVIE:
@@ -100,14 +101,15 @@ class ArtworkProcessor(object):
         elif mediatype == mediatypes.MOVIESET:
             mediaitem = quickjson.get_movieset_details(dbid)
         else:
-            xbmc.executebuiltin('Dialog.Close(busydialog)')
+            if mode == MODE_GUI:
+                busy.close()
             xbmcgui.Dialog().notification("Artwork Beef", L(NOT_SUPPORTED_MESSAGE).format(mediatype), '-', 6500)
             return
 
         self.init_run()
         if mode == MODE_GUI:
             self._process_item(Gatherer(self.monitor, self.only_filesystem), mediaitem, True, False)
-            xbmc.executebuiltin('Dialog.Close(busydialog)')
+            busy.close()
             if 'available art' in mediaitem:
                 availableart = mediaitem['available art']
                 if 'seasons' in mediaitem and 'fanart' in availableart:
