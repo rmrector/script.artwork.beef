@@ -57,10 +57,11 @@ def main():
                 action()
 
 def identify_unmatched_sets():
-    xbmc.executebuiltin('ActivateWindow(busydialog)')
+    busy = pykodi.get_busydialog()
+    busy.create()
     processed = ProcessedItems()
     unmatched = [mset for mset in quickjson.get_moviesets() if not processed.get_data(mset['setid'], 'set')]
-    xbmc.executebuiltin('Dialog.Close(busydialog)')
+    busy.close()
     if unmatched:
         selected = xbmcgui.Dialog().select(L(M.UNMATCHED_SETS), [mset['label'] for mset in unmatched])
         if selected < 0:
@@ -73,10 +74,11 @@ def identify_unmatched_sets():
         xbmcgui.Dialog().notification("Artwork Beef", L(M.NO_UNMATCHED_SETS), xbmcgui.NOTIFICATION_INFO)
 
 def set_autoaddepisodes():
-    xbmc.executebuiltin('ActivateWindow(busydialog)')
+    busy = pykodi.get_busydialog()
+    busy.create()
     serieslist = [series for series in quickjson.get_tvshows(True) if series.get('imdbnumber')]
     autoaddepisodes = addon.get_setting('autoaddepisodes_list')
-    xbmc.executebuiltin('Dialog.Close(busydialog)')
+    busy.close()
     selected = SeriesSelector('DialogSelect.xml', addon.path, serieslist=serieslist, selected=autoaddepisodes).prompt()
     addon.set_setting('autoaddepisodes_list', selected)
     if selected != autoaddepisodes:
