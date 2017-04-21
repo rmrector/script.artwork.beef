@@ -54,6 +54,7 @@ class ArtworkProcessor(object):
             self.minimum_rating = int(addon.get_setting('minimum_rating'))
         except ValueError:
             self.minimum_rating = 5
+            addon.set_setting('minimum_rating', "5")
         sizesetting = addon.get_setting('preferredsize')
         if sizesetting in imagesizes:
             self.preferredsize = imagesizes[sizesetting][0:2]
