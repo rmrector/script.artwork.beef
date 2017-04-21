@@ -150,6 +150,10 @@ msgctxt "#32413"
 msgid "Enable Artwork Beef context items [I](per skin)[/I]"
 msgstr ""
 
+msgctxt "#32414"
+msgid "Remove specific type of artwork for ..."
+msgstr ""
+
 # Settings
 
 msgctxt "#32900"

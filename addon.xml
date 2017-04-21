@@ -30,6 +30,7 @@
 		<news>v0.10.0
 - Automatically find new artwork for old items only once per day, or disable altogether
 - Remove movie thumbnail Kodi automatically creates if your scraper is not configured to add a poster
+- Add manual action to remove all artwork of a specific type
 
 v0.9.1 (2017-02-11)
 - Fix setting season artwork
