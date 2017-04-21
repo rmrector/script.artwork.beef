@@ -39,6 +39,12 @@ def remove_otherartwork(mediaitem):
     finalart.update((arttype, None) for arttype in mediaitem['art'] if arttype not in finalart)
     return finalart
 
+def remove_specific_arttype(mediaitem, arttype):
+    finalart = dict(art for art in mediaitem['art'].iteritems())
+    if arttype in finalart:
+        finalart[arttype] = None
+    return finalart
+
 def _get_clean_art(arttype, url):
     if not url: # Remove empty URLs
         url = None
