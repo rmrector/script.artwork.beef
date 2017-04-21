@@ -69,7 +69,7 @@ download automatically.
 If you have multiple Kodi installations sharing a database, only enable the automatic
 processing on one of them. Don't use Artwork Beef's automatic processing with Artwork Downloader's
 full library mode. The results won't be terrible, but they'll step all over each
-other and take up time and network resources.
+other and take up extra time and network resources.
 
 ### From NFO and image files
 
@@ -117,13 +117,11 @@ Episode and season backdrops may just work, depending on how your skin accesses 
 episodes or seasons. `$INFO[ListItem.Art(fanart)]` pulls the episode or season backdrop if it exists,
 otherwise, Kodi falls back to the series backdrop.
 
-Extrafanart has been integrated [into the library] and no longer has to be in the file system,
-but does require skins to access them differently. Extrathumbs can be similarly integrated, implemented
-in the library as `thumb1`, `thumb2`, and so on. [Artwork Helper] is a small add-on that skins can
-depend on to easily gather fanart/thumbs for a `multiimage` control. Skins should not list
-Artwork Beef as a dependency.
+Extrafanart has been integrated into the library and no longer has to be in the file system,
+but does require skins to access them differently. Extrathumbs can be similarly integrated.
+[Artwork Helper] is a small add-on that skins can depend on to easily gather fanart/thumbs for a
+`multiimage` control either way. Skins should not list Artwork Beef as a dependency.
 
-[into the library]: http://forum.kodi.tv/showthread.php?tid=236649
 [Artwork Helper]: https://github.com/rmrector/script.artwork.helper
 
 ### Current gotchas

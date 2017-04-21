@@ -37,7 +37,7 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
     selectedarttype = None
     selectedart = None
     typelist = [at['arttype'] for at in arttypes]
-    while selectedart == None and not monitor.abortRequested():
+    while selectedart is None and not monitor.abortRequested():
         # The loop shows the first window if viewer backs out of the second
         if singletype:
             selectedarttype = singletype

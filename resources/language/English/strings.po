@@ -125,7 +125,7 @@ msgid "add missing artwork for old items"
 msgstr ""
 
 msgctxt "#32408"
-msgid "identify unmatched sets with TheMovieDB"
+msgid "identify unmatched sets with TheMovieDB ..."
 msgstr ""
 
 msgctxt "#32407"
