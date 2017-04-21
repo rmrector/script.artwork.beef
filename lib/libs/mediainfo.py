@@ -11,13 +11,12 @@ idmap = (('episodeid', mediatypes.EPISODE),
     ('tvshowid', mediatypes.TVSHOW),
     ('movieid', mediatypes.MOVIE),
     ('setid', mediatypes.MOVIESET))
-idkeys = [x[0] for x in idmap]
 
 def is_known_mediatype(mediaitem):
-    return any(x in mediaitem for x in idkeys)
+    return any(x[0] in mediaitem for x in idmap)
 
 def get_mediatype_id(mediaitem):
-    return next(((value, mediaitem[key]) for key, value in idmap if key in mediaitem))
+    return next((value, mediaitem[key]) for key, value in idmap if key in mediaitem)
 
 def arttype_matches_base(arttype, basetype):
     return re.match(r'{0}\d*$'.format(basetype), arttype)

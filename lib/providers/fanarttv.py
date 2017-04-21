@@ -10,7 +10,6 @@ from lib.libs.utils import SortedDisplay
 addon = pykodi.get_main_addon()
 
 class FanartTVAbstractProvider(AbstractProvider):
-    # pylint: disable=W0223
     __metaclass__ = ABCMeta
     api_section = None
 

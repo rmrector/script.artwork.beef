@@ -149,11 +149,11 @@ def update_settings():
     for settingid in settings:
         splitsetting = re.split(r'\.|_', settingid)
         try:
-            artinfo[splitsetting[0]][splitsetting[1]]['autolimit'] = get_autolimit(settingid)
+            artinfo[splitsetting[0]][splitsetting[1]]['autolimit'] = _get_autolimit_from_setting(settingid)
         except ValueError:
             addon.set_setting(settingid, artinfo[splitsetting[0]][splitsetting[1]]['autolimit'])
 
-def get_autolimit(settingid):
+def _get_autolimit_from_setting(settingid):
     result = addon.get_setting(settingid)
     if settingid.endswith('_limit'):
         return int(result)

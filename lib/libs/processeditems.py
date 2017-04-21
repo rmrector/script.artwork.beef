@@ -4,8 +4,6 @@ import xbmcvfs
 
 from lib.libs.pykodi import Addon
 
-# Next check date so that a random amount of time can be baked in, and won't be given multiple attempts
-#   to pass the random delay
 class ProcessedItems(object):
     def __init__(self):
         dbpath = Addon().datapath

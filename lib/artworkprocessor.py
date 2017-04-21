@@ -239,6 +239,8 @@ class ArtworkProcessor(object):
             selectedart = info.renumber_all_artwork(selectedart)
 
             existingart.update(selectedart)
+
+            # Then add the rest of the missing art
             existingkeys = [key for key, url in existingart.iteritems() if url]
             selectedart.update(self.get_top_missing_art(info.iter_missing_arttypes(mediatype,
                 mediaitem.get('seasons'), existingkeys), mediatype, existingart, availableart))
@@ -412,7 +414,6 @@ class ArtworkProcessor(object):
         else:
             idsource, result = episode['uniqueid'].iteritems()[0] if episode['uniqueid'] else '', ''
             if result:
-                # I don't know what this might be, I'm not even sure Kodi can do anything else at the moment, but just in case
                 log("Didn't find 'unknown' uniqueid for episode, just picked the first, from '%s'." % idsource, xbmc.LOGINFO)
             else:
                 log("Didn't find a uniqueid for episode '%s', can't look it up. I expect the ID from TheTVDB, which generally comes from the scraper." % episode['label'], xbmc.LOGNOTICE)

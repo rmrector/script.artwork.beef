@@ -4,12 +4,12 @@ import xbmc
 from abc import ABCMeta, abstractmethod
 from requests import codes
 from requests.exceptions import HTTPError, Timeout
+from requests.packages import urllib3
 
 from lib.libs import pykodi, quickjson
 from lib.libs.pykodi import log
 from lib.libs.utils import SortedDisplay
 
-from requests.packages import urllib3
 urllib3.disable_warnings()
 
 useragent = 'ArtworkBeef Kodi'

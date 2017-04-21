@@ -11,7 +11,6 @@ apikey = '***REMOVED***'
 cfgurl = 'http://api.themoviedb.org/3/configuration'
 
 class TheMovieDBAbstractProvider(AbstractProvider):
-    # pylint: disable=W0223
     __metaclass__ = ABCMeta
 
     name = SortedDisplay('themoviedb.org', 'The Movie Database')

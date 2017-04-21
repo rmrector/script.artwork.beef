@@ -1,7 +1,7 @@
 v0.10.0
 - Automatically find new artwork for old items only once per day, plus option to disable old item updates altogether
-- Remove explicit action "clean URLs", this happens automatically as items are processed
 - Remove movie thumbnail Kodi automatically creates if your scraper is not configured to add a poster
+- Remove explicit action "clean URLs", this happens automatically as items are processed
 - Add manual action to remove all artwork of a specific type
 
 v0.9.1 (2017-02-11)

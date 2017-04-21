@@ -58,7 +58,7 @@ class TheTVDBProvider(AbstractProvider):
         flanguages = ['en', 'de', 'fr', 'es', 'ru']
         if languages[0] not in flanguages:
             flanguages.append(languages[0])
-        for arttype in self.artmap.keys():
+        for arttype in self.artmap:
             if types and not typematches(self.artmap[arttype], types):
                 continue
             for language in languages if arttype != 'fanart' else flanguages:

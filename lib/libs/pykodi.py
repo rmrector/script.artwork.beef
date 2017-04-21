@@ -24,7 +24,6 @@ _log_level_tag_lookup = {
 }
 
 ADDONID = 'script.artwork.beef'
-WINDOW_VIDEOS = 10025
 
 _main_addon = None
 def get_main_addon():
