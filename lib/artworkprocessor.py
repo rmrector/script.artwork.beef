@@ -209,7 +209,7 @@ class ArtworkProcessor(object):
                 return False
 
         if auto:
-            cleaned = info.get_artwork_updates(cleaner.clean_artwork(mediaitem), mediaitem['art'])
+            cleaned = info.get_artwork_updates(mediaitem['art'], cleaner.clean_artwork(mediaitem))
             if cleaned:
                 add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], cleaned)
                 mediaitem['art'].update(cleaned)
@@ -246,9 +246,10 @@ class ArtworkProcessor(object):
                 mediaitem.get('seasons'), existingkeys), mediatype, existingart, availableart))
             selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
             if selectedart:
+                mediaitem['selected art'] = selectedart
                 cleaner.clean_artwork_beforesave(mediaitem)
                 mediaitem['updated art'] = selectedart.keys()
-                add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
+                add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], mediaitem['selected art'])
 
         if error:
             header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
