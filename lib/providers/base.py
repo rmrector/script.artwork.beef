@@ -3,7 +3,7 @@ import sys
 import xbmc
 from abc import ABCMeta, abstractmethod
 from requests import codes
-from requests.exceptions import HTTPError, Timeout
+from requests.exceptions import HTTPError, Timeout, ConnectionError
 from requests.packages import urllib3
 
 from lib.libs import pykodi, quickjson
@@ -121,11 +121,11 @@ class Getter(object):
             finalheaders.update(headers)
         try:
             return self.session.get(url, params=params, headers=finalheaders, timeout=timeout)
-        except Timeout:
+        except (Timeout, ConnectionError):
             try:
                 return self.session.get(url, params=params, headers=finalheaders, timeout=timeout)
-            except Timeout as ex:
-                raise ProviderError, ("Provider is not responding", ex), sys.exc_info()[2]
+            except (Timeout, ConnectionError) as ex:
+                raise ProviderError, ("Cannot contact provider", ex), sys.exc_info()[2]
 
 class ProviderError(Exception):
     def __init__(self, message, cause=None):
