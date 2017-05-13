@@ -1,3 +1,6 @@
+v0.10.1
+- Fix removing auto-created thumbnails
+
 v0.10.0 (2017-04-21)
 - Automatically find new artwork for old items only once per day
   - Plus option to disable automatic updates for old items altogether
