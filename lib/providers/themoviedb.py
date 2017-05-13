@@ -4,7 +4,7 @@ from abc import ABCMeta
 
 from lib.providers.base import AbstractProvider, cache, Getter
 from lib.libs import mediatypes
-from lib.libs.pykodi import log
+from lib.libs.pykodi import json, log, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 
 apikey = '***REMOVED***'
@@ -46,7 +46,7 @@ class TheMovieDBAbstractProvider(AbstractProvider):
     def _get_data(self, url):
         self.log('uncached', xbmc.LOGINFO)
         response = self.doget(url, params={'api_key': apikey})
-        return 'Empty' if response is None else response.json()
+        return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
 
     def process_data(self, data):
         result = {}

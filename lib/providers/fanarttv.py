@@ -4,10 +4,11 @@ import xbmc
 from abc import ABCMeta
 
 from lib.providers.base import AbstractProvider, cache
-from lib.libs import mediatypes, pykodi
+from lib.libs import mediatypes
+from lib.libs.pykodi import get_main_addon, json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 
-addon = pykodi.get_main_addon()
+addon = get_main_addon()
 
 class FanartTVAbstractProvider(AbstractProvider):
     __metaclass__ = ABCMeta
@@ -33,7 +34,7 @@ class FanartTVAbstractProvider(AbstractProvider):
         if self.clientkey:
             headers['client-key'] = self.clientkey
         response = self.doget(self.apiurl % (self.api_section, mediaid), headers=headers)
-        return 'Empty' if response is None else response.json()
+        return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
 
 class FanartTVSeriesProvider(FanartTVAbstractProvider):
     mediatype = mediatypes.TVSHOW

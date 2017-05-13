@@ -3,6 +3,7 @@ v0.10.1
 - Don't crash on ConnectionError with web providers, but warn
 - Fix error when removing specific or all not-configured artwork from all seasons
 - Fix error with unicode characters from NFO file
+- Convert JSON results from providers to UTF-8 encoded bytestrings `str`
 
 v0.10.0 (2017-04-21)
 - Automatically find new artwork for old items only once per day
