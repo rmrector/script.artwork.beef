@@ -1,4 +1,4 @@
-v0.10.1
+v0.10.1 (2017-05-12)
 - Fix removing auto-created thumbnails
 - Don't crash on ConnectionError with web providers, but warn
 - Fix error when removing specific or all not-configured artwork from all seasons
