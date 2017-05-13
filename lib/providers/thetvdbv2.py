@@ -5,7 +5,8 @@ from math import pi, sin
 
 from lib.providers import base
 from lib.providers.base import AbstractProvider, cache
-from lib.libs import mediatypes, pykodi
+from lib.libs import mediatypes
+from lib.libs.pykodi import get_language, json, UTF8JSONDecoder
 from lib.providers import ProviderError
 from lib.libs.utils import SortedDisplay
 
@@ -34,7 +35,7 @@ class TheTVDBProvider(AbstractProvider):
         self.log('uncached', xbmc.LOGINFO)
         getparams = {'params': {'keyType': arttype}, 'headers': {'Accept-Language': language}}
         response = self.doget(self.apiurl % mediaid, **getparams)
-        return 'Empty' if response is None else response.json()
+        return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
 
     def _get_rating(self, image):
         if image['ratingsInfo']['count']:
@@ -51,7 +52,7 @@ class TheTVDBProvider(AbstractProvider):
         if types and not self.provides(types):
             return {}
         result = {}
-        languages = [pykodi.get_language(xbmc.ISO_639_1)]
+        languages = [get_language(xbmc.ISO_639_1)]
         if languages[0] != 'en':
             languages.append('en')
         # Useful fanart can be hidden by the language filter, try a few of the most frequently used
