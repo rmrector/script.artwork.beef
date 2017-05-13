@@ -19,7 +19,10 @@ class NFOFileAbstractProvider(object):
     name = SortedDisplay('file:nfo', 'NFO file')
 
     def build_resultimage(self, url, title):
-        url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
+        if isinstance(url, unicode):
+            url = url.encode('utf-8')
+        if url.startswith('http'):
+            url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
         resultimage = {'url': url, 'provider': self.name, 'preview': url}
         resultimage['title'] = '<{0}>'.format(title)
         resultimage['rating'] = SortedDisplay(0, '')
