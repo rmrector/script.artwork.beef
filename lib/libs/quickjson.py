@@ -1,7 +1,7 @@
-from lib.libs import pykodi
-from lib.libs.pykodi import get_kodi_version, json, log
+from itertools import chain
 
-from lib.libs import mediatypes
+from lib.libs import mediatypes, pykodi
+from lib.libs.pykodi import get_kodi_version, json, log
 
 # [0] method part
 typemap = {mediatypes.MOVIE: ('Movie',),
@@ -92,9 +92,10 @@ def get_moviesets():
     else:
         return []
 
-def get_tvshows(moreprops=False):
+def get_tvshows(moreprops=False, includeprops=True):
     json_request = get_base_json_request('VideoLibrary.GetTVShows')
-    json_request['params']['properties'] = more_tvshow_properties if moreprops else tvshow_properties
+    if includeprops:
+        json_request['params']['properties'] = more_tvshow_properties if moreprops else tvshow_properties
     json_request['params']['sort'] = {'method': 'sorttitle', 'order': 'ascending'}
 
     json_result = pykodi.execute_jsonrpc(json_request)
@@ -117,6 +118,12 @@ def get_episodes(tvshow_id=None):
         return []
 
 def get_seasons(tvshow_id=-1):
+    if tvshow_id == -1 and pykodi.get_kodi_version() < 17:
+        return _get_all_seasons_jarvis()
+    else:
+        return _inner_get_seasons(tvshow_id)
+
+def _inner_get_seasons(tvshow_id=-1):
     json_request = get_base_json_request('VideoLibrary.GetSeasons')
     if tvshow_id != -1:
         json_request['params']['tvshowid'] = tvshow_id
@@ -128,6 +135,11 @@ def get_seasons(tvshow_id=-1):
         return json_result['result']['seasons']
     else:
         return []
+
+def _get_all_seasons_jarvis():
+    # DEPRECATED: Jarvis won't give me all seasons in one request, gotta do it the long way
+    result = list(chain.from_iterable(_inner_get_seasons(tvshow['tvshowid']) for tvshow in get_tvshows(False, False)))
+    return result
 
 def set_details(dbid, mediatype, **details):
     assert mediatype in typemap
