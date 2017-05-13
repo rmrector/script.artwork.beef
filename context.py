@@ -34,9 +34,8 @@ def get_dbid(listitem):
     except AttributeError:
         # DEPRECATED: Before Krypton
         pass
-    infolabel = xbmc.getInfoLabel('ListItem.Label')
-    truelabel = listitem.getLabel()
-    if infolabel != truelabel:
+    if listitem.getLabel() != xbmc.getInfoLabel('ListItem.Label'):
+        # InfoLabels can report the wrong item
         return int(listitem.getfilename().split('?')[0].rstrip('/').split('/')[-1])
     else:
         return int(xbmc.getInfoLabel('ListItem.DBID'))
