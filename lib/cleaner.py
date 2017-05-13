@@ -13,9 +13,9 @@ def clean_artwork(mediaitem):
     return updated_art
 
 def clean_artwork_beforesave(mediaitem):
-    if mediaitem['mediatype'] == mediatypes.MOVIE and 'thumb' not in mediaitem.get('selected art', {}) and \
-            mediaitem['art'].get('thumb', '').startswith('image://video@') and \
-            (mediaitem.get('available art', {}).get('poster') or mediaitem['art'].get('poster')):
+    if mediaitem['mediatype'] == mediatypes.MOVIE and not mediaitem.get('selected art', {}).get('thumb') and \
+            mediaitem['art'].get('thumb', '').startswith('video@') and \
+            (mediaitem.get('selected art', {}).get('poster') or mediaitem['art'].get('poster')):
         # Remove movie thumb that Kodi generates if a poster isn't added by the scraper
         mediaitem['selected art']['thumb'] = None
 
