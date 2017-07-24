@@ -33,7 +33,7 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
     typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', addon.path, arttypes=arttypes,
         medialabel=medialabel, show_refresh=mediatype == mediatypes.MOVIESET)
     hqpreview = addon.get_setting('highquality_preview')
-    singletype = arttypes[0]['arttype'] if len(arttypes) == 1 else None
+    singletype = arttypes[0]['arttype'] if mediatype == 'episode' and len(arttypes) == 1 else None
     selectedarttype = None
     selectedart = None
     typelist = [at['arttype'] for at in arttypes]
