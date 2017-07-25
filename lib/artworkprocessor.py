@@ -253,11 +253,12 @@ class ArtworkProcessor(object):
                 add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], mediaitem['selected art'])
 
         if error:
-            header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
-            msg = '{0}: {1}'.format(header, error['message'])
-            mediaitem['error'] = msg
-            log(msg)
-            xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
+            if 'message' in error:
+                header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
+                msg = '{0}: {1}'.format(header, error['message'])
+                mediaitem['error'] = msg
+                log(msg)
+                xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
         elif auto:
             self.processed.set_nextdate(mediaitem['dbid'], mediatype,
                 datetime_now() + timedelta(days=self.get_nextcheckdelay(mediaitem)))

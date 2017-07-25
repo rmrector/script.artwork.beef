@@ -1,10 +1,13 @@
 from lib import providers
 from lib.providers import ProviderError
 
+MAX_ERRORS = 3
+
 class Gatherer(object):
     def __init__(self, monitor, only_filesystem):
         self.monitor = monitor
         self.only_filesystem = only_filesystem
+        self.providererrors = {}
 
     def getartwork(self, mediaitem, skipexisting=True):
         forcedartwork = {}
@@ -52,10 +55,20 @@ class Gatherer(object):
         images = {}
         error = None
         for provider in providers.external.get(mediatype, ()):
+            errcount = self.providererrors.get(provider.name, 0)
+            if errcount == MAX_ERRORS:
+                continue
             try:
                 providerimages = provider.get_images(imdbnumber, missing)
+                self.providererrors[provider.name] = 0
             except ProviderError as ex:
-                error = {'providername': provider.name.display, 'message': ex.message}
+                errcount += 1
+                self.providererrors[provider.name] = errcount
+                error = {'providername': provider.name.display}
+                if errcount == 1: # notify on first error
+                    error['message'] = ex.message
+                elif errcount == MAX_ERRORS: # and on last error when we're no longer going to try this provider
+                    error['message'] = "Encountered multiple errors, skipping provider for remaining items."
                 continue
             for arttype, artlist in providerimages.iteritems():
                 if arttype.startswith('season.'):
