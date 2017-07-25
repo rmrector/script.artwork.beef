@@ -233,7 +233,8 @@ class ArtworkProcessor(object):
             localart = [(arttype, image['url']) for arttype, image in forcedart.iteritems()
                 if not image['url'].startswith('http')]
             selectedart = dict((arttype, None) for arttype, url in existingart.iteritems()
-                if not url.startswith('http') and (arttype, url) not in localart)
+                if not url.startswith('http') and arttype not in ('animatedposter', 'animatedfanart')
+                    and (arttype, url) not in localart)
 
             selectedart.update((key, image['url']) for key, image in forcedart.iteritems())
             selectedart = info.renumber_all_artwork(selectedart)
