@@ -1,3 +1,8 @@
+v0.10.2 (2017-07-25)
+- Feature: don't repeatedly request artwork from an unavailable web service
+- Fix: don't remove animated artwork set by other add-ons
+- Fix: always allow movie sets to be re-matched from TMDB
+
 v0.10.1 (2017-05-12)
 - Fix removing auto-created thumbnails
 - Don't crash on ConnectionError with web providers, but warn
