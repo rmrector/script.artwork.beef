@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<includes>
+	<include name="MyVideoNavFanart">
+		<!-- Stick a hidden `fadelabel` like this next to your fanart `multiimage` control.
+			The `fadelabel` is the key to stitching these images together in a list to be displayed randomly,
+			without using a plugin. -->
+		<control type="fadelabel" id="9998">
+			<description>Randomizer for plugin-free multiple fanart</description>
+			<top>-1000</top> <!-- Don't need to see it, but can't change its visibility. Put it offscreen -->
+			<width>0</width>
+			<height>0</height>
+			<info>ListItem.Art(fanart)</info>
+			<info>ListItem.Art(fanart1)</info>
+			<info>ListItem.Art(fanart2)</info>
+			<info>ListItem.Art(fanart3)</info>
+			<info>ListItem.Art(fanart4)</info>
+			<info>ListItem.Art(fanart5)</info>
+			<info>ListItem.Art(fanart6)</info>
+			<info>ListItem.Art(fanart7)</info>
+			<info>ListItem.Art(fanart8)</info>
+			<info>ListItem.Art(fanart9)</info>
+			<!-- tvshow.fanarts are filled with the series fanart when navigating season and episode lists -->
+			<info>ListItem.Art(tvshow.fanart)</info>
+			<info>ListItem.Art(tvshow.fanart1)</info>
+			<info>ListItem.Art(tvshow.fanart2)</info>
+			<info>ListItem.Art(tvshow.fanart3)</info>
+			<info>ListItem.Art(tvshow.fanart4)</info>
+			<info>ListItem.Art(tvshow.fanart5)</info>
+			<info>ListItem.Art(tvshow.fanart6)</info>
+			<info>ListItem.Art(tvshow.fanart7)</info>
+			<info>ListItem.Art(tvshow.fanart8)</info>
+			<info>ListItem.Art(tvshow.fanart9)</info>
+			<randomize>true</randomize>
+			<pauseatend>30000</pauseatend> <!-- Time to show each image, in milliseconds -->
+			<!-- No scrolling so only the pauseatend above (plus a short fade-in) affects length of time each
+				item is shown -->
+			<scroll>false</scroll>
+			<!-- Resets the timer when navigating to a new item, so its first fanart will show for the full
+				amount of time -->
+			<resetonlabelchange>true</resetonlabelchange>
+		</control>
+	</include>
+
+	<!-- Add these bits to your variable that fills the `multiimage` control
+		<imagepath>$VAR[ListItemMultifanart]</imagepath> -->
+	<variable name="ListItemMultifanart">
+		<!-- Seasons or episodes with their own fanart, show them alone because they fancy -->
+		<value condition="[Container.Content(episodes) | Container.Content(seasons)] + !String.IsEqual(ListItem.Art(tvshow.fanart), ListItem.Art(fanart))">$INFO[ListItem.Art(fanart)]</value>
+
+		<!-- (This is optional) The `smartseries` path of Artwork Helper can still come in handy if you
+			need a smooth transition from a series to its seasons to its episodes and back, but may not be
+			a big deal for background fanart. It keeps the same fanart image as you navigate through the levels, while
+			the `fadelabel` strategy will often blink or switch to another fanart image. -->
+		<value condition="Container.Content(tvshows) | Container.Content(seasons) | Container.Content(episodes) | String.IsEqual(ListItem.DBTYPE,tvshow) | String.IsEqual(ListItem.DBTYPE,season) | String.IsEqual(ListItem.DBTYPE,episode)">plugin://script.artwork.helper/multiimage/smartseries/?title=$VAR[FanartSmartseriesTitle]</value>
+
+		<!-- This one displays the multiple fanart from the fadelabel above. Skins should just check for the
+			existence of this fanart; while Artwork Beef is currently the only add-on/program that sets this
+			artwork, it (hopefully) won't always be -->
+		<value condition="!String.IsEmpty(ListItem.Art(fanart1)) | !String.IsEmpty(ListItem.Art(tvshow.fanart1))">$INFO[Control.GetLabel(9998)]</value>
+
+		<!-- And down here you can use Artwork Helper, Skin Helper Service, or the original folder trick
+			to show the classic extrafanart, for folks that don't have them in the library.
+
+			If you don't want to fall back to extrafanart, leave out the "1" and the above also works well
+			for single fanart items
+		<value condition="!String.IsEmpty(ListItem.Art(fanart)) | !String.IsEmpty(ListItem.Art(tvshow.fanart))">$INFO[Control.GetLabel(9998)]</value>
+
+			Or handle anything left with a single fanart and finally a fallback image or whatever.
+		-->
+	</variable>
+
+	<!-- Only needed if you are using the smartseries plugin path above -->
+	<variable name="FanartSmartseriesTitle">
+		<value condition="[Container.Content(tvshows) | String.IsEqual(ListItem.DBTYPE,tvshow)] + !String.IsEmpty(ListItem.Title)">$INFO[ListItem.Title]</value>
+		<value condition="!String.IsEmpty(Container.ShowTitle)">$INFO[Container.ShowTitle]</value>
+		<value condition="!String.IsEmpty(ListItem.TVShowTitle)">$INFO[ListItem.TVShowTitle]</value>
+		<value>$INFO[ListItem.Label]</value>
+	</variable>
+</includes>
