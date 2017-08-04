@@ -20,7 +20,7 @@ added from The Movie Database.
 
 [high-quality fanart]: http://forum.kodi.tv/showthread.php?tid=236248
 
-The full list of supported artwork types for **movies** and **movie sets**: `poster`,
+The full list of artwork types grabbed from external web services for **movies** and **movie sets**: `poster`,
   `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `discart`  
 For **series**: `poster`, `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `characterart`  
 And **seasons**: `poster`, `fanart`, `banner`, `landscape`  
@@ -34,6 +34,8 @@ be installed with a [single zip file], but you will have to return here for upda
 
 Artwork Helper can be installed with this single [installable zip], but it's only necessary if a
 skin depends on it.
+Inclusion in the official Kodi repo isn't likely for now, some of this functionality may make
+its way into Leia so it will probably see some feature churn before long.
 
 [dev repository]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/repository.rector.stuff-latest.zip
 [single zip file]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.beef-latest.zip
@@ -121,13 +123,19 @@ Extrafanart has been integrated into the library and no longer has to be in the 
 but does require skins to access them differently. Extrathumbs can be similarly integrated.
 [Artwork Helper] is a small add-on that skins can depend on to easily gather fanart/thumbs for a
 `multiimage` control either way. Skins should not list Artwork Beef as a dependency.
+While Artwork Helper is consistently faster than loading extrafanart from a spinning hard drive,
+it can still have a noticeable delay compared to directly accessed artwork with `ListItem.Art(fanart)`
+(especially on Windows); you can use a `fadelabel` to feed the `multiimage` in many or
+all cases to avoid this delay, though it is a bit more work. See the file
+[resources/example-multifanart.xml](resources/example-multifanart.xml) for an example.
 
 [Artwork Helper]: https://github.com/rmrector/script.artwork.helper
 
 ### Current gotchas
 
 - It expects scrapers to set an IMDB number for movies, and a TVDB ID for series, like the default scrapers.
-- It cannot set artwork for "all seasons" with JSON-RPC. [related trac ticket](http://trac.kodi.tv/ticket/16139)
+- It cannot set artwork for "all seasons". [related trac ticket](http://trac.kodi.tv/ticket/16139)
+- No music video support, yet
 
 ### Thoughts
 
