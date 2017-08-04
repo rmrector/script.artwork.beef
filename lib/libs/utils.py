@@ -21,8 +21,9 @@ moviestacking = [re.compile(r'(.*?)([ _.-]*(?:cd|dvd|p(?:ar)?t|dis[ck])[ _.-]*[0
 ]
 def get_movie_path_list(stackedpath):
     """Returns a list of filenames that can be used to find a movie's supporting files.
-    The list includes both possible filenames for stacks, and the VIDEO_TS/BDMV parent directory.
-    If neither applies, returns a list of one item, the original path.
+    The list includes both possible filenames for stacks (from the first filename or from the common base of all
+    provided parts), and the parent directory of VIDEO_TS/BDMV. If neither applies, returns a list of one item,
+    the original path.
     Check for the supporting files from each of these results."""
     result = []
     if not stackedpath.startswith('stack://'):
@@ -42,13 +43,14 @@ def get_movie_path_list(stackedpath):
                         if match.group(2).lower() == match2.group(2).lower():
                             offset = match.start(3)
                             continue
-                        result = [firstpath, path + '/' + filename[:offset] + match.group(1).rstrip() + match.group(4)]
+                        result = [firstpath, path + get_pathsep(path) + filename[:offset] +
+                            match.group(1).rstrip() + match.group(4)]
                     break
         else: # folder stacking
             pass # I can't even get Kodi to add stacked VIDEO_TS rips period
         if not result:
-            log("Couldn't get an unstacked path from \"{0}\"".format(stackedpath), xbmc.LOGINFO)
+            log("Couldn't get an unstacked path from \"{0}\"".format(stackedpath), xbmc.LOGWARNING)
             result = [firstpath]
     if basename(dirname(result[0])) in ('VIDEO_TS', 'BDMV'):
-        result.append(dirname(dirname(result[0])) + '/' + basename(result[0]))
+        result.append(dirname(dirname(result[0])) + get_pathsep(result[0]) + basename(result[0]))
     return result
