@@ -16,7 +16,7 @@ class FanartTVAbstractProvider(AbstractProvider):
 
     name = SortedDisplay('fanart.tv', 'fanart.tv')
     apikey = '13756cf3472ff6b3dbffee20bed9c6ec'
-    apiurl = 'http://webservice.fanart.tv/v3/%s/%s'
+    apiurl = 'https://webservice.fanart.tv/v3/%s/%s'
 
     def __init__(self, *args):
         super(FanartTVAbstractProvider, self).__init__(*args)

@@ -8,7 +8,7 @@ from lib.libs.pykodi import json, log, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 
 apikey = '5a0727308f37da772002755d6c073aee'
-cfgurl = 'http://api.themoviedb.org/3/configuration'
+cfgurl = 'https://api.themoviedb.org/3/configuration'
 
 class TheMovieDBAbstractProvider(AbstractProvider):
     __metaclass__ = ABCMeta
@@ -27,7 +27,7 @@ class TheMovieDBAbstractProvider(AbstractProvider):
             response = self.doget(cfgurl, params={'api_key': apikey})
             if response is None:
                 return
-            self._baseurl = response.json()['images']['base_url']
+            self._baseurl = response.json()['images']['secure_base_url']
         return self._baseurl
 
     def _get_rating(self, image):
@@ -73,7 +73,7 @@ class TheMovieDBAbstractProvider(AbstractProvider):
 class TheMovieDBMovieProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.MOVIE
 
-    apiurl = 'http://api.themoviedb.org/3/movie/%s/images'
+    apiurl = 'https://api.themoviedb.org/3/movie/%s/images'
     artmap = {'backdrops': 'fanart', 'posters': 'poster'}
 
     def get_images(self, mediaid, types=None):
@@ -93,8 +93,8 @@ class TheMovieDBMovieProvider(TheMovieDBAbstractProvider):
 class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.EPISODE
 
-    tvdbidsearch_url = 'http://api.themoviedb.org/3/find/%s?external_source=tvdb_id'
-    apiurl = 'http://api.themoviedb.org/3/tv/%s/season/%s/episode/%s/images'
+    tvdbidsearch_url = 'https://api.themoviedb.org/3/find/%s?external_source=tvdb_id'
+    apiurl = 'https://api.themoviedb.org/3/tv/%s/season/%s/episode/%s/images'
     artmap = {'stills': 'fanart'}
 
     def get_images(self, mediaid, types=None):
@@ -113,7 +113,7 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
 class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.MOVIESET
 
-    apiurl = 'http://api.themoviedb.org/3/collection/%s/images'
+    apiurl = 'https://api.themoviedb.org/3/collection/%s/images'
     artmap = {'backdrops': 'fanart', 'posters': 'poster'}
 
     def get_images(self, mediaid, types=None):
@@ -132,7 +132,7 @@ class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
         return any(x in types for x in self.artmap.values())
 
 class TheMovieDBSearch(object):
-    searchurl = 'http://api.themoviedb.org/3/search/{0}'
+    searchurl = 'https://api.themoviedb.org/3/search/{0}'
     typemap = {mediatypes.MOVIESET: 'collection'}
     _baseurl = None
 

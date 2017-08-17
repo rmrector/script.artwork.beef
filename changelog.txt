@@ -1,4 +1,5 @@
 v0.11.0 (???)
+- Feature: use HTTPS for all API and image URLs
 - Feature: add option to remove all artwork for specific types of media
 
 v0.10.2 (2017-07-25)
