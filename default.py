@@ -27,6 +27,7 @@ class M(object):
     UNMATCHED_SETS = 32056
 
     LISTING_ALL = 32028
+    ALL = 593
     MOVIES = 36901
     SERIES = 36903
     SEASONS = 36905
@@ -79,12 +80,10 @@ def remove_specific_arttypes():
         allitems = options[selected][1]()
         counter = {}
         for arttype in chain.from_iterable(d.get('art', {}).keys() for d in allitems):
-            if '.' in arttype:
-                continue
-            if arttype in counter:
-                counter[arttype] += 1
-            else:
-                counter[arttype] = 1
+            if '.' in arttype: continue
+            counter['all'] = counter.get('all', 0) + 1
+            counter[arttype] = counter.get(arttype, 0) + 1
+
         arttypes = sorted(counter.keys())
         busy.close()
         selectedarttype = xbmcgui.Dialog().select(options[selected][0], ["{0}: {1}".format(arttype, counter[arttype])

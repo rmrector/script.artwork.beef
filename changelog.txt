@@ -1,3 +1,6 @@
+v0.11.0 (???)
+- Feature: add option to remove all artwork for specific types of media
+
 v0.10.2 (2017-07-25)
 - Feature: don't repeatedly request artwork from an unavailable web service
 - Fix: don't remove animated artwork set by other add-ons

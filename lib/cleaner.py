@@ -40,6 +40,9 @@ def remove_otherartwork(mediaitem):
     return finalart
 
 def remove_specific_arttype(mediaitem, arttype):
+    '''pass 'all' as arttype to clear all artwork.'''
+    if arttype == 'all':
+        return dict((atype, None) for atype in mediaitem['art'])
     finalart = dict(art for art in mediaitem['art'].iteritems())
     if arttype in finalart:
         finalart[arttype] = None
