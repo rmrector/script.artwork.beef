@@ -56,7 +56,7 @@ v0.9.0 (2017-01-27)
 - Spread out checking for new artwork so they don't happen all at once (after the first run)
 - Fix error when displaying non-ASCII characters in GUI</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
-		<forum>http://forum.kodi.tv/showthread.php?tid=258886</forum>
+		<forum>https://forum.kodi.tv/showthread.php?tid=258886</forum>
 		<license>The MIT License</license>
 		<platform>all</platform>
 		<language />

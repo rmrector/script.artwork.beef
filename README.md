@@ -10,7 +10,7 @@ services [fanart.tv], [TheTVDB.com], and [The Movie Database].
 
 The current version works with Kodi 17 Krypton and 16 Jarvis. 15 Isengard should mostly still work,
 but it's really time to update.  
-[Support and feedback thread](http://forum.kodi.tv/showthread.php?tid=258886) on the Kodi forums.  
+[Support and feedback thread](https://forum.kodi.tv/showthread.php?tid=258886) on the Kodi forums.  
 [Source](https://github.com/rmrector/script.artwork.beef) hosted on GitHub.
 
 It fully supports series and season artwork from TheTVDB.com; movie, movie set, series,
@@ -18,7 +18,7 @@ and season artwork from fanart.tv; and movie and movie set artwork from The Movi
 For those series that really pop, [high-quality fanart] for each episode can be
 added from The Movie Database.
 
-[high-quality fanart]: http://forum.kodi.tv/showthread.php?tid=236248
+[high-quality fanart]: https://forum.kodi.tv/showthread.php?tid=236248
 
 The full list of artwork types grabbed from external web services for **movies** and **movie sets**: `poster`,
   `fanart`, `banner`, `clearlogo`, `landscape`, `clearart`, `discart`  
@@ -109,7 +109,7 @@ querying the web services during automatic processing, saving time and network r
 
 [Kodi NFO file]: http://kodi.wiki/view/NFO_files
 [Kodi artwork]: http://kodi.wiki/view/Artwork#Naming_conventions
-[Movie Set Artwork Automator]: http://forum.kodi.tv/showthread.php?tid=153502
+[Movie Set Artwork Automator]: https://forum.kodi.tv/showthread.php?tid=153502
 [separate directory]: http://kodi.wiki/view/Movies_(Video_Library)
 
 ### Skin support
