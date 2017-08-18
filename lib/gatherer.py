@@ -4,9 +4,10 @@ from lib.providers import ProviderError
 MAX_ERRORS = 3
 
 class Gatherer(object):
-    def __init__(self, monitor, only_filesystem):
+    def __init__(self, monitor, only_filesystem, languages):
         self.monitor = monitor
         self.only_filesystem = only_filesystem
+        providers.base.languages = [lang for lang in languages if lang]
         self.providererrors = {}
 
     def getartwork(self, mediaitem, skipexisting=True):

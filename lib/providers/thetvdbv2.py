@@ -6,7 +6,7 @@ from math import pi, sin
 from lib.providers import base
 from lib.providers.base import AbstractProvider, cache
 from lib.libs import mediatypes
-from lib.libs.pykodi import get_language, json, UTF8JSONDecoder
+from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.providers import ProviderError
 from lib.libs.utils import SortedDisplay
 
@@ -52,13 +52,10 @@ class TheTVDBProvider(AbstractProvider):
         if types and not self.provides(types):
             return {}
         result = {}
-        languages = [get_language(xbmc.ISO_639_1)]
-        if languages[0] != 'en':
-            languages.append('en')
+        languages = base.languages
         # Useful fanart can be hidden by the language filter, try a few of the most frequently used
         flanguages = ['en', 'de', 'fr', 'es', 'ru']
-        if languages[0] not in flanguages:
-            flanguages.append(languages[0])
+        flanguages.extend(lang for lang in languages if lang not in flanguages)
         for arttype in self.artmap:
             if types and not typematches(self.artmap[arttype], types):
                 continue

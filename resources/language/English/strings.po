@@ -182,6 +182,10 @@ msgctxt "#32907"
 msgid "Minimum image rating"
 msgstr ""
 
+msgctxt "#32913"
+msgid "Override image language (defaults to Kodi interface)"
+msgstr ""
+
 msgctxt "#32903"
 msgid "Use high quality preview images"
 msgstr ""
