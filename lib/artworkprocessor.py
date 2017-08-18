@@ -50,6 +50,9 @@ class ArtworkProcessor(object):
         self.setartwork_fromcentral = addon.get_setting('setartwork_fromcentral')
         self.setartwork_dir = addon.get_setting('setartwork_dir')
         self.setartwork_fromparent = addon.get_setting('setartwork_fromparent')
+        self.language_override = addon.get_setting('language_override')
+        if self.language_override == 'None':
+            self.language_override = None
         try:
             self.minimum_rating = int(addon.get_setting('minimum_rating'))
         except ValueError:
@@ -109,7 +112,7 @@ class ArtworkProcessor(object):
 
         self.init_run()
         if mode == MODE_GUI:
-            self._process_item(Gatherer(self.monitor, self.only_filesystem), mediaitem, True, False)
+            self._process_item(Gatherer(self.monitor, self.only_filesystem, self.autolanguages), mediaitem, True, False)
             busy.close()
             if 'available art' in mediaitem:
                 availableart = mediaitem['available art']
@@ -152,7 +155,7 @@ class ArtworkProcessor(object):
                 medialist.extend(quickjson.get_episodes(dbid))
                 self.process_medialist(medialist)
             else:
-                self._process_item(Gatherer(self.monitor, self.only_filesystem), mediaitem, True)
+                self._process_item(Gatherer(self.monitor, self.only_filesystem, self.autolanguages), mediaitem, True)
                 notifycount(len(mediaitem.get('updated art', ())))
 
     def process_medialist(self, medialist):
@@ -161,7 +164,7 @@ class ArtworkProcessor(object):
         currentitem = 0
         aborted = False
         if medialist:
-            gatherer = Gatherer(self.monitor, self.only_filesystem)
+            gatherer = Gatherer(self.monitor, self.only_filesystem, self.autolanguages)
         for mediaitem in medialist:
             if self.visible:
                 self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
@@ -295,10 +298,11 @@ class ArtworkProcessor(object):
 
     def setlanguages(self):
         self.language = pykodi.get_language(xbmc.ISO_639_1)
-        if self.language == 'en':
-            self.autolanguages = (self.language, None)
-        else:
-            self.autolanguages = (self.language, 'en', None)
+        self.autolanguages = (self.language, None) if self.language == 'en' else (self.language, 'en', None)
+        if self.language_override:
+            self.language = self.language_override
+        if self.language_override not in self.autolanguages:
+            self.autolanguages += (self.language_override,)
 
     def add_additional_iteminfo(self, mediaitem):
         if 'mediatype' in mediaitem:

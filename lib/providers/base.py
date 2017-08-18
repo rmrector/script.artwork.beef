@@ -13,6 +13,7 @@ from lib.libs.utils import SortedDisplay
 urllib3.disable_warnings()
 
 useragent = 'ArtworkBeef Kodi'
+languages = ()
 
 def update_useragent():
     global useragent
