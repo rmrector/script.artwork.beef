@@ -174,6 +174,7 @@ class ArtworkService(xbmc.Monitor):
             if self.abortRequested():
                 return False
 
+        self.reset_recent()
         return self.processor.process_medialist(items)
 
     def process_recentitems(self):
