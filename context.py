@@ -3,6 +3,9 @@ import xbmc
 
 from lib.artworkprocessor import ArtworkProcessor
 
+# DEPRECATED: StringCompare in addon.xml is deprecated in Krypton, gone in Leia,
+#  but both resolve to False when unrecognized so the result is the same for all versions
+
 def main(mode):
     listitem = sys.listitem
     mediatype = get_mediatype(listitem)
