@@ -3,6 +3,7 @@ v0.11.0 (???)
 - Feature: add option to generate thumbnail from video files
 - Feature: add option to override image language (defaults to Kodi interface language)
 - Feature: add option to remove all artwork for specific types of media
+- Fix: a few Leia compatibility changes
 
 v0.10.2 (2017-07-25)
 - Feature: don't repeatedly request artwork from an unavailable web service

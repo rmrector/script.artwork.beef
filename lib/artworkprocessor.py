@@ -88,7 +88,8 @@ class ArtworkProcessor(object):
 
     @property
     def processor_busy(self):
-        return pykodi.get_conditional('!StringCompare(Window(Home).Property(ArtworkBeef.Status),idle)')
+        # DEPRECATED: StringCompare is deprecated in Krypton, gone in Leia
+        return pykodi.get_conditional('![StringCompare(Window(Home).Property(ArtworkBeef.Status),idle) | String.IsEqual(Window(Home).Property(ArtworkBeef.Status),idle)]')
 
     def process_item(self, mediatype, dbid, mode):
         if self.processor_busy:
