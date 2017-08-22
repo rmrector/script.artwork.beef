@@ -51,6 +51,8 @@
 	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="fanarttv_key" label="32905" type="text" />
+		<setting id="episode.thumb_generate" label="32914" type="bool" default="false" />
+		<setting id="movie.thumb_generate" label="32915" type="bool" default="false" />
 		<setting id="setartwork_fromcentral" label="32909" type="bool" default="false" />
 		<setting id="setartwork_dir" subsetting="true" label="32910" type="folder" visible="eq(-1,true)" />
 		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" />

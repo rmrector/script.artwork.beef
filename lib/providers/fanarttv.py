@@ -57,7 +57,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
     }
 
     def get_images(self, mediaid, types=None):
-        if types and not self.provides(types):
+        if types is not None and not self.provides(types):
             return {}
         data = self.get_data(mediaid)
         if not data:
@@ -128,7 +128,7 @@ class FanartTVAbstractMovieProvider(FanartTVAbstractProvider):
     disctitles = {'dvd': 'DVD', '3d': '3D', 'bluray': 'Blu-ray'}
 
     def get_images(self, mediaid, types=None):
-        if types and not self.provides(types):
+        if types is not None and not self.provides(types):
             return {}
         data = self.get_data(mediaid)
         if not data:
