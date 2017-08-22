@@ -214,3 +214,11 @@ msgstr ""
 msgctxt "#32911"
 msgid "grab movie set artwork from movie parent directory"
 msgstr ""
+
+msgctxt "#32914"
+msgid "Always generate episode thumb from video file"
+msgstr ""
+
+msgctxt "#32915"
+msgid "Always generate movie thumb from video file"
+msgstr ""

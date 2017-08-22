@@ -131,10 +131,10 @@ def get_language(language_format=xbmc.ENGLISH_NAME, region=False):
     return language
 
 def unquoteimage(imagestring):
-    if imagestring.startswith('image://'):
+    # video thumbnail image paths need to keep their 'image://' path
+    if imagestring.startswith('image://') and not imagestring.startswith('image://video@'):
         return urllib.unquote(imagestring[8:-1])
-    else:
-        return imagestring
+    return imagestring
 
 def get_command(*first_arg_keys):
     command = {}

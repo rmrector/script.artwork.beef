@@ -156,7 +156,11 @@ class ArtworkProcessor(object):
                 self.process_medialist(medialist)
             else:
                 self._process_item(Gatherer(self.monitor, self.only_filesystem, self.autolanguages), mediaitem, True)
-                notifycount(len(mediaitem.get('updated art', ())))
+                count = len(mediaitem.get('updated art', ()))
+                if mediatype == mediatypes.TVSHOW and addon.get_setting('episode.thumb_generate'):
+                    count += sum(1 for ep in quickjson.get_episodes(mediaitem['tvshowid'])
+                        if cleaner.generate_episode_thumb(ep))
+                notifycount(count)
 
     def process_medialist(self, medialist):
         self.init_run(len(medialist) > 0)
@@ -236,7 +240,7 @@ class ArtworkProcessor(object):
             localart = [(arttype, image['url']) for arttype, image in forcedart.iteritems()
                 if not image['url'].startswith('http')]
             selectedart = dict((arttype, None) for arttype, url in existingart.iteritems()
-                if not url.startswith('http') and arttype not in ('animatedposter', 'animatedfanart')
+                if not url.startswith(('http', 'image://video@')) and arttype not in ('animatedposter', 'animatedfanart')
                     and (arttype, url) not in localart)
 
             selectedart.update((key, image['url']) for key, image in forcedart.iteritems())
@@ -251,7 +255,6 @@ class ArtworkProcessor(object):
             selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
             if selectedart:
                 mediaitem['selected art'] = selectedart
-                cleaner.clean_artwork_beforesave(mediaitem)
                 mediaitem['updated art'] = selectedart.keys()
                 add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], mediaitem['selected art'])
 

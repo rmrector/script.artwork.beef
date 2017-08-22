@@ -49,7 +49,7 @@ class TheTVDBProvider(AbstractProvider):
             return SortedDisplay(5, 'Not rated')
 
     def get_images(self, mediaid, types=None):
-        if types and not self.provides(types):
+        if types is not None and not self.provides(types):
             return {}
         result = {}
         languages = base.languages

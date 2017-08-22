@@ -2,7 +2,8 @@ import sys
 import urllib
 
 from lib.libs import mediatypes, pykodi
-from lib.libs.mediainfo import arttype_matches_base, iter_base_arttypes, iter_urls_for_arttype
+from lib.libs.mediainfo import arttype_matches_base, iter_base_arttypes, iter_urls_for_arttype, update_art_in_library
+from lib.providers.videofile import build_video_thumbnail_path
 
 def clean_artwork(mediaitem):
     updated_art = dict(_get_clean_art(*art) for art in mediaitem['art'].iteritems())
@@ -11,13 +12,6 @@ def clean_artwork(mediaitem):
         updated_art.update(_arrange_multiart(updated_art, basetype, remove_duplicate_fanart))
 
     return updated_art
-
-def clean_artwork_beforesave(mediaitem):
-    if mediaitem['mediatype'] == mediatypes.MOVIE and not mediaitem.get('selected art', {}).get('thumb') and \
-            mediaitem['art'].get('thumb', '').startswith('video@') and \
-            (mediaitem.get('selected art', {}).get('poster') or mediaitem['art'].get('poster')):
-        # Remove movie thumb that Kodi generates if a poster isn't added by the scraper
-        mediaitem['selected art']['thumb'] = None
 
 def remove_otherartwork(mediaitem):
     ''' Remove artwork not enabled in add-on settings. '''
@@ -47,6 +41,13 @@ def remove_specific_arttype(mediaitem, arttype):
     if arttype in finalart:
         finalart[arttype] = None
     return finalart
+
+def generate_episode_thumb(episode):
+    '''awkwarder and awkwarder.'''
+    if episode['art'].get('thumb', '').startswith('image://video@') or episode['file'].endswith('.iso'):
+        return False
+    update_art_in_library(mediatypes.EPISODE, episode['episodeid'], {'thumb': build_video_thumbnail_path(episode['file'])})
+    return True
 
 def _get_clean_art(arttype, url):
     if not url: # Remove empty URLs

@@ -15,7 +15,7 @@ class TheMovieDBAbstractProvider(AbstractProvider):
 
     name = SortedDisplay('themoviedb.org', 'The Movie Database')
     _baseurl = None
-    artmap = None
+    artmap = {}
 
     def __init__(self, *args):
         super(TheMovieDBAbstractProvider, self).__init__(*args)
@@ -70,6 +70,9 @@ class TheMovieDBAbstractProvider(AbstractProvider):
                 result[generaltype].append(resultimage)
         return result
 
+    def provides(self, types):
+        return any(x in types for x in self.artmap.values())
+
 class TheMovieDBMovieProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.MOVIE
 
@@ -77,7 +80,7 @@ class TheMovieDBMovieProvider(TheMovieDBAbstractProvider):
     artmap = {'backdrops': 'fanart', 'posters': 'poster'}
 
     def get_images(self, mediaid, types=None):
-        if types and not self.provides(types):
+        if types is not None and not self.provides(types):
             return {}
         if not self.baseurl:
             return {}
@@ -87,9 +90,6 @@ class TheMovieDBMovieProvider(TheMovieDBAbstractProvider):
 
         return self.process_data(data)
 
-    def provides(self, types):
-        return any(x in types for x in self.artmap.values())
-
 class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.EPISODE
 
@@ -98,6 +98,8 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
     artmap = {'stills': 'fanart'}
 
     def get_images(self, mediaid, types=None):
+        if types is not None and not self.provides(types):
+            return {}
         if not self.baseurl:
             return {}
         data = self.get_data(self.tvdbidsearch_url % mediaid)
@@ -118,7 +120,7 @@ class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
 
     def get_images(self, mediaid, types=None):
         # mediaid = TMDB ID
-        if types and not self.provides(types):
+        if types is not None and not self.provides(types):
             return {}
         if not self.baseurl:
             return {}
@@ -127,9 +129,6 @@ class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
             return {}
 
         return self.process_data(data)
-
-    def provides(self, types):
-        return any(x in types for x in self.artmap.values())
 
 class TheMovieDBSearch(object):
     searchurl = 'https://api.themoviedb.org/3/search/{0}'

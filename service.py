@@ -1,5 +1,6 @@
 import xbmc
 
+from lib import cleaner
 from lib.artworkprocessor import ArtworkProcessor
 from lib.libs import mediatypes, pykodi, quickjson
 from lib.libs.processeditems import ProcessedItems
@@ -29,6 +30,7 @@ class ArtworkService(xbmc.Monitor):
         self._status = None
         self.enable_olditem_updates = addon.get_setting('enable_olditem_updates')
         self._last_itemupdate = addon.get_setting('last_itemupdate')
+        self.generate_episode_thumb = addon.get_setting('episode.thumb_generate')
         self.status = STATUS_IDLE
 
     @property
@@ -168,6 +170,9 @@ class ArtworkService(xbmc.Monitor):
             if not processed_season or series['season'] > int(processed_season) or \
                     shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW):
                 items.append(series)
+                if self.generate_episode_thumb and series['imdbnumber'] not in autoaddepisodes:
+                    for episode in quickjson.get_episodes(series['tvshowid']):
+                        cleaner.generate_episode_thumb(episode)
             if series['imdbnumber'] in autoaddepisodes:
                 episodes = quickjson.get_episodes(series['tvshowid'])
                 items.extend(ep for ep in episodes if shouldinclude_fn(ep['episodeid'], mediatypes.EPISODE))
@@ -210,6 +215,10 @@ class ArtworkService(xbmc.Monitor):
                     newitems.append(episode)
                 else:
                     ignoreepisodesfrom.add(episode['tvshowid'])
+                    if self.generate_episode_thumb:
+                        cleaner.generate_episode_thumb(episode)
+            elif self.generate_episode_thumb:
+                cleaner.generate_episode_thumb(episode)
             if self.abortRequested():
                 return
 
@@ -219,6 +228,7 @@ class ArtworkService(xbmc.Monitor):
     def onSettingsChanged(self):
         self.serviceenabled = addon.get_setting('enableservice')
         self.enable_olditem_updates = addon.get_setting('enable_olditem_updates')
+        self.generate_episode_thumb = addon.get_setting('episode.thumb_generate')
         mediatypes.update_settings()
         self.processor.update_settings()
         if self.processaftersettings:

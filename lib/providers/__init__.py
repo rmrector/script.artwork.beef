@@ -9,6 +9,7 @@ from lib.providers.fanarttv import FanartTVSeriesProvider, FanartTVMovieProvider
 from lib.providers.nfofile import NFOFileSeriesProvider, NFOFileMovieProvider, NFOFileEpisodeProvider, NFOFileMovieSetProvider
 from lib.providers.themoviedb import TheMovieDBMovieProvider, TheMovieDBEpisodeProvider, TheMovieDBMovieSetProvider
 from lib.providers.thetvdbv2 import TheTVDBProvider
+from lib.providers.videofile import VideoFileMovieProvider, VideoFileEpisodeProvider
 
 session = Session()
 external = {
@@ -20,9 +21,9 @@ external = {
 
 forced = {
     mediatypes.TVSHOW: (ArtFilesSeriesProvider(), NFOFileSeriesProvider()),
-    mediatypes.MOVIE: (ArtFilesMovieProvider(), NFOFileMovieProvider()),
+    mediatypes.MOVIE: (ArtFilesMovieProvider(), NFOFileMovieProvider(), VideoFileMovieProvider()),
     mediatypes.MOVIESET: (ArtFilesMovieSetProvider(), NFOFileMovieSetProvider()),
-    mediatypes.EPISODE: (ArtFilesEpisodeProvider(), NFOFileEpisodeProvider())
+    mediatypes.EPISODE: (ArtFilesEpisodeProvider(), NFOFileEpisodeProvider(), VideoFileEpisodeProvider())
 }
 
 search.init(session)

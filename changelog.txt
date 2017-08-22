@@ -1,5 +1,6 @@
 v0.11.0 (???)
 - Feature: use HTTPS for all API and image URLs
+- Feature: add option to generate thumbnail from video files
 - Feature: add option to override image language (defaults to Kodi interface language)
 - Feature: add option to remove all artwork for specific types of media
 
