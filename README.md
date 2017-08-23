@@ -55,7 +55,7 @@ Over time it will re-process media items still missing artwork, checking for new
 web services and the file system.
 
 **Episode fanart** requires using a scraper that grabs the TheTVDB ID for each episode, like the standard TheTVDB scraper.
-You must enable adding episode fanart automatically by series through the add-on settings, as they add a bundle of new
+You must enable adding episode fanart manually for each series through the add-on settings, as they add a bundle of new
 API calls to The Movie Database and just aren't available for many series.
 
 Grabbing **movie set artwork** from web services may not work automatically if the set name in
@@ -134,16 +134,20 @@ all cases to avoid this delay, though it is a bit more work. See the file
 ### Current gotchas
 
 - It expects scrapers to set an IMDB number for movies, and a TVDB ID for series, like the default scrapers.
-- It cannot set artwork for "all seasons". [related trac ticket](http://trac.kodi.tv/ticket/16139)
+  - In the future it will support IDs from other web services, but this information should always come
+    from scrapers or NFO in some form or another.
 - No music video support, yet
+- It doesn't add animated artwork, yet
+- It's not in the official Kodi repo, yet
+- It cannot set artwork for "all seasons". [related trac ticket](https://trac.kodi.tv/ticket/16139)
 
 ### Thoughts
 
 - It doesn't download any artwork, and likely never will; it just adds the URLs to Kodi's database, then Kodi
   downloads them as part of its regular caching process.
 - Extrathumbs aren't added from external sources. I don't want to resize backdrops/fanart from TMDB
-  like Artwork Downloader (I much prefer to use those for multiple fanart), and generating
-  the thumbs are outside the scope of this add-on. An external art/nfo manager could generate them.
+  like Artwork Downloader (I much prefer to use those for multiple fanart), and generating more than one
+  thumb from the video file are outside the scope of this add-on. An external art/nfo manager could generate them.
   Plugins can also set these to the ListItem, if their source provides more than one thumbnail.
 - It would be nice to have a Kodi built-in way for skins to feed multiple art to a `multiimage`,
   maybe something like `$INFO[ListItem.MultiArt(fanart)]` to pull all `fanart` and `fanart#` together.

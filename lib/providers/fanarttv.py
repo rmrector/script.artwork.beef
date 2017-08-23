@@ -109,8 +109,8 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         types = set(x if not x.startswith('season.') else re.sub(r'[\d]', '%s', x) for x in types)
         return any(x in types for x in self.artmap.itervalues())
 
-class FanartTVAbstractMovieProvider(FanartTVAbstractProvider):
-    __metaclass__ = ABCMeta
+class FanartTVMovieProvider(FanartTVAbstractProvider):
+    mediatype = mediatypes.MOVIE
 
     api_section = 'movies'
     artmap = {
@@ -156,11 +156,7 @@ class FanartTVAbstractMovieProvider(FanartTVAbstractProvider):
     def provides(self, types):
         return any(x in types for x in self.artmap.values())
 
-# Arg
-class FanartTVMovieProvider(FanartTVAbstractMovieProvider):
-    mediatype = mediatypes.MOVIE
-
-class FanartTVMovieSetProvider(FanartTVAbstractMovieProvider):
+class FanartTVMovieSetProvider(FanartTVMovieProvider):
     mediatype = mediatypes.MOVIESET
 
 def _get_imagesize(arttype):
@@ -182,8 +178,7 @@ def _get_imagesize(arttype):
         return SortedDisplay(1000, '1000x562')
     elif arttype == 'moviedisc':
         return SortedDisplay(1000, '1000x1000')
-    else:
-        return SortedDisplay(0, '')
+    return SortedDisplay(0, '')
 
 def _get_imagelanguage(arttype, image):
     if arttype in ('showbackground', 'characterart', 'moviebackground'):

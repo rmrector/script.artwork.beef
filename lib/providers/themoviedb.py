@@ -1,7 +1,6 @@
 import xbmc
 from abc import ABCMeta
 
-
 from lib.providers.base import AbstractProvider, cache, Getter
 from lib.libs import mediatypes
 from lib.libs.pykodi import json, log, UTF8JSONDecoder
@@ -142,15 +141,6 @@ class TheMovieDBSearch(object):
     def log(self, message, level=xbmc.LOGDEBUG):
         log(message, level, 'themoviedb.org:search')
 
-    @property
-    def baseurl(self):
-        if not self._baseurl:
-            response = self.getter.get(cfgurl, params={'api_key': apikey})
-            if response is None:
-                return
-            self._baseurl = response.json()['images']['base_url']
-        return self._baseurl
-
     def get_data(self, url, params=None):
         result = cache.cacheFunction(self._get_data, url, params)
         return result if result != 'Empty' else None
@@ -166,8 +156,6 @@ class TheMovieDBSearch(object):
 
     def search(self, query, mediatype):
         if mediatype not in self.typemap:
-            return []
-        if not self.baseurl:
             return []
         url = self.searchurl.format(self.typemap[mediatype])
         data = self.get_data(url, {'query': query})
