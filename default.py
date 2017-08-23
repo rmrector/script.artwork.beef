@@ -86,8 +86,8 @@ def remove_specific_arttypes():
 
         arttypes = sorted(counter.keys())
         busy.close()
-        selectedarttype = xbmcgui.Dialog().select(options[selected][0], ["{0}: {1}".format(arttype, counter[arttype])
-            for arttype in arttypes])
+        selectedarttype = xbmcgui.Dialog().select(options[selected][0],
+            ["{0}: {1}".format(arttype, counter[arttype]) for arttype in arttypes])
         if selectedarttype >= 0 and selectedarttype < len(arttypes):
             fixcount = runon_medialist(lambda mi: cleaner.remove_specific_arttype(mi, arttypes[selectedarttype]),
                 L(M.REMOVE_SPECIFIC_TYPES), allitems, options[selected][0])
@@ -122,7 +122,7 @@ def set_autoaddepisodes():
         if xbmcgui.Dialog().yesno(L(M.ADD_MISSING_HEADER), L(M.ADD_MISSING_MESSAGE)):
             pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAfterSettings)')
 
-def runon_medialist(function, heading, medialist=None, mediatype=None):
+def runon_medialist(function, heading, medialist=None, typelabel=None):
     ''' medialist defaults to every item in the library! '''
     progress = xbmcgui.DialogProgressBG()
     progress.create(heading)
@@ -135,7 +135,7 @@ def runon_medialist(function, heading, medialist=None, mediatype=None):
             (quickjson.get_moviesets, L(M.LISTING_ALL).format(L(M.MOVIESETS))),
             (quickjson.get_episodes, L(M.LISTING_ALL).format(L(M.EPISODES))))
     else:
-        steps_to_run = (((lambda: medialist), L(M.LISTING_ALL).format(mediatype)),)
+        steps_to_run = ((lambda: medialist, L(M.LISTING_ALL).format(typelabel)),)
     stepsize = 100 // len(steps_to_run)
 
     def update_art_for_items(items, start):
