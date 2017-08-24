@@ -2,11 +2,10 @@ import os
 import xbmcvfs
 from abc import ABCMeta
 
-from lib.libs import mediatypes, pykodi
+from lib.libs import mediatypes
+from lib.libs.addonsettings import settings
 from lib.libs.mediainfo import arttype_matches_base, format_arttype
 from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep
-
-addon = pykodi.get_main_addon()
 
 ARTWORK_EXTS = ('.jpg', '.png', '.gif')
 
@@ -14,9 +13,6 @@ class ArtFilesAbstractProvider(object):
     __metaclass__ = ABCMeta
     # 13514 = Local art
     name = SortedDisplay('file:art', 13514)
-
-    def __init__(self):
-        self.identifyalternatives = addon.get_setting('identify_alternatives')
 
     def buildimage(self, url, title):
         result = {'url': url, 'provider': self.name, 'preview': url}
@@ -84,13 +80,13 @@ class ArtFilesSeriesProvider(ArtFilesAbstractProvider):
                 if not basefile.isalnum() or len(basefile) > 20:
                     continue
                 arttype = basefile
-                if self.identifyalternatives and arttype in self.alttypes.keys():
+                if settings.identify_alternatives and arttype in self.alttypes.keys():
                     arttype = self.alttypes[arttype]
                     if arttype in result.keys():
                         continue
             result[arttype] = self.buildimage(path + filename, filename)
 
-        if self.identifyalternatives and dirs:
+        if settings.identify_alternatives and dirs:
             if 'extrafanart' in dirs:
                 result.update(self.getextra(path, result.keys()))
 
@@ -122,13 +118,13 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
                 if not imagefile.isalnum() or len(imagefile) > 20:
                     continue
                 arttype = imagefile
-                if self.identifyalternatives and arttype in self.alttypes.keys():
+                if settings.identify_alternatives and arttype in self.alttypes.keys():
                     arttype = self.alttypes[arttype]
                     if arttype in result.keys():
                         continue
                 result[arttype] = self.buildimage(dirname + filename, filename)
 
-            if self.identifyalternatives and dirs:
+            if settings.identify_alternatives and dirs:
                 if 'extrafanart' in dirs:
                     result.update(self.getextra(path, result.keys()))
                 if 'extrathumbs' in dirs:
@@ -161,7 +157,7 @@ class ArtFilesMovieSetProvider(ArtFilesAbstractProvider):
                     if not basefile.isalnum() or len(basefile) > 20:
                         continue
                     arttype = basefile
-                    if self.identifyalternatives and arttype in self.alttypes.keys():
+                    if settings.identify_alternatives and arttype in self.alttypes.keys():
                         arttype = self.alttypes[arttype]
                         if arttype in result.keys():
                             continue
@@ -185,7 +181,7 @@ class ArtFilesMovieSetProvider(ArtFilesAbstractProvider):
                         continue
                     arttype = basefile
 
-                if self.identifyalternatives and arttype in self.alttypes.keys():
+                if settings.identify_alternatives and arttype in self.alttypes.keys():
                     arttype = self.alttypes[arttype]
                     if arttype in result.keys():
                         continue

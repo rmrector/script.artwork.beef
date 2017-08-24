@@ -3,6 +3,7 @@ import xbmc
 from lib import cleaner
 from lib.artworkprocessor import ArtworkProcessor
 from lib.libs import mediatypes, pykodi, quickjson
+from lib.libs.addonsettings import settings
 from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import log, json
 from lib.maintenance import check_upgrades
@@ -18,8 +19,6 @@ addon = pykodi.get_main_addon()
 class ArtworkService(xbmc.Monitor):
     def __init__(self):
         super(ArtworkService, self).__init__()
-        self.serviceenabled = addon.get_setting('enableservice')
-        self.only_filesystem = addon.get_setting('only_filesystem')
         self.abort = False
         self.processor = ArtworkProcessor(self)
         self.processed = ProcessedItems()
@@ -28,9 +27,7 @@ class ArtworkService(xbmc.Monitor):
         self.stoppeditems = set()
         self._signal = None
         self._status = None
-        self.enable_olditem_updates = addon.get_setting('enable_olditem_updates')
         self._last_itemupdate = addon.get_setting('last_itemupdate')
-        self.generate_episode_thumb = addon.get_setting('episode.thumb_generate')
         self.status = STATUS_IDLE
 
     @property
@@ -122,19 +119,19 @@ class ArtworkService(xbmc.Monitor):
         elif method == 'Other.ProcessAfterSettings':
             self.processaftersettings = True
         elif method == 'Player.OnStop':
-            if self.serviceenabled:
+            if settings.enableservice:
                 data = json.loads(data)
                 if self.watchitem(data):
                     self.stoppeditems.add((data['item']['type'], data['item']['id']))
         elif method == 'VideoLibrary.OnScanStarted':
-            if self.serviceenabled and self.status == STATUS_PROCESSING:
+            if settings.enableservice and self.status == STATUS_PROCESSING:
                 self.abort = True
         elif method == 'VideoLibrary.OnScanFinished':
-            if self.serviceenabled:
-                scan_olditems = self.enable_olditem_updates and get_date() > self.last_itemupdate
+            if settings.enableservice:
+                scan_olditems = settings.enable_olditem_updates and get_date() > self.last_itemupdate
                 self.signal = 'olditems' if scan_olditems else 'unprocesseditems'
         elif method == 'VideoLibrary.OnUpdate':
-            if not self.serviceenabled:
+            if not settings.enableservice:
                 return
             data = json.loads(data)
             if not self.watchitem(data):
@@ -164,18 +161,18 @@ class ArtworkService(xbmc.Monitor):
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
             return False
-        autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
         for series in serieslist:
             processed_season = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW)
             if not processed_season or series['season'] > int(processed_season) or \
                     shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW):
                 items.append(series)
-                if self.generate_episode_thumb and series['imdbnumber'] not in autoaddepisodes:
-                    for episode in quickjson.get_episodes(series['tvshowid']):
-                        cleaner.generate_episode_thumb(episode)
-            if series['imdbnumber'] in autoaddepisodes:
+            if series['imdbnumber'] in settings.autoadd_episodes:
                 episodes = quickjson.get_episodes(series['tvshowid'])
                 items.extend(ep for ep in episodes if shouldinclude_fn(ep['episodeid'], mediatypes.EPISODE))
+            elif settings.generate_episode_thumb:
+                for episode in quickjson.get_episodes(series['tvshowid']):
+                    episode['skip'] = ['fanart']
+                    items.append(episode)
             if self.abortRequested():
                 return False
 
@@ -196,7 +193,6 @@ class ArtworkService(xbmc.Monitor):
             newitems.append(quickjson.get_tvshow_details(seriesid))
             if self.abortRequested():
                 return
-        autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
         for episodeid in self.recentitems['episode']:
             episode = quickjson.get_episode_details(episodeid)
             series = None
@@ -207,18 +203,21 @@ class ArtworkService(xbmc.Monitor):
                 newitems.append(series)
             if episode['tvshowid'] in addepisodesfrom:
                 newitems.append(episode)
-            elif episode['tvshowid'] not in ignoreepisodesfrom:
+            elif episode['tvshowid'] in ignoreepisodesfrom:
+                if settings.generate_episode_thumb:
+                    episode['skip'] = ['fanart']
+                    newitems.append(episode)
+            else:
                 if not series:
                     series = quickjson.get_tvshow_details(episode['tvshowid'])
-                if series['imdbnumber'] in autoaddepisodes:
+                if series['imdbnumber'] in settings.autoadd_episodes:
                     addepisodesfrom.add(episode['tvshowid'])
                     newitems.append(episode)
                 else:
                     ignoreepisodesfrom.add(episode['tvshowid'])
-                    if self.generate_episode_thumb:
-                        cleaner.generate_episode_thumb(episode)
-            elif self.generate_episode_thumb:
-                cleaner.generate_episode_thumb(episode)
+                    if settings.generate_episode_thumb:
+                        episode['skip'] = ['fanart']
+                        newitems.append(episode)
             if self.abortRequested():
                 return
 
@@ -226,11 +225,8 @@ class ArtworkService(xbmc.Monitor):
         self.processor.process_medialist(newitems)
 
     def onSettingsChanged(self):
-        self.serviceenabled = addon.get_setting('enableservice')
-        self.enable_olditem_updates = addon.get_setting('enable_olditem_updates')
-        self.generate_episode_thumb = addon.get_setting('episode.thumb_generate')
+        settings.update_settings()
         mediatypes.update_settings()
-        self.processor.update_settings()
         if self.processaftersettings:
             self.processor.create_progress()
             xbmc.sleep(200)

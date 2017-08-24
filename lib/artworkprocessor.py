@@ -8,19 +8,15 @@ from lib.artworkselection import prompt_for_artwork
 from lib.gatherer import Gatherer
 from lib.providers import search
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
+from lib.libs.addonsettings import settings
 from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import datetime_now, localize as L, log
 from lib.libs.utils import SortedDisplay, natural_sort, get_pathsep
-
-addon = pykodi.get_main_addon()
 
 MODE_AUTO = 'auto'
 MODE_GUI = 'gui'
 
 THROTTLE_TIME = 0.15
-
-DEFAULT_IMAGESIZE = '1920x1080'
-imagesizes = {'1920x1080': (1920, 1080, 700), '1280x720': (1280, 720, 520)}
 
 SOMETHING_MISSING = 32001
 FINAL_MESSAGE = 32019
@@ -42,30 +38,6 @@ class ArtworkProcessor(object):
         self.visible = False
         self.freshstart = "0"
         self.processed = ProcessedItems()
-        self.update_settings()
-
-    def update_settings(self):
-        self.titlefree_fanart = addon.get_setting('titlefree_fanart')
-        self.only_filesystem = addon.get_setting('only_filesystem')
-        self.setartwork_fromcentral = addon.get_setting('setartwork_fromcentral')
-        self.setartwork_dir = addon.get_setting('setartwork_dir')
-        self.setartwork_fromparent = addon.get_setting('setartwork_fromparent')
-        self.language_override = addon.get_setting('language_override')
-        if self.language_override == 'None':
-            self.language_override = None
-        try:
-            self.minimum_rating = int(addon.get_setting('minimum_rating'))
-        except ValueError:
-            self.minimum_rating = 5
-            addon.set_setting('minimum_rating', "5")
-        sizesetting = addon.get_setting('preferredsize')
-        if sizesetting in imagesizes:
-            self.preferredsize = imagesizes[sizesetting][0:2]
-            self.minimum_size = imagesizes[sizesetting][2]
-        else:
-            self.preferredsize = imagesizes[DEFAULT_IMAGESIZE][0:2]
-            self.minimum_size = imagesizes[DEFAULT_IMAGESIZE][2]
-            addon.set_setting('preferredsize', DEFAULT_IMAGESIZE)
 
     def create_progress(self):
         if not self.visible:
@@ -113,7 +85,7 @@ class ArtworkProcessor(object):
 
         self.init_run()
         if mode == MODE_GUI:
-            self._process_item(Gatherer(self.monitor, self.only_filesystem, self.autolanguages), mediaitem, True, False)
+            self._process_item(Gatherer(self.monitor, settings.only_filesystem, self.autolanguages), mediaitem, True, False)
             busy.close()
             if 'available art' in mediaitem:
                 availableart = mediaitem['available art']
@@ -150,18 +122,18 @@ class ArtworkProcessor(object):
                     L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
             self.finish_run()
         else:
-            autoaddepisodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
-            if mediatype == mediatypes.TVSHOW and mediaitem['imdbnumber'] in autoaddepisodes:
+            if mediatype == mediatypes.TVSHOW:
                 medialist = [mediaitem]
-                medialist.extend(quickjson.get_episodes(dbid))
+                if mediaitem['imdbnumber'] in settings.autoadd_episodes:
+                    medialist.extend(quickjson.get_episodes(dbid))
+                elif settings.generate_episode_thumb:
+                    for episode in quickjson.get_episodes(dbid):
+                        episode['skip'] = ['fanart']
+                        medialist.append(episode)
                 self.process_medialist(medialist)
             else:
-                self._process_item(Gatherer(self.monitor, self.only_filesystem, self.autolanguages), mediaitem, True)
-                count = len(mediaitem.get('updated art', ()))
-                if mediatype == mediatypes.TVSHOW and addon.get_setting('episode.thumb_generate'):
-                    count += sum(1 for ep in quickjson.get_episodes(mediaitem['tvshowid'])
-                        if cleaner.generate_episode_thumb(ep))
-                notifycount(count)
+                self._process_item(Gatherer(self.monitor, settings.only_filesystem, self.autolanguages), mediaitem, True)
+                notifycount(len(mediaitem.get('updated art', ())))
 
     def process_medialist(self, medialist):
         self.init_run(len(medialist) > 0)
@@ -169,7 +141,7 @@ class ArtworkProcessor(object):
         currentitem = 0
         aborted = False
         if medialist:
-            gatherer = Gatherer(self.monitor, self.only_filesystem, self.autolanguages)
+            gatherer = Gatherer(self.monitor, settings.only_filesystem, self.autolanguages)
         for mediaitem in medialist:
             if self.visible:
                 self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
@@ -197,7 +169,7 @@ class ArtworkProcessor(object):
         log('Processing {0}'.format(mediaitem['label']), xbmc.LOGINFO)
         self.add_additional_iteminfo(mediaitem)
         mediatype = mediaitem['mediatype']
-        if not mediaitem['imdbnumber'] and (singleitem or not self.only_filesystem):
+        if not mediaitem['imdbnumber'] and (singleitem or not settings.only_filesystem):
             if mediatype == mediatypes.MOVIESET:
                 header = "Could not find set on TheMovieDB, can't process"
                 message = "movie set '{0}'".format(mediaitem['label'])
@@ -225,8 +197,7 @@ class ArtworkProcessor(object):
                 mediaitem['cleaned art'] = cleaned.keys()
 
         existingkeys = [key for key, url in mediaitem['art'].iteritems() if url]
-        mediaitem['missing art'] = list(info.iter_missing_arttypes(mediatype,
-            mediaitem.get('seasons'), existingkeys))
+        mediaitem['missing art'] = list(info.iter_missing_arttypes(mediaitem, existingkeys))
 
         forcedart, availableart, services_hit, error = gatherer.getartwork(mediaitem, auto)
         mediaitem['forced art'] = forcedart
@@ -251,8 +222,10 @@ class ArtworkProcessor(object):
 
             # Then add the rest of the missing art
             existingkeys = [key for key, url in existingart.iteritems() if url]
-            selectedart.update(self.get_top_missing_art(info.iter_missing_arttypes(mediatype,
-                mediaitem.get('seasons'), existingkeys), mediatype, existingart, availableart))
+            selectedart.update(self.get_top_missing_art(info.iter_missing_arttypes(mediaitem, existingkeys),
+                mediatype, existingart, availableart))
+
+            # Identify actual changes, and save them
             selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
             if selectedart:
                 mediaitem['selected art'] = selectedart
@@ -274,7 +247,7 @@ class ArtworkProcessor(object):
         return services_hit
 
     def get_nextcheckdelay(self, mediaitem):
-        if self.only_filesystem:
+        if settings.only_filesystem:
             return plus_some(5, 3)
         elif not mediaitem.get('missing art'):
             return plus_some(120, 25)
@@ -303,10 +276,10 @@ class ArtworkProcessor(object):
     def setlanguages(self):
         self.language = pykodi.get_language(xbmc.ISO_639_1)
         self.autolanguages = (self.language, None) if self.language == 'en' else (self.language, 'en', None)
-        if self.language_override:
-            self.language = self.language_override
-        if self.language_override not in self.autolanguages:
-            self.autolanguages += (self.language_override,)
+        if settings.language_override:
+            self.language = settings.language_override
+        if settings.language_override not in self.autolanguages:
+            self.autolanguages += (settings.language_override,)
 
     def add_additional_iteminfo(self, mediaitem):
         if 'mediatype' in mediaitem:
@@ -319,7 +292,7 @@ class ArtworkProcessor(object):
             mediaitem['art'].update(seasonart)
         elif mediaitem['mediatype'] == mediatypes.MOVIESET:
             uniqueid = self.processed.get_data(mediaitem['dbid'], mediaitem['mediatype'])
-            if not uniqueid and not self.only_filesystem:
+            if not uniqueid and not settings.only_filesystem:
                 uniqueid = search.for_id(mediaitem['label'], mediatypes.MOVIESET)
                 if uniqueid:
                     self.processed.set_data(mediaitem['dbid'], mediatypes.MOVIESET, uniqueid)
@@ -328,11 +301,11 @@ class ArtworkProcessor(object):
 
             mediaitem['imdbnumber'] = uniqueid
             new = not self.processed.exists(mediaitem['dbid'], mediaitem['mediatype'])
-            if self.setartwork_fromparent or new:
-                prepare_movieset(mediaitem, new, self.setartwork_fromparent)
+            if settings.setartwork_fromparent or new:
+                prepare_movieset(mediaitem, new, settings.setartwork_fromparent)
 
-            if 'file' not in mediaitem and self.setartwork_fromcentral and self.setartwork_dir:
-                mediaitem['file'] = self.setartwork_dir + mediaitem['label'] + '.ext'
+            if 'file' not in mediaitem and settings.setartwork_fromcentral and settings.setartwork_dir:
+                mediaitem['file'] = settings.setartwork_dir + mediaitem['label'] + '.ext'
 
     def sort_images(self, arttype, imagelist, mediapath):
         # 1. Language, preferring fanart with no language/title if configured
@@ -355,19 +328,19 @@ class ArtworkProcessor(object):
             imagesize = int(imagesplit[0]), int(imagesplit[1])
         except ValueError:
             return image['size'].sort
-        if imagesize[0] > self.preferredsize[0]:
-            shrink = self.preferredsize[0] / float(imagesize[0])
-            imagesize = self.preferredsize[0], imagesize[1] * shrink
-        if imagesize[1] > self.preferredsize[1]:
-            shrink = self.preferredsize[1] / float(imagesize[1])
-            imagesize = imagesize[0] * shrink, self.preferredsize[1]
+        if imagesize[0] > settings.preferredsize[0]:
+            shrink = settings.preferredsize[0] / float(imagesize[0])
+            imagesize = settings.preferredsize[0], imagesize[1] * shrink
+        if imagesize[1] > settings.preferredsize[1]:
+            shrink = settings.preferredsize[1] / float(imagesize[1])
+            imagesize = imagesize[0] * shrink, settings.preferredsize[1]
         return max(imagesize) // 200
 
     def _imagelanguage_sort(self, image, arttype):
         otherweight = 0.5 if self.language != 'en' and image['language'] == 'en' else 1
         primarysort = 0 if image['language'] == self.language else otherweight
 
-        if arttype.endswith('fanart') and self.titlefree_fanart and image['language']:
+        if arttype.endswith('fanart') and settings.titlefree_fanart and image['language']:
             primarysort += 1
 
         return primarysort, image['language']
@@ -431,9 +404,9 @@ class ArtworkProcessor(object):
             return result
 
     def _auto_filter(self, arttype, art, ignoreurls=()):
-        if art['rating'].sort < self.minimum_rating:
+        if art['rating'].sort < settings.minimum_rating:
             return False
-        if arttype.endswith('fanart') and art['size'].sort < self.minimum_size:
+        if arttype.endswith('fanart') and art['size'].sort < settings.minimum_size:
             return False
         return art['language'] in self.autolanguages and art['url'] not in ignoreurls
 

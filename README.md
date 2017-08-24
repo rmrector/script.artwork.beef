@@ -65,8 +65,8 @@ to show a list of all still-unmatched movies sets, then select one and enter the
 exactly as it is on TheMovieDB. If a set was matched incorrectly, navigate to the set in the video
 library and choose "Select artwork..." from the "Manage" menu of the context menu, then choose "Search for set".
 
-There are add-on settings to specify exactly which types of artwork and how many to
-download automatically.
+There are add-on settings to specify exactly which types of artwork and how many to download automatically.
+Under "Advanced" there are settings to generate a thumbnail from video files for movies and episodes.
 
 If you have multiple Kodi installations sharing a database, only enable the automatic
 processing on one of them. Don't use Artwork Beef's automatic processing with Artwork Downloader's

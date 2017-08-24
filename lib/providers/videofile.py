@@ -2,10 +2,9 @@ import re
 import urllib
 from abc import ABCMeta
 
-from lib.libs import mediatypes, pykodi
+from lib.libs import mediatypes
+from lib.libs.addonsettings import settings
 from lib.libs.utils import SortedDisplay, get_movie_path_list
-
-addon = pykodi.get_main_addon()
 
 class VideoFileAbstractProvider(object):
     __metaclass__ = ABCMeta
@@ -29,7 +28,7 @@ class VideoFileMovieProvider(VideoFileAbstractProvider):
     mediatype = mediatypes.MOVIE
 
     def get_exact_images(self, path):
-        if not addon.get_setting('movie.thumb_generate'):
+        if not settings.generate_movie_thumb:
             return {}
         paths = get_movie_path_list(path)
         if paths[0].endswith('.iso'):
@@ -40,6 +39,6 @@ class VideoFileEpisodeProvider(VideoFileAbstractProvider):
     mediatype = mediatypes.EPISODE
 
     def get_exact_images(self, path):
-        if not addon.get_setting('episode.thumb_generate') or path.endswith('.iso'):
+        if not settings.generate_episode_thumb or path.endswith('.iso'):
             return {}
         return {'thumb': self.build_video_thumbnail(path)}
