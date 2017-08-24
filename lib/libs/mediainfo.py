@@ -44,10 +44,12 @@ def iter_renumbered_artlist(urllist, basetype, original_arttypes):
         if type_base == basetype and index >= i:
             yield arttype, None
 
-def iter_missing_arttypes(mediatype, seasons, existingarttypes):
+def iter_missing_arttypes(mediaitem, existingarttypes):
+    mediatype = mediaitem['mediatype']
+    seasons = mediaitem.get('seasons')
     fullartinfo = mediatypes.artinfo[mediatype]
     for arttype, artinfo in fullartinfo.iteritems():
-        if not artinfo['autolimit']:
+        if arttype in mediaitem.get('skip', ()) or not artinfo['autolimit']:
             continue
         elif artinfo['autolimit'] == 1:
             if arttype not in existingarttypes:

@@ -2,7 +2,8 @@ import re
 import xbmc
 import xbmcgui
 
-from lib.libs import mediatypes, pykodi
+from lib.libs import mediatypes
+from lib.libs.addonsettings import settings
 from lib.libs.pykodi import localize as L
 
 SEASON_NUMBER = 20358
@@ -16,7 +17,6 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
     if not availableart:
         return None, None
 
-    addon = pykodi.get_main_addon()
     arttypes = []
     for arttype, artlist in availableart.iteritems():
         if arttype.startswith('season.-1.'):
@@ -30,9 +30,8 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
         if arttype not in (at['arttype'] for at in arttypes):
             arttypes.append({'arttype': arttype, 'label': label, 'count': len(artlist)})
     arttypes.sort(key=lambda art: sort_arttype(art['arttype']))
-    typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', addon.path, arttypes=arttypes,
+    typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', settings.addon_path, arttypes=arttypes,
         medialabel=medialabel, show_refresh=mediatype == mediatypes.MOVIESET)
-    hqpreview = addon.get_setting('highquality_preview')
     singletype = arttypes[0]['arttype'] if mediatype == 'episode' and len(arttypes) == 1 else None
     selectedarttype = None
     selectedart = None
@@ -48,8 +47,8 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
         if not selectedarttype:
             break
         multi = mediatypes.get_artinfo(mediatype, selectedarttype)['multiselect']
-        artselectwindow = ArtworkSelector('DialogSelect.xml', addon.path, artlist=availableart[selectedarttype],
-            arttype=selectedarttype, medialabel=medialabel, multi=multi, hqpreview=hqpreview)
+        artselectwindow = ArtworkSelector('DialogSelect.xml', settings.addon_path, artlist=availableart[selectedarttype],
+            arttype=selectedarttype, medialabel=medialabel, multi=multi)
         selectedart = artselectwindow.prompt()
         if singletype and selectedart is None:
             selectedarttype = None
@@ -115,7 +114,6 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
                 self.arttype = self.arttype.replace('.', ' ')
         self.medialabel = kwargs.get('medialabel')
         self.multi = kwargs.get('multi', False)
-        self.hqpreview = kwargs.get('hqpreview', False)
         self.artlist = kwargs.get('artlist')
         self.guilist = None
         self.selected = None
@@ -171,9 +169,9 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
             listitem.setLabel2(summary)
             # DEPRECATED: Above Krypton and higher (only), below Jarvis and lower (only)
             listitem.setProperty('Addon.Summary', summary)
-            listitem.setIconImage(image['url'] if self.hqpreview else image['preview'])
+            listitem.setIconImage(image['url'] if settings.hqpreview else image['preview'])
             # DEPRECATED: Above is deprecated in Jarvis, but still works through Krypton (at least)
-            # listitem.setArt({'icon': image['url'] if self.hqpreview else image['preview']})
+            # listitem.setArt({'icon': image['url'] if settings.hqpreview else image['preview']})
             listitem.setPath(image['url'])
             if image.get('existing'):
                 listitem.select(True)

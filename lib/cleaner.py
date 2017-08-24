@@ -1,7 +1,8 @@
 import sys
 import urllib
 
-from lib.libs import mediatypes, pykodi
+from lib.libs import mediatypes
+from lib.libs.addonsettings import settings
 from lib.libs.mediainfo import arttype_matches_base, iter_base_arttypes, iter_urls_for_arttype, update_art_in_library
 from lib.providers.videofile import build_video_thumbnail_path
 
@@ -15,7 +16,7 @@ def clean_artwork(mediaitem):
 
 def remove_otherartwork(mediaitem):
     ''' Remove artwork not enabled in add-on settings. '''
-    keep_types = pykodi.get_main_addon().get_setting('save_additional_arttypes')
+    keep_types = settings.save_additional_arttypes
     keep_types = [addon.strip() for addon in keep_types.split(',')]
     keep_types = dict(arttype.split(':', 2) if ':' in arttype else (arttype, sys.maxsize) for arttype in keep_types)
     finalart = {}

@@ -7,10 +7,9 @@ from lib import cleaner
 from lib.artworkprocessor import ArtworkProcessor
 from lib.seriesselection import SeriesSelector
 from lib.libs import mediainfo, mediatypes, pykodi, quickjson
+from lib.libs.addonsettings import settings
 from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import localize as L, log
-
-addon = pykodi.get_main_addon()
 
 class M(object):
     ADD_MISSING_HEADER = 32401
@@ -114,11 +113,10 @@ def set_autoaddepisodes():
     busy = pykodi.get_busydialog()
     busy.create()
     serieslist = [series for series in quickjson.get_tvshows(True) if series.get('imdbnumber')]
-    autoaddepisodes = addon.get_setting('autoaddepisodes_list')
     busy.close()
-    selected = SeriesSelector('DialogSelect.xml', addon.path, serieslist=serieslist, selected=autoaddepisodes).prompt()
-    addon.set_setting('autoaddepisodes_list', selected)
-    if selected != autoaddepisodes:
+    selected = SeriesSelector('DialogSelect.xml', settings.addon_path, serieslist=serieslist, selected=settings.autoadd_episodes).prompt()
+    if selected != settings.autoadd_episodes:
+        settings.autoadd_episodes = selected
         if xbmcgui.Dialog().yesno(L(M.ADD_MISSING_HEADER), L(M.ADD_MISSING_MESSAGE)):
             pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAfterSettings)')
 

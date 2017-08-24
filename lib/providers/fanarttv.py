@@ -5,10 +5,9 @@ from abc import ABCMeta
 
 from lib.providers.base import AbstractProvider, cache
 from lib.libs import mediatypes
-from lib.libs.pykodi import get_main_addon, json, UTF8JSONDecoder
+from lib.libs.addonsettings import settings
+from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
-
-addon = get_main_addon()
 
 class FanartTVAbstractProvider(AbstractProvider):
     __metaclass__ = ABCMeta
@@ -22,7 +21,6 @@ class FanartTVAbstractProvider(AbstractProvider):
         super(FanartTVAbstractProvider, self).__init__(*args)
         self.set_accepted_contenttype('application/json')
         self.getter.retryon_servererror = True
-        self.clientkey = addon.get_setting('fanarttv_key')
 
     def get_data(self, mediaid):
         result = cache.cacheFunction(self._get_data, mediaid)
@@ -31,8 +29,8 @@ class FanartTVAbstractProvider(AbstractProvider):
     def _get_data(self, mediaid):
         self.log('uncached', xbmc.LOGINFO)
         headers = {'api-key': self.apikey}
-        if self.clientkey:
-            headers['client-key'] = self.clientkey
+        if settings.fanarttv_clientkey:
+            headers['client-key'] = settings.fanarttv_clientkey
         response = self.doget(self.apiurl % (self.api_section, mediaid), headers=headers)
         return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
 
