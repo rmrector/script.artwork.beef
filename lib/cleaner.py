@@ -8,7 +8,7 @@ from lib.providers.videofile import build_video_thumbnail_path
 
 def clean_artwork(mediaitem):
     updated_art = dict(_get_clean_art(*art) for art in mediaitem['art'].iteritems())
-    for basetype in iter_base_arttypes(updated_art):
+    for basetype in iter_base_arttypes(updated_art.keys()):
         remove_duplicate_fanart = basetype == 'fanart'
         updated_art.update(_arrange_multiart(updated_art, basetype, remove_duplicate_fanart))
 
@@ -21,7 +21,7 @@ def remove_otherartwork(mediaitem):
     keep_types = dict(arttype.split(':', 2) if ':' in arttype else (arttype, sys.maxsize) for arttype in keep_types)
     finalart = {}
 
-    for basetype in iter_base_arttypes(mediaitem['art']):
+    for basetype in iter_base_arttypes(mediaitem['art'].keys()):
         if basetype in keep_types:
             try:
                 max_allowed = int(keep_types[basetype])

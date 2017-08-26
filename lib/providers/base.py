@@ -6,23 +6,13 @@ from requests import codes
 from requests.exceptions import HTTPError, Timeout, ConnectionError
 from requests.packages import urllib3
 
-from lib.libs import pykodi, quickjson
+from lib.libs.addonsettings import settings
 from lib.libs.pykodi import log
 from lib.libs.utils import SortedDisplay
 
 urllib3.disable_warnings()
 
-useragent = 'ArtworkBeef Kodi'
 languages = ()
-
-def update_useragent():
-    global useragent
-    beefversion = pykodi.get_main_addon().version
-    props = quickjson.get_application_properties(['name', 'version'])
-    appversion = '{0}.{1}'.format(props['version']['major'], props['version']['minor'])
-    useragent = 'ArtworkBeef/{0} {1}/{2}'.format(beefversion, props['name'], appversion)
-
-update_useragent()
 
 cache = StorageServer.StorageServer('script.artwork.beef', 72)
 monitor = xbmc.Monitor()
@@ -117,7 +107,7 @@ class Getter(object):
         return result
 
     def _inget(self, url, params=None, headers=None, timeout=15):
-        finalheaders = {'User-Agent': useragent}
+        finalheaders = {'User-Agent': settings.useragent}
         if headers:
             finalheaders.update(headers)
         try:

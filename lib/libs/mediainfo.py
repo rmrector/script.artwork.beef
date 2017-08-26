@@ -26,9 +26,9 @@ def iter_urls_for_arttype(art, arttype):
         if arttype_matches_base(exact, arttype):
             yield art[exact]
 
-def iter_base_arttypes(art):
+def iter_base_arttypes(artkeys):
     usedtypes = set()
-    for arttype in sorted(art.keys(), key=natural_sort):
+    for arttype in sorted(artkeys, key=natural_sort):
         basetype = get_basetype(arttype)
         if basetype not in usedtypes:
             yield basetype
@@ -86,7 +86,7 @@ def format_arttype(basetype, index):
 
 def renumber_all_artwork(art):
     result = {}
-    for basetype in iter_base_arttypes(art):
+    for basetype in iter_base_arttypes(art.keys()):
         urllist = [art[key] for key in sorted(art.keys(), key=natural_sort) if arttype_matches_base(key, basetype)]
         result.update(iter_renumbered_artlist(urllist, basetype, art.keys()))
     return result

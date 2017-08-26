@@ -1,4 +1,4 @@
-from lib.libs import pykodi
+from lib.libs import pykodi, quickjson
 
 addon = pykodi.get_main_addon()
 
@@ -8,7 +8,16 @@ AVAILABLE_IMAGESIZES = {'1920x1080': (1920, 1080, 700), '1280x720': (1280, 720, 
 class Settings(object):
     def __init__(self):
         self.addon_path = addon.path
+        self.datapath = addon.datapath
+        self._autoadd_episodes = ()
         self.update_settings()
+        self.update_useragent()
+
+    def update_useragent(self):
+        beefversion = pykodi.get_main_addon().version
+        props = quickjson.get_application_properties(['name', 'version'])
+        appversion = '{0}.{1}'.format(props['version']['major'], props['version']['minor'])
+        self.useragent = 'ArtworkBeef/{0} {1}/{2}'.format(beefversion, props['name'], appversion)
 
     def update_settings(self):
         self._autoadd_episodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
@@ -24,6 +33,7 @@ class Settings(object):
         self.hqpreview = addon.get_setting('highquality_preview')
         self.save_additional_arttypes = addon.get_setting('save_additional_arttypes')
         self.identify_alternatives = addon.get_setting('identify_alternatives')
+        self.report_peritem = addon.get_setting('report_peritem')
         self.fanarttv_clientkey = addon.get_setting('fanarttv_key')
 
         self.language_override = addon.get_setting('language_override')
