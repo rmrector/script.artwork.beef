@@ -2,7 +2,7 @@ import xbmc
 
 from lib import reporting
 from lib.artworkprocessor import ArtworkProcessor
-from lib.libs import mediatypes, pykodi, quickjson
+from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings
 from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import log, json
@@ -11,8 +11,6 @@ from lib.maintenance import check_upgrades
 STATUS_IDLE = 'idle'
 STATUS_SIGNALLED = 'signalled'
 STATUS_PROCESSING = 'processing'
-
-UNPROCESSED_DAYS = 1
 
 addon = pykodi.get_main_addon()
 
@@ -154,7 +152,11 @@ class ArtworkService(xbmc.Monitor):
     def process_oldandunprocesseditems(self):
         return self.process_allitems(self.processed.is_stale)
 
-    def process_allitems(self, shouldinclude_fn=lambda id, type: True):
+    def process_allitems(self, shouldinclude_fn=None):
+        allitems = False
+        if not shouldinclude_fn:
+            allitems = True
+            shouldinclude_fn = lambda id, type: True
         items = [movie for movie in quickjson.get_movies() if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE)]
         items.extend([mset for mset in quickjson.get_moviesets()
             if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET)])
@@ -162,21 +164,30 @@ class ArtworkService(xbmc.Monitor):
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
             return False
+        serieseps_added = set()
         for series in serieslist:
             processed_season = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW)
             if not processed_season or series['season'] > int(processed_season) or \
                     shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW):
                 items.append(series)
-            if series['imdbnumber'] in settings.autoadd_episodes:
+                if series['imdbnumber'] not in settings.autoadd_episodes and not allitems:
+                    for episode in quickjson.get_episodes(series['tvshowid']):
+                        if info.has_generated_thumbnail(episode):
+                            episode['skip'] = ['fanart']
+                            items.append(episode)
+                    serieseps_added.add(series['tvshowid'])
+            if series['imdbnumber'] in settings.autoadd_episodes and series['tvshowid'] not in serieseps_added:
                 episodes = quickjson.get_episodes(series['tvshowid'])
                 items.extend(ep for ep in episodes if shouldinclude_fn(ep['episodeid'], mediatypes.EPISODE))
-            elif settings.generate_episode_thumb:
-                for episode in quickjson.get_episodes(series['tvshowid']):
-                    episode['skip'] = ['fanart']
-                    items.append(episode)
+                serieseps_added.add(series['tvshowid'])
             if self.abortRequested():
                 return False
-
+        if settings.generate_episode_thumb:
+            # Too many to get all of them, and filtering by a specific date for dateadded isn't much better
+            for episode in (quickjson.get_episodes() if allitems else quickjson.get_episodes(limit=500)):
+                if episode['tvshowid'] not in serieseps_added and not info.has_generated_thumbnail(episode):
+                    episode['skip'] = ['fanart']
+                    items.append(episode)
         self.reset_recent()
         return self.processor.process_medialist(items)
 

@@ -24,7 +24,7 @@ class Settings(object):
         self.enableservice = addon.get_setting('enableservice')
         self.enable_olditem_updates = addon.get_setting('enable_olditem_updates')
         self.generate_episode_thumb = addon.get_setting('episode.thumb_generate')
-        self.generate_movie_thumb = addon.get_setting('move.thumb_generate')
+        self.generate_movie_thumb = addon.get_setting('movie.thumb_generate')
         self.only_filesystem = addon.get_setting('only_filesystem')
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
         self.setartwork_fromcentral = addon.get_setting('setartwork_fromcentral')
