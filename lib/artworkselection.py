@@ -71,7 +71,7 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
     def onInit(self):
         # This is called every time the window is shown
         if not self.selected:
-            self.getControl(1).setLabel(L(CHOOSE_TYPE_HEADER).format(self.medialabel))
+            self.getControl(1).setLabel("Artwork Beef: " + L(CHOOSE_TYPE_HEADER).format(self.medialabel))
             self.getControl(3).setVisible(False)
             self.getControl(5).setVisible(self.show_refresh)
             self.getControl(5).setLabel(L(REFRESH_ITEM))
@@ -126,7 +126,7 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
         return self.selected
 
     def onInit(self):
-        self.getControl(1).setLabel(L(CHOOSE_ART_HEADER).format(self.arttype, self.medialabel))
+        self.getControl(1).setLabel("Artwork Beef: " + L(CHOOSE_ART_HEADER).format(self.arttype, self.medialabel))
         self.getControl(3).setVisible(False)
         self.getControl(5).setVisible(self.multi)
         self.getControl(5).setLabel('$LOCALIZE[186]')
