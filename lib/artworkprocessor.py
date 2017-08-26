@@ -3,7 +3,7 @@ import xbmc
 import xbmcgui
 from datetime import timedelta
 
-from lib import cleaner
+from lib import cleaner, reporting
 from lib.artworkselection import prompt_for_artwork
 from lib.gatherer import Gatherer
 from lib.providers import search
@@ -43,6 +43,10 @@ class ArtworkProcessor(object):
         if not self.visible:
             self.progress.create("Artwork Beef: " + L(ADDING_ARTWORK_MESSAGE), "")
             self.visible = True
+
+    def update_progress(self, percent, message):
+        if self.visible:
+            self.progress.update(percent, message=message)
 
     def close_progress(self):
         if self.visible:
@@ -84,7 +88,13 @@ class ArtworkProcessor(object):
             return
 
         self.init_run()
+        if mediatype == mediatypes.EPISODE:
+            series = quickjson.get_tvshow_details(mediaitem['tvshowid'])
+            if series['imdbnumber'] not in settings.autoadd_episodes:
+                mediaitem['skip'] = ['fanart']
+
         if mode == MODE_GUI:
+            self.add_additional_iteminfo(mediaitem)
             self._process_item(Gatherer(self.monitor, settings.only_filesystem, self.autolanguages), mediaitem, True, False)
             busy.close()
             if 'available art' in mediaitem:
@@ -115,40 +125,46 @@ class ArtworkProcessor(object):
 
                     selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
                     if selectedart:
+                        mediaitem['selected art'] = selectedart
+                        mediaitem['updated art'] = selectedart.keys()
                         add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
+                    reporting.report_item(mediaitem, True, True)
                     notifycount(len(selectedart))
             else:
                 xbmcgui.Dialog().notification(L(NOT_AVAILABLE_MESSAGE),
                     L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
             self.finish_run()
         else:
+            medialist = [mediaitem]
             if mediatype == mediatypes.TVSHOW:
-                medialist = [mediaitem]
                 if mediaitem['imdbnumber'] in settings.autoadd_episodes:
                     medialist.extend(quickjson.get_episodes(dbid))
                 elif settings.generate_episode_thumb:
                     for episode in quickjson.get_episodes(dbid):
-                        episode['skip'] = ['fanart']
-                        medialist.append(episode)
-                self.process_medialist(medialist)
-            else:
-                self._process_item(Gatherer(self.monitor, settings.only_filesystem, self.autolanguages), mediaitem, True)
-                notifycount(len(mediaitem.get('updated art', ())))
+                        if not info.has_generated_thumbnail(episode):
+                            episode['skip'] = ['fanart']
+                            medialist.append(episode)
+            self.process_medialist(medialist, True)
 
-    def process_medialist(self, medialist):
+    def process_medialist(self, medialist, alwaysnotify=False):
         self.init_run(len(medialist) > 0)
         artcount = 0
         currentitem = 0
         aborted = False
+        for mediaitem in medialist:
+            self.add_additional_iteminfo(mediaitem)
+        singleitemlist = len(medialist) == 1
+        if not singleitemlist:
+            reporting.report_start(medialist)
         if medialist:
             gatherer = Gatherer(self.monitor, settings.only_filesystem, self.autolanguages)
         for mediaitem in medialist:
-            if self.visible:
-                self.progress.update(currentitem * 100 // len(medialist), message=mediaitem['label'])
-                currentitem += 1
+            self.update_progress(currentitem * 100 // len(medialist), mediaitem['label'])
+            currentitem += 1
             if not info.is_known_mediatype(mediaitem):
                 continue
             services_hit = self._process_item(gatherer, mediaitem)
+            reporting.report_item(mediaitem, singleitemlist)
             if 'updated art' in mediaitem:
                 artcount += len(mediaitem['updated art'])
 
@@ -161,13 +177,12 @@ class ArtworkProcessor(object):
                 break
 
         self.finish_run()
-        if artcount:
+        reporting.report_end(medialist, currentitem if aborted else 0)
+        if artcount or alwaysnotify:
             notifycount(artcount)
         return not aborted
 
     def _process_item(self, gatherer, mediaitem, singleitem=False, auto=True):
-        log('Processing {0}'.format(mediaitem['label']), xbmc.LOGINFO)
-        self.add_additional_iteminfo(mediaitem)
         mediatype = mediaitem['mediatype']
         if not mediaitem['imdbnumber'] and (singleitem or not settings.only_filesystem):
             if mediatype == mediatypes.MOVIESET:
@@ -194,7 +209,7 @@ class ArtworkProcessor(object):
                 add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], cleaned)
                 mediaitem['art'].update(cleaned)
                 mediaitem['art'] = dict(item for item in mediaitem['art'].iteritems() if item[1])
-                mediaitem['cleaned art'] = cleaned.keys()
+                mediaitem['updated art'] = cleaned.keys()
 
         existingkeys = [key for key, url in mediaitem['art'].iteritems() if url]
         mediaitem['missing art'] = list(info.iter_missing_arttypes(mediaitem, existingkeys))
@@ -229,7 +244,7 @@ class ArtworkProcessor(object):
             selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
             if selectedart:
                 mediaitem['selected art'] = selectedart
-                mediaitem['updated art'] = selectedart.keys()
+                mediaitem['updated art'] = list(set(mediaitem.get('updated art', []) + selectedart.keys()))
                 add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], mediaitem['selected art'])
 
         if error:
@@ -337,8 +352,8 @@ class ArtworkProcessor(object):
         return max(imagesize) // 200
 
     def _imagelanguage_sort(self, image, arttype):
-        otherweight = 0.5 if self.language != 'en' and image['language'] == 'en' else 1
-        primarysort = 0 if image['language'] == self.language else otherweight
+        primarysort = 0 if image['language'] == self.language else \
+            0.5 if self.language != 'en' and image['language'] == 'en' else 1
 
         if arttype.endswith('fanart') and settings.titlefree_fanart and image['language']:
             primarysort += 1
@@ -423,7 +438,6 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
         info.update_art_in_library(mediatype, dbid, selectedart)
 
 def notifycount(count):
-    log(L(ARTWORK_UPDATED_MESSAGE).format(count), xbmc.LOGINFO)
     if count:
         xbmcgui.Dialog().notification("Artwork Beef: " + L(ARTWORK_UPDATED_MESSAGE).format(count), L(FINAL_MESSAGE), '-', 7500)
     else:

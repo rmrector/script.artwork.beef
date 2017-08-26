@@ -6,6 +6,7 @@ from math import pi, sin
 from lib.providers import base
 from lib.providers.base import AbstractProvider, cache
 from lib.libs import mediatypes
+from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.providers import ProviderError
 from lib.libs.utils import SortedDisplay
@@ -95,7 +96,7 @@ class TheTVDBProvider(AbstractProvider):
 
     def login(self):
         response = self.session.post(self.loginurl, json={'apikey': self.apikey},
-            headers={'Content-Type': 'application/json', 'User-Agent': base.useragent}, timeout=15)
+            headers={'Content-Type': 'application/json', 'User-Agent': settings.useragent}, timeout=15)
         if not response or not response.headers['Content-Type'].startswith('application/json'):
             raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]
         self.session.headers['authorization'] = 'Bearer %s' % response.json()['token']

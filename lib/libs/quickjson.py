@@ -13,7 +13,7 @@ tvshow_properties = ['art', 'imdbnumber', 'season', 'file', 'premiered']
 more_tvshow_properties = ['art', 'imdbnumber', 'season', 'file', 'premiered', 'plot', 'year']
 movie_properties = ['art', 'imdbnumber', 'file', 'premiered']
 movieset_properties = ['art']
-episode_properties = ['art', 'uniqueid', 'tvshowid', 'season', 'file']
+episode_properties = ['art', 'uniqueid', 'tvshowid', 'season', 'file', 'showtitle']
 
 def get_movie_details(movie_id):
     json_request = get_base_json_request('VideoLibrary.GetMovieDetails')
