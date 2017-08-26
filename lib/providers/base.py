@@ -67,11 +67,10 @@ class Getter(object):
             return
         errcount = 0
         while self.retryon_servererror and result.status_code in self.retryable_errors:
-            message = sys.exc_info()[1].message if sys.exc_info()[1] else 'HTTP 520' if \
-                result.status_code == 520 else ''
+            message = 'HTTP error ' + str(result.status_code)
             if errcount > 2:
                 raise ProviderError, (message, sys.exc_info()[1]), sys.exc_info()[2]
-            log('HTTP 5xx error, retrying in 2s: ' + message + '\n' + url)
+            log('HTTP 5xx error, retrying in 2s: ' + message)
             errcount += 1
             if monitor.waitForAbort(2):
                 return
@@ -101,7 +100,7 @@ class Getter(object):
         try:
             result.raise_for_status()
         except HTTPError:
-            raise ProviderError, (sys.exc_info()[1].message, sys.exc_info()[1]), sys.exc_info()[2]
+            raise ProviderError, ('HTTP error ' + str(result.status_code), sys.exc_info()[1]), sys.exc_info()[2]
         if self.contenttype and not result.headers['Content-Type'].startswith(self.contenttype):
             raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]
         return result
