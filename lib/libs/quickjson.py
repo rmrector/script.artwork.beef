@@ -104,12 +104,14 @@ def get_tvshows(moreprops=False, includeprops=True):
     else:
         return []
 
-def get_episodes(tvshow_id=None):
+def get_episodes(tvshow_id=None, limit=None):
     json_request = get_base_json_request('VideoLibrary.GetEpisodes')
     if tvshow_id:
         json_request['params']['tvshowid'] = tvshow_id
     json_request['params']['properties'] = episode_properties
     json_request['params']['sort'] = {'method': 'dateadded', 'order': 'descending'}
+    if limit:
+        json_request['params']['limits'] = {'end': limit}
 
     json_result = pykodi.execute_jsonrpc(json_request)
     if check_json_result(json_result, 'episodes', json_request):

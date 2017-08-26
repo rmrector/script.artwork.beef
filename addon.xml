@@ -30,7 +30,7 @@
 		<news>
 v0.11.0~beta1 (2017-08-22)
 - Feature: use HTTPS for all API and image URLs
-- Feature: add option to generate thumbnail from video files
+- Feature: add option to generate thumbnail from video files (disabled by default)
 - Feature: add option to override image language (defaults to Kodi interface language)
 		</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>

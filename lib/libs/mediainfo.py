@@ -21,6 +21,9 @@ def get_mediatype_id(mediaitem):
 def arttype_matches_base(arttype, basetype):
     return re.match(r'{0}\d*$'.format(basetype), arttype)
 
+def has_generated_thumbnail(mediaitem):
+    return mediaitem['art'].get('thumb', '').startswith('image://video@')
+
 def iter_urls_for_arttype(art, arttype):
     for exact in sorted(art, key=natural_sort):
         if arttype_matches_base(exact, arttype):

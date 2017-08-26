@@ -145,9 +145,11 @@ all cases to avoid this delay, though it is a bit more work. See the file
 
 - It doesn't download any artwork, and likely never will; it just adds the URLs to Kodi's database, then Kodi
   downloads them as part of its regular caching process.
-- Extrathumbs aren't added from external sources. I don't want to resize backdrops/fanart from TMDB
-  like Artwork Downloader (I much prefer to use those for multiple fanart), and generating more than one
-  thumb from the video file are outside the scope of this add-on. An external art/nfo manager could generate them.
+- Extrathumbs aren't added from external sources. There is no way to tell the difference between stills
+  and press/marketing images from the web services, while thumbs should only include stills; resizing
+  them currently requires downloading them, which I want to avoid, see above. If they aren't resized nor
+  different than fanart then skins can use multiple fanart similarly. Generating more than one thumb from
+  a video file is outside the scope of this add-on, but any provided by an art file/nfo manager is added to the library.
   Plugins can also set these to the ListItem, if their source provides more than one thumbnail.
 - It would be nice to have a Kodi built-in way for skins to feed multiple art to a `multiimage`,
   maybe something like `$INFO[ListItem.MultiArt(fanart)]` to pull all `fanart` and `fanart#` together.

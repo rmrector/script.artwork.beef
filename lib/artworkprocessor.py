@@ -255,8 +255,9 @@ class ArtworkProcessor(object):
                 log(msg)
                 xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
         elif auto:
-            self.processed.set_nextdate(mediaitem['dbid'], mediatype,
-                datetime_now() + timedelta(days=self.get_nextcheckdelay(mediaitem)))
+            if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.get('skip', ())):
+                self.processed.set_nextdate(mediaitem['dbid'], mediatype,
+                    datetime_now() + timedelta(days=self.get_nextcheckdelay(mediaitem)))
             if mediatype == mediatypes.TVSHOW:
                 self.processed.set_data(mediaitem['dbid'], mediatype, mediaitem['season'])
         return services_hit
