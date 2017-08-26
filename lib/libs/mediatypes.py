@@ -33,115 +33,115 @@ artinfo = {
         'poster': {
             'autolimit': 1,
             'multiselect': False
-		},
+        },
         'fanart': {
-	        'autolimit': 5,
-	        'multiselect': True
-		},
+            'autolimit': 5,
+            'multiselect': True
+        },
         'banner': {
-	        'autolimit': 1,
-	        'multiselect': False
-		},
-		'clearlogo': {
-	        'autolimit': 1,
-	        'multiselect': False
-		},
-		'landscape': {
-	        'autolimit': 1,
-	        'multiselect': False
-	    },
-		'clearart': {
-	        'autolimit': 1,
-	        'multiselect': False
-	    },
-	    'characterart': {
-	        'autolimit': 1,
-	        'multiselect': True
-	    }
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'clearlogo': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'landscape': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'clearart': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'characterart': {
+            'autolimit': 1,
+            'multiselect': True
+        }
     },
     MOVIE: {
-		'poster': {
+        'poster': {
             'autolimit': 1,
             'multiselect': False
-		},
-		'fanart': {
-	        'autolimit': 5,
-	        'multiselect': True
-		},
-		'banner': {
-	        'autolimit': 1,
-	        'multiselect': False
-		},
-		'clearlogo': {
-	        'autolimit': 1,
-	        'multiselect': False
-		},
-		'landscape': {
-	        'autolimit': 1,
-	        'multiselect': False
-	    },
-		'clearart': {
-	        'autolimit': 1,
-	        'multiselect': False
-	    },
-	    'discart': {
-	        'autolimit': 1,
-	        'multiselect': False
-	    }
-	},
-    MOVIESET: {
-		'poster': {
+        },
+        'fanart': {
+            'autolimit': 5,
+            'multiselect': True
+        },
+        'banner': {
             'autolimit': 1,
             'multiselect': False
-		},
-		'fanart': {
-	        'autolimit': 5,
-	        'multiselect': True
-		},
-		'banner': {
-	        'autolimit': 1,
-	        'multiselect': False
-		},
-		'clearlogo': {
-	        'autolimit': 1,
-	        'multiselect': False
-		},
-		'landscape': {
-	        'autolimit': 1,
-	        'multiselect': False
-	    },
-		'clearart': {
-	        'autolimit': 1,
-	        'multiselect': False
-	    },
-	    'discart': {
-	        'autolimit': 1,
-	        'multiselect': False
-	    }
-	},
-    SEASON: {
-		'poster': {
+        },
+        'clearlogo': {
             'autolimit': 1,
             'multiselect': False
-		},
-		'fanart': {
-            'autolimit': 1,
-            'multiselect': False
-		},
-		'banner': {
-	        'autolimit': 1,
-	        'multiselect': False
-		},
+        },
         'landscape': {
-	        'autolimit': 1,
-	        'multiselect': False
-		}
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'clearart': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'discart': {
+            'autolimit': 1,
+            'multiselect': False
+        }
+    },
+    MOVIESET: {
+        'poster': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'fanart': {
+            'autolimit': 5,
+            'multiselect': True
+        },
+        'banner': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'clearlogo': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'landscape': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'clearart': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'discart': {
+            'autolimit': 1,
+            'multiselect': False
+        }
+    },
+    SEASON: {
+        'poster': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'fanart': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'banner': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'landscape': {
+            'autolimit': 1,
+            'multiselect': False
+        }
     },
     EPISODE: {
         'fanart': {
-	        'autolimit': 1,
-	        'multiselect': False
-		}
+            'autolimit': 1,
+            'multiselect': False
+        }
     }
 }
 
