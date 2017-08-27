@@ -156,10 +156,10 @@ class ArtworkService(xbmc.Monitor):
         allitems = False
         if not shouldinclude_fn:
             allitems = True
-            shouldinclude_fn = lambda id, type: True
-        items = [movie for movie in quickjson.get_movies() if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE)]
+            shouldinclude_fn = lambda id, type, label: True
+        items = [movie for movie in quickjson.get_movies() if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE, movie['label'])]
         items.extend([mset for mset in quickjson.get_moviesets()
-            if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET)])
+            if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label'])])
 
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
@@ -168,7 +168,7 @@ class ArtworkService(xbmc.Monitor):
         for series in serieslist:
             processed_season = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW)
             if not processed_season or series['season'] > int(processed_season) or \
-                    shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW):
+                    shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW, series['label']):
                 items.append(series)
                 if series['imdbnumber'] not in settings.autoadd_episodes and not allitems:
                     for episode in quickjson.get_episodes(series['tvshowid']):
@@ -178,7 +178,7 @@ class ArtworkService(xbmc.Monitor):
                     serieseps_added.add(series['tvshowid'])
             if series['imdbnumber'] in settings.autoadd_episodes and series['tvshowid'] not in serieseps_added:
                 episodes = quickjson.get_episodes(series['tvshowid'])
-                items.extend(ep for ep in episodes if shouldinclude_fn(ep['episodeid'], mediatypes.EPISODE))
+                items.extend(ep for ep in episodes if shouldinclude_fn(ep['episodeid'], mediatypes.EPISODE, ep['label']))
                 serieseps_added.add(series['tvshowid'])
             if self.abortRequested():
                 return False

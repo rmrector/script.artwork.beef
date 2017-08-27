@@ -1,5 +1,6 @@
 v0.11.0
 - Feature: generate a report of all changed artwork
+- Fix: reset items' processed status when the Kodi library is rebuilt
 
 v0.11.0~beta1 (2017-08-22)
 - Feature: use HTTPS for all API and image URLs

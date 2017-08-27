@@ -199,8 +199,8 @@ class ArtworkProcessor(object):
                 mediaitem['error'] = header
                 if auto:
                     # Set nextdate to avoid repeated querying when no match is found
-                    self.processed.set_nextdate(mediaitem['dbid'], mediatype, datetime_now() +
-                        timedelta(days=plus_some(15, 5)))
+                    self.processed.set_nextdate(mediaitem['dbid'], mediatype, mediaitem['label'],
+                        datetime_now() + timedelta(days=plus_some(15, 5)))
                 return False
 
         if auto:
@@ -256,10 +256,10 @@ class ArtworkProcessor(object):
                 xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
         elif auto:
             if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.get('skip', ())):
-                self.processed.set_nextdate(mediaitem['dbid'], mediatype,
+                self.processed.set_nextdate(mediaitem['dbid'], mediatype, mediaitem['label'],
                     datetime_now() + timedelta(days=self.get_nextcheckdelay(mediaitem)))
             if mediatype == mediatypes.TVSHOW:
-                self.processed.set_data(mediaitem['dbid'], mediatype, mediaitem['season'])
+                self.processed.set_data(mediaitem['dbid'], mediatype, mediaitem['label'], mediaitem['season'])
         return services_hit
 
     def get_nextcheckdelay(self, mediaitem):
@@ -286,7 +286,7 @@ class ArtworkProcessor(object):
                 return False # Cancelled
             uniqueid = options[selected]['id']
         mediaitem['imdbnumber'] = uniqueid
-        self.processed.set_data(mediaitem['setid'], mediatypes.MOVIESET, uniqueid)
+        self.processed.set_data(mediaitem['setid'], mediatypes.MOVIESET, mediaitem['label'], uniqueid)
         return True
 
     def setlanguages(self):
@@ -311,12 +311,12 @@ class ArtworkProcessor(object):
             if not uniqueid and not settings.only_filesystem:
                 uniqueid = search.for_id(mediaitem['label'], mediatypes.MOVIESET)
                 if uniqueid:
-                    self.processed.set_data(mediaitem['dbid'], mediatypes.MOVIESET, uniqueid)
+                    self.processed.set_data(mediaitem['dbid'], mediatypes.MOVIESET, mediaitem['label'], uniqueid)
                 else:
                     log("Could not find set '{0}' on TheMovieDB".format(mediaitem['label']), xbmc.LOGNOTICE)
 
             mediaitem['imdbnumber'] = uniqueid
-            new = not self.processed.exists(mediaitem['dbid'], mediaitem['mediatype'])
+            new = not self.processed.exists(mediaitem['dbid'], mediaitem['mediatype'], mediaitem['label'])
             if settings.setartwork_fromparent or new:
                 prepare_movieset(mediaitem, new, settings.setartwork_fromparent)
 
