@@ -356,7 +356,8 @@ class ArtworkProcessor(object):
         primarysort = 0 if image['language'] == self.language else \
             0.5 if self.language != 'en' and image['language'] == 'en' else 1
 
-        if arttype.endswith('fanart') and settings.titlefree_fanart and image['language']:
+        if image['language'] and (arttype.endswith('fanart') and settings.titlefree_fanart or
+                arttype.endswith('poster') and settings.titlefree_poster):
             primarysort += 1
 
         return primarysort, image['language']
