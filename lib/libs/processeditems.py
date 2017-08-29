@@ -22,7 +22,7 @@ class ProcessedItems(object):
         exists = self._key_exists(mediaid, mediatype)
         scriptbit = "datetime('{0}')".format(nextdate) if nextdate else 'null'
         script = "UPDATE processeditems SET nextdate={0}, medialabel=? WHERE mediaid=? AND mediatype=?" if exists \
-            else "INSERT INTO processeditems (nextdate, mediaid, mediatype, medialabel) VALUES ({0}, ?, ?, ?)"
+            else "INSERT INTO processeditems (nextdate, medialabel, mediaid, mediatype) VALUES ({0}, ?, ?, ?)"
         self.db.execute(script.format(scriptbit), (medialabel, mediaid, mediatype))
 
     def get_data(self, mediaid, mediatype):
@@ -49,6 +49,7 @@ class ProcessedItems(object):
 
 def upgrade_processeditems(db, fromversion):
     if fromversion == VERSION:
+        _quickfix_beta(db)
         return VERSION
 
     if fromversion == -1:
@@ -63,6 +64,19 @@ def upgrade_processeditems(db, fromversion):
         workingversion = 1
 
     return workingversion
+
+def _quickfix_beta(db):
+    # DEPRECATED: This is only for beta 3, goes away before final
+    fixids = []
+    for row in db.fetchall("SELECT * FROM processeditems"):
+        if not row:
+            continue
+        try:
+            int(row['mediaid'])
+        except ValueError:
+            fixids.append(("DELETE FROM processeditems WHERE mediaid=?", (row['mediaid'],)))
+    if fixids:
+        db.executemany(*fixids)
 
 SETTINGS_TABLE_VALUE = 'database-settings'
 # must be quoted to use as identifier
