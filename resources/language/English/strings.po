@@ -174,6 +174,10 @@ msgctxt "#32901"
 msgid "Prefer fanart with no title"
 msgstr ""
 
+msgctxt "#32917"
+msgid "Prefer posters with no title"
+msgstr ""
+
 msgctxt "#32902"
 msgid "Preferred artwork size"
 msgstr ""

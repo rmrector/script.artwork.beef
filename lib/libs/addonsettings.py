@@ -27,6 +27,7 @@ class Settings(object):
         self.generate_movie_thumb = addon.get_setting('movie.thumb_generate')
         self.only_filesystem = addon.get_setting('only_filesystem')
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
+        self.titlefree_poster = addon.get_setting('titlefree_poster')
         self.setartwork_fromcentral = addon.get_setting('setartwork_fromcentral')
         self.setartwork_dir = addon.get_setting('setartwork_dir')
         self.setartwork_fromparent = addon.get_setting('setartwork_fromparent')
