@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.11.0~beta3-adev" provider-name="rmrector">
+<addon id="script.artwork.beef" name="Artwork Beef" version="0.11.0" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -28,16 +28,13 @@
 		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the file system.</description>
 		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database</disclaimer>
 		<news>
-v0.11.0~beta3 (2017-08-29)
-- Fix: Kodi library rebuild handling
-
-v0.11.0~beta1 and 2
+v0.11.0 (2017-09-02)
 - Feature: add option to override image language (defaults to Kodi interface language)
 - Feature: generate a report of all changed artwork
 - Feature: add option to prefer posters without a title
 - Feature: use HTTPS for all API and image URLs
 - Feature: add option to generate thumbnail from video files (disabled by default)
-- Fix: reset items' processed status when the Kodi library is rebuilt
+- Fix: rematch movie sets when the Kodi library is rebuilt
 		</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
 		<forum>https://forum.kodi.tv/showthread.php?tid=258886</forum>
