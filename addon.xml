@@ -35,6 +35,7 @@ v0.11.0 (2017-09-02)
 - Feature: use HTTPS for all API and image URLs
 - Feature: add option to generate thumbnail from video files (disabled by default)
 - Fix: rematch movie sets when the Kodi library is rebuilt
+- Fix: a few Leia compatibility changes
 		</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
 		<forum>https://forum.kodi.tv/showthread.php?tid=258886</forum>
