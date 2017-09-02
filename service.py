@@ -1,6 +1,5 @@
 import xbmc
 
-from lib import reporting
 from lib.artworkprocessor import ArtworkProcessor
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings
@@ -27,7 +26,6 @@ class ArtworkService(xbmc.Monitor):
         self._status = None
         self._last_itemupdate = addon.get_setting('last_itemupdate')
         self.status = STATUS_IDLE
-        reporting.report_startup(self.processed.db.version)
 
     @property
     def scanning(self):

@@ -228,5 +228,5 @@ msgid "Always generate movie thumb from video file"
 msgstr ""
 
 msgctxt "#32916"
-msgid "Show detailed reports with per item changes"
+msgid "Include detailed per item changes in the reports"
 msgstr ""
