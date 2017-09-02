@@ -52,14 +52,15 @@
 	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="fanarttv_key" label="32905" type="text" />
+		<setting id="report_peritem" label="32916" type="bool" default="false" />
+		<setting id="highquality_preview" label="32903" type="bool" default="false" />
+		<setting label="$LOCALIZE[744]" type="lsep" />
 		<setting id="episode.thumb_generate" label="32914" type="bool" default="false" />
 		<setting id="movie.thumb_generate" label="32915" type="bool" default="false" />
 		<setting id="setartwork_fromcentral" label="32909" type="bool" default="false" />
 		<setting id="setartwork_dir" subsetting="true" label="32910" type="folder" visible="eq(-1,true)" />
 		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" />
 		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
-		<setting id="highquality_preview" label="32903" type="bool" default="false" />
-		<setting id="report_peritem" label="32916" type="bool" default="false" />
 		<setting label="32055" type="lsep" />
 		<setting label="32407" type="action" action="RunScript(script.artwork.beef, command=remove_otherartwork)" />
 		<setting id="save_additional_arttypes" subsetting="true" label="32908" type="text"
