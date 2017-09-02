@@ -49,7 +49,6 @@ class ProcessedItems(object):
 
 def upgrade_processeditems(db, fromversion):
     if fromversion == VERSION:
-        _quickfix_beta(db)
         return VERSION
 
     if fromversion == -1:
@@ -64,19 +63,6 @@ def upgrade_processeditems(db, fromversion):
         workingversion = 1
 
     return workingversion
-
-def _quickfix_beta(db):
-    # DEPRECATED: This is only for beta 3, goes away before final
-    fixids = []
-    for row in db.fetchall("SELECT * FROM processeditems"):
-        if not row:
-            continue
-        try:
-            int(row['mediaid'])
-        except ValueError:
-            fixids.append(("DELETE FROM processeditems WHERE mediaid=?", (row['mediaid'],)))
-    if fixids:
-        db.executemany(*fixids)
 
 SETTINGS_TABLE_VALUE = 'database-settings'
 # must be quoted to use as identifier
