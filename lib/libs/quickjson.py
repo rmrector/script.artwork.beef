@@ -9,27 +9,42 @@ typemap = {mediatypes.MOVIE: ('Movie',),
     mediatypes.TVSHOW: ('TVShow',),
     mediatypes.EPISODE: ('Episode',),
     mediatypes.SEASON: ('Season',)}
-tvshow_properties = ['art', 'imdbnumber', 'season', 'file', 'premiered']
-more_tvshow_properties = ['art', 'imdbnumber', 'season', 'file', 'premiered', 'plot', 'year']
-movie_properties = ['art', 'imdbnumber', 'file', 'premiered']
+
+tvshow_properties = ['art', 'imdbnumber', 'season', 'file', 'premiered', 'uniqueid']
+more_tvshow_properties = tvshow_properties + ['plot', 'year']
+movie_properties = ['art', 'imdbnumber', 'file', 'premiered', 'uniqueid']
 movieset_properties = ['art']
 episode_properties = ['art', 'uniqueid', 'tvshowid', 'season', 'file', 'showtitle']
+
+def _needupgrade(mediatype):
+    return mediatype == 'movie' and get_kodi_version() < 17
+
+def _upgradeproperties():
+    if get_kodi_version() < 17:
+        tvshow_properties.remove('uniqueid')
+        more_tvshow_properties.remove('uniqueid')
+        movie_properties.remove('premiered')
+        movie_properties.remove('uniqueid')
+        movie_properties.append('year')
+
+_upgradeproperties()
+
+def _upgradeitem(mediaitem, mediatype):
+    if mediatype == 'movie':
+        mediaitem['premiered'] = '{0}-01-01'.format(mediaitem['year'])
+        del mediaitem['year']
 
 def get_movie_details(movie_id):
     json_request = get_base_json_request('VideoLibrary.GetMovieDetails')
     json_request['params']['movieid'] = movie_id
-    if get_kodi_version() >= 17:
-        json_request['params']['properties'] = movie_properties
-    else:
-        json_request['params']['properties'] = ['art', 'imdbnumber', 'file', 'year']
+    json_request['params']['properties'] = movie_properties
 
     json_result = pykodi.execute_jsonrpc(json_request)
 
     if check_json_result(json_result, 'moviedetails', json_request):
         movie = json_result['result']['moviedetails']
-        if get_kodi_version() < 17:
-            movie['premiered'] = '{0}-01-01'.format(movie['year'])
-            del movie['year']
+        if _needupgrade('movie'):
+            _upgradeitem(movie, 'movie')
         return movie
 
 def get_movieset_details(movieset_id):
@@ -66,17 +81,13 @@ def get_episode_details(episode_id):
 def get_movies():
     json_request = get_base_json_request('VideoLibrary.GetMovies')
     json_request['params']['sort'] = {'method': 'sorttitle', 'order': 'ascending'}
-    if get_kodi_version() >= 17:
-        json_request['params']['properties'] = movie_properties
-    else:
-        json_request['params']['properties'] = ['art', 'imdbnumber', 'file', 'year']
+    json_request['params']['properties'] = movie_properties
 
     json_result = pykodi.execute_jsonrpc(json_request)
     if check_json_result(json_result, 'movies', json_request):
-        if get_kodi_version() < 17:
+        if _needupgrade('movie'):
             for movie in json_result['result']['movies']:
-                movie['premiered'] = '{0}-01-01'.format(movie['year'])
-                del movie['year']
+                _upgradeitem(movie, 'movie')
         return json_result['result']['movies']
     else:
         return []
