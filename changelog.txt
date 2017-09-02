@@ -1,3 +1,6 @@
+v0.11.0 (2017-09-02)
+- Fix: only report Beef + Kodi version once per file per version pair
+
 v0.11.0~beta3 (2017-08-29)
 - Fix: Kodi library rebuild handling
 

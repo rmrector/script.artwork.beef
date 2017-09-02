@@ -1,3 +1,4 @@
+import os
 import xbmc
 import xbmcvfs
 
@@ -30,9 +31,15 @@ UPDATED_LABEL = "Updated artwork"
 ERROR_MESSAGE = "Encountered an error"
 ERRORS_MESSAGE = "Errors were encountered"
 
-def report_startup(dbversion):
+def report_startup():
     with _get_file() as reportfile:
-        write(reportfile, "= {0} ABDatabase/{1}".format(settings.useragent, str(dbversion)))
+        reportfile.seek(0, os.SEEK_SET)
+        newline = "= Versions: {0}".format(settings.useragent)
+        line_exists = any(newline in line for line in reportfile)
+        if not line_exists:
+            reportfile.seek(0, os.SEEK_END)
+            write(reportfile, newline)
+            write(reportfile, '')
 
 def report_start(medialist):
     with _get_file() as reportfile:
@@ -139,13 +146,16 @@ def _rotate_file():
             log("Could not delete old report '{0}'".format(filename), xbmc.LOGWARNING, 'reporting')
             return False
         del reportfiles[0]
+    report_startup()
     return True
 
 def _get_file():
-    return open(xbmc.translatePath(_get_filepath()), 'a')
+    return open(xbmc.translatePath(_get_filepath()), 'a+')
 
 def _exists(filetag=''):
     return xbmcvfs.exists(_get_filepath(filetag))
 
 def _get_filepath(filetag=''):
     return settings.datapath + REPORT_NAME + ('.' + filetag if filetag else '') + '.txt'
+
+report_startup()

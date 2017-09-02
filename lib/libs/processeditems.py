@@ -115,9 +115,9 @@ class Database(object):
         self._cursor.execute(query, args)
 
     def _setup(self, upgrade_fn):
-        self.version = self._get_version()
-        newversion = upgrade_fn(self, self.version)
-        if self.version != newversion:
+        version = self._get_version()
+        newversion = upgrade_fn(self, version)
+        if version != newversion:
             self._update_version(newversion)
 
     def _build_settings(self, version=-1):
@@ -143,7 +143,6 @@ class Database(object):
         return result['value']
 
     def _update_version(self, newversion):
-        self.version = newversion
         exists = bool(self.fetchone("SELECT * FROM {0} WHERE name='database version'".format(SETTINGS_TABLE)))
         script = "UPDATE {0} SET value=? WHERE name=?" if exists else "INSERT INTO {0} (value, name) VALUES (?, ?)"
         self.execute(script.format(SETTINGS_TABLE), (str(newversion), 'database version'))
