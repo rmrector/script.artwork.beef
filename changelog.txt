@@ -1,3 +1,6 @@
+v0.11.1 (2017-09-05)
+- Fix: reporting error for new users
+
 v0.11.0 (2017-09-02)
 - Feature: add temporary action to reset all movie set IDs
 - Cleanup: rearrange some Advanced add-on settings

@@ -32,6 +32,8 @@ ERROR_MESSAGE = "Encountered an error"
 ERRORS_MESSAGE = "Errors were encountered"
 
 def report_startup():
+    if not xbmcvfs.exists(settings.datapath):
+        xbmcvfs.mkdir(settings.datapath)
     with _get_file() as reportfile:
         reportfile.seek(0, os.SEEK_SET)
         newline = "= Versions: {0}".format(settings.useragent)
