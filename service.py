@@ -5,7 +5,6 @@ from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings
 from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import log, json
-from lib.maintenance import check_upgrades
 
 STATUS_IDLE = 'idle'
 STATUS_SIGNALLED = 'signalled'
@@ -63,7 +62,6 @@ class ArtworkService(xbmc.Monitor):
         self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
 
     def run(self):
-        check_upgrades()
         while not self.really_waitforabort(5):
             if self.scanning:
                 continue
