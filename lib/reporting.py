@@ -52,7 +52,7 @@ def report_start(medialist):
             return
         mediatypecount = {}
         for item in medialist:
-            mediatypecount[item['mediatype']] = mediatypecount.get(item['mediatype'], 0) + 1
+            mediatypecount[item.mediatype] = mediatypecount.get(item.mediatype, 0) + 1
 
         write(reportfile, L(ITEM_COUNT).format(len(medialist)) + " - " +
             ', '.join('{0}: {1}'.format(mt, mediatypecount[mt]) for mt in mediatypecount))
@@ -70,11 +70,11 @@ def report_end(medialist, abortedcount):
         total = 0
         errorcount = 0
         for item in medialist:
-            for arttype in item.get('updated art', ()):
+            for arttype in item.updatedart:
                 arttype = get_basetype(arttype)
                 arttypecount[arttype] = arttypecount.get(arttype, 0) + 1
                 total += 1
-            if item.get('error'):
+            if item.error:
                 errorcount += 1
 
         if not total:
@@ -92,24 +92,24 @@ def report_item(mediaitem, forcedreport=False, manual=False):
     if not forcedreport and not settings.report_peritem:
         return
     with _get_file() as reportfile:
-        itemtitle = "{0} '{1}'".format(mediaitem['mediatype'], mediaitem['label']) if mediaitem['mediatype'] != mediatypes.EPISODE \
-            else "{0} '{1}' of '{2}'".format(mediaitem['mediatype'], mediaitem['label'], mediaitem['showtitle'])
+        itemtitle = "{0} '{1}'".format(mediaitem.mediatype, mediaitem.label) if mediaitem.mediatype != mediatypes.EPISODE \
+            else "{0} '{1}' of '{2}'".format(mediaitem.mediatype, mediaitem.label, mediaitem.showtitle)
         message = "== {0}: ".format(get_datetime()) if forcedreport else ""
         message += PROCESSING_MANUALLY if manual else PROCESSING
         write(reportfile, message.format(itemtitle))
-        if not mediaitem.get('missing art'):
+        if not mediaitem.missingart:
             if not manual:
                 write(reportfile, L(NO_MISSING_ARTWORK))
         else:
-            write(reportfile, L(MISSING_LABEL) + ': ' + ', '.join(mediaitem['missing art']))
+            write(reportfile, L(MISSING_LABEL) + ': ' + ', '.join(mediaitem.missingart))
 
-        if mediaitem.get('updated art'):
-            write(reportfile, L(UPDATED_LABEL) + ': ' + ', '.join(mediaitem['updated art']))
-        elif manual or mediaitem.get('missing art'):
+        if mediaitem.updatedart:
+            write(reportfile, L(UPDATED_LABEL) + ': ' + ', '.join(mediaitem.updatedart))
+        elif manual or mediaitem.missingart:
             write(reportfile, L(NO_UPDATES))
 
-        if mediaitem.get('error'):
-            write(reportfile, L(ERROR_MESSAGE) + ' - ' + mediaitem['error'])
+        if mediaitem.error:
+            write(reportfile, L(ERROR_MESSAGE) + ' - ' + mediaitem.error)
         if forcedreport:
             write(reportfile, '')
     if forcedreport and _should_rotate():

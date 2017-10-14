@@ -78,8 +78,11 @@ class TheMovieDBMovieProvider(TheMovieDBAbstractProvider):
     apiurl = 'https://api.themoviedb.org/3/movie/%s/images'
     artmap = {'backdrops': 'fanart', 'posters': 'poster'}
 
-    def get_images(self, mediaid, types=None):
+    def get_images(self, uniqueids, types=None):
         if types is not None and not self.provides(types):
+            return {}
+        mediaid = get_mediaid(uniqueids)
+        if not mediaid:
             return {}
         if not self.baseurl:
             return {}
@@ -96,15 +99,29 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
     apiurl = 'https://api.themoviedb.org/3/tv/%s/season/%s/episode/%s/images'
     artmap = {'stills': 'fanart'}
 
-    def get_images(self, mediaid, types=None):
+    def get_images(self, uniqueids, types=None):
         if types is not None and not self.provides(types):
             return {}
         if not self.baseurl:
             return {}
-        data = self.get_data(self.tvdbidsearch_url % mediaid)
-        if not data or not data['tv_episode_results']:
+        mediaid = get_mediaid(uniqueids, ('tmdb_se', 'tvdb', 'tvdb_se', 'unknown'))
+        if not mediaid:
             return {}
-        data = data['tv_episode_results'][0]
+        if 'tmdb_se' in uniqueids:
+            splits = mediaid.split('/')
+            data = {'show_id': splits[0], 'season_number': splits[1], 'episode_number': splits[2]}
+        elif 'tvdb_se' in uniqueids and 'tvdb' not in uniqueids:
+            splits = mediaid.split('/')
+            data = self.get_data(self.tvdbidsearch_url % mediaid)
+            if not data or not data['tv_results']:
+                return {}
+            data = data['tv_results'][0]
+            data = {'show_id': data['id'], 'season_number': splits[1], 'episode_number': splits[2]}
+        else:
+            data = self.get_data(self.tvdbidsearch_url % mediaid)
+            if not data or not data['tv_episode_results']:
+                return {}
+            data = data['tv_episode_results'][0]
         data = self.get_data(self.apiurl % (data['show_id'], data['season_number'], data['episode_number']))
         if not data:
             return {}
@@ -117,9 +134,11 @@ class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
     apiurl = 'https://api.themoviedb.org/3/collection/%s/images'
     artmap = {'backdrops': 'fanart', 'posters': 'poster'}
 
-    def get_images(self, mediaid, types=None):
-        # mediaid = TMDB ID
+    def get_images(self, uniqueids, types=None):
         if types is not None and not self.provides(types):
+            return {}
+        mediaid = get_mediaid(uniqueids, ('tmdb', 'unknown'))
+        if not mediaid:
             return {}
         if not self.baseurl:
             return {}
@@ -131,11 +150,12 @@ class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
 
 class TheMovieDBSearch(object):
     searchurl = 'https://api.themoviedb.org/3/search/{0}'
+    tvexternalidsurl = 'https://api.themoviedb.org/3/tv/{0}/external_ids'
     typemap = {mediatypes.MOVIESET: 'collection'}
     _baseurl = None
 
-    def __init__(self, session):
-        self.getter = Getter(session)
+    def __init__(self):
+        self.getter = Getter()
         self.getter.set_accepted_contenttype('application/json')
 
     def log(self, message, level=xbmc.LOGDEBUG):
@@ -163,3 +183,16 @@ class TheMovieDBSearch(object):
             return []
 
         return [{'label': item['name'], 'id': item['id']} for item in data['results']]
+
+    def get_more_uniqueids(self, uniqueids, mediatype):
+        if mediatype != mediatypes.TVSHOW or 'tvdb' in uniqueids:
+            return {}
+        mediaid = get_mediaid(uniqueids)
+        url = self.tvexternalidsurl.format(mediaid)
+        data = self.get_data(url)
+        return {} if not data or not data.get('tvdb_id') else {'tvdb': data['tvdb_id']}
+
+def get_mediaid(uniqueids, sources=('imdb', 'tmdb', 'unknown')):
+    for source in sources:
+        if source in uniqueids:
+            return uniqueids[source]

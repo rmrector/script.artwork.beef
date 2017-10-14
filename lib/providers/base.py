@@ -46,7 +46,7 @@ class AbstractProvider(object):
         return False
 
     @abstractmethod
-    def get_images(self, mediaid, types=None):
+    def get_images(self, uniqueids, types=None):
         pass
 
 class Getter(object):

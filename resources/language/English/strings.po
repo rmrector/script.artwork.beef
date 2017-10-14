@@ -230,3 +230,7 @@ msgstr ""
 msgctxt "#32916"
 msgid "Include detailed per item changes in the reports"
 msgstr ""
+
+msgctxt "#32918"
+msgid "Default TV show / episode ID source if unknown: TheTVDB or TheMovieDB"
+msgstr ""

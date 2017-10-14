@@ -3,13 +3,14 @@ import xbmc
 import xbmcgui
 from itertools import chain
 
-from lib import cleaner
+from lib import cleaner, reporting
 from lib.artworkprocessor import ArtworkProcessor
-from lib.seriesselection import SeriesSelector
-from lib.libs import mediainfo, mediatypes, pykodi, quickjson
+from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
 from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import localize as L, log
+from lib.providers import search
+from lib.seriesselection import SeriesSelector
 
 class M(object):
     ADD_MISSING_HEADER = 32401
@@ -41,6 +42,8 @@ def main():
     elif 'command' in command:
         if command['command'] == 'set_autoaddepisodes':
             set_autoaddepisodes()
+        elif command['command'] == 'show_artwork_log':
+            show_artwork_log()
         elif command['command'] == 'remove_otherartwork':
             fixcount = runon_medialist(cleaner.remove_otherartwork, L(M.REMOVE_EXTRA_ARTWORK))
             notify_count(L(M.REMOVED_ART_COUNT), fixcount)
@@ -103,10 +106,11 @@ def identify_unmatched_sets():
         selected = xbmcgui.Dialog().select(L(M.UNMATCHED_SETS), [mset['label'] for mset in unmatched])
         if selected < 0:
             return # Cancelled
-        mediaitem = unmatched[selected]
+        mediaitem = info.MediaItem(unmatched[selected])
+        info.add_additional_iteminfo(mediaitem, processed, search)
         processor = ArtworkProcessor()
-        if processor.identify_movieset(mediaitem):
-            processor.process_item(mediatypes.MOVIESET, mediaitem['setid'], 'auto')
+        if processor.manualid_movieset(mediaitem):
+            processor.process_item(mediatypes.MOVIESET, mediaitem.dbid, 'auto')
     else:
         xbmcgui.Dialog().notification("Artwork Beef", L(M.NO_UNMATCHED_SETS), xbmcgui.NOTIFICATION_INFO)
 
@@ -146,11 +150,11 @@ def runon_medialist(function, heading, medialist=None, typelabel=None):
         changedcount = 0
         for i, item in enumerate(items):
             progress.update(start + i * stepsize // len(items))
-            mediainfo.prepare_mediaitem(item)
+            item = info.MediaItem(item)
 
-            processed = mediainfo.get_artwork_updates(item['art'], function(item))
+            processed = utils.get_simpledict_updates(item.art, function(item))
             if processed:
-                mediainfo.update_art_in_library(item['mediatype'], item['dbid'], processed)
+                info.update_art_in_library(item.mediatype, item.dbid, processed)
                 changedcount += len(processed)
             if monitor.abortRequested():
                 break

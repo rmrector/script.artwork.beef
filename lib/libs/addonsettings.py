@@ -36,6 +36,7 @@ class Settings(object):
         self.identify_alternatives = addon.get_setting('identify_alternatives')
         self.report_peritem = addon.get_setting('report_peritem')
         self.fanarttv_clientkey = addon.get_setting('fanarttv_key')
+        self.default_tvidsource = addon.get_setting('default_tvidsource')
 
         self.language_override = addon.get_setting('language_override')
         if self.language_override == 'None':

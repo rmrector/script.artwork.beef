@@ -1,9 +1,10 @@
 import re
+import xbmc
 
-from lib.libs import mediatypes
-from lib.libs.utils import natural_sort
-from lib.libs.pykodi import unquoteimage
-from lib.libs import quickjson
+from lib.libs import mediatypes, pykodi, quickjson
+from lib.libs.addonsettings import settings
+from lib.libs.pykodi import log, unquoteimage
+from lib.libs.utils import natural_sort, get_pathsep
 
 # get_mediatype_id must evaluate these in order, as episodes have tvshowid
 idmap = (('episodeid', mediatypes.EPISODE),
@@ -12,17 +13,53 @@ idmap = (('episodeid', mediatypes.EPISODE),
     ('movieid', mediatypes.MOVIE),
     ('setid', mediatypes.MOVIESET))
 
-def is_known_mediatype(mediaitem):
-    return any(x[0] in mediaitem for x in idmap)
+class MediaItem(object):
+    def __init__(self, jsondata):
+        self.label = jsondata['label']
+        self.file = jsondata.get('file')
+        self.premiered = jsondata.get('premiered')
+        self.sourcemedia = _get_sourcemedia(self.file)
+        self.mediatype, self.dbid = get_mediatype_id(jsondata)
+        self.skip_artwork = []
 
-def get_mediatype_id(mediaitem):
-    return next((value, mediaitem[key]) for key, value in idmap if key in mediaitem)
+        self.art = get_own_artwork(jsondata)
+        self.uniqueids = _get_uniqueids(jsondata, self.mediatype)
+        if self.mediatype == mediatypes.EPISODE:
+            self.tvshowid = jsondata['tvshowid']
+            self.showtitle = jsondata['showtitle']
+            self.season_episode = jsondata['season'], jsondata['episode']
+        elif self.mediatype == mediatypes.TVSHOW:
+            self.season = jsondata['season']
+        elif self.mediatype == mediatypes.MOVIESET:
+            self.movies = jsondata.get('movies', [])
+            if settings.setartwork_fromcentral and settings.setartwork_dir:
+                # TODO: What about finding artwork in both setartwork_dir and parent dir?
+                #  parent dir currently overrides setartwork_dir if it is found
+                self.file = settings.setartwork_dir + self.label + '.ext'
+
+        self.seasons = None
+        self.availableart = {}
+        self.missingart = [] # or build this dynamically?
+        self.selectedart = {}
+        self.forcedart = {}
+        self.updatedart = []
+        self.error = None
+
+def is_known_mediatype(jsondata):
+    return any(x[0] in jsondata for x in idmap)
+
+def get_mediatype_id(jsondata):
+    return next((value, jsondata[key]) for key, value in idmap if key in jsondata)
+
+def get_own_artwork(jsondata):
+    return dict((arttype.lower(), unquoteimage(url)) for arttype, url
+        in jsondata['art'].iteritems() if '.' not in arttype)
+
+def has_generated_thumbnail(jsondata):
+    return jsondata['art'].get('thumb', '').startswith('image://video@')
 
 def arttype_matches_base(arttype, basetype):
     return re.match(r'{0}\d*$'.format(basetype), arttype)
-
-def has_generated_thumbnail(mediaitem):
-    return mediaitem['art'].get('thumb', '').startswith('image://video@')
 
 def iter_urls_for_arttype(art, arttype):
     for exact in sorted(art, key=natural_sort):
@@ -48,11 +85,8 @@ def iter_renumbered_artlist(urllist, basetype, original_arttypes):
             yield arttype, None
 
 def iter_missing_arttypes(mediaitem, existingarttypes):
-    mediatype = mediaitem['mediatype']
-    seasons = mediaitem.get('seasons')
-    fullartinfo = mediatypes.artinfo[mediatype]
-    for arttype, artinfo in fullartinfo.iteritems():
-        if arttype in mediaitem.get('skip', ()) or not artinfo['autolimit']:
+    for arttype, artinfo in mediatypes.artinfo[mediaitem.mediatype].iteritems():
+        if arttype in mediaitem.skip_artwork or not artinfo['autolimit']:
             continue
         elif artinfo['autolimit'] == 1:
             if arttype not in existingarttypes:
@@ -62,9 +96,9 @@ def iter_missing_arttypes(mediaitem, existingarttypes):
             if artcount < artinfo['autolimit']:
                 yield arttype
 
-    if mediatype == mediatypes.TVSHOW:
+    if mediaitem.mediatype == mediatypes.TVSHOW:
         seasonartinfo = mediatypes.artinfo.get(mediatypes.SEASON)
-        for season in seasons.iteritems():
+        for season in mediaitem.seasons.iteritems():
             for arttype, artinfo in seasonartinfo.iteritems():
                 arttype = '%s.%s.%s' % (mediatypes.SEASON, season[0], arttype)
                 if not artinfo['autolimit']:
@@ -94,27 +128,100 @@ def renumber_all_artwork(art):
         result.update(iter_renumbered_artlist(urllist, basetype, art.keys()))
     return result
 
-def get_artwork_updates(originalart, newart):
-    return dict((arttype, url) for arttype, url in newart.iteritems() if url != originalart.get(arttype))
-
-
-def prepare_mediaitem(mediaitem):
-    mediaitem['mediatype'], mediaitem['dbid'] = get_mediatype_id(mediaitem)
-
-    mediaitem['art'] = dict((arttype.lower(), unquoteimage(url)) for
-        arttype, url in mediaitem['art'].iteritems() if '.' not in arttype)
-
-
 def update_art_in_library(mediatype, dbid, updatedart):
     if updatedart:
-        quickjson.set_details(dbid, mediatype, art=updatedart)
+        quickjson.set_item_details(dbid, mediatype, art=updatedart)
 
-def get_media_source(mediapath):
+def add_additional_iteminfo(mediaitem, processed, search):
+    '''Get more data from the Kodi library, processed items, and look up movie sets and sometimes TV shows on TMDB.'''
+    if mediaitem.mediatype == mediatypes.TVSHOW:
+        # TODO: Split seasons out to separate items
+        mediaitem.seasons, seasonart = _get_seasons_artwork(quickjson.get_seasons(mediaitem.dbid))
+        mediaitem.art.update(seasonart)
+        if settings.default_tvidsource == 'tmdb' and 'tvdb' not in mediaitem.uniqueids:
+            # TODO: Set to the Kodi library if found
+            resultids = search.searcher.get_more_uniqueids(mediaitem.uniqueids, mediaitem.mediatype)
+            if 'tvdb' in resultids:
+                mediaitem.uniqueids['tvdb'] = resultids['tvdb']
+    elif mediaitem.mediatype == mediatypes.EPISODE and settings.default_tvidsource == 'tmdb':
+        # TheMovieDB scraper sets episode IDs that can't be used in the API
+        tvshowids = quickjson.get_item_details(mediaitem.tvshowid, mediatypes.TVSHOW)['uniqueid']
+        tvshowid = tvshowids.get('tmdb', tvshowids.get('unknown'))
+        if tvshowid: # set this one to Kodi library?
+            mediaitem.uniqueids['tmdb_se'] = '{0}/{1}/{2}'.format(tvshowid, *mediaitem.season_episode)
+    elif mediaitem.mediatype == mediatypes.MOVIESET:
+        if not mediaitem.uniqueids.get('tmdb'):
+            uniqueid = processed.get_data(mediaitem.dbid, mediaitem.mediatype)
+            if not uniqueid and not settings.only_filesystem:
+                uniqueid = search.for_id(mediaitem.label, mediatypes.MOVIESET)
+                if uniqueid:
+                    processed.set_data(mediaitem.dbid, mediatypes.MOVIESET, mediaitem.label, uniqueid)
+                else:
+                    mediaitem.error = "Could not find set on TheMovieDB"
+                    log("Could not find set '{0}' on TheMovieDB".format(mediaitem.label), xbmc.LOGNOTICE)
+
+            mediaitem.uniqueids['tmdb'] = uniqueid
+        if not processed.exists(mediaitem.dbid, mediaitem.mediatype, mediaitem.label):
+            _remove_set_movieposters(mediaitem)
+        if settings.setartwork_fromparent:
+            _identify_parent_movieset(mediaitem)
+
+def _get_seasons_artwork(seasons):
+    resultseasons = {}
+    resultart = {}
+    for season in seasons:
+        resultseasons[season['season']] = season['seasonid']
+        for arttype, url in season['art'].iteritems():
+            arttype = arttype.lower()
+            if not arttype.startswith(('tvshow.', 'season.')):
+                resultart['%s.%s.%s' % (mediatypes.SEASON, season['season'], arttype)] = pykodi.unquoteimage(url)
+    return resultseasons, resultart
+
+def _remove_set_movieposters(mediaitem):
+    # Remove poster/fanart Kodi automatically sets from a movie
+    if not set(key for key in mediaitem.art).difference('poster', 'fanart'):
+        if 'poster' in mediaitem.art:
+            del mediaitem.art['poster']
+        if 'fanart' in mediaitem.art:
+            del mediaitem.art['fanart']
+
+def _identify_parent_movieset(mediaitem):
+    # Identify set folder among movie parent dirs
+    if not mediaitem.movies:
+        mediaitem.movies = quickjson.get_item_details(mediaitem.dbid, mediatypes.MOVIESET)['movies']
+    for movie in mediaitem.movies:
+        pathsep = get_pathsep(movie.file)
+        setmatch = pathsep + mediaitem.label + pathsep
+        if setmatch in movie.file:
+            mediaitem.file = movie.file.split(setmatch)[0] + setmatch
+            break
+
+def _get_uniqueids(jsondata, mediatype):
+    uniqueids = jsondata.get('uniqueid', {})
+    if '/' in uniqueids.get('tvdb', ''):
+        # PlexKodiConnect sets these
+        uniqueids['tvdb_se'] = uniqueids['tvdb']
+        del uniqueids['tvdb']
+    if 'unknown' in uniqueids:
+        uniqueid = uniqueids['unknown']
+        if uniqueid.startswith('tt') and 'imdb' not in uniqueids:
+            # TODO: If changed, set it in Kodi's library
+            uniqueids['imdb'] = uniqueid
+            del uniqueids['unknown']
+        elif mediatype in (mediatypes.TVSHOW, mediatypes.EPISODE) and settings.default_tvidsource not in uniqueids:
+            # but maybe not this guy
+            uniqueids[settings.default_tvidsource] = uniqueid
+            del uniqueids['unknown']
+
+    return uniqueids
+
+def _get_sourcemedia(mediapath):
     if not mediapath:
         return 'unknown'
     mediapath = mediapath.lower()
     if re.search(r'\b3d\b', mediapath):
         return '3d'
+    # TODO: UHD?
     if re.search(r'blu-?ray|b[rd]-?rip', mediapath) or mediapath.endswith('.bdmv'):
         return 'bluray'
     if re.search(r'\bdvd', mediapath) or mediapath.endswith('.ifo'):
