@@ -6,12 +6,12 @@ from datetime import timedelta
 from lib import cleaner, reporting
 from lib.artworkselection import prompt_for_artwork
 from lib.gatherer import Gatherer
-from lib.providers import search
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings
 from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import datetime_now, localize as L, log
-from lib.libs.utils import SortedDisplay, natural_sort, get_pathsep
+from lib.libs.utils import SortedDisplay, natural_sort, get_simpledict_updates
+from lib.providers import search
 
 MODE_AUTO = 'auto'
 MODE_GUI = 'gui'
@@ -73,14 +73,8 @@ class ArtworkProcessor(object):
         if mode == MODE_GUI:
             busy = pykodi.get_busydialog()
             busy.create()
-        if mediatype == mediatypes.TVSHOW:
-            mediaitem = quickjson.get_tvshow_details(dbid)
-        elif mediatype == mediatypes.MOVIE:
-            mediaitem = quickjson.get_movie_details(dbid)
-        elif mediatype == mediatypes.EPISODE:
-            mediaitem = quickjson.get_episode_details(dbid)
-        elif mediatype == mediatypes.MOVIESET:
-            mediaitem = quickjson.get_movieset_details(dbid)
+        if mediatype in (mediatypes.TVSHOW, mediatypes.MOVIE, mediatypes.EPISODE, mediatypes.MOVIESET):
+            mediaitem = info.MediaItem(quickjson.get_item_details(dbid, mediatype))
         else:
             if mode == MODE_GUI:
                 busy.close()
@@ -89,84 +83,89 @@ class ArtworkProcessor(object):
 
         self.init_run()
         if mediatype == mediatypes.EPISODE:
-            series = quickjson.get_tvshow_details(mediaitem['tvshowid'])
-            if series['imdbnumber'] not in settings.autoadd_episodes:
-                mediaitem['skip'] = ['fanart']
+            series = quickjson.get_item_details(mediaitem.tvshowid, mediatypes.TVSHOW)
+            if not any(uniqueid in settings.autoadd_episodes for uniqueid in series['uniqueid'].itervalues()):
+                mediaitem.skip_artwork = ['fanart']
 
+        info.add_additional_iteminfo(mediaitem, self.processed, search)
+        if not mediaitem.uniqueids and not settings.only_filesystem:
+            if mediatype == mediatypes.MOVIESET:
+                self.manualid_movieset(mediaitem)
         if mode == MODE_GUI:
-            self.add_additional_iteminfo(mediaitem)
-            self._process_item(Gatherer(self.monitor, settings.only_filesystem, self.autolanguages), mediaitem, True, False)
-            busy.close()
-            if 'available art' in mediaitem:
-                availableart = mediaitem['available art']
-                if 'seasons' in mediaitem and 'fanart' in availableart:
-                    for season in mediaitem['seasons'].keys():
-                        unseasoned_backdrops = [dict(art) for art in availableart['fanart'] if not art.get('hasseason')]
+            self._manual_item_process(mediaitem, busy)
+        else:
+            medialist = [mediaitem]
+            if mediatype == mediatypes.TVSHOW:
+                if mediaitem.uniqueids and any(x in mediaitem.uniqueids.itervalues() for x in settings.autoadd_episodes):
+                    medialist.extend(info.MediaItem(ep) for ep in quickjson.get_episodes(dbid))
+                elif settings.generate_episode_thumb:
+                    for episode in quickjson.get_episodes(dbid):
+                        if not info.has_generated_thumbnail(episode):
+                            episode = info.MediaItem(episode)
+                            episode.skip_artwork = ['fanart']
+                            medialist.append(episode)
+            self.process_medialist(medialist, True)
+
+    def _manual_item_process(self, mediaitem, busy):
+        self._process_item(Gatherer(self.monitor, settings.only_filesystem, self.autolanguages), mediaitem, True, False)
+        busy.close()
+        if mediaitem.availableart or mediaitem.forcedart:
+            availableart = dict(mediaitem.availableart)
+            if mediaitem.mediatype == mediatypes.TVSHOW and 'fanart' in availableart:
+                # add unseasoned backdrops as manual-only options for each season fanart
+                unseasoned_backdrops = [dict(art) for art in availableart['fanart'] if not art.get('hasseason')]
+                if unseasoned_backdrops:
+                    for season in mediaitem.seasons.keys():
                         key = 'season.{0}.fanart'.format(season)
                         if key in availableart:
                             availableart[key].extend(unseasoned_backdrops)
                         else:
-                            availableart[key] = unseasoned_backdrops
-                tag_forcedandexisting_art(availableart, mediaitem['forced art'], mediaitem['art'])
-                selectedarttype, selectedart = prompt_for_artwork(mediatype, mediaitem['label'],
-                    availableart, self.monitor)
-                if selectedarttype and selectedarttype not in availableart:
-                    self.identify_movieset(mediaitem)
-                    return
-                if selectedarttype and selectedart:
-                    if mediatypes.get_artinfo(mediatype, selectedarttype)['multiselect']:
-                        existingurls = [url for exacttype, url in mediaitem['art'].iteritems()
-                            if info.arttype_matches_base(exacttype, selectedarttype)]
-                        urls_toset = [url for url in existingurls if url not in selectedart[1]]
-                        urls_toset.extend([url for url in selectedart[0] if url not in urls_toset])
-                        selectedart = dict(info.iter_renumbered_artlist(urls_toset, selectedarttype, mediaitem['art'].keys()))
-                    else:
-                        selectedart = {selectedarttype: selectedart}
+                            availableart[key] = list(unseasoned_backdrops)
+            tag_forcedandexisting_art(availableart, mediaitem.forcedart, mediaitem.art)
+            selectedarttype, selectedart = prompt_for_artwork(mediaitem.mediatype, mediaitem.label,
+                availableart, self.monitor)
+            if selectedarttype and selectedarttype not in availableart:
+                self.manualid_movieset(mediaitem)
+                return
+            if selectedarttype and selectedart:
+                if mediatypes.get_artinfo(mediaitem.mediatype, selectedarttype)['multiselect']:
+                    existingurls = [url for exacttype, url in mediaitem.art.iteritems()
+                        if info.arttype_matches_base(exacttype, selectedarttype)]
+                    urls_toset = [url for url in existingurls if url not in selectedart[1]]
+                    urls_toset.extend([url for url in selectedart[0] if url not in urls_toset])
+                    selectedart = dict(info.iter_renumbered_artlist(urls_toset, selectedarttype, mediaitem.art.keys()))
+                else:
+                    selectedart = {selectedarttype: selectedart}
 
-                    selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
-                    if selectedart:
-                        mediaitem['selected art'] = selectedart
-                        mediaitem['updated art'] = selectedart.keys()
-                        add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], selectedart)
-                    reporting.report_item(mediaitem, True, True)
-                    notifycount(len(selectedart))
-            else:
-                xbmcgui.Dialog().notification(L(NOT_AVAILABLE_MESSAGE),
-                    L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
-            self.finish_run()
+                selectedart = get_simpledict_updates(mediaitem.art, selectedart)
+                if selectedart:
+                    mediaitem.selectedart = selectedart
+                    mediaitem.updatedart = selectedart.keys()
+                    add_art_to_library(mediaitem.mediatype, mediaitem.seasons, mediaitem.dbid, selectedart)
+                reporting.report_item(mediaitem, True, True)
+                notifycount(len(selectedart))
         else:
-            medialist = [mediaitem]
-            if mediatype == mediatypes.TVSHOW:
-                if mediaitem['imdbnumber'] in settings.autoadd_episodes:
-                    medialist.extend(quickjson.get_episodes(dbid))
-                elif settings.generate_episode_thumb:
-                    for episode in quickjson.get_episodes(dbid):
-                        if not info.has_generated_thumbnail(episode):
-                            episode['skip'] = ['fanart']
-                            medialist.append(episode)
-            self.process_medialist(medialist, True)
+            xbmcgui.Dialog().notification(L(NOT_AVAILABLE_MESSAGE),
+                L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
+        self.finish_run()
 
     def process_medialist(self, medialist, alwaysnotify=False):
         self.init_run(len(medialist) > 0)
         artcount = 0
         currentitem = 0
         aborted = False
-        for mediaitem in medialist:
-            self.add_additional_iteminfo(mediaitem)
         singleitemlist = len(medialist) == 1
         if not singleitemlist:
             reporting.report_start(medialist)
         if medialist:
             gatherer = Gatherer(self.monitor, settings.only_filesystem, self.autolanguages)
         for mediaitem in medialist:
-            self.update_progress(currentitem * 100 // len(medialist), mediaitem['label'])
+            self.update_progress(currentitem * 100 // len(medialist), mediaitem.label)
+            info.add_additional_iteminfo(mediaitem, self.processed, search)
             currentitem += 1
-            if not info.is_known_mediatype(mediaitem):
-                continue
             services_hit = self._process_item(gatherer, mediaitem)
             reporting.report_item(mediaitem, singleitemlist)
-            if 'updated art' in mediaitem:
-                artcount += len(mediaitem['updated art'])
+            artcount += len(mediaitem.updatedart)
 
             if not services_hit:
                 if self.monitor.abortRequested():
@@ -183,54 +182,37 @@ class ArtworkProcessor(object):
         return not aborted
 
     def _process_item(self, gatherer, mediaitem, singleitem=False, auto=True):
-        mediatype = mediaitem['mediatype']
-        if not mediaitem['imdbnumber'] and (singleitem or not settings.only_filesystem):
-            if mediatype == mediatypes.MOVIESET:
-                header = "Could not find set on TheMovieDB, can't process"
-                message = "movie set '{0}'".format(mediaitem['label'])
+        mediatype = mediaitem.mediatype
+        if not mediaitem.uniqueids and not settings.only_filesystem:
+            header = "No web service IDs available, can't look up online"
+            mediaitem.error = header
+            if singleitem:
+                message = "{0} '{1}'".format(mediatype, mediaitem.label)
                 xbmcgui.Dialog().notification("Artwork Beef: " + header, message, xbmcgui.NOTIFICATION_INFO)
-            else:
-                header = "No default uniqueid available, can't process"
-                message = "{0} '{1}'".format(mediatype, mediaitem['label'])
-                if singleitem:
-                    xbmcgui.Dialog().notification("Artwork Beef: " + header, message, xbmcgui.NOTIFICATION_INFO)
-
-            if not singleitem or (mediatype == mediatypes.MOVIESET and not self.identify_movieset(mediaitem)):
-                mediaitem['error'] = header
-                if auto:
-                    # Set nextdate to avoid repeated querying when no match is found
-                    self.processed.set_nextdate(mediaitem['dbid'], mediatype, mediaitem['label'],
-                        datetime_now() + timedelta(days=plus_some(15, 5)))
-                return False
 
         if auto:
-            cleaned = info.get_artwork_updates(mediaitem['art'], cleaner.clean_artwork(mediaitem))
+            cleaned = get_simpledict_updates(mediaitem.art, cleaner.clean_artwork(mediaitem))
             if cleaned:
-                add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], cleaned)
-                mediaitem['art'].update(cleaned)
-                mediaitem['art'] = dict(item for item in mediaitem['art'].iteritems() if item[1])
-                mediaitem['updated art'] = cleaned.keys()
+                add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, cleaned)
+                mediaitem.art.update(cleaned)
+                mediaitem.art = dict(item for item in mediaitem.art.iteritems() if item[1])
+                mediaitem.updatedart = cleaned.keys()
 
-        existingkeys = [key for key, url in mediaitem['art'].iteritems() if url]
-        mediaitem['missing art'] = list(info.iter_missing_arttypes(mediaitem, existingkeys))
+        existingkeys = [key for key, url in mediaitem.art.iteritems() if url]
+        mediaitem.missingart = list(info.iter_missing_arttypes(mediaitem, existingkeys))
 
-        forcedart, availableart, services_hit, error = gatherer.getartwork(mediaitem, auto)
-        mediaitem['forced art'] = forcedart
-
-        for arttype, imagelist in availableart.iteritems():
-            self.sort_images(arttype, imagelist, mediaitem.get('file'))
-        mediaitem['available art'] = availableart
+        services_hit, error = gatherer.getartwork(mediaitem, auto)
 
         if auto:
             # Remove existing local artwork if it is no longer available
-            existingart = dict(mediaitem['art'])
-            localart = [(arttype, image['url']) for arttype, image in forcedart.iteritems()
+            existingart = dict(mediaitem.art)
+            localart = [(arttype, image['url']) for arttype, image in mediaitem.forcedart.iteritems()
                 if not image['url'].startswith('http')]
             selectedart = dict((arttype, None) for arttype, url in existingart.iteritems()
                 if not url.startswith(('http', 'image://video@')) and arttype not in ('animatedposter', 'animatedfanart')
                     and (arttype, url) not in localart)
 
-            selectedart.update((key, image['url']) for key, image in forcedart.iteritems())
+            selectedart.update((key, image['url']) for key, image in mediaitem.forcedart.iteritems())
             selectedart = info.renumber_all_artwork(selectedart)
 
             existingart.update(selectedart)
@@ -238,129 +220,66 @@ class ArtworkProcessor(object):
             # Then add the rest of the missing art
             existingkeys = [key for key, url in existingart.iteritems() if url]
             selectedart.update(self.get_top_missing_art(info.iter_missing_arttypes(mediaitem, existingkeys),
-                mediatype, existingart, availableart))
+                mediatype, existingart, mediaitem.availableart))
 
             # Identify actual changes, and save them
-            selectedart = info.get_artwork_updates(mediaitem['art'], selectedart)
+            selectedart = get_simpledict_updates(mediaitem.art, selectedart)
             if selectedart:
-                mediaitem['selected art'] = selectedart
-                mediaitem['updated art'] = list(set(mediaitem.get('updated art', []) + selectedart.keys()))
-                add_art_to_library(mediatype, mediaitem.get('seasons'), mediaitem['dbid'], mediaitem['selected art'])
+                mediaitem.selectedart = selectedart
+                mediaitem.updatedart = list(set(mediaitem.updatedart + selectedart.keys()))
+                add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, mediaitem.selectedart)
 
         if error:
             if 'message' in error:
                 header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
                 msg = '{0}: {1}'.format(header, error['message'])
-                mediaitem['error'] = msg
+                mediaitem.error = msg
                 log(msg)
                 xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
         elif auto:
-            if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.get('skip', ())):
-                self.processed.set_nextdate(mediaitem['dbid'], mediatype, mediaitem['label'],
+            if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.skip_artwork):
+                self.processed.set_nextdate(mediaitem.dbid, mediatype, mediaitem.label,
                     datetime_now() + timedelta(days=self.get_nextcheckdelay(mediaitem)))
             if mediatype == mediatypes.TVSHOW:
-                self.processed.set_data(mediaitem['dbid'], mediatype, mediaitem['label'], mediaitem['season'])
+                self.processed.set_data(mediaitem.dbid, mediatype, mediaitem.label, mediaitem.season)
         return services_hit
 
     def get_nextcheckdelay(self, mediaitem):
         if settings.only_filesystem:
             return plus_some(5, 3)
-        elif not mediaitem.get('missing art'):
+        elif not mediaitem.uniqueids:
+            return plus_some(30, 5)
+        elif not mediaitem.missingart:
             return plus_some(120, 25)
-        elif mediaitem['mediatype'] in (mediatypes.MOVIE, mediatypes.TVSHOW) and \
-                mediaitem['premiered'] > self.freshstart:
+        elif mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) and \
+                mediaitem.premiered > self.freshstart:
             return plus_some(30, 10)
         else:
             return plus_some(60, 15)
 
-    def identify_movieset(self, mediaitem):
-        self.add_additional_iteminfo(mediaitem)
+    def manualid_movieset(self, mediaitem):
         uniqueid = None
         while not uniqueid:
-            result = xbmcgui.Dialog().input(L(ENTER_COLLECTION_NAME), mediaitem['label'])
+            result = xbmcgui.Dialog().input(L(ENTER_COLLECTION_NAME), mediaitem.label)
             if not result:
                 return False # Cancelled
             options = search.search(result, mediatypes.MOVIESET)
-            selected = xbmcgui.Dialog().select(mediaitem['label'], [option['label'] for option in options])
+            selected = xbmcgui.Dialog().select(mediaitem.label, [option['label'] for option in options])
             if selected < 0:
                 return False # Cancelled
             uniqueid = options[selected]['id']
-        mediaitem['imdbnumber'] = uniqueid
-        self.processed.set_data(mediaitem['setid'], mediatypes.MOVIESET, mediaitem['label'], uniqueid)
+        mediaitem['tmdb'] = uniqueid
+        self.processed.set_data(mediaitem.dbid, mediatypes.MOVIESET, mediaitem.label, uniqueid)
         return True
 
     def setlanguages(self):
-        self.language = pykodi.get_language(xbmc.ISO_639_1)
-        self.autolanguages = (self.language, None) if self.language == 'en' else (self.language, 'en', None)
-        if settings.language_override:
-            self.language = settings.language_override
-        if settings.language_override not in self.autolanguages:
-            self.autolanguages += (settings.language_override,)
-
-    def add_additional_iteminfo(self, mediaitem):
-        if 'mediatype' in mediaitem:
-            return
-        info.prepare_mediaitem(mediaitem)
-        if mediaitem['mediatype'] == mediatypes.EPISODE:
-            mediaitem['imdbnumber'] = self._get_episodeid(mediaitem)
-        elif mediaitem['mediatype'] == mediatypes.TVSHOW:
-            mediaitem['seasons'], seasonart = self._get_seasons_artwork(quickjson.get_seasons(mediaitem['dbid']))
-            mediaitem['art'].update(seasonart)
-        elif mediaitem['mediatype'] == mediatypes.MOVIESET:
-            uniqueid = self.processed.get_data(mediaitem['dbid'], mediaitem['mediatype'])
-            if not uniqueid and not settings.only_filesystem:
-                uniqueid = search.for_id(mediaitem['label'], mediatypes.MOVIESET)
-                if uniqueid:
-                    self.processed.set_data(mediaitem['dbid'], mediatypes.MOVIESET, mediaitem['label'], uniqueid)
-                else:
-                    log("Could not find set '{0}' on TheMovieDB".format(mediaitem['label']), xbmc.LOGNOTICE)
-
-            mediaitem['imdbnumber'] = uniqueid
-            new = not self.processed.exists(mediaitem['dbid'], mediaitem['mediatype'], mediaitem['label'])
-            if settings.setartwork_fromparent or new:
-                prepare_movieset(mediaitem, new, settings.setartwork_fromparent)
-
-            if 'file' not in mediaitem and settings.setartwork_fromcentral and settings.setartwork_dir:
-                mediaitem['file'] = settings.setartwork_dir + mediaitem['label'] + '.ext'
-
-    def sort_images(self, arttype, imagelist, mediapath):
-        # 1. Language, preferring fanart with no language/title if configured
-        # 2. Match discart to media source
-        # 3. Size (in 200px groups), up to preferredsize
-        # 4. Rating
-        imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
-        imagelist.sort(key=self.size_sort, reverse=True)
-        if arttype == 'discart':
-            mediasubtype = info.get_media_source(mediapath)
-            if mediasubtype != 'unknown':
-                imagelist.sort(key=lambda image: 0 if image.get('subtype', SortedDisplay(None, '')).sort == mediasubtype else 1)
-        imagelist.sort(key=lambda image: self._imagelanguage_sort(image, arttype))
-
-    def size_sort(self, image):
-        imagesplit = image['size'].display.split('x')
-        if len(imagesplit) != 2:
-            return image['size'].sort
-        try:
-            imagesize = int(imagesplit[0]), int(imagesplit[1])
-        except ValueError:
-            return image['size'].sort
-        if imagesize[0] > settings.preferredsize[0]:
-            shrink = settings.preferredsize[0] / float(imagesize[0])
-            imagesize = settings.preferredsize[0], imagesize[1] * shrink
-        if imagesize[1] > settings.preferredsize[1]:
-            shrink = settings.preferredsize[1] / float(imagesize[1])
-            imagesize = imagesize[0] * shrink, settings.preferredsize[1]
-        return max(imagesize) // 200
-
-    def _imagelanguage_sort(self, image, arttype):
-        primarysort = 0 if image['language'] == self.language else \
-            0.5 if self.language != 'en' and image['language'] == 'en' else 1
-
-        if image['language'] and (arttype.endswith('fanart') and settings.titlefree_fanart or
-                arttype.endswith('poster') and settings.titlefree_poster):
-            primarysort += 1
-
-        return primarysort, image['language']
+        languages = [pykodi.get_language(xbmc.ISO_639_1)]
+        if settings.language_override and settings.language_override not in languages:
+            languages.insert(0, settings.language_override)
+        if 'en' not in languages:
+            languages.append('en')
+        languages.append(None)
+        self.autolanguages = languages
 
     def get_top_missing_art(self, missingarts, mediatype, existingart, availableart):
         if not availableart:
@@ -398,28 +317,6 @@ class ArtworkProcessor(object):
                     newartwork[missingart] = newart['url']
         return newartwork
 
-    def _get_seasons_artwork(self, seasons):
-        resultseasons = {}
-        resultart = {}
-        for season in seasons:
-            resultseasons[season['season']] = season['seasonid']
-            for arttype, url in season['art'].iteritems():
-                arttype = arttype.lower()
-                if not arttype.startswith(('tvshow.', 'season.')):
-                    resultart['%s.%s.%s' % (mediatypes.SEASON, season['season'], arttype)] = pykodi.unquoteimage(url)
-        return resultseasons, resultart
-
-    def _get_episodeid(self, episode):
-        if 'unknown' in episode['uniqueid']:
-            return episode['uniqueid']['unknown']
-        else:
-            idsource, result = episode['uniqueid'].iteritems()[0] if episode['uniqueid'] else '', ''
-            if result:
-                log("Didn't find 'unknown' uniqueid for episode, just picked the first, from '%s'." % idsource, xbmc.LOGINFO)
-            else:
-                log("Didn't find a uniqueid for episode '%s', can't look it up. I expect the ID from TheTVDB, which generally comes from the scraper." % episode['label'], xbmc.LOGNOTICE)
-            return result
-
     def _auto_filter(self, arttype, art, ignoreurls=()):
         if art['rating'].sort < settings.minimum_rating:
             return False
@@ -448,28 +345,6 @@ def notifycount(count):
 
 def plus_some(start, rng):
     return start + (random.randrange(-rng, rng + 1))
-
-def prepare_movieset(mediaitem, new, setfile):
-    if new:
-        # Remove poster/fanart Kodi automatically sets from a movie
-        if not set(key for key in mediaitem['art']).difference('poster', 'fanart'):
-            if 'poster' in mediaitem['art']:
-                del mediaitem['art']['poster']
-            if 'fanart' in mediaitem['art']:
-                del mediaitem['art']['fanart']
-
-    if setfile:
-        # Identify set folder among movie parent dirs
-        if 'movies' not in mediaitem:
-            mediaitem['movies'] = quickjson.get_movieset_details(mediaitem['dbid'])['movies']
-        for movie in mediaitem['movies']:
-            pathsep = get_pathsep(movie['file'])
-            setmatch = pathsep + mediaitem['label'] + pathsep
-            if setmatch in movie['file']:
-                mediaitem['file'] = movie['file'].split(setmatch)[0] + setmatch
-
-            if 'file' in mediaitem:
-                break
 
 def tag_forcedandexisting_art(availableart, forcedart, existingart):
     typeinsert = {}

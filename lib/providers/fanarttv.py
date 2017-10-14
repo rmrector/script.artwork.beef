@@ -1,7 +1,7 @@
 import re
 import urllib
 import xbmc
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 
 from lib.providers.base import AbstractProvider, cache
 from lib.libs import mediatypes
@@ -12,6 +12,7 @@ from lib.libs.utils import SortedDisplay
 class FanartTVAbstractProvider(AbstractProvider):
     __metaclass__ = ABCMeta
     api_section = None
+    mediatype = None
 
     name = SortedDisplay('fanart.tv', 'fanart.tv')
     apikey = '***REMOVED***'
@@ -20,7 +21,17 @@ class FanartTVAbstractProvider(AbstractProvider):
     def __init__(self, *args):
         super(FanartTVAbstractProvider, self).__init__(*args)
         self.set_accepted_contenttype('application/json')
-        self.getter.retryon_servererror = True
+
+    def get_images(self, uniqueids, types=None):
+        if types is not None and not self.provides(types):
+            return {}
+        mediaid = get_mediaid(uniqueids, self.mediatype)
+        if not mediaid:
+            return {}
+        data = self.get_data(mediaid)
+        if not data:
+            return {}
+        return self._get_images(data)
 
     def get_data(self, mediaid):
         result = cache.cacheFunction(self._get_data, mediaid)
@@ -33,6 +44,14 @@ class FanartTVAbstractProvider(AbstractProvider):
             headers['client-key'] = settings.fanarttv_clientkey
         response = self.doget(self.apiurl % (self.api_section, mediaid), headers=headers)
         return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
+
+    @abstractmethod
+    def _get_images(self, data):
+        pass
+
+    @abstractmethod
+    def provides(self, types):
+        pass
 
 class FanartTVSeriesProvider(FanartTVAbstractProvider):
     mediatype = mediatypes.TVSHOW
@@ -54,12 +73,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         'showbackground-season': mediatypes.SEASON + '.%s.fanart'
     }
 
-    def get_images(self, mediaid, types=None):
-        if types is not None and not self.provides(types):
-            return {}
-        data = self.get_data(mediaid)
-        if not data:
-            return {}
+    def _get_images(self, data):
         result = {}
         for arttype, artlist in data.iteritems():
             generaltype = self.artmap.get(arttype)
@@ -125,12 +139,7 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
 
     disctitles = {'dvd': 'DVD', '3d': '3D', 'bluray': 'Blu-ray'}
 
-    def get_images(self, mediaid, types=None):
-        if types is not None and not self.provides(types):
-            return {}
-        data = self.get_data(mediaid)
-        if not data:
-            return {}
+    def _get_images(self, data):
         result = {}
         for arttype, artlist in data.iteritems():
             generaltype = self.artmap.get(arttype)
@@ -156,6 +165,13 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
 
 class FanartTVMovieSetProvider(FanartTVMovieProvider):
     mediatype = mediatypes.MOVIESET
+
+def get_mediaid(uniqueids, mediatype):
+    sources = ('imdb', 'tmdb', 'unknown') if mediatype == mediatypes.MOVIE else \
+        ('tmdb', 'unknown') if mediatype == mediatypes.MOVIESET else ('tvdb', 'unknown')
+    for source in sources:
+        if source in uniqueids:
+            return uniqueids[source]
 
 def _get_imagesize(arttype):
     if arttype in ('hdtvlogo', 'hdclearart', 'hdmovielogo', 'hdmovieclearart'):

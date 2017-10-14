@@ -3,11 +3,10 @@ import urllib
 
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
-from lib.libs.mediainfo import arttype_matches_base, iter_base_arttypes, iter_urls_for_arttype, update_art_in_library
-from lib.providers.videofile import build_video_thumbnail_path
+from lib.libs.mediainfo import arttype_matches_base, iter_base_arttypes, iter_urls_for_arttype
 
 def clean_artwork(mediaitem):
-    updated_art = dict(_get_clean_art(*art) for art in mediaitem['art'].iteritems())
+    updated_art = dict(_get_clean_art(*art) for art in mediaitem.art.iteritems())
     for basetype in iter_base_arttypes(updated_art.keys()):
         remove_duplicate_fanart = basetype == 'fanart'
         updated_art.update(_arrange_multiart(updated_art, basetype, remove_duplicate_fanart))
@@ -21,34 +20,27 @@ def remove_otherartwork(mediaitem):
     keep_types = dict(arttype.split(':', 2) if ':' in arttype else (arttype, sys.maxsize) for arttype in keep_types)
     finalart = {}
 
-    for basetype in iter_base_arttypes(mediaitem['art'].keys()):
+    for basetype in iter_base_arttypes(mediaitem.art.keys()):
         if basetype in keep_types:
             try:
                 max_allowed = int(keep_types[basetype])
             except ValueError:
                 max_allowed = sys.maxsize
         else:
-            max_allowed = mediatypes.get_artinfo(mediaitem['mediatype'], basetype)['autolimit']
-        finalart.update(_arrange_multiart(mediaitem['art'], basetype, limit=max_allowed))
+            max_allowed = mediatypes.get_artinfo(mediaitem.mediatype, basetype)['autolimit']
+        finalart.update(_arrange_multiart(mediaitem.art, basetype, limit=max_allowed))
 
-    finalart.update((arttype, None) for arttype in mediaitem['art'] if arttype not in finalart)
+    finalart.update((arttype, None) for arttype in mediaitem.art if arttype not in finalart)
     return finalart
 
 def remove_specific_arttype(mediaitem, arttype):
     '''pass 'all' as arttype to clear all artwork.'''
     if arttype == 'all':
-        return dict((atype, None) for atype in mediaitem['art'])
-    finalart = dict(art for art in mediaitem['art'].iteritems())
+        return dict((atype, None) for atype in mediaitem.art)
+    finalart = dict(art for art in mediaitem.art.iteritems())
     if arttype in finalart:
         finalart[arttype] = None
     return finalart
-
-def generate_episode_thumb(episode):
-    '''awkwarder and awkwarder.'''
-    if episode['art'].get('thumb', '').startswith('image://video@') or episode['file'].endswith('.iso'):
-        return False
-    update_art_in_library(mediatypes.EPISODE, episode['episodeid'], {'thumb': build_video_thumbnail_path(episode['file'])})
-    return True
 
 def _get_clean_art(arttype, url):
     if not url: # Remove empty URLs

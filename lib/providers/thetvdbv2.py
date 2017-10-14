@@ -49,8 +49,11 @@ class TheTVDBProvider(AbstractProvider):
         else:
             return SortedDisplay(5, 'Not rated')
 
-    def get_images(self, mediaid, types=None):
+    def get_images(self, uniqueids, types=None):
         if types is not None and not self.provides(types):
+            return {}
+        mediaid = get_mediaid(uniqueids)
+        if not mediaid:
             return {}
         result = {}
         languages = base.languages
@@ -115,3 +118,8 @@ def shouldset_imagelanguage(image):
 
 def typematches(arttype, types):
     return any(x for x in types if arttype == (x if not x.startswith('season.') else re.sub(r'[\d]', '%s', x)))
+
+def get_mediaid(uniqueids):
+    for source in ('tvdb', 'unknown'):
+        if source in uniqueids:
+            return uniqueids[source]

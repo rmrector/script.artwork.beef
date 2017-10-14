@@ -14,6 +14,9 @@ def get_pathsep(path):
     # The path separator can go either way on Windows, C:\Videos or smb://SERVER/Videos
     return '\\' if '\\' in path else '/'
 
+def get_simpledict_updates(original, newdict):
+    return dict(pair for pair in newdict.iteritems() if pair[1] != original.get(pair[0]))
+
 # TODO: Load from advancedsettings.xml
 moviestacking = [re.compile(r'(.*?)([ _.-]*(?:cd|dvd|p(?:ar)?t|dis[ck])[ _.-]*[0-9]+)(.*?)(\.[^.]+)$', re.IGNORECASE),
     re.compile(r'(.*?)([ _.-]*(?:cd|dvd|p(?:ar)?t|dis[ck])[ _.-]*[a-d])(.*?)(\.[^.]+)$', re.IGNORECASE),

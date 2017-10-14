@@ -1,4 +1,6 @@
 from lib import providers
+from lib.libs.addonsettings import settings
+from lib.libs.utils import SortedDisplay
 from lib.providers import ProviderError
 
 MAX_ERRORS = 3
@@ -8,28 +10,28 @@ class Gatherer(object):
         self.monitor = monitor
         self.only_filesystem = only_filesystem
         providers.base.languages = [lang for lang in languages if lang]
+        self.language = providers.base.languages[0]
         self.providererrors = {}
 
     def getartwork(self, mediaitem, skipexisting=True):
-        forcedartwork = {}
-        availableartwork = {}
         services_hit = False
         error = None
-        forcedartwork = self.get_forced_artwork(mediaitem['mediatype'], mediaitem.get('file'),
-            mediaitem.get('seasons'), not skipexisting)
-        existingtypes = [key for key, url in mediaitem['art'].iteritems() if url]
-        existingtypes.extend(forcedartwork.keys())
+        mediaitem.forcedart = self.get_forced_artwork(mediaitem.mediatype, mediaitem.file,
+            mediaitem.seasons, not skipexisting)
+        existingtypes = [key for key, url in mediaitem.art.iteritems() if url]
+        existingtypes.extend(mediaitem.forcedart.keys())
         if skipexisting:
-            if not self.only_filesystem and 'imdbnumber' in mediaitem and mediaitem['missing art']:
-                availableartwork, error = self.get_external_artwork(mediaitem['mediatype'], mediaitem.get('seasons'),
-                    mediaitem['imdbnumber'], mediaitem['missing art'])
+            if not self.only_filesystem and mediaitem.uniqueids and mediaitem.missingart:
+                mediaitem.availableart, error = self.get_external_artwork(mediaitem.mediatype, mediaitem.seasons,
+                    mediaitem.uniqueids, mediaitem.missingart)
                 services_hit = True
-        elif 'imdbnumber' in mediaitem:
-            availableartwork, error = self.get_external_artwork(mediaitem['mediatype'], mediaitem.get('seasons'),
-                mediaitem['imdbnumber'])
+        elif mediaitem.uniqueids:
+            mediaitem.availableart, error = self.get_external_artwork(mediaitem.mediatype, mediaitem.seasons,
+                mediaitem.uniqueids)
             services_hit = True
-        # REVIEW: This 4 value return is bugging me
-        return forcedartwork, availableartwork, services_hit, error
+        for arttype, imagelist in mediaitem.availableart.iteritems():
+            _sort_images(arttype, imagelist, mediaitem.sourcemedia, self.language)
+        return services_hit, error
 
     def get_forced_artwork(self, mediatype, mediafile, seasons, allowmutiple=False):
         if not mediafile:
@@ -52,7 +54,7 @@ class Gatherer(object):
                 break
         return resultimages
 
-    def get_external_artwork(self, mediatype, seasons, imdbnumber, missing=None):
+    def get_external_artwork(self, mediatype, seasons, uniqueids, missing=None):
         images = {}
         error = None
         for provider in providers.external.get(mediatype, ()):
@@ -60,7 +62,7 @@ class Gatherer(object):
             if errcount == MAX_ERRORS:
                 continue
             try:
-                providerimages = provider.get_images(imdbnumber, missing)
+                providerimages = provider.get_images(uniqueids, missing)
                 self.providererrors[provider.name] = 0
             except ProviderError as ex:
                 errcount += 1
@@ -83,3 +85,41 @@ class Gatherer(object):
             if self.monitor.abortRequested():
                 break
         return images, error
+
+
+def _sort_images(arttype, imagelist, mediasource, language):
+    # 1. Language, preferring fanart with no language/title if configured
+    # 2. Match discart to media source
+    # 3. Size (in 200px groups), up to preferredsize
+    # 4. Rating
+    imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
+    imagelist.sort(key=_size_sort, reverse=True)
+    if arttype == 'discart':
+        if mediasource != 'unknown':
+            imagelist.sort(key=lambda image: 0 if image.get('subtype', SortedDisplay(None, '')).sort == mediasource else 1)
+    imagelist.sort(key=lambda image: _imagelanguage_sort(image, arttype, language))
+
+def _size_sort(image):
+    imagesplit = image['size'].display.split('x')
+    if len(imagesplit) != 2:
+        return image['size'].sort
+    try:
+        imagesize = int(imagesplit[0]), int(imagesplit[1])
+    except ValueError:
+        return image['size'].sort
+    if imagesize[0] > settings.preferredsize[0]:
+        shrink = settings.preferredsize[0] / float(imagesize[0])
+        imagesize = settings.preferredsize[0], imagesize[1] * shrink
+    if imagesize[1] > settings.preferredsize[1]:
+        shrink = settings.preferredsize[1] / float(imagesize[1])
+        imagesize = imagesize[0] * shrink, settings.preferredsize[1]
+    return max(imagesize) // 200
+
+def _imagelanguage_sort(image, arttype, language):
+    primarysort = 0 if image['language'] == language else 0.5 if image['language'] == 'en' else 1
+
+    if image['language'] and (arttype.endswith('fanart') and settings.titlefree_fanart or
+            arttype.endswith('poster') and settings.titlefree_poster):
+        primarysort += 1
+
+    return primarysort, image['language']
