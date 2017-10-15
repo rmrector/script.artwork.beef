@@ -4,7 +4,7 @@ import xbmc
 from math import pi, sin
 
 from lib.providers import base
-from lib.providers.base import AbstractProvider, cache
+from lib.providers.base import AbstractImageProvider, cache
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
@@ -12,9 +12,10 @@ from lib.providers import ProviderError
 from lib.libs.utils import SortedDisplay
 
 # designed for version 2.1.0 of TheTVDB API
-class TheTVDBProvider(AbstractProvider):
+class TheTVDBProvider(AbstractImageProvider):
     name = SortedDisplay('thetvdb.com', 'TheTVDB.com')
     mediatype = mediatypes.TVSHOW
+    contenttype = 'application/json'
 
     apikey = '8357F01B3F8F1393'
     apiurl = 'https://api.thetvdb.com/series/%s/images/query'
@@ -23,10 +24,6 @@ class TheTVDBProvider(AbstractProvider):
 
     artmap = {'fanart': 'fanart', 'poster': 'poster', 'season': mediatypes.SEASON + '.%s.poster',
         'seasonwide': mediatypes.SEASON + '.%s.banner', 'series': 'banner'}
-
-    def __init__(self, *args):
-        super(TheTVDBProvider, self).__init__(*args)
-        self.set_accepted_contenttype('application/json')
 
     def get_data(self, mediaid, arttype, language):
         result = cache.cacheFunction(self._get_data, mediaid, arttype, language)
@@ -98,11 +95,11 @@ class TheTVDBProvider(AbstractProvider):
         return result
 
     def login(self):
-        response = self.session.post(self.loginurl, json={'apikey': self.apikey},
+        response = self.getter.session.post(self.loginurl, json={'apikey': self.apikey},
             headers={'Content-Type': 'application/json', 'User-Agent': settings.useragent}, timeout=15)
         if not response or not response.headers['Content-Type'].startswith('application/json'):
             raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]
-        self.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
+        self.getter.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
         return True
 
     def provides(self, types):

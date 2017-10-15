@@ -1,24 +1,21 @@
 import xbmc
 from abc import ABCMeta
 
-from lib.providers.base import AbstractProvider, cache, Getter
 from lib.libs import mediatypes
-from lib.libs.pykodi import json, log, UTF8JSONDecoder
+from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
+from lib.providers.base import AbstractProvider, AbstractImageProvider, cache
 
 apikey = '5a0727308f37da772002755d6c073aee'
 cfgurl = 'https://api.themoviedb.org/3/configuration'
 
-class TheMovieDBAbstractProvider(AbstractProvider):
+class TheMovieDBAbstractProvider(AbstractImageProvider):
     __metaclass__ = ABCMeta
+    contenttype = 'application/json'
 
     name = SortedDisplay('themoviedb.org', 'The Movie Database')
     _baseurl = None
     artmap = {}
-
-    def __init__(self, *args):
-        super(TheMovieDBAbstractProvider, self).__init__(*args)
-        self.set_accepted_contenttype('application/json')
 
     @property
     def baseurl(self):
@@ -148,18 +145,14 @@ class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
 
         return self.process_data(data)
 
-class TheMovieDBSearch(object):
+class TheMovieDBSearch(AbstractProvider):
+    name = SortedDisplay('themoviedb.org:search', 'The Movie Database search')
+    contenttype = 'application/json'
+
     searchurl = 'https://api.themoviedb.org/3/search/{0}'
     tvexternalidsurl = 'https://api.themoviedb.org/3/tv/{0}/external_ids'
     typemap = {mediatypes.MOVIESET: 'collection'}
     _baseurl = None
-
-    def __init__(self):
-        self.getter = Getter()
-        self.getter.set_accepted_contenttype('application/json')
-
-    def log(self, message, level=xbmc.LOGDEBUG):
-        log(message, level, 'themoviedb.org:search')
 
     def get_data(self, url, params=None):
         result = cache.cacheFunction(self._get_data, url, params)
@@ -171,7 +164,7 @@ class TheMovieDBSearch(object):
             params = {'api_key': apikey}
         else:
             params = dict(params, api_key=apikey)
-        response = self.getter.get(url, params=params)
+        response = self.doget(url, params)
         return 'Empty' if response is None else response.json()
 
     def search(self, query, mediatype):

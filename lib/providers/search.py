@@ -2,9 +2,9 @@ from lib.providers.themoviedb import TheMovieDBSearch
 
 searcher = None
 
-def init(session):
+def init():
     global searcher
-    searcher = TheMovieDBSearch(session)
+    searcher = TheMovieDBSearch()
 
 def search(query, mediatype):
     return searcher.search(query, mediatype)

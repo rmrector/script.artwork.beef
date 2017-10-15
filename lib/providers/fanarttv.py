@@ -3,24 +3,21 @@ import urllib
 import xbmc
 from abc import ABCMeta, abstractmethod
 
-from lib.providers.base import AbstractProvider, cache
+from lib.providers.base import AbstractImageProvider, cache
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 
-class FanartTVAbstractProvider(AbstractProvider):
+class FanartTVAbstractProvider(AbstractImageProvider):
     __metaclass__ = ABCMeta
     api_section = None
     mediatype = None
+    contenttype = 'application/json'
 
     name = SortedDisplay('fanart.tv', 'fanart.tv')
     apikey = '13756cf3472ff6b3dbffee20bed9c6ec'
     apiurl = 'https://webservice.fanart.tv/v3/%s/%s'
-
-    def __init__(self, *args):
-        super(FanartTVAbstractProvider, self).__init__(*args)
-        self.set_accepted_contenttype('application/json')
 
     def get_images(self, uniqueids, types=None):
         if types is not None and not self.provides(types):
@@ -44,6 +41,14 @@ class FanartTVAbstractProvider(AbstractProvider):
             headers['client-key'] = settings.fanarttv_clientkey
         response = self.doget(self.apiurl % (self.api_section, mediaid), headers=headers)
         return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
+
+    def build_image(self, url, arttype, image, likediv=5.0):
+        result = {'url': url, 'provider': self.name}
+        result['preview'] = url.replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
+        result['rating'] = SortedDisplay(6 + int(image['likes']) / float(likediv), '{0} likes'.format(image['likes']))
+        result['size'] = _get_imagesize(arttype)
+        result['language'] = _get_imagelanguage(arttype, image)
+        return result
 
     @abstractmethod
     def _get_images(self, data):
@@ -88,11 +93,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                 if itype not in result:
                     result[itype] = []
                 url = urllib.quote(image['url'], safe="%/:=&?~#+!$,;'@()*[]")
-                resultimage = {'url': url, 'provider': self.name}
-                resultimage['preview'] = url.replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
-                resultimage['rating'] = SortedDisplay(6 + int(image['likes']) / 3.0, '{0} likes'.format(image['likes']))
-                resultimage['size'] = _get_imagesize(arttype)
-                resultimage['language'] = _get_imagelanguage(arttype, image)
+                resultimage = self.build_image(url, arttype, image, 3.0)
                 if arttype == 'showbackground' and seasonnum is not None:
                     resultimage['hasseason'] = True
                     if seasonnum >= 0:
@@ -149,14 +150,10 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
                 result[generaltype] = []
             for image in artlist:
                 url = urllib.quote(image['url'], safe="%/:=&?~#+!$,;'@()*[]")
-                resultimage = {'url': url, 'provider': self.name}
-                resultimage['preview'] = url.replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
-                resultimage['rating'] = SortedDisplay(6 + int(image['likes']) / 5.0, '%s likes' % image['likes'])
+                resultimage = self.build_image(url, arttype, image)
                 if arttype == 'moviedisc':
                     display = self.disctitles.get(image['disc_type']) or image['disc_type']
                     resultimage['subtype'] = SortedDisplay(image['disc_type'], display)
-                resultimage['size'] = _get_imagesize(arttype)
-                resultimage['language'] = _get_imagelanguage(arttype, image)
                 result[generaltype].append(resultimage)
         return result
 
