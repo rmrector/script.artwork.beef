@@ -121,6 +121,19 @@ def get_datetime():
 def write(reportfile, line):
     reportfile.write(line + '\n')
 
+def get_latest_report():
+    if not _exists(): return ""
+    result = []
+    with _get_file() as reportfile:
+        inserti = 0
+        for line in reportfile.readlines():
+            result.insert(inserti, line)
+            if line == '\n':
+                inserti = 0
+            else:
+                inserti += 1
+    return ''.join(result)
+
 def _should_rotate():
     if not _exists():
         return False
