@@ -8,8 +8,7 @@ from lib.libs.utils import SortedDisplay, get_movie_path_list
 
 class VideoFileAbstractProvider(object):
     __metaclass__ = ABCMeta
-    # 21371 = Thumbnail
-    name = SortedDisplay('video:thumb', 21371)
+    name = SortedDisplay('video:thumb', 'video file')
 
     def build_video_thumbnail(self, path):
         url = build_video_thumbnail_path(path)
