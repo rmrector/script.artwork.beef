@@ -114,6 +114,12 @@ def identify_unmatched_sets():
     else:
         xbmcgui.Dialog().notification("Artwork Beef", L(M.NO_UNMATCHED_SETS), xbmcgui.NOTIFICATION_INFO)
 
+def show_artwork_log():
+    if pykodi.get_kodi_version() < 16:
+        xbmcgui.Dialog().notification("Artwork Beef", "This only works on Jarvis and above", xbmcgui.NOTIFICATION_INFO)
+        return
+    xbmcgui.Dialog().textviewer("Artwork Beef artwork log", reporting.get_latest_report())
+
 def remove_movieset_matches():
     # DEPRECATED short 2017-09-02: just a quick fix until the processeditems medialabel change has fully taken effect
     ProcessedItems().db.execute("DELETE FROM processeditems where mediatype = 'set'")

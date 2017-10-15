@@ -234,3 +234,7 @@ msgstr ""
 msgctxt "#32918"
 msgid "Default TV show / episode ID source if unknown: TheTVDB or TheMovieDB"
 msgstr ""
+
+msgctxt "#32919"
+msgid "Show latest artwork log"
+msgstr ""
