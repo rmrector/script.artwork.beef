@@ -8,7 +8,8 @@ typemap = {mediatypes.MOVIE: ('Movie', ['art', 'imdbnumber', 'file', 'premiered'
     mediatypes.MOVIESET: ('MovieSet', ['art'], {'movies': {'properties': ['art', 'file']}}),
     mediatypes.TVSHOW: ('TVShow', ['art', 'imdbnumber', 'season', 'file', 'premiered', 'uniqueid'], None),
     mediatypes.EPISODE: ('Episode', ['art', 'uniqueid', 'tvshowid', 'season', 'episode', 'file', 'showtitle'], None),
-    mediatypes.SEASON: ('Season', ['season', 'art'], None)}
+    mediatypes.SEASON: ('Season', ['season', 'art'], None),
+    mediatypes.MUSICVIDEO: ('MusicVideo', ['art', 'file', 'title', 'artist'], None)}
 
 def _needupgrade(mediatype):
     return mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) and get_kodi_version() < 17
@@ -68,6 +69,17 @@ def get_moviesets():
     json_result = pykodi.execute_jsonrpc(json_request)
     if check_json_result(json_result, 'sets', json_request):
         return json_result['result']['sets']
+    else:
+        return []
+
+def get_musicvideos():
+    json_request = get_base_json_request('VideoLibrary.GetMusicVideos')
+    json_request['params']['properties'] = typemap[mediatypes.MUSICVIDEO][1]
+    json_request['params']['sort'] = {'method': 'sorttitle', 'order': 'ascending'}
+
+    json_result = pykodi.execute_jsonrpc(json_request)
+    if check_json_result(json_result, 'musicvideos', json_request):
+        return json_result['result']['musicvideos']
     else:
         return []
 

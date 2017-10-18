@@ -23,12 +23,15 @@ class FanartTVAbstractProvider(AbstractImageProvider):
         if types is not None and not self.provides(types):
             return {}
         mediaid = get_mediaid(uniqueids, self.mediatype)
-        if not mediaid:
+        if not mediaid or isinstance(mediaid, tuple) and not mediaid[0]:
             return {}
-        data = self.get_data(mediaid)
+        data = self.get_data(mediaid[0] if isinstance(mediaid, tuple) else mediaid)
         if not data:
             return {}
-        return self._get_images(data)
+        if self.mediatype == mediatypes.MUSICVIDEO:
+            return self._get_images(data, mediaid)
+        else:
+            return self._get_images(data)
 
     def get_data(self, mediaid):
         result = cache.cacheFunction(self._get_data, mediaid)
@@ -163,7 +166,48 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
 class FanartTVMovieSetProvider(FanartTVMovieProvider):
     mediatype = mediatypes.MOVIESET
 
+class FanartTVMusicVideoProvider(FanartTVAbstractProvider):
+    mediatype = mediatypes.MUSICVIDEO
+
+    api_section = 'music'
+    artmap = {
+        'artistthumb': 'artistthumb',
+        'artistbackground': 'fanart',
+        'albumcover': 'poster',
+        'cdart': 'cdart',
+        'musiclogo': 'clearlogo',
+        'hdmusiclogo': 'clearlogo',
+        'musicbanner': 'banner'
+    }
+
+    def _get_images(self, data, albumid):
+        def poofit(arttype, artlist, resultmap):
+            generaltype = self.artmap.get(arttype)
+            if not generaltype:
+                return
+            if artlist and generaltype not in resultmap:
+                resultmap[generaltype] = []
+            for image in artlist:
+                url = urllib.quote(image['url'], safe="%/:=&?~#+!$,;'@()*[]")
+                resultmap[generaltype].append(self.build_image(url, arttype, image))
+
+        result = {}
+        for arttype, artlist in data.iteritems():
+            if arttype != 'albums':
+                poofit(arttype, artlist, result)
+            else:
+                if not albumid:
+                    continue
+                for album_arttype, album_artlist in artlist.get(albumid, {}):
+                    poofit(album_arttype, album_artlist, result)
+        return result
+
+    def provides(self, types):
+        return any(x in types for x in self.artmap.values())
+
 def get_mediaid(uniqueids, mediatype):
+    if mediatype == mediatypes.MUSICVIDEO:
+        return (uniqueids.get('mbid_artist'), uniqueids.get('mbid_album'))
     sources = ('imdb', 'tmdb', 'unknown') if mediatype == mediatypes.MOVIE else \
         ('tmdb', 'unknown') if mediatype == mediatypes.MOVIESET else ('tvdb', 'unknown')
     for source in sources:
@@ -171,13 +215,13 @@ def get_mediaid(uniqueids, mediatype):
             return uniqueids[source]
 
 def _get_imagesize(arttype):
-    if arttype in ('hdtvlogo', 'hdclearart', 'hdmovielogo', 'hdmovieclearart'):
-        return SortedDisplay(400, 'HD')
-    elif arttype in ('clearlogo', 'clearart', 'movielogo', 'movieart'):
-        return SortedDisplay(10, 'SD')
-    elif arttype in ('tvbanner', 'seasonbanner', 'moviebanner'):
+    if arttype in ('hdtvlogo', 'hdclearart', 'hdmovielogo', 'hdmovieclearart', 'hdmusiclogo'):
+        return SortedDisplay(800, 'HD')
+    elif arttype in ('clearlogo', 'clearart', 'movielogo', 'movieart', 'musiclogo'):
+        return SortedDisplay(400, 'SD')
+    elif arttype in ('tvbanner', 'seasonbanner', 'moviebanner', 'musicbanner'):
         return SortedDisplay(1000, '1000x185')
-    elif arttype in ('showbackground', 'moviebackground'):
+    elif arttype in ('showbackground', 'moviebackground', 'artistbackground'):
         return SortedDisplay(1920, '1920x1080')
     elif arttype in ('tvposter', 'seasonposter', 'movieposter'):
         return SortedDisplay(1426, '1000x1426')
@@ -187,12 +231,12 @@ def _get_imagesize(arttype):
         return SortedDisplay(512, '512x512')
     elif arttype == 'moviethumb':
         return SortedDisplay(1000, '1000x562')
-    elif arttype == 'moviedisc':
+    elif arttype in ('moviedisc', 'cdart', 'artistthumb', 'albumcover'):
         return SortedDisplay(1000, '1000x1000')
     return SortedDisplay(0, '')
 
 def _get_imagelanguage(arttype, image):
-    if arttype in ('showbackground', 'characterart', 'moviebackground'):
+    if 'lang' not in image or arttype in ('showbackground', 'characterart', 'moviebackground', 'artistbackgroun'):
         return None
     if arttype in ('clearlogo', 'hdtvlogo', 'seasonposter', 'hdclearart', 'clearart', 'tvthumb', 'seasonthumb',
             'tvbanner', 'seasonbanner', 'movielogo', 'hdmovielogo', 'hdmovieclearart', 'movieart', 'moviebanner',

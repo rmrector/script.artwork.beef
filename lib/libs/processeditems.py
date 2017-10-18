@@ -10,7 +10,7 @@ VERSION = 1
 
 class ProcessedItems(object):
     def __init__(self):
-        # data is uniqueid for sets, last known season for TV shows
+        # data is uniqueid for sets, last known season for TV shows, musicbrainz track/album/artist IDs for music videos
         self.db = Database('processeditems', upgrade_processeditems)
 
     def is_stale(self, mediaid, mediatype, medialabel):

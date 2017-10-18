@@ -41,3 +41,11 @@ class VideoFileEpisodeProvider(VideoFileAbstractProvider):
         if not settings.generate_episode_thumb or path.endswith('.iso'):
             return {}
         return {'thumb': self.build_video_thumbnail(path)}
+
+class VideoFileMusicVideoProvider(VideoFileAbstractProvider):
+    mediatype = mediatypes.MUSICVIDEO
+
+    def get_exact_images(self, path):
+        if not settings.generate_musicvideo_thumb or path.endswith('.iso'):
+            return {}
+        return {'thumb': self.build_video_thumbnail(path)}

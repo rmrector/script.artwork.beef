@@ -73,7 +73,7 @@ class ArtworkProcessor(object):
         if mode == MODE_GUI:
             busy = pykodi.get_busydialog()
             busy.create()
-        if mediatype in (mediatypes.TVSHOW, mediatypes.MOVIE, mediatypes.EPISODE, mediatypes.MOVIESET):
+        if mediatype in mediatypes.artinfo:
             mediaitem = info.MediaItem(quickjson.get_item_details(dbid, mediatype))
         else:
             if mode == MODE_GUI:
@@ -263,7 +263,7 @@ class ArtworkProcessor(object):
             result = xbmcgui.Dialog().input(L(ENTER_COLLECTION_NAME), mediaitem.label)
             if not result:
                 return False # Cancelled
-            options = search.search(result, mediatypes.MOVIESET)
+            options = search[mediatypes.MOVIESET](result, mediatypes.MOVIESET)
             selected = xbmcgui.Dialog().select(mediaitem.label, [option['label'] for option in options])
             if selected < 0:
                 return False # Cancelled

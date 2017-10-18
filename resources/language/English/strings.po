@@ -238,3 +238,7 @@ msgstr ""
 msgctxt "#32919"
 msgid "Show latest artwork log"
 msgstr ""
+
+msgctxt "#32920"
+msgid "Always generate music video thumb from video file"
+msgstr ""

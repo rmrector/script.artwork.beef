@@ -51,6 +51,15 @@
 		<setting id="set.clearart" label="$LOCALIZE[20457] clearart" type="bool" default="true" />
 		<setting id="set.discart" label="$LOCALIZE[20457] discart" type="bool" default="true" />
 	</category>
+	<category label="$LOCALIZE[20389]">
+		<setting label="32053" type="lsep" />
+		<setting id="musicvideo.poster" label="poster" type="bool" default="true" />
+		<setting id="musicvideo.fanart_limit" label="fanart" type="slider" option="int" default="3" range="0,1,20" />
+		<setting id="musicvideo.banner" label="banner" type="bool" default="true" />
+		<setting id="musicvideo.clearlogo" label="clearlogo" type="bool" default="true" />
+		<setting id="musicvideo.cdart" label="cdart" type="bool" default="true" />
+		<setting id="musicvideo.artistthumb" label="artistthumb" type="bool" default="true" />
+	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />
 		<setting id="fanarttv_key" label="32905" type="text" />
@@ -59,6 +68,7 @@
 		<setting label="$LOCALIZE[744]" type="lsep" />
 		<setting id="episode.thumb_generate" label="32914" type="bool" default="false" />
 		<setting id="movie.thumb_generate" label="32915" type="bool" default="false" />
+		<setting id="musicvideo.thumb_generate" label="32920" type="bool" default="false" />
 		<setting id="setartwork_fromcentral" label="32909" type="bool" default="false" />
 		<setting id="setartwork_dir" subsetting="true" label="32910" type="folder" visible="eq(-1,true)" />
 		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" />
