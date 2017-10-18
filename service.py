@@ -169,11 +169,12 @@ class ArtworkService(xbmc.Monitor):
                     shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW, series['label']):
                 items.append(info.MediaItem(series))
                 if series['imdbnumber'] not in settings.autoadd_episodes and not allitems:
-                    for episode in quickjson.get_episodes(series['tvshowid']):
-                        if info.has_generated_thumbnail(episode):
-                            ep = info.MediaItem(episode)
-                            ep.skip_artwork = ['fanart']
-                            items.append(ep)
+                    if settings.generate_episode_thumb:
+                        for episode in quickjson.get_episodes(series['tvshowid']):
+                            if not info.has_generated_thumbnail(episode):
+                                ep = info.MediaItem(episode)
+                                ep.skip_artwork = ['fanart']
+                                items.append(ep)
                     serieseps_added.add(series['tvshowid'])
             if series['imdbnumber'] in settings.autoadd_episodes and series['tvshowid'] not in serieseps_added:
                 episodes = quickjson.get_episodes(series['tvshowid'])
