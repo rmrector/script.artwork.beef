@@ -102,11 +102,11 @@ def _sort_images(arttype, imagelist, mediasource, language):
 def _size_sort(image):
     imagesplit = image['size'].display.split('x')
     if len(imagesplit) != 2:
-        return image['size'].sort
+        return image['size'].sort // 200
     try:
         imagesize = int(imagesplit[0]), int(imagesplit[1])
     except ValueError:
-        return image['size'].sort
+        return image['size'].sort // 200
     if imagesize[0] > settings.preferredsize[0]:
         shrink = settings.preferredsize[0] / float(imagesize[0])
         imagesize = settings.preferredsize[0], imagesize[1] * shrink
