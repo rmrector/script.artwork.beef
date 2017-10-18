@@ -212,6 +212,47 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
             result[arttype] = self.buildimage(path + filename, filename)
         return result
 
+class ArtFilesMusicVideoProvider(ArtFilesAbstractProvider):
+    mediatype = mediatypes.MUSICVIDEO
+
+    alttypes = {'logo': 'clearlogo', 'disc': 'cdart'}
+
+    def get_exact_images(self, path):
+        path, inputfilename = os.path.split(path)
+        path += get_pathsep(path)
+        dirs, files = xbmcvfs.listdir(path)
+        check_inputbase = os.path.splitext(inputfilename)[0].lower()
+        result = {}
+        paths = get_movie_path_list(path)
+        result = {}
+        sep = get_pathsep(path)
+        path = os.path.dirname(paths[0]) + sep
+        for filename in files:
+            check_filename = filename.lower()
+            if not check_filename.endswith(ARTWORK_EXTS):
+                continue
+            basefile = os.path.splitext(check_filename)[0]
+            if '-' in basefile:
+                firstbit, basefile = basefile.rsplit('-', 1)
+                if firstbit != check_inputbase:
+                    continue
+            if not basefile.isalnum() or len(basefile) > 20:
+                continue
+            arttype = basefile
+            if settings.identify_alternatives and arttype in self.alttypes.keys():
+                arttype = self.alttypes[arttype]
+                if arttype in result.keys():
+                    continue
+            result[arttype] = self.buildimage(path + filename, filename)
+
+        if settings.identify_alternatives and dirs:
+            if 'extrafanart' in dirs:
+                result.update(self.getextra(path, result.keys()))
+            if 'extrathumbs' in dirs:
+                result.update(self.getextra(path, result.keys(), True))
+
+        return result
+
 def getopentypes(existingtypes, arttype):
     keys = [exact for exact in sorted(existingtypes, key=natural_sort)
         if arttype_matches_base(arttype, exact)]

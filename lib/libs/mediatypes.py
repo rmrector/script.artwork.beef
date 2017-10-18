@@ -7,12 +7,14 @@ MOVIE = 'movie'
 EPISODE = 'episode'
 SEASON = 'season'
 MOVIESET = 'set'
+MUSICVIDEO = 'musicvideo'
 
 settings = ('tvshow.poster', 'tvshow.fanart_limit', 'tvshow.banner', 'tvshow.clearlogo', 'tvshow.landscape',
     'tvshow.clearart', 'tvshow.characterart_limit', 'season.poster', 'season.banner', 'season.landscape',
     'episode.fanart', 'movie.poster', 'movie.fanart_limit', 'movie.banner', 'movie.clearlogo', 'movie.landscape',
     'movie.clearart', 'movie.discart', 'set.poster', 'set.fanart_limit', 'set.banner', 'set.clearlogo',
-    'set.landscape', 'set.clearart', 'set.discart')
+    'set.landscape', 'set.clearart', 'set.discart', 'musicvideo.poster', 'musicvideo.fanart_limit', 'musicvideo.banner',
+    'musicvideo.clearlogo', 'musicvideo.cdart', 'musicvideo.artistthumb')
 
 addon = pykodi.get_main_addon()
 
@@ -139,6 +141,35 @@ artinfo = {
     },
     EPISODE: {
         'fanart': {
+            'autolimit': 1,
+            'multiselect': False
+        }
+    },
+    MUSICVIDEO: {
+        # album
+        'poster': { # poster is what Kodi scrapers set and matches other areas of the video library,
+                # but it should really be 'cover'
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'cdart': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'fanart': { # artist or maybe album
+            'autolimit': 1,
+            'multiselect': True
+        },
+        # artist
+        'artistthumb': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'banner': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'clearlogo': {
             'autolimit': 1,
             'multiselect': False
         }

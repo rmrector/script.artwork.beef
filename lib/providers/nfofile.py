@@ -132,6 +132,28 @@ class NFOFileEpisodeProvider(NFOFileAbstractProvider):
                 result[arttype] = self.build_resultimage(url, arttype)
         return result
 
+class NFOFileMusicVideoProvider(NFOFileAbstractProvider):
+    mediatype = mediatypes.MUSICVIDEO
+
+    def get_exact_images(self, path):
+        artlist = None
+        for nfopath in (os.path.splitext(path)[0] + '.nfo', os.path.dirname(path) + '/musicvideo.nfo'):
+            root = read_nfofile(nfopath)
+            if root is not None and root.find('art') is not None:
+                artlist = root.find('art')
+                break
+
+        if artlist is None:
+            return {}
+
+        result = {}
+        for artelement in artlist:
+            arttype = artelement.tag.lower()
+            url = artelement.text.strip()
+            if arttype.isalnum() and url:
+                result[arttype] = self.build_resultimage(url, arttype)
+        return result
+
 def read_nfofile(filename):
     if not xbmcvfs.exists(filename):
         return None

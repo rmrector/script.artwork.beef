@@ -156,6 +156,8 @@ class ArtworkService(xbmc.Monitor):
         items = [info.MediaItem(movie) for movie in quickjson.get_movies() if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE, movie['label'])]
         items.extend([info.MediaItem(mset) for mset in quickjson.get_moviesets()
             if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label'])])
+        items.extend([info.MediaItem(mvid) for mvid in quickjson.get_musicvideos()
+            if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MOVIESET, mvid['label'])])
 
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():

@@ -11,7 +11,8 @@ idmap = (('episodeid', mediatypes.EPISODE),
     ('seasonid', mediatypes.SEASON),
     ('tvshowid', mediatypes.TVSHOW),
     ('movieid', mediatypes.MOVIE),
-    ('setid', mediatypes.MOVIESET))
+    ('setid', mediatypes.MOVIESET),
+    ('musicvideoid', mediatypes.MUSICVIDEO))
 
 class MediaItem(object):
     def __init__(self, jsondata):
@@ -36,6 +37,9 @@ class MediaItem(object):
                 # TODO: What about finding artwork in both setartwork_dir and parent dir?
                 #  parent dir currently overrides setartwork_dir if it is found
                 self.file = settings.setartwork_dir + self.label + '.ext'
+        elif self.mediatype == mediatypes.MUSICVIDEO:
+            self.label = jsondata['title']
+            self.artist = jsondata['artist']
 
         self.seasons = None
         self.availableart = {}
@@ -133,27 +137,37 @@ def update_art_in_library(mediatype, dbid, updatedart):
         quickjson.set_item_details(dbid, mediatype, art=updatedart)
 
 def add_additional_iteminfo(mediaitem, processed, search):
-    '''Get more data from the Kodi library, processed items, and look up movie sets and sometimes TV shows on TMDB.'''
+    '''Get more data from the Kodi library, processed items, and look up web service IDs.'''
+    if mediaitem.mediatype in search:
+        search = search[mediaitem.mediatype]
     if mediaitem.mediatype == mediatypes.TVSHOW:
         # TODO: Split seasons out to separate items
-        mediaitem.seasons, seasonart = _get_seasons_artwork(quickjson.get_seasons(mediaitem.dbid))
-        mediaitem.art.update(seasonart)
+        if not mediaitem.seasons:
+            mediaitem.seasons, seasonart = _get_seasons_artwork(quickjson.get_seasons(mediaitem.dbid))
+            mediaitem.art.update(seasonart)
         if settings.default_tvidsource == 'tmdb' and 'tvdb' not in mediaitem.uniqueids:
             # TODO: Set to the Kodi library if found
-            resultids = search.searcher.get_more_uniqueids(mediaitem.uniqueids, mediaitem.mediatype)
+            resultids = search.get_more_uniqueids(mediaitem.uniqueids, mediaitem.mediatype)
             if 'tvdb' in resultids:
                 mediaitem.uniqueids['tvdb'] = resultids['tvdb']
-    elif mediaitem.mediatype == mediatypes.EPISODE and settings.default_tvidsource == 'tmdb':
-        # TheMovieDB scraper sets episode IDs that can't be used in the API
-        tvshowids = quickjson.get_item_details(mediaitem.tvshowid, mediatypes.TVSHOW)['uniqueid']
-        tvshowid = tvshowids.get('tmdb', tvshowids.get('unknown'))
-        if tvshowid: # set this one to Kodi library?
-            mediaitem.uniqueids['tmdb_se'] = '{0}/{1}/{2}'.format(tvshowid, *mediaitem.season_episode)
+    elif mediaitem.mediatype == mediatypes.EPISODE:
+        if settings.default_tvidsource == 'tmdb':
+            # TheMovieDB scraper sets episode IDs that can't be used in the API, but seriesID/season/episode works
+            tvshowids = quickjson.get_item_details(mediaitem.tvshowid, mediatypes.TVSHOW)['uniqueid']
+            tvshowid = tvshowids.get('tmdb', tvshowids.get('unknown'))
+            if tvshowid:
+                mediaitem.uniqueids['tmdb_se'] = '{0}/{1}/{2}'.format(tvshowid, *mediaitem.season_episode)
     elif mediaitem.mediatype == mediatypes.MOVIESET:
         if not mediaitem.uniqueids.get('tmdb'):
             uniqueid = processed.get_data(mediaitem.dbid, mediaitem.mediatype)
             if not uniqueid and not settings.only_filesystem:
-                uniqueid = search.for_id(mediaitem.label, mediatypes.MOVIESET)
+                searchresults = search.search(mediaitem.label, mediaitem.mediatype)
+                if searchresults:
+                    for result in searchresults:
+                        if result['label'] == mediaitem.label:
+                            uniqueid = result['id']
+                            break
+                    uniqueid = searchresults[0]['id']
                 if uniqueid:
                     processed.set_data(mediaitem.dbid, mediatypes.MOVIESET, mediaitem.label, uniqueid)
                 else:
@@ -165,6 +179,22 @@ def add_additional_iteminfo(mediaitem, processed, search):
             _remove_set_movieposters(mediaitem)
         if settings.setartwork_fromparent:
             _identify_parent_movieset(mediaitem)
+    elif mediaitem.mediatype == mediatypes.MUSICVIDEO:
+        if not mediaitem.uniqueids.get('mbid_track') or not mediaitem.uniqueids.get('mbid_album') \
+                or not mediaitem.uniqueids.get('mbid_artist'):
+            newdata = processed.get_data(mediaitem.dbid, mediaitem.mediatype)
+            if newdata:
+                mb_t, mb_al, mb_ar = newdata.split('/')
+                mediaitem.uniqueids = {'mbid_track': mb_t, 'mbid_album': mb_al, 'mbid_artist': mb_ar}
+            elif not settings.only_filesystem:
+                results = search.search_byitem(mediaitem)
+                if results and results[0].get('uniqueids'):
+                    mediaitem.uniqueids = uq = results[0]['uniqueids']
+                    processed.set_data(mediaitem.dbid, mediatypes.MUSICVIDEO, mediaitem.label,
+                        uq['mbid_track'] + '/' + uq['mbid_album'] + '/' + uq['mbid_artist'])
+                else:
+                    mediaitem.error = "Could not find music video on TheAudioDB"
+                    log("Could not find music video '{0}' on TheAudioDB".format(mediaitem.label), xbmc.LOGNOTICE)
 
 def _get_seasons_artwork(seasons):
     resultseasons = {}
