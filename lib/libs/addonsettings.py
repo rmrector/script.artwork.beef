@@ -38,6 +38,7 @@ class Settings(object):
         self.report_peritem = addon.get_setting('report_peritem')
         self.fanarttv_clientkey = addon.get_setting('fanarttv_key')
         self.default_tvidsource = addon.get_setting('default_tvidsource')
+        self.prefer_tmdbartwork = addon.get_setting('prefer_tmdbartwork')
 
         self.language_override = addon.get_setting('language_override')
         if self.language_override == 'None':

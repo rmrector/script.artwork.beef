@@ -2,6 +2,7 @@ import xbmc
 from abc import ABCMeta
 
 from lib.libs import mediatypes
+from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 from lib.providers.base import AbstractProvider, AbstractImageProvider, cache
@@ -27,13 +28,14 @@ class TheMovieDBAbstractProvider(AbstractImageProvider):
         return self._baseurl
 
     def _get_rating(self, image):
+        adds = 5 if settings.prefer_tmdbartwork else 0
         if image['vote_count']:
             # Reweigh ratings, increase difference from 5
             rating = image['vote_average']
             rating = 5 + (rating - 5) * 2
-            return SortedDisplay(rating, '{0:.1f} stars'.format(image['vote_average']))
+            return SortedDisplay(rating + adds, '{0:.1f} stars'.format(image['vote_average']))
         else:
-            return SortedDisplay(5, 'Not rated')
+            return SortedDisplay(5 + adds, 'Not rated')
 
     def get_data(self, url):
         result = cache.cacheFunction(self._get_data, url)

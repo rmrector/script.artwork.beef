@@ -246,3 +246,7 @@ msgstr ""
 msgctxt "#32920"
 msgid "Always generate music video thumb from video file"
 msgstr ""
+
+msgctxt "#32921"
+msgid "Prefer artwork from The Movie DB when available"
+msgstr ""
