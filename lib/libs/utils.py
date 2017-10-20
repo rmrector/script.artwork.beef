@@ -57,3 +57,24 @@ def get_movie_path_list(stackedpath):
     if basename(dirname(result[0])) in ('VIDEO_TS', 'BDMV'):
         result.append(dirname(dirname(result[0])) + get_pathsep(result[0]) + basename(result[0]))
     return result
+
+replace_chars = ':?"/\\<>*|'
+replace_with = ('', '_', '+')
+replace_colon_with = (' -', '-')
+def iter_possible_cleannames(originalname):
+    yield originalname
+    filenames = [originalname]
+    cleanend = originalname.rstrip(' .')
+    if cleanend != originalname:
+        yield cleanend
+        filenames.append(cleanend)
+    for char, in replace_chars:
+        if char in originalname:
+            for filename in list(filenames):
+                replacements = replace_with
+                if char == ':':
+                    replacements += replace_colon_with
+                for newchar in replacements:
+                    cleaned = filename.replace(char, newchar)
+                    yield cleaned
+                    filenames.append(cleaned)

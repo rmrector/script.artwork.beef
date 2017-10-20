@@ -4,7 +4,7 @@ import xbmc
 from lib.libs import mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import log, unquoteimage
-from lib.libs.utils import natural_sort, get_pathsep
+from lib.libs.utils import natural_sort, get_pathsep, iter_possible_cleannames
 
 # get_mediatype_id must evaluate these in order, as episodes have tvshowid
 idmap = (('episodeid', mediatypes.EPISODE),
@@ -209,7 +209,7 @@ def _get_seasons_artwork(seasons):
 
 def _remove_set_movieposters(mediaitem):
     # Remove poster/fanart Kodi automatically sets from a movie
-    if not set(key for key in mediaitem.art).difference('poster', 'fanart'):
+    if not set(key for key in mediaitem.art).difference(('poster', 'fanart')):
         if 'poster' in mediaitem.art:
             del mediaitem.art['poster']
         if 'fanart' in mediaitem.art:
@@ -219,12 +219,14 @@ def _identify_parent_movieset(mediaitem):
     # Identify set folder among movie parent dirs
     if not mediaitem.movies:
         mediaitem.movies = quickjson.get_item_details(mediaitem.dbid, mediatypes.MOVIESET)['movies']
-    for movie in mediaitem.movies:
-        pathsep = get_pathsep(movie.file)
-        setmatch = pathsep + mediaitem.label + pathsep
-        if setmatch in movie.file:
-            mediaitem.file = movie.file.split(setmatch)[0] + setmatch
-            break
+    for cleanlabel in iter_possible_cleannames(mediaitem.label):
+        for movie in mediaitem.movies:
+            pathsep = get_pathsep(movie['file'])
+            setmatch = pathsep + cleanlabel + pathsep
+            if setmatch in movie['file']:
+                result = movie['file'].split(setmatch)[0] + setmatch
+                mediaitem.file = result if not mediaitem.file else (result, mediaitem.file)
+                return
 
 def _get_uniqueids(jsondata, mediatype):
     uniqueids = jsondata.get('uniqueid', {})
