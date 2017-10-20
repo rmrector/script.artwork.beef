@@ -5,7 +5,7 @@ from abc import ABCMeta
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.mediainfo import arttype_matches_base, format_arttype
-from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep
+from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep, iter_possible_cleannames
 
 ARTWORK_EXTS = ('.jpg', '.png', '.gif')
 
@@ -142,21 +142,19 @@ class ArtFilesMovieSetProvider(ArtFilesAbstractProvider):
         sep = get_pathsep(path)
         path += sep
         dirs, files = xbmcvfs.listdir(path)
-        check_inputbase = os.path.splitext(inputfilename)[0].lower() if inputfilename else ''
+        check_inputbase = os.path.splitext(inputfilename)[0] if inputfilename else ''
         result = {}
         if inputfilename:
-            dirname = next((name for name in dirs if name.lower() == check_inputbase), None)
-            if dirname:
+            dirname = next((name for name in dirs if name in iter_possible_cleannames(check_inputbase)), None)
+            if dirname: # '[centraldir]/[set name]/[arttype].[ext]'
                 dirname = path + dirname + sep
                 _, dfiles = xbmcvfs.listdir(dirname)
                 for filename in dfiles:
-                    check_filename = filename.lower()
-                    if not check_filename.endswith(ARTWORK_EXTS):
+                    if not filename.endswith(ARTWORK_EXTS):
                         continue
-                    basefile = os.path.splitext(check_filename)[0]
-                    if not basefile.isalnum() or len(basefile) > 20:
+                    arttype = os.path.splitext(filename)[0]
+                    if not arttype.isalnum() or len(arttype) > 20:
                         continue
-                    arttype = basefile
                     if settings.identify_alternatives and arttype in self.alttypes.keys():
                         arttype = self.alttypes[arttype]
                         if arttype in result.keys():
@@ -166,17 +164,16 @@ class ArtFilesMovieSetProvider(ArtFilesAbstractProvider):
 
         if not result:
             for filename in files:
-                check_filename = filename.lower()
-                if not check_filename.endswith(ARTWORK_EXTS):
+                if not filename.endswith(ARTWORK_EXTS):
                     continue
-                basefile = os.path.splitext(check_filename)[0]
-                if check_inputbase:
+                basefile = os.path.splitext(filename)[0]
+                if check_inputbase: # '[centraldir]/[set name]-[arttype].[ext]'
                     if '-' not in basefile:
                         continue
                     firstbit, arttype = basefile.rsplit('-', 1)
-                    if firstbit != check_inputbase or not arttype.isalnum():
+                    if not arttype.isalnum() or firstbit not in iter_possible_cleannames(check_inputbase):
                         continue
-                else:
+                else: # parent of movie directory
                     if not basefile.isalnum() or len(basefile) > 20:
                         continue
                     arttype = basefile
