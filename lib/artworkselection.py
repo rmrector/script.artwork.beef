@@ -6,7 +6,7 @@ from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import localize as L
 
-SEASON_NUMBER = 20358
+SEASON_NUMBER = 32002
 SPECIALS = 20381
 UNKNOWN_SOURCE = 32000
 CHOOSE_TYPE_HEADER = 32050
@@ -215,7 +215,7 @@ def get_seasonlabel(arttype):
     if season[1] == '0':
         return '{0}: {1}'.format(L(SPECIALS), season[2])
     elif season[1] != '-1':
-        return '{0}: {1}'.format(L(SEASON_NUMBER) % int(season[1]), season[2])
+        return '{0}: {1}'.format(L(SEASON_NUMBER).format(season[1]), season[2])
 
 def sort_arttype(arttype, naturalsortresplit=re.compile('([0-9]+)')):
     result = []
