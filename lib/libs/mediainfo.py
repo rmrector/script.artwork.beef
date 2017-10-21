@@ -28,7 +28,8 @@ class MediaItem(object):
         if self.mediatype == mediatypes.EPISODE:
             self.tvshowid = jsondata['tvshowid']
             self.showtitle = jsondata['showtitle']
-            self.season_episode = jsondata['season'], jsondata['episode']
+            self.season = jsondata['season']
+            self.episode = jsondata['episode']
         elif self.mediatype == mediatypes.TVSHOW:
             self.season = jsondata['season']
         elif self.mediatype == mediatypes.MOVIESET:
@@ -156,7 +157,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
             tvshowids = quickjson.get_item_details(mediaitem.tvshowid, mediatypes.TVSHOW)['uniqueid']
             tvshowid = tvshowids.get('tmdb', tvshowids.get('unknown'))
             if tvshowid:
-                mediaitem.uniqueids['tmdb_se'] = '{0}/{1}/{2}'.format(tvshowid, *mediaitem.season_episode)
+                mediaitem.uniqueids['tmdb_se'] = '{0}/{1}/{2}'.format(tvshowid, mediaitem.season, mediaitem.episode)
     elif mediaitem.mediatype == mediatypes.MOVIESET:
         if not mediaitem.uniqueids.get('tmdb'):
             uniqueid = processed.get_data(mediaitem.dbid, mediaitem.mediatype)

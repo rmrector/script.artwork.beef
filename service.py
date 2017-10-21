@@ -19,7 +19,7 @@ class ArtworkService(xbmc.Monitor):
         self.processor = ArtworkProcessor(self)
         self.processed = ProcessedItems()
         self.processaftersettings = False
-        self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
+        self.recentitems = {'movie': [], 'tvshow': [], 'episode': [], 'musicvideo': []}
         self.stoppeditems = set()
         self._signal = None
         self._status = None
@@ -59,7 +59,7 @@ class ArtworkService(xbmc.Monitor):
         self.status = STATUS_SIGNALLED if value else STATUS_IDLE
 
     def reset_recent(self):
-        self.recentitems = {'movie': [], 'tvshow': [], 'episode': []}
+        self.recentitems = {'movie': [], 'tvshow': [], 'episode': [], 'musicvideo': []}
 
     def run(self):
         while not self.really_waitforabort(5):
@@ -157,7 +157,7 @@ class ArtworkService(xbmc.Monitor):
         items.extend([info.MediaItem(mset) for mset in quickjson.get_moviesets()
             if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label'])])
         items.extend([info.MediaItem(mvid) for mvid in quickjson.get_musicvideos()
-            if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MOVIESET, mvid['label'])])
+            if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, mvid['label'])])
 
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
@@ -197,39 +197,37 @@ class ArtworkService(xbmc.Monitor):
         addepisodesfrom = set()
         seriesadded = set()
         newitems = []
-        for movieid in self.recentitems['movie']:
-            newitems.append(quickjson.get_item_details(movieid, mediatypes.MOVIE))
-            if self.abortRequested():
-                return
-        for seriesid in self.recentitems['tvshow']:
-            seriesadded.add(seriesid)
-            newitems.append(quickjson.get_item_details(seriesid, mediatypes.TVSHOW))
-            if self.abortRequested():
-                return
+        for mtype in ('movie', 'musicvideo', 'tvshow'):
+            for mediaid in self.recentitems[mtype]:
+                if mtype == 'tvshow':
+                    seriesadded.add(mediaid)
+                newitems.append(info.MediaItem(quickjson.get_item_details(mediaid, mtype)))
+                if self.abortRequested():
+                    return
         for episodeid in self.recentitems['episode']:
-            episode = quickjson.get_item_details(episodeid, mediatypes.EPISODE)
+            episode = info.MediaItem(quickjson.get_item_details(episodeid, mediatypes.EPISODE))
             series = None
-            if episode['tvshowid'] not in seriesadded and (episode['season'] >
-                    self.processed.get_data(episode['tvshowid'], mediatypes.TVSHOW)):
-                seriesadded.add(episode['tvshowid'])
-                series = quickjson.get_item_details(episode['tvshowid'], mediatypes.TVSHOW)
+            if episode.tvshowid not in seriesadded and (episode.season >
+                    self.processed.get_data(episode.tvshowid, mediatypes.TVSHOW)):
+                seriesadded.add(episode.tvshowid)
+                series = info.MediaItem(quickjson.get_item_details(episode.tvshowid, mediatypes.TVSHOW))
                 newitems.append(series)
-            if episode['tvshowid'] in addepisodesfrom:
+            if episode.tvshowid in addepisodesfrom:
                 newitems.append(episode)
-            elif episode['tvshowid'] in ignoreepisodesfrom:
+            elif episode.tvshowid in ignoreepisodesfrom:
                 if settings.generate_episode_thumb:
-                    episode['skip'] = ['fanart']
+                    episode.skip_artwork = ['fanart']
                     newitems.append(episode)
             else:
                 if not series:
-                    series = quickjson.get_item_details(episode['tvshowid'], mediatypes.TVSHOW)
-                if series['imdbnumber'] in settings.autoadd_episodes:
-                    addepisodesfrom.add(episode['tvshowid'])
+                    series = info.MediaItem(quickjson.get_item_details(episode.tvshowid, mediatypes.TVSHOW))
+                if any(x for x in series.uniqueids.itervalues() if x in settings.autoadd_episodes):
+                    addepisodesfrom.add(episode.tvshowid)
                     newitems.append(episode)
                 else:
-                    ignoreepisodesfrom.add(episode['tvshowid'])
+                    ignoreepisodesfrom.add(episode.tvshowid)
                     if settings.generate_episode_thumb:
-                        episode['skip'] = ['fanart']
+                        episode.skip_artwork = ['fanart']
                         newitems.append(episode)
             if self.abortRequested():
                 return
