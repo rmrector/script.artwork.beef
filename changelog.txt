@@ -1,3 +1,12 @@
+v0.12.0 (??)
+- Feature: grab music video artwork from TheAudioDB and fanart.tv
+- Feature: support multiple uniqueids as expanded in Krypton, support TheMovieDB TV scraper in particular
+- Feature: show latest artwork report in Kodi from the add-on settings
+- Feature: add option to prefer artwork from The Movie DB when available
+- Fix: clean file system unsafe characters when matching local set artwork
+- Fix: another Leia compatibility fix, localized string formatting changes
+- Cleanup: simplify web service request retries and session management
+
 v0.11.1 (2017-09-05)
 - Fix: reporting error for new users
 
