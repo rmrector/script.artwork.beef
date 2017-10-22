@@ -39,8 +39,7 @@ class MediaItem(object):
                 #  parent dir currently overrides setartwork_dir if it is found
                 self.file = settings.setartwork_dir + self.label + '.ext'
         elif self.mediatype == mediatypes.MUSICVIDEO:
-            self.label = jsondata['title']
-            self.artist = jsondata['artist']
+            self.label = jsondata['artist'][0] + ' - ' + jsondata['title']
 
         self.seasons = None
         self.availableart = {}
@@ -166,9 +165,9 @@ def add_additional_iteminfo(mediaitem, processed, search):
                 if searchresults:
                     for result in searchresults:
                         if result['label'] == mediaitem.label:
-                            uniqueid = result['id']
+                            uniqueid = result['uniqueids']['tmdb']
                             break
-                    uniqueid = searchresults[0]['id']
+                    uniqueid = searchresults[0]['uniqueids']['tmdb']
                 if uniqueid:
                     processed.set_data(mediaitem.dbid, mediatypes.MOVIESET, mediaitem.label, uniqueid)
                 else:
@@ -188,7 +187,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
                 mb_t, mb_al, mb_ar = newdata.split('/')
                 mediaitem.uniqueids = {'mbid_track': mb_t, 'mbid_album': mb_al, 'mbid_artist': mb_ar}
             elif not settings.only_filesystem:
-                results = search.search_byitem(mediaitem)
+                results = search.search(mediaitem.label, mediatypes.MUSICVIDEO)
                 if results and results[0].get('uniqueids'):
                     mediaitem.uniqueids = uq = results[0]['uniqueids']
                     processed.set_data(mediaitem.dbid, mediatypes.MUSICVIDEO, mediaitem.label,

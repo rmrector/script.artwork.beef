@@ -28,6 +28,7 @@ PROVIDER_ERROR_MESSAGE = 32024
 NOT_SUPPORTED_MESSAGE = 32025
 CURRENT_ART = 13512
 ENTER_COLLECTION_NAME = 32057
+ENTER_ARTIST_TRACK_NAMES = 32058
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -90,7 +91,7 @@ class ArtworkProcessor(object):
         info.add_additional_iteminfo(mediaitem, self.processed, search)
         if not mediaitem.uniqueids and not settings.only_filesystem:
             if mediatype == mediatypes.MOVIESET:
-                self.manualid_movieset(mediaitem)
+                self.manual_id(mediaitem)
         if mode == MODE_GUI:
             self._manual_item_process(mediaitem, busy)
         else:
@@ -125,7 +126,7 @@ class ArtworkProcessor(object):
             selectedarttype, selectedart = prompt_for_artwork(mediaitem.mediatype, mediaitem.label,
                 availableart, self.monitor)
             if selectedarttype and selectedarttype not in availableart:
-                self.manualid_movieset(mediaitem)
+                self.manual_id(mediaitem)
                 return
             if selectedarttype and selectedart:
                 if mediatypes.get_artinfo(mediaitem.mediatype, selectedarttype)['multiselect']:
@@ -257,20 +258,22 @@ class ArtworkProcessor(object):
         else:
             return plus_some(60, 15)
 
-    def manualid_movieset(self, mediaitem):
-        uniqueid = None
-        while not uniqueid:
-            result = xbmcgui.Dialog().input(L(ENTER_COLLECTION_NAME), mediaitem.label)
-            if not result:
-                return False # Cancelled
-            options = search[mediatypes.MOVIESET](result, mediatypes.MOVIESET)
-            selected = xbmcgui.Dialog().select(mediaitem.label, [option['label'] for option in options])
-            if selected < 0:
-                return False # Cancelled
-            uniqueid = options[selected]['id']
-        mediaitem['tmdb'] = uniqueid
-        self.processed.set_data(mediaitem.dbid, mediatypes.MOVIESET, mediaitem.label, uniqueid)
-        return True
+    def manual_id(self, mediaitem):
+        label = ENTER_COLLECTION_NAME if mediaitem.mediatype == mediatypes.MOVIESET else ENTER_ARTIST_TRACK_NAMES
+        result = xbmcgui.Dialog().input(L(label), mediaitem.label)
+        if not result:
+            return False # Cancelled
+        options = search[mediaitem.mediatype].search(result, mediaitem.mediatype)
+        selected = xbmcgui.Dialog().select(mediaitem.label, [option['label'] for option in options])
+        if selected < 0:
+            return False # Cancelled
+        uq = options[selected]['uniqueids']
+        toset = uq.get('tmdb')
+        if not toset and 'mbid_track' in uq and 'mbid_album' in uq and 'mbid_artist' in uq:
+            toset = '{0}/{1}/{2}'.format(uq['mbid_track'], uq['mbid_album'], uq['mbid_artist'])
+        if toset:
+            self.processed.set_data(mediaitem.dbid, mediaitem.mediatype, mediaitem.label, toset)
+        return bool(toset)
 
     def setlanguages(self):
         languages = [pykodi.get_language(xbmc.ISO_639_1)]
