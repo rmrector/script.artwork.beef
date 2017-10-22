@@ -20,11 +20,12 @@ class M(object):
     ADD_MISSING_FOR_OLD = 32406
     ADD_MISSING_FOR_ALL = 32405
     IDENTIFY_UNMATCHED_SETS = 32408
+    IDENTIFY_UNMATCHED_MVIDS = 32415
     REMOVE_EXTRA_ARTWORK = 32407
     REMOVE_SPECIFIC_TYPES = 32414
     REMOVED_ART_COUNT = 32027
-    NO_UNMATCHED_SETS = 32029
-    UNMATCHED_SETS = 32056
+    NO_UNMATCHED_ITEMS = 32029
+    UNMATCHED_ITEMS = 32056
 
     LISTING_ALL = 32028
     ALL = 593
@@ -55,7 +56,8 @@ def main():
             options = [(L(M.ADD_MISSING_FOR_NEW), 'NotifyAll(script.artwork.beef, ProcessUnprocessedItems)'),
                 (L(M.ADD_MISSING_FOR_OLD), 'NotifyAll(script.artwork.beef, ProcessOldItems)'),
                 (L(M.ADD_MISSING_FOR_ALL), 'NotifyAll(script.artwork.beef, ProcessAllItems)'),
-                (L(M.IDENTIFY_UNMATCHED_SETS), identify_unmatched_sets),
+                (L(M.IDENTIFY_UNMATCHED_SETS), lambda: identify_unmatched(mediatypes.MOVIESET)),
+                (L(M.IDENTIFY_UNMATCHED_MVIDS), lambda: identify_unmatched(mediatypes.MUSICVIDEO)),
                 (L(M.REMOVE_SPECIFIC_TYPES), remove_specific_arttypes),
                 ("Quick fix: Reset all movie set IDs", remove_movieset_matches)]
         selected = xbmcgui.Dialog().select('Artwork Beef', [option[0] for option in options])
@@ -96,23 +98,24 @@ def remove_specific_arttypes():
                 L(M.REMOVE_SPECIFIC_TYPES), allitems, options[selected][0])
             notify_count(L(M.REMOVED_ART_COUNT), fixcount)
 
-def identify_unmatched_sets():
+def identify_unmatched(mediatype):
     busy = pykodi.get_busydialog()
     busy.create()
     processed = ProcessedItems()
-    unmatched = [mset for mset in quickjson.get_moviesets() if not processed.get_data(mset['setid'], 'set')]
+    ulist = quickjson.get_moviesets() if mediatype == mediatypes.MOVIESET else quickjson.get_musicvideos()
+    unmatched = [item for item in ulist if not processed.get_data(item[mediatype + 'id'], mediatype)]
     busy.close()
     if unmatched:
-        selected = xbmcgui.Dialog().select(L(M.UNMATCHED_SETS), [mset['label'] for mset in unmatched])
+        selected = xbmcgui.Dialog().select(L(M.UNMATCHED_ITEMS), [item['label'] for item in unmatched])
         if selected < 0:
             return # Cancelled
         mediaitem = info.MediaItem(unmatched[selected])
         info.add_additional_iteminfo(mediaitem, processed, search)
         processor = ArtworkProcessor()
-        if processor.manualid_movieset(mediaitem):
-            processor.process_item(mediatypes.MOVIESET, mediaitem.dbid, 'auto')
+        if processor.manual_id(mediaitem):
+            processor.process_item(mediatype, mediaitem.dbid, 'auto')
     else:
-        xbmcgui.Dialog().notification("Artwork Beef", L(M.NO_UNMATCHED_SETS), xbmcgui.NOTIFICATION_INFO)
+        xbmcgui.Dialog().notification("Artwork Beef", L(M.NO_UNMATCHED_ITEMS), xbmcgui.NOTIFICATION_INFO)
 
 def show_artwork_log():
     if pykodi.get_kodi_version() < 16:

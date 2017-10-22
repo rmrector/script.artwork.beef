@@ -5,7 +5,7 @@ from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 from lib.providers.base import AbstractProvider, AbstractImageProvider, cache
 
-api_key = '1'
+api_key = '***REMOVED***'
 
 class TheAudioDBMusicVideoProvider(AbstractImageProvider):
     name = SortedDisplay('theaudiodb.com', 'TheAudioDB.com')
@@ -106,10 +106,13 @@ class TheAudioDBSearch(AbstractProvider):
         response = self.doget(url, params=params)
         return 'Empty' if response is None else response.json()
 
-    def search_byitem(self, mediaitem):
-        if mediaitem.mediatype != mediatypes.MUSICVIDEO:
+    def search(self, query, mediatype):
+        if mediatype != mediatypes.MUSICVIDEO:
             return []
-        data = self.get_data(self.url_trackby_artistandtrack, {'s': mediaitem.artist, 't': mediaitem.label})
+        query = query.split(' - ', 1)
+        if len(query) != 2:
+            return []
+        data = self.get_data(self.url_trackby_artistandtrack, {'s': query[0], 't': query[1]})
         if not data or not data.get('track'):
             return []
 

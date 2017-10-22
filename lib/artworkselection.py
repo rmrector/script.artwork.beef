@@ -31,7 +31,7 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
             arttypes.append({'arttype': arttype, 'label': label, 'count': len(artlist)})
     arttypes.sort(key=lambda art: sort_arttype(art['arttype']))
     typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', settings.addon_path, arttypes=arttypes,
-        medialabel=medialabel, show_refresh=mediatype == mediatypes.MOVIESET)
+        medialabel=medialabel, show_refresh=mediatype in (mediatypes.MOVIESET, mediatypes.MUSICVIDEO))
     singletype = arttypes[0]['arttype'] if mediatype == 'episode' and len(arttypes) == 1 else None
     selectedarttype = None
     selectedart = None

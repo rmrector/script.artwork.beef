@@ -59,7 +59,7 @@ msgid "Listing all {0}"
 msgstr ""
 
 msgctxt "#32029"
-msgid "All sets identified. Hurray!"
+msgid "All items identified. Hurray!"
 msgstr ""
 
 # Headings
@@ -75,7 +75,7 @@ msgid "Choose {0} for {1}"
 msgstr ""
 
 msgctxt "#32056"
-msgid "Unmatched sets"
+msgid "Unmatched items"
 msgstr ""
 
 msgctxt "#32057"
@@ -96,6 +96,10 @@ msgstr ""
 
 msgctxt "#32055"
 msgid "Maintenance actions [I](save all changes to add-on settings first)[/I]"
+msgstr ""
+
+msgctxt "#32058"
+msgid "Enter the artist and track name"
 msgstr ""
 
 # Actions
@@ -129,7 +133,7 @@ msgid "add missing artwork for old items"
 msgstr ""
 
 msgctxt "#32408"
-msgid "identify unmatched sets with TheMovieDB ..."
+msgid "identify unmatched movie sets with TheMovieDB ..."
 msgstr ""
 
 msgctxt "#32407"
@@ -137,7 +141,7 @@ msgid "Remove extra artwork not configured in the add-on"
 msgstr ""
 
 msgctxt "#32409"
-msgid "Search for set"
+msgid "Search for item"
 msgstr ""
 
 msgctxt "#32410"
@@ -160,6 +164,9 @@ msgctxt "#32414"
 msgid "Remove specific type of artwork for ..."
 msgstr ""
 
+msgctxt "#32415"
+msgid "identify unmatched music videos with TheAudioDB ..."
+msgstr ""
 # Settings
 
 msgctxt "#32900"

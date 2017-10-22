@@ -236,7 +236,7 @@ def _get_imagesize(arttype):
     return SortedDisplay(0, '')
 
 def _get_imagelanguage(arttype, image):
-    if 'lang' not in image or arttype in ('showbackground', 'characterart', 'moviebackground', 'artistbackgroun'):
+    if 'lang' not in image or arttype in ('showbackground', 'characterart', 'moviebackground', 'artistbackground'):
         return None
     if arttype in ('clearlogo', 'hdtvlogo', 'seasonposter', 'hdclearart', 'clearart', 'tvthumb', 'seasonthumb',
             'tvbanner', 'seasonbanner', 'movielogo', 'hdmovielogo', 'hdmovieclearart', 'movieart', 'moviebanner',

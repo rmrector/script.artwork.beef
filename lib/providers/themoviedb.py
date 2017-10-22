@@ -177,7 +177,7 @@ class TheMovieDBSearch(AbstractProvider):
         if not data or 'results' not in data:
             return []
 
-        return [{'label': item['name'], 'id': item['id']} for item in data['results']]
+        return [{'label': item['name'], 'uniqueids': {'tmdb': item['id']}} for item in data['results']]
 
     def get_more_uniqueids(self, uniqueids, mediatype):
         if mediatype != mediatypes.TVSHOW or 'tvdb' in uniqueids:
