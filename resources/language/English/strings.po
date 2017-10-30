@@ -167,6 +167,15 @@ msgstr ""
 msgctxt "#32415"
 msgid "identify unmatched music videos with TheAudioDB ..."
 msgstr ""
+
+msgctxt "#32416"
+msgid "Quick fix: Reset all movie set IDs"
+msgstr ""
+
+msgctxt "#32417"
+msgid "Done resetting all movie set IDs"
+msgstr ""
+
 # Settings
 
 msgctxt "#32900"
