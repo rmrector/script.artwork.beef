@@ -20,7 +20,7 @@ msgstr ""
 # Messages
 
 msgctxt "#32019"
-msgid "Contribute or donate to the source: fanart.tv, thetvdb.com, themoviedb.org"
+msgid "Contribute or donate to the source: fanart.tv, thetvdb.com, themoviedb.org, theaudiodb.com"
 msgstr ""
 
 msgctxt "#32020"
@@ -167,6 +167,7 @@ msgstr ""
 msgctxt "#32415"
 msgid "identify unmatched music videos with TheAudioDB ..."
 msgstr ""
+
 # Settings
 
 msgctxt "#32900"
