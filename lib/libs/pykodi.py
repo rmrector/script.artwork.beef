@@ -160,7 +160,7 @@ class Addon(xbmcaddon.Addon):
     def __init__(self, *args, **kwargs):
         super(Addon, self).__init__()
         self.addonid = self.getAddonInfo('id')
-        self.version = self.getAddonInfo('version') # WARN: If upgraded, this can change
+        self.version = self.getAddonInfo('version')
         self.path = self.getAddonInfo('path')
         self.datapath = self.getAddonInfo('profile') # WARN: This can change if Kodi profile changes
         self.resourcespath = os.path.join(xbmc.translatePath(self.path).decode('utf-8'), u'resources')

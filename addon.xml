@@ -28,16 +28,11 @@
 		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the file system.</description>
 		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB</disclaimer>
 		<news>
-v0.12.0
-- Feature: support multiple uniqueids as expanded in Krypton, support TheMovieDB TV scraper in particular
-  - [B]Action:[/B] If you use the TMDB [B]TV scraper[/B], flip the switch in "Advanced" add-on settings
-- Feature: show latest artwork report in Kodi from the add-on settings
+v0.12.0 (2017-11-03)
 - Feature: grab music video artwork from TheAudioDB and fanart.tv
-- Feature: add option to prefer artwork from The Movie DB when available
-- Fix: clean file system unsafe characters when matching local set artwork
+- Feature: support multiple uniqueids as expanded in Krypton, support TMDb TV scraper in particular
+  - [B]Action:[/B] If you use the TMDb [B]TV scraper[/B], flip the switch in "Advanced" add-on settings
 - Fix: more localized strings, including notifications and the artwork report
-- Fix: another Leia compatibility fix, localized string formatting changes
-- Cleanup: simplify web service request retries and session management
 		</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
 		<forum>https://forum.kodi.tv/showthread.php?tid=258886</forum>
