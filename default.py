@@ -26,6 +26,8 @@ class M(object):
     REMOVED_ART_COUNT = 32027
     NO_UNMATCHED_ITEMS = 32029
     UNMATCHED_ITEMS = 32056
+    REPORT_TITLE = 32007
+    VERSION_REQUIRED = 32026
 
     LISTING_ALL = 32028
     ALL = 593
@@ -33,7 +35,7 @@ class M(object):
     SERIES = 36903
     SEASONS = 36905
     EPISODES = 36907
-    MOVIESETS = 20434
+    MOVIESETS = 36911
 
 def main():
     command = get_command()
@@ -119,9 +121,9 @@ def identify_unmatched(mediatype):
 
 def show_artwork_log():
     if pykodi.get_kodi_version() < 16:
-        xbmcgui.Dialog().notification("Artwork Beef", "This only works on Jarvis and above", xbmcgui.NOTIFICATION_INFO)
+        xbmcgui.Dialog().notification("Artwork Beef", L(M.VERSION_REQUIRED).format("Kodi 16"), xbmcgui.NOTIFICATION_INFO)
         return
-    xbmcgui.Dialog().textviewer("Artwork Beef artwork log", reporting.get_latest_report())
+    xbmcgui.Dialog().textviewer("Artwork Beef: " + L(M.REPORT_TITLE), reporting.get_latest_report())
 
 def remove_movieset_matches():
     # DEPRECATED short 2017-09-02: just a quick fix until the processeditems medialabel change has fully taken effect

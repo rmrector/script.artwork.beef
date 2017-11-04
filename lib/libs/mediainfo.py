@@ -3,8 +3,11 @@ import xbmc
 
 from lib.libs import mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings
-from lib.libs.pykodi import log, unquoteimage
+from lib.libs.pykodi import log, unquoteimage, localize as L
 from lib.libs.utils import natural_sort, get_pathsep, iter_possible_cleannames
+
+CANT_FIND_MOVIESET = 32032
+CANT_FIND_MUSICVIDEO = 32033
 
 # get_mediatype_id must evaluate these in order, as episodes have tvshowid
 idmap = (('episodeid', mediatypes.EPISODE),
@@ -171,7 +174,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
                 if uniqueid:
                     processed.set_data(mediaitem.dbid, mediatypes.MOVIESET, mediaitem.label, uniqueid)
                 else:
-                    mediaitem.error = "Could not find set on TheMovieDB"
+                    mediaitem.error = L(CANT_FIND_MOVIESET)
                     log("Could not find set '{0}' on TheMovieDB".format(mediaitem.label), xbmc.LOGNOTICE)
 
             mediaitem.uniqueids['tmdb'] = uniqueid
@@ -193,7 +196,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
                     processed.set_data(mediaitem.dbid, mediatypes.MUSICVIDEO, mediaitem.label,
                         uq['mbid_track'] + '/' + uq['mbid_album'] + '/' + uq['mbid_artist'])
                 else:
-                    mediaitem.error = "Could not find music video on TheAudioDB"
+                    mediaitem.error = L(CANT_FIND_MUSICVIDEO)
                     log("Could not find music video '{0}' on TheAudioDB".format(mediaitem.label), xbmc.LOGNOTICE)
 
 def _get_seasons_artwork(seasons):

@@ -14,9 +14,11 @@ else:
 from lib.libs import mediatypes
 from lib.libs.utils import SortedDisplay, get_movie_path_list
 
+NFO_FILE = 32003
+
 class NFOFileAbstractProvider(object):
     __metaclass__ = ABCMeta
-    name = SortedDisplay('file:nfo', 'NFO file')
+    name = SortedDisplay('file:nfo', NFO_FILE)
 
     def build_resultimage(self, url, title):
         if isinstance(url, unicode):

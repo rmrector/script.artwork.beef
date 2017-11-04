@@ -14,7 +14,28 @@ msgid "Something missing?"
 msgstr ""
 
 msgctxt "#32002"
+# 0 = art type (poster/fanart/banner/etc)
 msgid "Season {0}"
+msgstr ""
+
+msgctxt "#32003"
+msgid "NFO file"
+msgstr ""
+
+msgctxt "#32004"
+msgid "video file"
+msgstr ""
+
+msgctxt "#32005"
+msgid "Video file thumbnail"
+msgstr ""
+
+msgctxt "#32006"
+msgid "{0:d} available"
+msgstr ""
+
+msgctxt "#32007"
+msgid "artwork report"
 msgstr ""
 
 # Messages
@@ -32,7 +53,7 @@ msgid "No artwork available"
 msgstr ""
 
 msgctxt "#32022"
-msgid "{0} artwork updated"
+msgid "{0:d} artwork updated"
 msgstr ""
 
 msgctxt "#32023"
@@ -47,10 +68,13 @@ msgctxt "#32025"
 msgid "Media type '{0}' not supported"
 msgstr ""
 
-# Unused "#32026"
+msgctxt "#32026"
+# 0 = version of Kodi - "Kodi 16"
+msgid "{0} or newer required"
+msgstr ""
 
 msgctxt "#32027"
-msgid "Removed {0} images"
+msgid "Removed {0:d} images"
 msgstr ""
 
 # 0: media type - movie/series/seasons/episodes
@@ -60,6 +84,30 @@ msgstr ""
 
 msgctxt "#32029"
 msgid "All items identified. Hurray!"
+msgstr ""
+
+msgctxt "#32030"
+msgid "No web service IDs available, can't look up online"
+msgstr ""
+
+msgctxt "#32031"
+msgid "Encountered multiple errors, skipping provider for remaining items"
+msgstr ""
+
+msgctxt "#32032"
+msgid "Could not find movie set on TMDb"
+msgstr ""
+
+msgctxt "#32033"
+msgid "Could not find music video on TheAudioDB"
+msgstr ""
+
+msgctxt "#32034"
+msgid "Could not contact provider"
+msgstr ""
+
+msgctxt "#32035"
+msgid "HTTP error: {0}"
 msgstr ""
 
 # Headings
@@ -133,7 +181,7 @@ msgid "add missing artwork for old items"
 msgstr ""
 
 msgctxt "#32408"
-msgid "identify unmatched movie sets with TheMovieDB ..."
+msgid "identify unmatched movie sets with TMDb ..."
 msgstr ""
 
 msgctxt "#32407"
@@ -244,7 +292,7 @@ msgid "Include detailed per item changes in the reports"
 msgstr ""
 
 msgctxt "#32918"
-msgid "Default TV show / episode ID source if unknown: TheTVDB or TheMovieDB"
+msgid "Default TV show / episode ID source if unknown"
 msgstr ""
 
 msgctxt "#32919"
@@ -256,5 +304,77 @@ msgid "Always generate music video thumb from video file"
 msgstr ""
 
 msgctxt "#32921"
-msgid "Prefer artwork from The Movie DB when available"
+msgid "Prefer artwork from The Movie Database when available"
+msgstr ""
+
+# Used in the artwork report
+
+msgctxt "#32800"
+msgid "Processing list automatically"
+msgstr ""
+
+msgctxt "#32801"
+# 0 = label of media item
+msgid "Manually processing {0}"
+msgstr ""
+
+msgctxt "#32802"
+# 0 = label of media item
+msgid "Processing {0}"
+msgstr ""
+
+msgctxt "#32803"
+msgid "Processing finished"
+msgstr ""
+
+msgctxt "#32804"
+msgid "Processing aborted"
+msgstr ""
+
+msgctxt "#32805"
+msgid "No items in list"
+msgstr ""
+
+msgctxt "#32806"
+msgid "{0:d} items in list"
+msgstr ""
+
+msgctxt "#32807"
+msgid "{0:d} items processed"
+msgstr ""
+
+msgctxt "#32808"
+msgid "No artwork updated"
+msgstr ""
+
+msgctxt "#32809"
+msgid "{0:d} artwork updated"
+msgstr ""
+
+msgctxt "#32810"
+msgid "Not missing artwork, not looking for any"
+msgstr ""
+
+msgctxt "#32811"
+# 0 = comma separated list of missing artwork types
+msgid "Missing artwork: {0}"
+msgstr ""
+
+msgctxt "#32812"
+# 0 = comma separated list of updated artwork types
+msgid "Updated artwork: {0}"
+msgstr ""
+
+msgctxt "#32813"
+# 0 = text of error message
+msgid "Encountered an error - {0}"
+msgstr ""
+
+msgctxt "#32814"
+msgid "Errors were encountered"
+msgstr ""
+
+msgctxt "#32815"
+# 0 = versions of Artwork Beef and Kodi
+msgid "Versions: {0}"
 msgstr ""

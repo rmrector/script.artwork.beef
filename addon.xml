@@ -35,6 +35,7 @@ v0.12.0
 - Feature: grab music video artwork from TheAudioDB and fanart.tv
 - Feature: add option to prefer artwork from The Movie DB when available
 - Fix: clean file system unsafe characters when matching local set artwork
+- Fix: more localized strings, including notifications and the artwork report
 - Fix: another Leia compatibility fix, localized string formatting changes
 - Cleanup: simplify web service request retries and session management
 		</news>
