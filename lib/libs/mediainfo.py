@@ -162,7 +162,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
                 mediaitem.uniqueids['tmdb_se'] = '{0}/{1}/{2}'.format(tvshowid, mediaitem.season, mediaitem.episode)
     elif mediaitem.mediatype == mediatypes.MOVIESET:
         if not mediaitem.uniqueids.get('tmdb'):
-            uniqueid = processed.get_data(mediaitem.dbid, mediaitem.mediatype)
+            uniqueid = processed.get_data(mediaitem.dbid, mediaitem.mediatype, mediaitem.label)
             if not uniqueid and not settings.only_filesystem:
                 searchresults = search.search(mediaitem.label, mediaitem.mediatype)
                 if searchresults:
@@ -174,6 +174,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
                 if uniqueid:
                     processed.set_data(mediaitem.dbid, mediatypes.MOVIESET, mediaitem.label, uniqueid)
                 else:
+                    processed.set_data(mediaitem.dbid, mediatypes.MOVIESET, mediaitem.label, None)
                     mediaitem.error = L(CANT_FIND_MOVIESET)
                     log("Could not find set '{0}' on TheMovieDB".format(mediaitem.label), xbmc.LOGNOTICE)
 
@@ -185,7 +186,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
     elif mediaitem.mediatype == mediatypes.MUSICVIDEO:
         if not mediaitem.uniqueids.get('mbid_track') or not mediaitem.uniqueids.get('mbid_album') \
                 or not mediaitem.uniqueids.get('mbid_artist'):
-            newdata = processed.get_data(mediaitem.dbid, mediaitem.mediatype)
+            newdata = processed.get_data(mediaitem.dbid, mediaitem.mediatype, mediaitem.label)
             if newdata:
                 mb_t, mb_al, mb_ar = newdata.split('/')
                 mediaitem.uniqueids = {'mbid_track': mb_t, 'mbid_album': mb_al, 'mbid_artist': mb_ar}
@@ -196,6 +197,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
                     processed.set_data(mediaitem.dbid, mediatypes.MUSICVIDEO, mediaitem.label,
                         uq['mbid_track'] + '/' + uq['mbid_album'] + '/' + uq['mbid_artist'])
                 else:
+                    processed.set_data(mediaitem.dbid, mediatypes.MUSICVIDEO, mediaitem.label, None)
                     mediaitem.error = L(CANT_FIND_MUSICVIDEO)
                     log("Could not find music video '{0}' on TheAudioDB".format(mediaitem.label), xbmc.LOGNOTICE)
 
