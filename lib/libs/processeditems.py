@@ -5,7 +5,7 @@ import xbmcvfs
 from lib.libs.addonsettings import settings
 
 VERSION = 1
-# DEPRECATED short 2017-08-26: `medialabel IS NULL` x2 is only for transitioning from VERSION = 0
+# DEPRECATED short 2017-08-26: `medialabel IS NULL` x3 is only for transitioning from VERSION = 0
 #  maybe the first check in `_get_version` can go later on
 
 class ProcessedItems(object):
@@ -25,8 +25,9 @@ class ProcessedItems(object):
             else "INSERT INTO processeditems (nextdate, medialabel, mediaid, mediatype) VALUES ({0}, ?, ?, ?)"
         self.db.execute(script.format(scriptbit), (medialabel, mediaid, mediatype))
 
-    def get_data(self, mediaid, mediatype):
-        result = self.db.fetchone("SELECT * FROM processeditems WHERE mediaid=? AND mediatype=?", (mediaid, mediatype))
+    def get_data(self, mediaid, mediatype, medialabel):
+        result = self.db.fetchone("""SELECT * FROM processeditems WHERE mediaid=? AND mediatype=?
+            AND (medialabel=? or medialabel IS NULL)""", (mediaid, mediatype, medialabel))
         if result:
             return result['data']
 

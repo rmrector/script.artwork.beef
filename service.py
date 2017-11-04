@@ -157,14 +157,14 @@ class ArtworkService(xbmc.Monitor):
         items.extend([info.MediaItem(mset) for mset in quickjson.get_moviesets()
             if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label'])])
         items.extend([info.MediaItem(mvid) for mvid in quickjson.get_musicvideos()
-            if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, mvid['label'])])
+            if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, mvid['artist'][0] + ' - ' + mvid['title'])])
 
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
             return False
         serieseps_added = set()
         for series in serieslist:
-            processed_season = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW)
+            processed_season = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW, series['label'])
             if not processed_season or series['season'] > int(processed_season) or \
                     shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW, series['label']):
                 items.append(info.MediaItem(series))
@@ -208,7 +208,7 @@ class ArtworkService(xbmc.Monitor):
             episode = info.MediaItem(quickjson.get_item_details(episodeid, mediatypes.EPISODE))
             series = None
             if episode.tvshowid not in seriesadded and (episode.season >
-                    self.processed.get_data(episode.tvshowid, mediatypes.TVSHOW)):
+                    self.processed.get_data(episode.tvshowid, mediatypes.TVSHOW, episode.label)):
                 seriesadded.add(episode.tvshowid)
                 series = info.MediaItem(quickjson.get_item_details(episode.tvshowid, mediatypes.TVSHOW))
                 newitems.append(series)

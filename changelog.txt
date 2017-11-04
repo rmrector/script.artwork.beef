@@ -1,3 +1,6 @@
+v0.12.1 (2017-11-04)
+- Fix: mismatched IDs for movie sets and music videos
+
 v0.12.0 (2017-11-03)
 - Feature: grab music video artwork from TheAudioDB and fanart.tv
 - Feature: support multiple uniqueids as expanded in Krypton, support TheMovieDB TV scraper in particular
