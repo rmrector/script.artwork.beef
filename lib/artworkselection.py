@@ -12,6 +12,7 @@ UNKNOWN_SOURCE = 32000
 CHOOSE_TYPE_HEADER = 32050
 CHOOSE_ART_HEADER = 32051
 REFRESH_ITEM = 32409
+AVAILABLE = 32059
 
 def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
     if not availableart:
@@ -78,7 +79,7 @@ class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
             self.guilist = self.getControl(6)
             for arttype in self.arttypes:
                 listitem = xbmcgui.ListItem(arttype['label'])
-                summary = '{0} available'.format(arttype['count'])
+                summary = '{0} '.format(arttype['count'])+L(AVAILABLE).format(self.medialabel)
                 listitem.setLabel2(summary)
                 # DEPRECATED: Above Krypton and higher (only), below Jarvis and lower (only)
                 listitem.setProperty('Addon.Summary', summary)
