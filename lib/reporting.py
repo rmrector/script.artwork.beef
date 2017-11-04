@@ -15,28 +15,29 @@ REPORT_SIZE = 100000
 REPORT_COUNT = 5
 PER_ITEM_MULT = 5
 
-PROCESSING_AUTOMATICALLY = "Processing list automatically"
-PROCESSING_MANUALLY = "Manually processing {0}"
-PROCESSING = "Processing {0}"
-PROCESSING_FINISHED = "Processing finished"
-PROCESSING_ABORTED = "Processing aborted"
-NO_ITEMS = "No items in list"
-ITEM_COUNT = "{0} items in list"
-PROCESSED_COUNT = "{0} items processed"
-NO_UPDATES = "No artwork updated"
-UPDATE_COUNT = "{0} artwork updated"
-NO_MISSING_ARTWORK = "Not missing artwork, not looking for any"
-MISSING_LABEL = "Missing artwork"
-UPDATED_LABEL = "Updated artwork"
-ERROR_MESSAGE = "Encountered an error"
-ERRORS_MESSAGE = "Errors were encountered"
+PROCESSING_AUTOMATICALLY = 32800
+PROCESSING_MANUALLY = 32801
+PROCESSING = 32802
+PROCESSING_FINISHED = 32803
+PROCESSING_ABORTED = 32804
+NO_ITEMS = 32805
+ITEM_COUNT = 32806
+PROCESSED_COUNT = 32807
+NO_UPDATES = 32808
+UPDATE_COUNT = 32809
+NO_MISSING_ARTWORK = 32810
+MISSING_LABEL = 32811
+UPDATED_LABEL = 32812
+ERROR_MESSAGE = 32813
+ERRORS_MESSAGE = 32814
+RUNNING_VERSION = 32815
 
 def report_startup():
     if not xbmcvfs.exists(settings.datapath):
         xbmcvfs.mkdir(settings.datapath)
     with _get_file() as reportfile:
         reportfile.seek(0, os.SEEK_SET)
-        newline = "= Versions: {0}".format(settings.useragent)
+        newline = "= " + L(RUNNING_VERSION).format(settings.useragent)
         line_exists = any(newline in line for line in reportfile)
         if not line_exists:
             reportfile.seek(0, os.SEEK_END)
@@ -95,21 +96,21 @@ def report_item(mediaitem, forcedreport=False, manual=False):
         itemtitle = "{0} '{1}'".format(mediaitem.mediatype, mediaitem.label) if mediaitem.mediatype != mediatypes.EPISODE \
             else "{0} '{1}' of '{2}'".format(mediaitem.mediatype, mediaitem.label, mediaitem.showtitle)
         message = "== {0}: ".format(get_datetime()) if forcedreport else ""
-        message += PROCESSING_MANUALLY if manual else PROCESSING
+        message += L(PROCESSING_MANUALLY if manual else PROCESSING)
         write(reportfile, message.format(itemtitle))
         if not mediaitem.missingart:
             if not manual:
                 write(reportfile, L(NO_MISSING_ARTWORK))
         else:
-            write(reportfile, L(MISSING_LABEL) + ': ' + ', '.join(mediaitem.missingart))
+            write(reportfile, L(MISSING_LABEL).format(', '.join(mediaitem.missingart)))
 
         if mediaitem.updatedart:
-            write(reportfile, L(UPDATED_LABEL) + ': ' + ', '.join(mediaitem.updatedart))
+            write(reportfile, L(UPDATED_LABEL).format(', '.join(mediaitem.updatedart)))
         elif manual or mediaitem.missingart:
             write(reportfile, L(NO_UPDATES))
 
         if mediaitem.error:
-            write(reportfile, L(ERROR_MESSAGE) + ' - ' + mediaitem.error)
+            write(reportfile, L(ERROR_MESSAGE).format(mediaitem.error))
         if forcedreport:
             write(reportfile, '')
     if forcedreport and _should_rotate():

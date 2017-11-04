@@ -6,9 +6,12 @@ from requests.exceptions import HTTPError, Timeout, ConnectionError
 from requests.packages import urllib3
 
 from lib.libs.addonsettings import settings
-from lib.libs.pykodi import log
+from lib.libs.pykodi import log, localize as L
 from lib.libs.utils import SortedDisplay
 from lib.libs.webhelper import Getter
+
+CANT_CONTACT_PROVIDER = 32034
+HTTP_ERROR = 32035
 
 urllib3.disable_warnings()
 
@@ -38,9 +41,9 @@ class AbstractProvider(object):
         try:
             return self.getter(url, params, headers)
         except (Timeout, ConnectionError) as ex:
-            raise ProviderError, ("Cannot contact provider", ex), sys.exc_info()[2]
+            raise ProviderError, (L(CANT_CONTACT_PROVIDER), ex), sys.exc_info()[2]
         except HTTPError as ex:
-            raise ProviderError, ('HTTP error: ' + ex.message, ex), sys.exc_info()[2]
+            raise ProviderError, (L(HTTP_ERROR).format(ex.message), ex), sys.exc_info()[2]
 
     def log(self, message, level=xbmc.LOGDEBUG):
         if self.mediatype:

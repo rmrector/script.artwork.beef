@@ -29,6 +29,7 @@ NOT_SUPPORTED_MESSAGE = 32025
 CURRENT_ART = 13512
 ENTER_COLLECTION_NAME = 32057
 ENTER_ARTIST_TRACK_NAMES = 32058
+NO_IDS_MESSAGE = 32030
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -185,7 +186,7 @@ class ArtworkProcessor(object):
     def _process_item(self, gatherer, mediaitem, singleitem=False, auto=True):
         mediatype = mediaitem.mediatype
         if not mediaitem.uniqueids and not settings.only_filesystem:
-            header = "No web service IDs available, can't look up online"
+            header = L(NO_IDS_MESSAGE)
             mediaitem.error = header
             if singleitem:
                 message = "{0} '{1}'".format(mediatype, mediaitem.label)

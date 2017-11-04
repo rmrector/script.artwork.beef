@@ -1,9 +1,11 @@
 from lib import providers
 from lib.libs.addonsettings import settings
+from lib.libs.pykodi import localize as L
 from lib.libs.utils import SortedDisplay
 from lib.providers import ProviderError
 
 MAX_ERRORS = 3
+TOO_MANY_ERRORS = 32031
 
 class Gatherer(object):
     def __init__(self, monitor, only_filesystem, languages):
@@ -71,7 +73,7 @@ class Gatherer(object):
                 if errcount == 1: # notify on first error
                     error['message'] = ex.message
                 elif errcount == MAX_ERRORS: # and on last error when we're no longer going to try this provider
-                    error['message'] = "Encountered multiple errors, skipping provider for remaining items."
+                    error['message'] = L(TOO_MANY_ERRORS)
                 continue
             for arttype, artlist in providerimages.iteritems():
                 if arttype.startswith('season.'):
