@@ -36,6 +36,7 @@ class M(object):
     SEASONS = 36905
     EPISODES = 36907
     MOVIESETS = 36911
+    MUSICVIDEOS = 36909
 
 def main():
     command = get_command()
@@ -78,7 +79,7 @@ def notify_count(message, count):
 def remove_specific_arttypes():
     options = ((L(M.MOVIES), quickjson.get_movies), (L(M.SERIES), quickjson.get_tvshows),
         (L(M.SEASONS), quickjson.get_seasons), (L(M.MOVIESETS), quickjson.get_moviesets),
-        (L(M.EPISODES), quickjson.get_episodes))
+        (L(M.EPISODES), quickjson.get_episodes), (L(M.MUSICVIDEOS), quickjson.get_musicvideos))
 
     selected = xbmcgui.Dialog().select(L(M.REMOVE_SPECIFIC_TYPES), [option[0] + " ..." for option in options])
     if selected >= 0 and selected < len(options):
