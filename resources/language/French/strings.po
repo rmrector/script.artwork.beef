@@ -1,0 +1,374 @@
+# Kodi Media Center language file
+# Addon Name: Artwork Beef
+# Addon id: service.artwork.beef
+msgid ""
+msgstr ""
+
+msgctxt "#32000"
+msgid "Unknown source"
+msgstr "Source inconnue"
+
+# Prefixed to 32019 if no artwork found or updated
+msgctxt "#32001"
+msgid "Something missing?"
+msgstr "Quelque chose manque ?"
+
+msgctxt "#32002"
+msgid "Season {0}"
+msgstr "Saison {0}"
+
+msgctxt "#32003"
+msgid "NFO file"
+msgstr "Fichier NFO"
+
+msgctxt "#32004"
+msgid "video file"
+msgstr "Fichier vidéo"
+
+msgctxt "#32005"
+msgid "Video file thumbnail"
+msgstr "Vignette du fichier vidéo"
+
+msgctxt "#32006"
+msgid "{0:d} available"
+msgstr "{0:d} disponible(s)"
+
+msgctxt "#32007"
+msgid "artwork report"
+msgstr "Rapport des artworks"
+
+# Messages
+msgctxt "#32019"
+msgid "Contribute or donate to the source: fanart.tv, thetvdb.com, themoviedb.org, theaudiodb.com"
+msgstr "Contribuez ou faites un don aux sites : fanart.tv, thetvdb.com, themoviedb.org, theaudiodb.com"
+
+msgctxt "#32020"
+msgid "Adding extended artwork"
+msgstr "Ajout des artworks supplémentaires"
+
+msgctxt "#32021"
+msgid "No artwork available"
+msgstr "Aucun artwork disponible"
+
+msgctxt "#32022"
+msgid "{0:d} artwork updated"
+msgstr "{0:d} artwork(s) mis à jour"
+
+msgctxt "#32023"
+msgid "No artwork updated"
+msgstr "Aucun artwork n'a été mis à jour"
+
+msgctxt "#32024"
+msgid "Error with provider '{0}'"
+msgstr "Erreur avec le fournisseur d'informations '{0}'"
+
+msgctxt "#32025"
+msgid "Media type '{0}' not supported"
+msgstr "Le type '{0}' du média n'est pas supporté"
+
+# 0 = version of Kodi - "Kodi 16"
+msgctxt "#32026"
+msgid "{0} or newer required"
+msgstr "{0} ou plus récent requis"
+
+msgctxt "#32027"
+msgid "Removed {0:d} images"
+msgstr "{0:d} image(s) supprimée(s)"
+
+# 0: media type - movie/series/seasons/episodes
+msgctxt "#32028"
+msgid "Listing all {0}"
+msgstr "Tout afficher {0}"
+
+msgctxt "#32029"
+msgid "All items identified. Hurray!"
+msgstr "Tous les éléments ont été identifié. Hourra !"
+
+msgctxt "#32030"
+msgid "No web service IDs available, can't look up online"
+msgstr "Aucun ID de service Web disponible, impossible de rechercher en ligne"
+
+msgctxt "#32031"
+msgid "Encountered multiple errors, skipping provider for remaining items"
+msgstr "Plusieurs erreurs rencontrées, fournisseur d’informations ignoré pour les éléments restants"
+
+msgctxt "#32032"
+msgid "Could not find movie set on TMDb"
+msgstr "Impossible de trouver la saga de films sur TheMovieDb"
+
+msgctxt "#32033"
+msgid "Could not find music video on TheAudioDB"
+msgstr "Impossible de trouver le clip vidéo sur TheAudioDB"
+
+msgctxt "#32034"
+msgid "Could not contact provider"
+msgstr "Impossible de contacter le fournisseur d’informations"
+
+msgctxt "#32035"
+msgid "HTTP error: {0}"
+msgstr "Erreur HTTP : {0}"
+
+# Headings
+# 0: media title
+msgctxt "#32050"
+msgid "Choose art type for {0}"
+msgstr "Choisir un type d'artwork pour {0}"
+
+# 0: art type (poster/fanart/etc), 1: media title
+msgctxt "#32051"
+msgid "Choose {0} for {1}"
+msgstr "{0} pour {1}"
+
+msgctxt "#32056"
+msgid "Unmatched items"
+msgstr "Eléments non trouvés"
+
+msgctxt "#32057"
+msgid "Enter TheMovieDB collection name"
+msgstr "Entrez le nom de la saga TheMovieDB"
+
+msgctxt "#32052"
+msgid "Actions"
+msgstr "Actions"
+
+msgctxt "#32053"
+msgid "Automatically add these artwork types from web services"
+msgstr "Ajouter automatiquement ces types d'artworks à partir des services Web"
+
+msgctxt "#32054"
+msgid "Sorting and auto filters"
+msgstr "Tri et filtres automatiques"
+
+msgctxt "#32055"
+msgid "Maintenance actions [I](save all changes to add-on settings first)[/I]"
+msgstr "Actions de maintenance [I](enregistrez d'abord toutes les modifications apportées aux paramètres de l'extension)[/I]"
+
+msgctxt "#32058"
+msgid "Enter the artist and track name"
+msgstr "Entrer le nom de l'artiste et de la chanson"
+
+# Actions
+msgctxt "#32400"
+msgid "Select series to auto add episode artwork..."
+msgstr "Sélectionner les séries TV pour ajouter automatiquement les artworks des épisodes..."
+
+msgctxt "#32401"
+msgid "Add missing artwork now?"
+msgstr "Ajouter les artworks manquants maintenant ?"
+
+msgctxt "#32402"
+msgid "Add missing episode artwork for newly selected series after add-on settings are closed?"
+msgstr "Voulez-vous ajouter les artworks manquants des épisodes après la fermeture des paramètres de l'extension pour les séries nouvellement sélectionnées ?"
+
+msgctxt "#32403"
+msgid "stop current process"
+msgstr "Arrêter le processus en cours"
+
+msgctxt "#32404"
+msgid "add missing artwork for new items"
+msgstr "Ajouter les artworks manquants pour les nouveaux éléments"
+
+msgctxt "#32405"
+msgid "add missing artwork for all items"
+msgstr "Ajouter les artworks manquants pour tous les éléments"
+
+msgctxt "#32406"
+msgid "add missing artwork for old items"
+msgstr "Ajouter les artworks manquants pour les anciens éléments"
+
+msgctxt "#32408"
+msgid "identify unmatched movie sets with TMDb ..."
+msgstr "Identifier les sagas de films non trouvées avec TheMovieDB"
+
+msgctxt "#32407"
+msgid "Remove extra artwork not configured in the add-on"
+msgstr "Supprimer les artworks supplémentaires qui ne sont pas configurés dans les paramètres de l'extension"
+
+msgctxt "#32409"
+msgid "Search for item"
+msgstr "Rechercher un élément"
+
+msgctxt "#32410"
+msgid "Add missing artwork"
+msgstr "Obtenir les artworks manquants"
+
+msgctxt "#32411"
+msgid "Select artwork..."
+msgstr "Sélectionner les artworks..."
+
+msgctxt "#32412"
+msgid "Disable Artwork Beef context items [I](per skin)[/I]"
+msgstr "Désactiver les éléments de Artwork Beef sur le menu contextuel (par thème)"
+
+msgctxt "#32413"
+msgid "Enable Artwork Beef context items [I](per skin)[/I]"
+msgstr "Activer les éléments de Artwork Beef sur le menu contextuel (par thème)"
+
+msgctxt "#32414"
+msgid "Remove specific type of artwork for ..."
+msgstr "Supprimer un type spécifique d'artworks pour ..."
+
+msgctxt "#32415"
+msgid "identify unmatched music videos with TheAudioDB ..."
+msgstr "Identifier les clips vidéos non trouvées avec TheAudioDB"
+
+# Settings
+msgctxt "#32900"
+msgid "Automatically add artwork for new items"
+msgstr "Ajouter automatiquement les artworks pour les nouveaux éléments"
+
+msgctxt "#32912"
+msgid "Update artwork for old items daily"
+msgstr "Mettre à jour quotidiennement les artworks pour les anciens éléments"
+
+msgctxt "#32904"
+msgid "Automatically add from filesystem only"
+msgstr "Ajouter automatiquement à partir du système de fichiers uniquement"
+
+msgctxt "#32901"
+msgid "Prefer fanart with no title"
+msgstr "Préférer les fanarts sans titre"
+
+msgctxt "#32917"
+msgid "Prefer posters with no title"
+msgstr "Préférer les posters sans titre"
+
+msgctxt "#32902"
+msgid "Preferred artwork size"
+msgstr "Taille préférée des images"
+
+msgctxt "#32907"
+msgid "Minimum image rating"
+msgstr "Note minimale des images"
+
+msgctxt "#32913"
+msgid "Override image language (defaults to Kodi interface)"
+msgstr "Remplacer la langue des artworks (celle de l'interface Kodi par défaut)"
+
+msgctxt "#32903"
+msgid "Use high quality preview images"
+msgstr "Utiliser des images de prévisualisation de haute qualité"
+
+msgctxt "#32905"
+msgid "fanart.tv personal API key"
+msgstr "Clé API personnelle fanart.tv"
+
+msgctxt "#32906"
+msgid "Identify alternate Artwork Downloader and MSAA artwork file names"
+msgstr "Identifier les noms de fichiers d'artworks de Artwork Downloader et de Movie Set Artwork Automator"
+
+# subsetting of action #32407
+msgctxt "#32908"
+msgid "Additional artwork types to keep"
+msgstr "Types d'artworks supplémentaires à conserver"
+
+msgctxt "#32909"
+msgid "grab movie set artwork from central artwork directory"
+msgstr "Récupérer les artworks des sagas de films à partir du répertoire centralisé des artworks"
+
+msgctxt "#32910"
+msgid "central movie set artwork directory"
+msgstr "Répertoire centralisé des artworks des sagas de films"
+
+msgctxt "#32911"
+msgid "grab movie set artwork from movie parent directory"
+msgstr "Récupérer les artworks des sagas de films à partir du répertoire parents des films"
+
+msgctxt "#32914"
+msgid "Always generate episode thumb from video file"
+msgstr "Toujours générer les vignettes des épisodes à partir du fichier vidéo"
+
+msgctxt "#32915"
+msgid "Always generate movie thumb from video file"
+msgstr "Toujours générer les vignettes des films à partir du fichier vidéo"
+
+msgctxt "#32916"
+msgid "Include detailed per item changes in the reports"
+msgstr "Inclure les changements détaillés par élément dans les rapports"
+
+msgctxt "#32918"
+msgid "Default TV show / episode ID source if unknown"
+msgstr "Fournisseur d'informations par défaut des séries TV et épisodes"
+
+msgctxt "#32919"
+msgid "Show latest artwork log"
+msgstr "Afficher le dernier journal"
+
+msgctxt "#32920"
+msgid "Always generate music video thumb from video file"
+msgstr "Toujours générer les vignettes des clips vidéos à partir du fichier vidéo"
+
+msgctxt "#32921"
+msgid "Prefer artwork from The Movie Database when available"
+msgstr "Préférer les artworks de TheMovieDB si disponibles"
+
+# Used in the artwork report
+msgctxt "#32800"
+msgid "Processing list automatically"
+msgstr "Traitement de la liste automatiquement"
+
+# 0 = label of media item
+msgctxt "#32801"
+msgid "Manually processing {0}"
+msgstr "Traitement manuel {0}"
+
+# 0 = label of media item
+msgctxt "#32802"
+msgid "Processing {0}"
+msgstr "Traitement {0}"
+
+msgctxt "#32803"
+msgid "Processing finished"
+msgstr "Traitement terminé"
+
+msgctxt "#32804"
+msgid "Processing aborted"
+msgstr "Traitement annulé"
+
+msgctxt "#32805"
+msgid "No items in list"
+msgstr "Aucun élément dans la liste"
+
+msgctxt "#32806"
+msgid "{0:d} items in list"
+msgstr "{0:d} élément(s) dans la liste"
+
+msgctxt "#32807"
+msgid "{0:d} items processed"
+msgstr "{0:d} élément(s) traité(s)"
+
+msgctxt "#32808"
+msgid "No artwork updated"
+msgstr "Aucun artwork n'a été mis à jour"
+
+msgctxt "#32809"
+msgid "{0:d} artwork updated"
+msgstr "{0:d} artwork(s) mis à jour"
+
+msgctxt "#32810"
+msgid "Not missing artwork, not looking for any"
+msgstr "Aucun artwork manquant"
+
+# 0 = comma separated list of missing artwork types
+msgctxt "#32811"
+msgid "Missing artwork: {0}"
+msgstr "Artwork(s) manquant(s) : {0}"
+
+# 0 = comma separated list of updated artwork types
+msgctxt "#32812"
+msgid "Updated artwork: {0}"
+msgstr "Artwork(s) mis à jour : {0}"
+
+# 0 = text of error message
+msgctxt "#32813"
+msgid "Encountered an error - {0}"
+msgstr "Erreur rencontrée - {0}"
+
+msgctxt "#32814"
+msgid "Errors were encountered"
+msgstr "Des erreurs ont été rencontrées"
+
+# 0 = versions of Artwork Beef and Kodi
+msgctxt "#32815"
+msgid "Versions: {0}"
+msgstr "Versions : {0}"

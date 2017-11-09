@@ -1,3 +1,6 @@
+v0.12.2 (2017-11-08)
+- Feature: add French translation
+
 v0.12.1 (2017-11-04)
 - Fix: mismatched IDs for movie sets and music videos
 
