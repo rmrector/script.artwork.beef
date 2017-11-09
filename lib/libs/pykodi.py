@@ -200,7 +200,11 @@ class UTF8PrettyJSONEncoder(json.JSONEncoder):
             return dict((key, obj[key]) for key in obj.keys())
         if isinstance(obj, collections.Iterable):
             return list(obj)
-        return str(obj)
+        if callable(obj):
+            return str(obj)
+        result = dict(obj.__dict__)
+        result['* objecttype'] = str(type(obj))
+        return result
 
     def iterencode(self, obj, _one_shot=False):
         for result in super(UTF8PrettyJSONEncoder, self).iterencode(obj, _one_shot):
