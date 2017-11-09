@@ -38,14 +38,17 @@ Install my [dev repository] to get updates delivered to you automatically. After
 installed, Artwork Beef can be installed from "Program add-ons". Artwork Beef can also
 be installed with a [single zip file], but you will have to return here for updates.
 
-_Artwork Helper_ can be installed with this single [installable zip], but it's only necessary if a
-skin depends on it.
+_Artwork Helper_ can be installed with this single [installable zip] for Kodi 17 and above
+(or this one [for Kodi 16] and below), but it's only necessary if a skin depends on it.
 Inclusion in the official Kodi repo isn't likely for now, some of this functionality may make
 its way into Leia so it will probably see some feature churn before long.
+
+These URLs will always point to the latest stable version.
 
 [dev repository]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/repository.rector.stuff-latest.zip
 [single zip file]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.beef-latest.zip
 [installable zip]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.helper-latest.zip
+[for Kodi 16]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.helper-jarvis-latest.zip
 
 ### Usage
 
