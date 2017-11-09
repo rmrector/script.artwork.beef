@@ -241,7 +241,7 @@ class OldDialogBusy(object):
         xbmc.executebuiltin('Dialog.Close(busydialog)')
         self.visible = False
 
-    def update(self): pass
+    def update(self, percent): pass
     def iscanceled(self): return False
 
     def __del__(self):
