@@ -1,6 +1,7 @@
-v0.12.2 (2017-11-08)
+v0.12.2 (2017-11-09)
 - Feature: add French translation
 - Fix: missing IDs in Jarvis and lower
+- Fix: don't notify over video, add final count message to progress dialog
 
 v0.12.1 (2017-11-04)
 - Fix: mismatched IDs for movie sets and music videos

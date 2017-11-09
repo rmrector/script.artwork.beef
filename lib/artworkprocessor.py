@@ -46,9 +46,9 @@ class ArtworkProcessor(object):
             self.progress.create("Artwork Beef: " + L(ADDING_ARTWORK_MESSAGE), "")
             self.visible = True
 
-    def update_progress(self, percent, message):
+    def update_progress(self, percent, message, heading=None):
         if self.visible:
-            self.progress.update(percent, message=message)
+            self.progress.update(percent, heading, message)
 
     def close_progress(self):
         if self.visible:
@@ -177,10 +177,12 @@ class ArtworkProcessor(object):
                 aborted = True
                 break
 
-        self.finish_run()
         reporting.report_end(medialist, currentitem if aborted else 0)
         if artcount or alwaysnotify:
-            notifycount(artcount)
+            header, message = finalmessages(artcount)
+            self.update_progress(100, message, header)
+            self.monitor.waitForAbort(8)
+        self.finish_run()
         return not aborted
 
     def _process_item(self, gatherer, mediaitem, singleitem=False, auto=True):
@@ -342,12 +344,13 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
     else:
         info.update_art_in_library(mediatype, dbid, selectedart)
 
+def finalmessages(count):
+    return (L(ARTWORK_UPDATED_MESSAGE).format(count), L(FINAL_MESSAGE)) if count else \
+        (L(NO_ARTWORK_UPDATED_MESSAGE), L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE))
+
 def notifycount(count):
-    if count:
-        xbmcgui.Dialog().notification("Artwork Beef: " + L(ARTWORK_UPDATED_MESSAGE).format(count), L(FINAL_MESSAGE), '-', 7500)
-    else:
-        xbmcgui.Dialog().notification("Artwork Beef: " + L(NO_ARTWORK_UPDATED_MESSAGE),
-            L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
+    header, message = finalmessages(count)
+    xbmcgui.Dialog().notification("Artwork Beef: " + header, message, '-', 8000)
 
 def plus_some(start, rng):
     return start + (random.randrange(-rng, rng + 1))
