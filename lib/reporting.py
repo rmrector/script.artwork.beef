@@ -42,7 +42,7 @@ def report_startup():
         if not line_exists:
             reportfile.seek(0, os.SEEK_END)
             write(reportfile, newline)
-            write(reportfile, '')
+            finish_chunk(reportfile)
 
 def report_start(medialist):
     with _get_file() as reportfile:
@@ -85,7 +85,7 @@ def report_end(medialist, abortedcount):
                 ', '.join('{0}: {1}'.format(at, arttypecount[at]) for at in arttypecount))
         if errorcount:
             write(reportfile, L(ERRORS_MESSAGE))
-        write(reportfile, '')
+        finish_chunk(reportfile)
     if _should_rotate():
         _rotate_file()
 
@@ -112,7 +112,7 @@ def report_item(mediaitem, forcedreport=False, manual=False):
         if mediaitem.error:
             write(reportfile, L(ERROR_MESSAGE).format(mediaitem.error))
         if forcedreport:
-            write(reportfile, '')
+            finish_chunk(reportfile)
     if forcedreport and _should_rotate():
         _rotate_file()
 
@@ -121,6 +121,9 @@ def get_datetime():
 
 def write(reportfile, line):
     reportfile.write(line + '\n')
+
+def finish_chunk(reportfile):
+    reportfile.write('\n')
 
 def get_latest_report():
     if not _exists(): return ""
