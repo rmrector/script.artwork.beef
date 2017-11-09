@@ -45,7 +45,10 @@ def get_item_details(dbid, mediatype):
 
     result_key = mediatype + 'details'
     if check_json_result(json_result, result_key, json_request):
-        return json_result['result'][result_key]
+        result = json_result['result'][result_key]
+        if _needupgrade(mediatype):
+            _upgradeitem(result, mediatype)
+        return result
 
 def get_movies():
     json_request = get_base_json_request('VideoLibrary.GetMovies')
@@ -54,10 +57,11 @@ def get_movies():
 
     json_result = pykodi.execute_jsonrpc(json_request)
     if check_json_result(json_result, 'movies', json_request):
+        result = json_result['result']['movies']
         if _needupgrade(mediatypes.MOVIE):
-            for movie in json_result['result']['movies']:
+            for movie in result:
                 _upgradeitem(movie, mediatypes.MOVIE)
-        return json_result['result']['movies']
+        return result
     else:
         return []
 
@@ -92,7 +96,11 @@ def get_tvshows(moreprops=False, includeprops=True):
 
     json_result = pykodi.execute_jsonrpc(json_request)
     if check_json_result(json_result, 'tvshows', json_request):
-        return json_result['result']['tvshows']
+        result = json_result['result']['tvshows']
+        if _needupgrade(mediatypes.TVSHOW):
+            for tvshow in result:
+                _upgradeitem(tvshow, mediatypes.TVSHOW)
+        return result
     else:
         return []
 
