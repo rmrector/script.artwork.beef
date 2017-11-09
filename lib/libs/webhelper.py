@@ -21,7 +21,7 @@ class Getter(object):
             self.session.headers['Accept'] = contenttype
 
     def __call__(self, url, params=None, headers=None, timeout=20):
-        # callers still need to handle Timeout, ConnectionError, HTTPError
+        # callers still need to handle most `RequestException`s
         result = self.session.get(url, params=params, headers=headers, timeout=timeout)
         if result is None:
             return

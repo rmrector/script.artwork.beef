@@ -190,6 +190,8 @@ class ArtworkProcessor(object):
             mediaitem.error = header
             if singleitem:
                 message = "{0} '{1}'".format(mediatype, mediaitem.label)
+                log(header + ": " + message, xbmc.LOGNOTICE)
+                log(mediaitem, xbmc.LOGNOTICE)
                 xbmcgui.Dialog().notification("Artwork Beef: " + header, message, xbmcgui.NOTIFICATION_INFO)
 
         if auto:
@@ -236,7 +238,7 @@ class ArtworkProcessor(object):
                 header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
                 msg = '{0}: {1}'.format(header, error['message'])
                 mediaitem.error = msg
-                log(msg)
+                log(msg, xbmc.LOGWARNING)
                 xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
         elif auto:
             if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.skip_artwork):
