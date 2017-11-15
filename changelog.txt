@@ -1,3 +1,7 @@
+v0.12.3 (2017-11-14)
+- Fix: Properly check before removing missing local artwork
+- Fix: tweak final notification
+
 v0.12.2 (2017-11-09)
 - Feature: add French translation
 - Fix: missing IDs in Jarvis and lower
