@@ -178,7 +178,9 @@ class ArtworkProcessor(object):
                 break
 
         reporting.report_end(medialist, currentitem if aborted else 0)
-        if artcount or alwaysnotify:
+        if alwaysnotify:
+            notifycount(artcount)
+        elif artcount:
             header, message = finalmessages(artcount)
             self.update_progress(100, message, header)
             self.monitor.waitForAbort(8)
