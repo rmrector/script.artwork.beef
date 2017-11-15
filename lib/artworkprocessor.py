@@ -1,6 +1,7 @@
 import random
 import xbmc
 import xbmcgui
+import xbmcvfs
 from datetime import timedelta
 
 from lib import cleaner, reporting
@@ -214,11 +215,11 @@ class ArtworkProcessor(object):
         if auto:
             # Remove existing local artwork if it is no longer available
             existingart = dict(mediaitem.art)
-            localart = [(arttype, image['url']) for arttype, image in mediaitem.forcedart.iteritems()
-                if not image['url'].startswith('http')]
+            newlocalart = [(arttype, image['url']) for arttype, image in mediaitem.forcedart.iteritems()
+                if not image['url'].startswith(('http', 'image://video@'))]
             selectedart = dict((arttype, None) for arttype, url in existingart.iteritems()
-                if not url.startswith(('http', 'image://video@')) and arttype not in ('animatedposter', 'animatedfanart')
-                    and (arttype, url) not in localart)
+                if not url.startswith(('http', 'image://video@')) and (arttype, url) not in newlocalart
+                    and not xbmcvfs.exists(url))
 
             selectedart.update((key, image['url']) for key, image in mediaitem.forcedart.iteritems())
             selectedart = info.renumber_all_artwork(selectedart)
