@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Artwork Beef</title>
+    <link>https://rmrector.github.io/script.artwork.beef/</link>
+    <description>Recent content on Artwork Beef</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 21 Nov 2017 22:44:39 -0700</lastBuildDate>
+    
+	<atom:link href="https://rmrector.github.io/script.artwork.beef/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>First usage</title>
+      <link>https://rmrector.github.io/script.artwork.beef/usage/firstusage/</link>
+      <pubDate>Tue, 21 Nov 2017 22:45:06 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/usage/firstusage/</guid>
+      <description>If you haven&amp;rsquo;t been managing movie collection artwork, Kodi sets posters and fanart to those of one of the movies in the collection. You may want to run Artwork Beef from Program Add-ons and remove all existing artwork from movie collections before running Artwork Beef&amp;rsquo;s full process. If you manage all of your artwork with image files and/or NFO files, the add-on setting &amp;ldquo;Auto add artwork from filesystem only&amp;rdquo; under &amp;ldquo;Advanced&amp;rdquo; will prevent the add-on from querying the web services during automatic processing, saving time and network resources.</description>
+    </item>
+    
+    <item>
+      <title>NFO and image files</title>
+      <link>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</link>
+      <pubDate>Tue, 21 Nov 2017 22:45:58 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</guid>
+      <description>Artwork file naming conventions Artwork Beef will pick up any properly named artwork files next to your media. It has two conventions for loading most artwork: [media file name]-[art type].[ext] for movies, episodes, and music videos, and [art type].[ext] for TV shows and as an alternative for movies and music videos with their own directories.
+[art type] must be alphanumeric, lowercase, and no longer than 20 characters, but can otherwise be freely named.</description>
+    </item>
+    
+    <item>
+      <title>Artwork helper</title>
+      <link>https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/</link>
+      <pubDate>Tue, 21 Nov 2017 22:45:47 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/</guid>
+      <description>Artwork Helper provides skins with a few options for building a list of images for a multiimage or list control from images available via InfoLabels. This is a small add-on that skins can use as a dependency, only doing what a skin asks it to do.
+Current version only works for Kodi 17 and 18, use version 0.7.1 for 15 and 16.
+Add-on setting There is an add-on setting to pull extrafanart and extrathumbs from the filesystem, if there is only a single image in the library.</description>
+    </item>
+    
+    <item>
+      <title>Fun without add-ons</title>
+      <link>https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/</link>
+      <pubDate>Tue, 21 Nov 2017 22:44:56 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/</guid>
+      <description>Because who wants another dependency?
+Display multiple fanart Artwork Helper isn&amp;rsquo;t strictly needed, how about that? It is a bit more work though.
+The trick is to use a fadelabel control to gather multiple InfoLabels and randomize them, then use that control&amp;rsquo;s label as the final image to be displayed.
+&amp;lt;control type=&amp;quot;fadelabel&amp;quot; id=&amp;quot;9998&amp;quot;&amp;gt; &amp;lt;description&amp;gt;Randomizer for plugin-free multiple fanart&amp;lt;/description&amp;gt; &amp;lt;top&amp;gt;-1000&amp;lt;/top&amp;gt; &amp;lt;!-- Don&#39;t need to see it, but can&#39;t change its visibility.</description>
+    </item>
+    
+    <item>
+      <title>Why replace extrafanart/extrathumbs</title>
+      <link>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</link>
+      <pubDate>Tue, 21 Nov 2017 22:46:53 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</guid>
+      <description>Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it! Avoid filesystem delays/access issues (unavailable network filesystem, removable media) when the images have been cached. Classic extrafanart always had to hit the filesystem at least once when the path changed to get a list of all extrafanart, even if they were all cached. Skins can more easily work with all fanart together (main + extra fanart)  There are plugin:// paths to stitch together fanart images for &amp;lsquo;multiimage&amp;rsquo; controls, &amp;lsquo;fanart&amp;rsquo; and &amp;lsquo;fanart#&amp;rsquo; alike!</description>
+    </item>
+    
+  </channel>
+</rss>
