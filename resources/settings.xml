@@ -58,6 +58,7 @@
 		<setting id="musicvideo.fanart_limit" label="fanart" type="slider" option="int" default="3" range="0,1,20" />
 		<setting id="musicvideo.banner" label="banner" type="bool" default="true" />
 		<setting id="musicvideo.clearlogo" label="clearlogo" type="bool" default="true" />
+		<setting id="musicvideo.clearart" label="clearart" type="bool" default="true" />
 		<setting id="musicvideo.cdart" label="cdart" type="bool" default="true" />
 		<setting id="musicvideo.artistthumb" label="artistthumb" type="bool" default="true" />
 	</category>

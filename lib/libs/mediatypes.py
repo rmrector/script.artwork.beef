@@ -14,7 +14,7 @@ settings = ('tvshow.poster', 'tvshow.fanart_limit', 'tvshow.banner', 'tvshow.cle
     'episode.fanart', 'movie.poster', 'movie.fanart_limit', 'movie.banner', 'movie.clearlogo', 'movie.landscape',
     'movie.clearart', 'movie.discart', 'set.poster', 'set.fanart_limit', 'set.banner', 'set.clearlogo',
     'set.landscape', 'set.clearart', 'set.discart', 'musicvideo.poster', 'musicvideo.fanart_limit', 'musicvideo.banner',
-    'musicvideo.clearlogo', 'musicvideo.cdart', 'musicvideo.artistthumb')
+    'musicvideo.clearlogo', 'musicvideo.clearart', 'musicvideo.cdart', 'musicvideo.artistthumb')
 
 addon = pykodi.get_main_addon()
 
@@ -170,6 +170,10 @@ artinfo = {
             'multiselect': False
         },
         'clearlogo': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'clearart': {
             'autolimit': 1,
             'multiselect': False
         }
