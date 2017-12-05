@@ -192,8 +192,9 @@ def add_additional_iteminfo(mediaitem, processed, search):
                 mediaitem.uniqueids = {'mbid_track': mb_t, 'mbid_album': mb_al, 'mbid_artist': mb_ar}
             elif not settings.only_filesystem:
                 results = search.search(mediaitem.label, mediatypes.MUSICVIDEO)
-                if results and results[0].get('uniqueids'):
-                    mediaitem.uniqueids = uq = results[0]['uniqueids']
+                uq = results and results[0].get('uniqueids')
+                if uq and uq.get('mbid_track') and uq.get('mbid_album') and uq.get('mbid_artist'):
+                    mediaitem.uniqueids = uq
                     processed.set_data(mediaitem.dbid, mediatypes.MUSICVIDEO, mediaitem.label,
                         uq['mbid_track'] + '/' + uq['mbid_album'] + '/' + uq['mbid_artist'])
                 else:
