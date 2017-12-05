@@ -12,14 +12,17 @@ class TheAudioDBMusicVideoProvider(AbstractImageProvider):
     mediatype = mediatypes.MUSICVIDEO
     contenttype = 'application/json'
 
-    # i=MB track/album/artist ID
-    url_trackinfo = 'http://www.theaudiodb.com/api/v1/json/{0}/track-mb.php'.format(api_key)
-    url_albuminfo = 'http://www.theaudiodb.com/api/v1/json/{0}/album-mb.php'.format(api_key)
-    url_artistinfo = 'http://www.theaudiodb.com/api/v1/json/{0}/artist-mb.php'.format(api_key)
-
-    artmap = {'strTrackThumb': 'poster', 'strAlbumThumb': 'poster', 'strAlbumCDart': 'cdart',
-        'strArtistThumb': 'artistthumb', 'strArtistLogo': 'clearlogo', 'strArtistBanner': 'banner',
-        'strArtistFanart': 'fanart', 'strArtistFanart2': 'fanart', 'strArtistFanart3': 'fanart'}
+    # url param i=MB track/album/artist ID
+    artmap = {'mbid_track': {'datakey':'track', 'artmap': {'strTrackThumb': 'poster'},
+            'url': 'http://www.theaudiodb.com/api/v1/json/{0}/track-mb.php'.format(api_key)},
+        'mbid_album': {'datakey':'album', 'artmap': {'strAlbumThumb': 'poster', 'strAlbumCDart': 'cdart'},
+            'url': 'http://www.theaudiodb.com/api/v1/json/{0}/album-mb.php'.format(api_key)},
+        'mbid_artist': {'datakey':'artists', 'artmap': {'strArtistThumb': 'artistthumb', 'strArtistLogo': 'clearlogo',
+                'strArtistBanner': 'banner', 'strArtistFanart': 'fanart', 'strArtistFanart2': 'fanart',
+                'strArtistFanart3': 'fanart', 'strArtistClearart': 'clearart'},
+            'url': 'http://www.theaudiodb.com/api/v1/json/{0}/artist-mb.php'.format(api_key)}
+    }
+    provtypes = set(x for data in artmap.values() for x in data['artmap'].values())
 
     def get_data(self, url, params):
         result = cache.cacheFunction(self._get_data, url, params)
@@ -35,33 +38,23 @@ class TheAudioDBMusicVideoProvider(AbstractImageProvider):
                 'mbid_album' in uniqueids or 'mbid_artist' in uniqueids):
             return {}
 
-        def smashtype(data, originaltype, images, imagetitle=None):
-            if data.get(originaltype):
-                _insertart(images, self.artmap[originaltype], self._build_image(data[originaltype],
-                    _get_imagesize(originaltype), imagetitle))
-
         images = {}
-        if 'mbid_track' in uniqueids:
-            # IDEA: There are also thumbnails here
-            data = self.get_data(self.url_trackinfo, {'i': uniqueids['mbid_track']})
-            if data and data.get('track'):
-                smashtype(data['track'][0], 'strTrackThumb', images, 'track')
-        if 'mbid_album' in uniqueids:
-            data = self.get_data(self.url_albuminfo, {'i': uniqueids['mbid_album']})
-            if data and data.get('album'):
-                smashtype(data['album'][0], 'strAlbumThumb', images, 'album')
-                smashtype(data['album'][0], 'strAlbumCDart', images)
-        if 'mbid_artist' in uniqueids:
-            data = self.get_data(self.url_artistinfo, {'i': uniqueids['mbid_artist']})
-            if data and data.get('artists'):
-                data = data['artists'][0]
-                for otype in ('strArtistThumb', 'strArtistLogo', 'strArtistBanner',
-                        'strArtistFanart', 'strArtistFanart2', 'strArtistFanart3'):
-                    smashtype(data, otype, images)
+        for idsource, artdata in self.artmap.iteritems():
+            if idsource not in uniqueids or types and not any(x in types for x in artdata['artmap'].itervalues()):
+                continue
+            data = self.get_data(artdata['url'], {'i': uniqueids[idsource]})
+            if not data or not data.get(artdata['datakey']):
+                continue
+            data = data[artdata['datakey']][0]
+            for originaltype, finaltype in artdata['artmap'].iteritems():
+                if data.get(originaltype):
+                    _insertart(images, finaltype, self._build_image(data[originaltype],
+                        _get_imagesize(originaltype), artdata['datakey']))
+
         return images
 
     def provides(self, types):
-        return any(x in types for x in self.artmap.values())
+        return set(types) & self.provtypes
 
     def _build_image(self, url, size, title=None):
         result = {'provider': self.name, 'url': url, 'preview': url + '/preview',
@@ -79,6 +72,8 @@ def _get_imagesize(arttype):
         return SortedDisplay(400, '400x155 or 800x310')
     if arttype in ('strArtistBanner',):
         return SortedDisplay(1000, '1000x185')
+    if arttype in ('strArtistClearart',):
+        return SortedDisplay(1000, '1000x562')
     if arttype in ('strArtistFanart', 'strArtistFanart2', 'strArtistFanart3'):
         return SortedDisplay(1280, '1280x720 or 1920x1080')
     return SortedDisplay(0, '')
