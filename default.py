@@ -8,7 +8,7 @@ from lib.artworkprocessor import ArtworkProcessor
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
 from lib.libs.processeditems import ProcessedItems
-from lib.libs.pykodi import localize as L, log
+from lib.libs.pykodi import localize as L, log, get_kodi_version
 from lib.providers import search
 from lib.seriesselection import SeriesSelector
 
@@ -16,9 +16,13 @@ class M(object):
     ADD_MISSING_HEADER = 32401
     ADD_MISSING_MESSAGE = 32402
     STOP = 32403
-    ADD_MISSING_FOR_NEW = 32404
-    ADD_MISSING_FOR_OLD = 32406
-    ADD_MISSING_FOR_ALL = 32405
+    ADD_MISSING_FOR = 32416
+    FOR_NEW_VIDEOS = 32417
+    FOR_OLD_VIDEOS = 32418
+    FOR_ALL_VIDEOS = 32419
+    FOR_NEW_AUDIO = 32420
+    FOR_OLD_AUDIO = 32421
+    FOR_ALL_AUDIO = 32422
     IDENTIFY_UNMATCHED_SETS = 32408
     IDENTIFY_UNMATCHED_MVIDS = 32415
     REMOVE_EXTRA_ARTWORK = 32407
@@ -30,13 +34,15 @@ class M(object):
     VERSION_REQUIRED = 32026
 
     LISTING_ALL = 32028
-    ALL = 593
     MOVIES = 36901
     SERIES = 36903
     SEASONS = 36905
     EPISODES = 36907
     MOVIESETS = 36911
     MUSICVIDEOS = 36909
+    ARTISTS = 36917
+    ALBUMS = 36919
+    SONGS = 36921
 
 def main():
     command = get_command()
@@ -54,11 +60,9 @@ def main():
     else:
         processor = ArtworkProcessor()
         if processor.processor_busy:
-            options = [(L(M.STOP), 'NotifyAll(script.artwork.beef, CancelCurrent)')]
+            options = [(L(M.STOP), 'NotifyAll(script.artwork.beef:control, CancelCurrent)')]
         else:
-            options = [(L(M.ADD_MISSING_FOR_NEW), 'NotifyAll(script.artwork.beef, ProcessUnprocessedItems)'),
-                (L(M.ADD_MISSING_FOR_OLD), 'NotifyAll(script.artwork.beef, ProcessOldItems)'),
-                (L(M.ADD_MISSING_FOR_ALL), 'NotifyAll(script.artwork.beef, ProcessAllItems)'),
+            options = [(L(M.ADD_MISSING_FOR), add_missing_for),
                 (L(M.IDENTIFY_UNMATCHED_SETS), lambda: identify_unmatched(mediatypes.MOVIESET)),
                 (L(M.IDENTIFY_UNMATCHED_MVIDS), lambda: identify_unmatched(mediatypes.MUSICVIDEO)),
                 (L(M.REMOVE_SPECIFIC_TYPES), remove_specific_arttypes),
@@ -77,10 +81,21 @@ def notify_count(message, count):
     log(countmessage, xbmc.LOGINFO)
     xbmcgui.Dialog().notification('Artwork Beef', countmessage)
 
+def add_missing_for():
+    options =[(L(M.FOR_NEW_VIDEOS), 'ProcessUnprocessedVideos'), (L(M.FOR_OLD_VIDEOS), 'ProcessOldVideos'),
+        (L(M.FOR_ALL_VIDEOS), 'ProcessAllVideos')]
+
+    selected = xbmcgui.Dialog().select(L(M.ADD_MISSING_FOR), [option[0] for option in options])
+    if selected >= 0 and selected < len(options):
+        pykodi.execute_builtin('NotifyAll(script.artwork.beef:control, {0})'.format(options[selected][1]))
+
 def remove_specific_arttypes():
-    options = ((L(M.MOVIES), quickjson.get_movies), (L(M.SERIES), quickjson.get_tvshows),
-        (L(M.SEASONS), quickjson.get_seasons), (L(M.MOVIESETS), quickjson.get_moviesets),
-        (L(M.EPISODES), quickjson.get_episodes), (L(M.MUSICVIDEOS), quickjson.get_musicvideos))
+    options = [(L(M.MOVIES), lambda: quickjson.get_item_list(mediatypes.MOVIE)),
+        (L(M.SERIES), quickjson.get_tvshows),
+        (L(M.SEASONS), quickjson.get_seasons),
+        (L(M.MOVIESETS), lambda: quickjson.get_item_list(mediatypes.MOVIESET)),
+        (L(M.EPISODES), quickjson.get_episodes),
+        (L(M.MUSICVIDEOS), lambda: quickjson.get_item_list(mediatypes.MUSICVIDEO))]
 
     selected = xbmcgui.Dialog().select(L(M.REMOVE_SPECIFIC_TYPES), [option[0] + " ..." for option in options])
     if selected >= 0 and selected < len(options):
@@ -106,7 +121,7 @@ def identify_unmatched(mediatype):
     busy = pykodi.get_busydialog()
     busy.create()
     processed = ProcessedItems()
-    ulist = quickjson.get_moviesets() if mediatype == mediatypes.MOVIESET else quickjson.get_musicvideos()
+    ulist = quickjson.get_item_list(mediatype)
     unmatched = [item for item in ulist if not processed.get_data(item[mediatype + 'id'], mediatype, item['label'])]
     busy.close()
     if unmatched:
@@ -146,7 +161,7 @@ def set_autoaddepisodes():
     if selected != settings.autoadd_episodes:
         settings.autoadd_episodes = selected
         if xbmcgui.Dialog().yesno(L(M.ADD_MISSING_HEADER), L(M.ADD_MISSING_MESSAGE)):
-            pykodi.execute_builtin('NotifyAll(script.artwork.beef, ProcessAfterSettings)')
+            pykodi.execute_builtin('NotifyAll(script.artwork.beef:control, ProcessAfterSettings)')
 
 def runon_medialist(function, heading, medialist=None, typelabel=None):
     ''' medialist defaults to every item in the library! '''
@@ -155,11 +170,12 @@ def runon_medialist(function, heading, medialist=None, typelabel=None):
     monitor = xbmc.Monitor()
 
     if medialist is None:
-        steps_to_run = ((quickjson.get_movies, L(M.LISTING_ALL).format(L(M.MOVIES))),
+        steps_to_run = [(lambda: quickjson.get_item_list(mediatypes.MOVIE), L(M.LISTING_ALL).format(L(M.MOVIES))),
             (quickjson.get_tvshows, L(M.LISTING_ALL).format(L(M.SERIES))),
             (quickjson.get_seasons, L(M.LISTING_ALL).format(L(M.SEASONS))),
-            (quickjson.get_moviesets, L(M.LISTING_ALL).format(L(M.MOVIESETS))),
-            (quickjson.get_episodes, L(M.LISTING_ALL).format(L(M.EPISODES))))
+            (lambda: quickjson.get_item_list(mediatypes.MOVIESET), L(M.LISTING_ALL).format(L(M.MOVIESETS))),
+            (quickjson.get_episodes, L(M.LISTING_ALL).format(L(M.EPISODES))),
+            (lambda: quickjson.get_item_list(mediatypes.MUSICVIDEO), L(M.LISTING_ALL).format(L(M.MUSICVIDEOS)))]
     else:
         steps_to_run = ((lambda: medialist, L(M.LISTING_ALL).format(typelabel)),)
     stepsize = 100 // len(steps_to_run)

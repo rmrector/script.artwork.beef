@@ -9,13 +9,16 @@ from lib.libs.utils import natural_sort, get_pathsep, iter_possible_cleannames
 CANT_FIND_MOVIESET = 32032
 CANT_FIND_MUSICVIDEO = 32033
 
-# get_mediatype_id must evaluate these in order, as episodes have tvshowid
+# get_mediatype_id must evaluate these in order
 idmap = (('episodeid', mediatypes.EPISODE),
     ('seasonid', mediatypes.SEASON),
     ('tvshowid', mediatypes.TVSHOW),
     ('movieid', mediatypes.MOVIE),
     ('setid', mediatypes.MOVIESET),
-    ('musicvideoid', mediatypes.MUSICVIDEO))
+    ('musicvideoid', mediatypes.MUSICVIDEO),
+    ('songid', mediatypes.SONG),
+    ('albumid', mediatypes.ALBUM),
+    ('artistid', mediatypes.ARTIST))
 
 class MediaItem(object):
     def __init__(self, jsondata):
@@ -63,7 +66,7 @@ def get_own_artwork(jsondata):
         in jsondata['art'].iteritems() if '.' not in arttype)
 
 def has_generated_thumbnail(jsondata):
-    return jsondata['art'].get('thumb', '').startswith('image://video@')
+    return jsondata['art'].get('thumb', '').startswith(pykodi.thumbnailimages)
 
 def arttype_matches_base(arttype, basetype):
     return re.match(r'{0}\d*$'.format(basetype), arttype)
@@ -184,19 +187,19 @@ def add_additional_iteminfo(mediaitem, processed, search):
         if settings.setartwork_fromparent:
             _identify_parent_movieset(mediaitem)
     elif mediaitem.mediatype == mediatypes.MUSICVIDEO:
-        if not mediaitem.uniqueids.get('mbid_track') or not mediaitem.uniqueids.get('mbid_album') \
-                or not mediaitem.uniqueids.get('mbid_artist'):
+        if not mediaitem.uniqueids.get('mbtrack') or not mediaitem.uniqueids.get('mbgroup') \
+                or not mediaitem.uniqueids.get('mbartist'):
             newdata = processed.get_data(mediaitem.dbid, mediaitem.mediatype, mediaitem.label)
             if newdata:
                 mb_t, mb_al, mb_ar = newdata.split('/')
-                mediaitem.uniqueids = {'mbid_track': mb_t, 'mbid_album': mb_al, 'mbid_artist': mb_ar}
+                mediaitem.uniqueids = {'mbtrack': mb_t, 'mbgroup': mb_al, 'mbartist': mb_ar}
             elif not settings.only_filesystem:
                 results = search.search(mediaitem.label, mediatypes.MUSICVIDEO)
                 uq = results and results[0].get('uniqueids')
-                if uq and uq.get('mbid_track') and uq.get('mbid_album') and uq.get('mbid_artist'):
+                if uq and uq.get('mbtrack') and uq.get('mbgroup') and uq.get('mbartist'):
                     mediaitem.uniqueids = uq
                     processed.set_data(mediaitem.dbid, mediatypes.MUSICVIDEO, mediaitem.label,
-                        uq['mbid_track'] + '/' + uq['mbid_album'] + '/' + uq['mbid_artist'])
+                        uq['mbtrack'] + '/' + uq['mbgroup'] + '/' + uq['mbartist'])
                 else:
                     processed.set_data(mediaitem.dbid, mediatypes.MUSICVIDEO, mediaitem.label, None)
                     mediaitem.error = L(CANT_FIND_MUSICVIDEO)
@@ -250,7 +253,12 @@ def _get_uniqueids(jsondata, mediatype):
             # but maybe not this guy
             uniqueids[settings.default_tvidsource] = uniqueid
             del uniqueids['unknown']
-
+    if 'musicbrainzartistid' in jsondata and jsondata['musicbrainzartistid'][0]:
+        uniqueids['mbartist'] = jsondata['musicbrainzartistid'][0]
+    if jsondata.get('musicbrainzreleasegroupid'):
+        uniqueids['mbgroup'] = jsondata['musicbrainzreleasegroupid']
+    if jsondata.get('musicbrainztrackid'):
+        uniqueids['mbtrack'] = jsondata['musicbrainztrackid']
     return uniqueids
 
 def _get_sourcemedia(mediapath):

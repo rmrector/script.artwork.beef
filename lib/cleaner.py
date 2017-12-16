@@ -10,7 +10,12 @@ def clean_artwork(mediaitem):
     for basetype in iter_base_arttypes(updated_art.keys()):
         remove_duplicate_fanart = basetype == 'fanart'
         updated_art.update(_arrange_multiart(updated_art, basetype, remove_duplicate_fanart))
-
+    if updated_art.get('cdart'):
+        # DEPRECATED: short - initial music video support used cdart like the old support in AD,
+        #  but I really don't want to carry it to the music library
+        if not updated_art.get('discart'):
+            updated_art['discart'] = updated_art['cdart']
+            updated_art['cdart'] = None
     return updated_art
 
 def remove_otherartwork(mediaitem):
