@@ -146,9 +146,7 @@ msgctxt "#32054"
 msgid "Sorting and auto filters"
 msgstr ""
 
-msgctxt "#32055"
-msgid "Maintenance actions [I](save all changes to add-on settings first)[/I]"
-msgstr ""
+# 32055 retired 2017-12-15
 
 msgctxt "#32058"
 msgid "Enter the artist and track name"
@@ -172,14 +170,10 @@ msgctxt "#32403"
 msgid "stop current process"
 msgstr ""
 
-# 32404, 32405, 32406 retired 2017-12-15
+# 32404, 32405, 32406, 32407 retired 2017-12-15
 
 msgctxt "#32408"
 msgid "identify unmatched movie sets with TMDb ..."
-msgstr ""
-
-msgctxt "#32407"
-msgid "Remove extra artwork not configured in the add-on"
 msgstr ""
 
 msgctxt "#32409"
@@ -284,10 +278,7 @@ msgctxt "#32906"
 msgid "Identify alternate Artwork Downloader and MSAA artwork file names"
 msgstr ""
 
-# subsetting of action #32407
-msgctxt "#32908"
-msgid "Additional artwork types to keep"
-msgstr ""
+# 32908 retired 2017-12-15
 
 msgctxt "#32909"
 msgid "grab movie set artwork from central artwork directory"

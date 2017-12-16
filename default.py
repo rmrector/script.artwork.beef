@@ -54,9 +54,9 @@ def main():
             set_autoaddepisodes()
         elif command['command'] == 'show_artwork_log':
             show_artwork_log()
-        elif command['command'] == 'remove_otherartwork':
-            fixcount = runon_medialist(cleaner.remove_otherartwork, L(M.REMOVE_EXTRA_ARTWORK))
-            notify_count(L(M.REMOVED_ART_COUNT), fixcount)
+        # elif command['command'] == 'remove_otherartwork':
+        #     fixcount = runon_medialist(cleaner.remove_otherartwork, L(M.REMOVE_EXTRA_ARTWORK))
+        #     notify_count(L(M.REMOVED_ART_COUNT), fixcount)
     else:
         processor = ArtworkProcessor()
         if processor.processor_busy:
