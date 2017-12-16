@@ -76,7 +76,7 @@ class ArtworkProcessor(object):
         if mode == MODE_GUI:
             busy = pykodi.get_busydialog()
             busy.create()
-        if mediatype in mediatypes.artinfo:
+        if mediatype in mediatypes.artinfo and mediatype not in mediatypes.audiotypes:
             mediaitem = info.MediaItem(quickjson.get_item_details(dbid, mediatype))
         else:
             if mode == MODE_GUI:
@@ -163,6 +163,8 @@ class ArtworkProcessor(object):
         if medialist:
             gatherer = Gatherer(self.monitor, settings.only_filesystem, self.autolanguages)
         for mediaitem in medialist:
+            if mediaitem.mediatype in mediatypes.audiotypes:
+                continue
             self.update_progress(currentitem * 100 // len(medialist), mediaitem.label)
             info.add_additional_iteminfo(mediaitem, self.processed, search)
             currentitem += 1
@@ -213,12 +215,13 @@ class ArtworkProcessor(object):
         services_hit, error = gatherer.getartwork(mediaitem, auto)
 
         if auto:
+            nolocal = pykodi.thumbnailimages + ('http',)
             # Remove existing local artwork if it is no longer available
             existingart = dict(mediaitem.art)
             newlocalart = [(arttype, image['url']) for arttype, image in mediaitem.forcedart.iteritems()
-                if not image['url'].startswith(('http', 'image://video@'))]
+                if not image['url'].startswith(nolocal)]
             selectedart = dict((arttype, None) for arttype, url in existingart.iteritems()
-                if not url.startswith(('http', 'image://video@')) and (arttype, url) not in newlocalart
+                if not url.startswith(nolocal) and (arttype, url) not in newlocalart
                     and not xbmcvfs.exists(url))
 
             selectedart.update((key, image['url']) for key, image in mediaitem.forcedart.iteritems())
@@ -246,7 +249,8 @@ class ArtworkProcessor(object):
                 log(msg, xbmc.LOGWARNING)
                 xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
         elif auto:
-            if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.skip_artwork):
+            if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.skip_artwork) and \
+                    mediatype != mediatypes.SONG:
                 self.processed.set_nextdate(mediaitem.dbid, mediatype, mediaitem.label,
                     datetime_now() + timedelta(days=self.get_nextcheckdelay(mediaitem)))
             if mediatype == mediatypes.TVSHOW:
@@ -254,8 +258,8 @@ class ArtworkProcessor(object):
         return services_hit
 
     def get_nextcheckdelay(self, mediaitem):
-        if settings.only_filesystem:
-            return plus_some(5, 3)
+        if settings.only_filesystem and not mediaitem.mediatype in (mediatypes.ARTIST, mediatypes.ALBUM):
+            return plus_some(15, 3)
         elif not mediaitem.uniqueids:
             return plus_some(30, 5)
         elif not mediaitem.missingart:
@@ -263,6 +267,8 @@ class ArtworkProcessor(object):
         elif mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) and \
                 mediaitem.premiered > self.freshstart:
             return plus_some(30, 10)
+        elif mediaitem.mediatype in (mediatypes.ARTIST, mediatypes.ALBUM):
+            return plus_some(120, 25)
         else:
             return plus_some(60, 15)
 
@@ -277,8 +283,8 @@ class ArtworkProcessor(object):
             return False # Cancelled
         uq = options[selected]['uniqueids']
         toset = uq.get('tmdb')
-        if not toset and 'mbid_track' in uq and 'mbid_album' in uq and 'mbid_artist' in uq:
-            toset = '{0}/{1}/{2}'.format(uq['mbid_track'], uq['mbid_album'], uq['mbid_artist'])
+        if not toset and 'mbtrack' in uq and 'mbgroup' in uq and 'mbartist' in uq:
+            toset = '{0}/{1}/{2}'.format(uq['mbtrack'], uq['mbgroup'], uq['mbartist'])
         if toset:
             self.processed.set_data(mediaitem.dbid, mediaitem.mediatype, mediaitem.label, toset)
         return bool(toset)

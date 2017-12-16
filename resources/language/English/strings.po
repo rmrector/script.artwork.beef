@@ -110,6 +110,10 @@ msgctxt "#32035"
 msgid "HTTP error: {0}"
 msgstr ""
 
+msgctxt "#32036"
+msgid "Kodi 18 or newer required"
+msgstr ""
+
 # Headings
 
 msgctxt "#32050"
@@ -168,17 +172,7 @@ msgctxt "#32403"
 msgid "stop current process"
 msgstr ""
 
-msgctxt "#32404"
-msgid "add missing artwork for new items"
-msgstr ""
-
-msgctxt "#32405"
-msgid "add missing artwork for all items"
-msgstr ""
-
-msgctxt "#32406"
-msgid "add missing artwork for old items"
-msgstr ""
+# 32404, 32405, 32406 retired 2017-12-15
 
 msgctxt "#32408"
 msgid "identify unmatched movie sets with TMDb ..."
@@ -216,10 +210,38 @@ msgctxt "#32415"
 msgid "identify unmatched music videos with TheAudioDB ..."
 msgstr ""
 
+msgctxt "#32416"
+msgid "add missing artwork for ..."
+msgstr ""
+
+msgctxt "#32417"
+msgid "new videos"
+msgstr ""
+
+msgctxt "#32418"
+msgid "old videos"
+msgstr ""
+
+msgctxt "#32419"
+msgid "all videos (new, old, and all in between)"
+msgstr ""
+
+msgctxt "#32420"
+msgid "new music"
+msgstr ""
+
+msgctxt "#32421"
+msgid "old music"
+msgstr ""
+
+msgctxt "#32422"
+msgid "all music (new, old, and all in between)"
+msgstr ""
+
 # Settings
 
 msgctxt "#32900"
-msgid "Automatically add artwork for new items"
+msgid "Automatically add artwork for new videos"
 msgstr ""
 
 msgctxt "#32912"
@@ -305,6 +327,10 @@ msgstr ""
 
 msgctxt "#32921"
 msgid "Prefer artwork from The Movie Database when available"
+msgstr ""
+
+msgctxt "#32922"
+msgid "Automatically add artwork for new music"
 msgstr ""
 
 # Used in the artwork report

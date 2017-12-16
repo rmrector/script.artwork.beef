@@ -212,7 +212,7 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
 class ArtFilesMusicVideoProvider(ArtFilesAbstractProvider):
     mediatype = mediatypes.MUSICVIDEO
 
-    alttypes = {'logo': 'clearlogo', 'disc': 'cdart'}
+    alttypes = {'logo': 'clearlogo', 'disc': 'discart', 'cdart': 'discart'}
 
     def get_exact_images(self, path):
         path, inputfilename = os.path.split(path)

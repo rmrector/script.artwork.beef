@@ -24,6 +24,9 @@ _log_level_tag_lookup = {
 }
 
 ADDONID = 'script.artwork.beef'
+thumbnailimages = ('image://video@',)
+# video_ for Leia embedded images
+notlocalimages = thumbnailimages + ('http', 'image://video_', 'image://music')
 
 _main_addon = None
 def get_main_addon():
@@ -131,8 +134,8 @@ def get_language(language_format=xbmc.ENGLISH_NAME, region=False):
     return language
 
 def unquoteimage(imagestring):
-    # video thumbnail image paths need to keep their 'image://' path
-    if imagestring.startswith('image://') and not imagestring.startswith('image://video@'):
+    # extracted thumbnail images need to keep their 'image://' encoding
+    if imagestring.startswith('image://') and not imagestring.startswith(('image://video', 'image://music')):
         return urllib.unquote(imagestring[8:-1])
     return imagestring
 

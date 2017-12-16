@@ -17,7 +17,10 @@ def main(mode):
 
 def get_mediatype(listitem):
     try:
-        return listitem.getVideoInfoTag().getMediaType()
+        item = listitem.getVideoInfoTag().getMediaType()
+        if not item:
+            item = listitem.getMusicInfoTag().getMediaType()
+        return item
     except AttributeError:
         # DEPRECATED: Before Krypton
         pass
@@ -33,7 +36,10 @@ def get_mediatype(listitem):
 
 def get_dbid(listitem):
     try:
-        return listitem.getVideoInfoTag().getDbId()
+        dbid = listitem.getVideoInfoTag().getDbId()
+        if dbid == -1:
+            dbid = listitem.getMusicInfoTag().getDbId()
+        return dbid
     except AttributeError:
         # DEPRECATED: Before Krypton
         pass

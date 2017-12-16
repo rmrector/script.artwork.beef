@@ -19,11 +19,12 @@ class ArtworkService(xbmc.Monitor):
         self.processor = ArtworkProcessor(self)
         self.processed = ProcessedItems()
         self.processaftersettings = False
-        self.recentitems = {'movie': [], 'tvshow': [], 'episode': [], 'musicvideo': []}
+        self.recentvideos = {'movie': [], 'tvshow': [], 'episode': [], 'musicvideo': []}
         self.stoppeditems = set()
         self._signal = None
         self._status = None
-        self._last_itemupdate = addon.get_setting('last_itemupdate')
+        self._last_videoupdate = addon.get_setting('last_videoupdate')
+        self._last_musicupdate = addon.get_setting('last_musicupdate')
         self.status = STATUS_IDLE
 
     @property
@@ -31,13 +32,22 @@ class ArtworkService(xbmc.Monitor):
         return pykodi.get_conditional('Library.IsScanningVideo | Library.IsScanningMusic')
 
     @property
-    def last_itemupdate(self):
-        return self._last_itemupdate
+    def last_videoupdate(self):
+        return self._last_videoupdate
 
-    @last_itemupdate.setter
-    def last_itemupdate(self, value):
-        addon.set_setting('last_itemupdate', value)
-        self._last_itemupdate = value
+    @last_videoupdate.setter
+    def last_videoupdate(self, value):
+        addon.set_setting('last_videoupdate', value)
+        self._last_videoupdate = value
+
+    @property
+    def last_musicupdate(self):
+        return self._last_musicupdate
+
+    @last_musicupdate.setter
+    def last_musicupdate(self, value):
+        addon.set_setting('last_musicupdate', value)
+        self._last_musicupdate = value
 
     @property
     def status(self):
@@ -59,7 +69,7 @@ class ArtworkService(xbmc.Monitor):
         self.status = STATUS_SIGNALLED if value else STATUS_IDLE
 
     def reset_recent(self):
-        self.recentitems = {'movie': [], 'tvshow': [], 'episode': [], 'musicvideo': []}
+        self.recentvideos = {'movie': [], 'tvshow': [], 'episode': [], 'musicvideo': []}
 
     def run(self):
         while not self.really_waitforabort(5):
@@ -68,20 +78,20 @@ class ArtworkService(xbmc.Monitor):
             if self.signal:
                 signal = self.signal
                 self._signal = None
-                if signal == 'recentitems':
+                if signal == 'recentvideos':
                     # Add a delay to catch rapid fire VideoLibrary.OnUpdate
-                    self.signal = 'recentitems_really'
+                    self.signal = 'recentvideos_really'
                     continue
                 self.status = STATUS_PROCESSING
-                if signal == 'allitems':
-                    self.process_allitems()
-                elif signal == 'unprocesseditems':
-                    self.process_unprocesseditems()
-                elif signal == 'olditems':
-                    if self.process_oldandunprocesseditems():
-                        self.last_itemupdate = get_date()
-                elif signal == 'recentitems_really':
-                    self.process_recentitems()
+                if signal == 'allvideos':
+                    self.process_allvideos()
+                elif signal == 'unprocessedvideos':
+                    self.process_allvideos(self.processed.does_not_exist)
+                elif signal == 'oldvideos':
+                    if self.process_allvideos(self.processed.is_stale):
+                        self.last_videoupdate = get_date()
+                elif signal == 'recentvideos_really':
+                    self.process_recentvideos()
                 self.status = STATUS_IDLE
 
     def abortRequested(self):
@@ -94,7 +104,7 @@ class ArtworkService(xbmc.Monitor):
         return super(ArtworkService, self).waitForAbort(timeout)
 
     def onNotification(self, sender, method, data):
-        if method.startswith('Other.') and sender != 'script.artwork.beef':
+        if method.startswith('Other.') and sender != 'script.artwork.beef:control':
             return
         if method == 'Other.CancelCurrent':
             if self.status == STATUS_PROCESSING:
@@ -102,15 +112,15 @@ class ArtworkService(xbmc.Monitor):
             elif self.signal:
                 self.signal = None
                 self.processor.close_progress()
-        elif method == 'Other.ProcessUnprocessedItems':
+        elif method == 'Other.ProcessUnprocessedVideos':
             self.processor.create_progress()
-            self.signal = 'unprocesseditems'
-        elif method == 'Other.ProcessOldItems':
+            self.signal = 'unprocessedvideos'
+        elif method == 'Other.ProcessOldVideos':
             self.processor.create_progress()
-            self.signal = 'olditems'
-        elif method == 'Other.ProcessAllItems':
+            self.signal = 'oldvideos'
+        elif method == 'Other.ProcessAllVideos':
             self.processor.create_progress()
-            self.signal = 'allitems'
+            self.signal = 'allvideos'
         elif method == 'Other.ProcessAfterSettings':
             self.processaftersettings = True
         elif method == 'Player.OnStop':
@@ -123,8 +133,8 @@ class ArtworkService(xbmc.Monitor):
                 self.abort = True
         elif method == 'VideoLibrary.OnScanFinished':
             if settings.enableservice:
-                scan_olditems = settings.enable_olditem_updates and get_date() > self.last_itemupdate
-                self.signal = 'olditems' if scan_olditems else 'unprocesseditems'
+                scan_olditems = settings.enable_olditem_updates and get_date() > self.last_videoupdate
+                self.signal = 'oldvideos' if scan_olditems else 'unprocessedvideos'
         elif method == 'VideoLibrary.OnUpdate':
             if not settings.enableservice:
                 return
@@ -135,28 +145,37 @@ class ArtworkService(xbmc.Monitor):
                 self.stoppeditems.remove((data['item']['type'], data['item']['id']))
                 return
             if not self.scanning:
-                self.recentitems[data['item']['type']].append(data['item']['id'])
-                self.signal = 'recentitems'
+                self.recentvideos[data['item']['type']].append(data['item']['id'])
+                self.signal = 'recentvideos'
+        elif pykodi.get_kodi_version() >= 18:
+            if method == 'AudioLibrary.OnScanFinished':
+                if settings.enableservice_music:
+                    scan_olditems = settings.enable_olditem_updates and get_date() > self.last_musicupdate
+                    self.signal = 'oldmusic' if scan_olditems else 'unprocessedmusic'
+            elif method == 'Other.ProcessUnprocessedMusic':
+                self.processor.create_progress()
+                self.signal = 'unprocessedmusic'
+            elif method == 'Other.ProcessOldMusic':
+                self.processor.create_progress()
+                self.signal = 'oldmusic'
+            elif method == 'Other.ProcessAllMusic':
+                self.processor.create_progress()
+                self.signal = 'allmusic'
 
     def watchitem(self, data):
         can_use_data = 'item' in data and data['item'].get('id') and data['item'].get('id') != -1
-        return can_use_data and 'playcount' not in data and data['item'].get('type') in self.recentitems
+        return can_use_data and 'playcount' not in data and data['item'].get('type') in self.recentvideos
 
-    def process_unprocesseditems(self):
-        return self.process_allitems(self.processed.does_not_exist)
-
-    def process_oldandunprocesseditems(self):
-        return self.process_allitems(self.processed.is_stale)
-
-    def process_allitems(self, shouldinclude_fn=None):
-        allitems = False
+    def process_allvideos(self, shouldinclude_fn=None):
+        allvideos = False
         if not shouldinclude_fn:
-            allitems = True
+            allvideos = True
             shouldinclude_fn = lambda id, type, label: True
-        items = [info.MediaItem(movie) for movie in quickjson.get_movies() if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE, movie['label'])]
-        items.extend([info.MediaItem(mset) for mset in quickjson.get_moviesets()
+        items = [info.MediaItem(movie) for movie in quickjson.get_item_list(mediatypes.MOVIE)
+            if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE, movie['label'])]
+        items.extend([info.MediaItem(mset) for mset in quickjson.get_item_list(mediatypes.MOVIESET)
             if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label'])])
-        items.extend([info.MediaItem(mvid) for mvid in quickjson.get_musicvideos()
+        items.extend([info.MediaItem(mvid) for mvid in quickjson.get_item_list(mediatypes.MUSICVIDEO)
             if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, mvid['artist'][0] + ' - ' + mvid['title'])])
 
         serieslist = quickjson.get_tvshows()
@@ -168,7 +187,7 @@ class ArtworkService(xbmc.Monitor):
             if not processed_season or series['season'] > int(processed_season) or \
                     shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW, series['label']):
                 items.append(info.MediaItem(series))
-                if series['imdbnumber'] not in settings.autoadd_episodes and not allitems:
+                if series['imdbnumber'] not in settings.autoadd_episodes and not allvideos:
                     if settings.generate_episode_thumb:
                         for episode in quickjson.get_episodes(series['tvshowid']):
                             if not info.has_generated_thumbnail(episode):
@@ -184,7 +203,7 @@ class ArtworkService(xbmc.Monitor):
                 return False
         if settings.generate_episode_thumb:
             # Too many to get all of them, and filtering by a specific date for dateadded isn't much better
-            for episode in quickjson.get_episodes() if allitems else quickjson.get_episodes(limit=500):
+            for episode in quickjson.get_episodes() if allvideos else quickjson.get_episodes(limit=500):
                 if episode['tvshowid'] not in serieseps_added and not info.has_generated_thumbnail(episode):
                     ep = info.MediaItem(episode)
                     ep.skip_artwork = ['fanart']
@@ -192,19 +211,19 @@ class ArtworkService(xbmc.Monitor):
         self.reset_recent()
         return self.processor.process_medialist(items)
 
-    def process_recentitems(self):
+    def process_recentvideos(self):
         ignoreepisodesfrom = set()
         addepisodesfrom = set()
         seriesadded = set()
         newitems = []
         for mtype in ('movie', 'musicvideo', 'tvshow'):
-            for mediaid in self.recentitems[mtype]:
+            for mediaid in self.recentvideos[mtype]:
                 if mtype == 'tvshow':
                     seriesadded.add(mediaid)
                 newitems.append(info.MediaItem(quickjson.get_item_details(mediaid, mtype)))
                 if self.abortRequested():
                     return
-        for episodeid in self.recentitems['episode']:
+        for episodeid in self.recentvideos['episode']:
             episode = info.MediaItem(quickjson.get_item_details(episodeid, mediatypes.EPISODE))
             series = None
             if episode.tvshowid not in seriesadded and (episode.season >
@@ -242,7 +261,7 @@ class ArtworkService(xbmc.Monitor):
             self.processor.create_progress()
             xbmc.sleep(200)
             self.processaftersettings = False
-            self.signal = 'unprocesseditems'
+            self.signal = 'unprocessedvideos'
 
 def get_date():
     return pykodi.get_infolabel('System.Date(yyyy-mm-dd)')

@@ -30,6 +30,10 @@ class FanartTVAbstractProvider(AbstractImageProvider):
             return {}
         if self.mediatype == mediatypes.MUSICVIDEO:
             return self._get_images(data, mediaid)
+        elif self.mediatype == mediatypes.ALBUM:
+            if not data.get('albums', {}).get(mediaid):
+                return {}
+            return self._get_images(data['albums'][mediaid])
         else:
             return self._get_images(data)
 
@@ -174,7 +178,7 @@ class FanartTVMusicVideoProvider(FanartTVAbstractProvider):
         'artistthumb': 'artistthumb',
         'artistbackground': 'fanart',
         'albumcover': 'poster',
-        'cdart': 'cdart',
+        'cdart': 'discart',
         'musiclogo': 'clearlogo',
         'hdmusiclogo': 'clearlogo',
         'musicbanner': 'banner'
@@ -205,9 +209,32 @@ class FanartTVMusicVideoProvider(FanartTVAbstractProvider):
     def provides(self, types):
         return any(x in types for x in self.artmap.values())
 
+class FanartTVAlbumProvider(FanartTVMovieProvider):
+    mediatype = mediatypes.ALBUM
+    api_section = 'music'
+    artmap = {
+        'albumcover': 'thumb',
+        'cdart': 'discart'
+    }
+
+class FanartTVArtistProvider(FanartTVMovieProvider):
+    mediatype = mediatypes.ARTIST
+    api_section = 'music/albums'
+    artmap = {
+        'artistthumb': 'thumb',
+        'artistbackground': 'fanart',
+        'musiclogo': 'clearlogo',
+        'hdmusiclogo': 'clearlogo',
+        'musicbanner': 'banner'
+    }
+
 def get_mediaid(uniqueids, mediatype):
     if mediatype == mediatypes.MUSICVIDEO:
-        return (uniqueids.get('mbid_artist'), uniqueids.get('mbid_album'))
+        return (uniqueids.get('mbartist'), uniqueids.get('mbgroup'))
+    if mediatype == mediatypes.ALBUM:
+        return uniqueids.get('mbgroup')
+    if mediatype == mediatypes.ARTIST:
+        return uniqueids.get('mbartist')
     sources = ('imdb', 'tmdb', 'unknown') if mediatype == mediatypes.MOVIE else \
         ('tmdb', 'unknown') if mediatype == mediatypes.MOVIESET else ('tvdb', 'unknown')
     for source in sources:

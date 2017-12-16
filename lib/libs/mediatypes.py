@@ -8,13 +8,10 @@ EPISODE = 'episode'
 SEASON = 'season'
 MOVIESET = 'set'
 MUSICVIDEO = 'musicvideo'
-
-settings = ('tvshow.poster', 'tvshow.fanart_limit', 'tvshow.banner', 'tvshow.clearlogo', 'tvshow.landscape',
-    'tvshow.clearart', 'tvshow.characterart_limit', 'season.poster', 'season.banner', 'season.landscape',
-    'episode.fanart', 'movie.poster', 'movie.fanart_limit', 'movie.banner', 'movie.clearlogo', 'movie.landscape',
-    'movie.clearart', 'movie.discart', 'set.poster', 'set.fanart_limit', 'set.banner', 'set.clearlogo',
-    'set.landscape', 'set.clearart', 'set.discart', 'musicvideo.poster', 'musicvideo.fanart_limit', 'musicvideo.banner',
-    'musicvideo.clearlogo', 'musicvideo.clearart', 'musicvideo.cdart', 'musicvideo.artistthumb')
+ARTIST = 'artist'
+ALBUM = 'album'
+SONG = 'song'
+audiotypes = (ARTIST, ALBUM, SONG)
 
 addon = pykodi.get_main_addon()
 
@@ -152,12 +149,12 @@ artinfo = {
             'autolimit': 1,
             'multiselect': False
         },
-        'cdart': {
+        'discart': {
             'autolimit': 1,
             'multiselect': False
         },
         'fanart': { # artist or maybe album
-            'autolimit': 1,
+            'autolimit': 3,
             'multiselect': True
         },
         # artist
@@ -177,8 +174,59 @@ artinfo = {
             'autolimit': 1,
             'multiselect': False
         }
+    },
+    ARTIST: {
+        'thumb': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'fanart': {
+            'autolimit': 3,
+            'multiselect': True
+        },
+        'banner': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'clearlogo': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'clearart': {
+            'autolimit': 1,
+            'multiselect': False
+        }
+    },
+    ALBUM: {
+        'thumb': { # I'd much prefer 'cover', but for now it's thumb just like music video 'poster'
+            'autolimit': 1,
+            'multiselect': False
+        },
+        # I can imagine 'fanart' images that can be accurately attributed to an album rather than the artist,
+        #  perhaps made from liner notes or press images, but nothing currently available from web services
+        'discart': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'back': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'spine': {
+            'autolimit': 1,
+            'multiselect': False
+        }
+    },
+    SONG: {
+        'thumb': { # single cover
+            'autolimit': 1,
+            'multiselect': False
+        }
     }
 }
+
+settings = [m[0] + '.' + art[0] + ('_limit' if art[1]['multiselect'] else '')
+    for m in artinfo.iteritems() for art in m[1].iteritems()]
 
 def update_settings():
     for settingid in settings:
