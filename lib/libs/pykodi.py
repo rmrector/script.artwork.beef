@@ -189,25 +189,36 @@ class Addon(xbmcaddon.Addon):
             value = str(value)
         self.setSetting(settingid, value)
 
-class UTF8PrettyJSONEncoder(json.JSONEncoder):
+class ObjectJSONEncoder(json.JSONEncoder):
+    # Will still flop on circular objects
     def __init__(self, *args, **kwargs):
         kwargs['skipkeys'] = True
-        kwargs['ensure_ascii'] = False
-        kwargs['indent'] = 2
-        kwargs['separators'] = (',', ': ')
-        super(UTF8PrettyJSONEncoder, self).__init__(*args, **kwargs)
+        super(ObjectJSONEncoder, self).__init__(*args, **kwargs)
 
     def default(self, obj):
         # Called for objects that aren't directly JSON serializable
         if isinstance(obj, collections.Mapping):
             return dict((key, obj[key]) for key in obj.keys())
-        if isinstance(obj, collections.Iterable):
+        if isinstance(obj, collections.Sequence):
             return list(obj)
         if callable(obj):
             return str(obj)
-        result = dict(obj.__dict__)
+        try:
+            result = dict(obj.__dict__)
+            result['* objecttype'] = str(type(obj))
+            return result
+        except AttributeError:
+            pass # obj has no __dict__ attribute
+        result = {'* dir': dir(obj)}
         result['* objecttype'] = str(type(obj))
         return result
+
+class UTF8PrettyJSONEncoder(ObjectJSONEncoder):
+    def __init__(self, *args, **kwargs):
+        kwargs['ensure_ascii'] = False
+        kwargs['indent'] = 2
+        kwargs['separators'] = (',', ': ')
+        super(UTF8PrettyJSONEncoder, self).__init__(*args, **kwargs)
 
     def iterencode(self, obj, _one_shot=False):
         for result in super(UTF8PrettyJSONEncoder, self).iterencode(obj, _one_shot):
