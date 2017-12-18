@@ -1,4 +1,6 @@
-from lib.libs import pykodi, quickjson
+import xbmc
+
+from lib.libs import pykodi
 
 addon = pykodi.get_main_addon()
 
@@ -15,9 +17,7 @@ class Settings(object):
 
     def update_useragent(self):
         beefversion = pykodi.get_main_addon().version
-        props = quickjson.get_application_properties(['name', 'version'])
-        appversion = '{0}.{1}'.format(props['version']['major'], props['version']['minor'])
-        self.useragent = 'ArtworkBeef/{0} {1}/{2}'.format(beefversion, props['name'], appversion)
+        self.useragent = 'ArtworkBeef/{0} '.format(beefversion) + xbmc.getUserAgent()
 
     def update_settings(self):
         self._autoadd_episodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
