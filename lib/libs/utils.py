@@ -59,8 +59,8 @@ def get_movie_path_list(stackedpath):
     return result
 
 replace_chars = ':?"/\\<>*|'
-replace_with = ('', '_', '+')
-replace_colon_with = (' -', '-')
+replace_with = ('', '_', '+', '-')
+replace_colon_with = (' -',)
 def iter_possible_cleannames(originalname):
     yield originalname
     filenames = [originalname]
@@ -68,7 +68,7 @@ def iter_possible_cleannames(originalname):
     if cleanend != originalname:
         yield cleanend
         filenames.append(cleanend)
-    for char, in replace_chars:
+    for char in replace_chars:
         if char in originalname:
             for filename in list(filenames):
                 replacements = replace_with
