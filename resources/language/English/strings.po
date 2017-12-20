@@ -114,6 +114,11 @@ msgctxt "#32036"
 msgid "Kodi 18 or newer required"
 msgstr ""
 
+msgctxt "#32037"
+# 0 = full filename
+msgid "Could not save image to file: {0}"
+msgstr ""
+
 # Headings
 
 msgctxt "#32050"
@@ -232,6 +237,10 @@ msgctxt "#32422"
 msgid "all music (new, old, and all in between)"
 msgstr ""
 
+msgctxt "#32423"
+msgid "Download existing remote images"
+msgstr ""
+
 # Settings
 
 msgctxt "#32900"
@@ -243,7 +252,7 @@ msgid "Update artwork for old items daily"
 msgstr ""
 
 msgctxt "#32904"
-msgid "Automatically add from filesystem only"
+msgid "Automatically add from file system only"
 msgstr ""
 
 msgctxt "#32901"
@@ -281,11 +290,11 @@ msgstr ""
 # 32908 retired 2017-12-15
 
 msgctxt "#32909"
-msgid "grab movie set artwork from central artwork directory"
+msgid "process movie set artwork in a central info directory"
 msgstr ""
 
 msgctxt "#32910"
-msgid "central movie set artwork directory"
+msgid "central info directory"
 msgstr ""
 
 msgctxt "#32911"
@@ -322,6 +331,10 @@ msgstr ""
 
 msgctxt "#32922"
 msgid "Automatically add artwork for new music"
+msgstr ""
+
+msgctxt "#32923"
+msgid "Download all processed artwork to file system"
 msgstr ""
 
 # Used in the artwork report
@@ -394,4 +407,8 @@ msgstr ""
 msgctxt "#32815"
 # 0 = versions of Artwork Beef and Kodi
 msgid "Versions: {0}"
+msgstr ""
+
+msgctxt "#32816"
+msgid "{0:d} artwork downloaded"
 msgstr ""

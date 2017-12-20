@@ -8,7 +8,7 @@ typemap = {mediatypes.MOVIE: ('Movie', ['art', 'imdbnumber', 'file', 'premiered'
     mediatypes.MOVIESET: ('MovieSet', ['art'], {'movies': {'properties': ['art', 'file']}}),
     mediatypes.TVSHOW: ('TVShow', ['art', 'imdbnumber', 'season', 'file', 'premiered', 'uniqueid'], None),
     mediatypes.EPISODE: ('Episode', ['art', 'uniqueid', 'tvshowid', 'season', 'episode', 'file', 'showtitle'], None),
-    mediatypes.SEASON: ('Season', ['season', 'art'], None),
+    mediatypes.SEASON: ('Season', ['season', 'art', 'tvshowid', 'showtitle'], None),
     mediatypes.MUSICVIDEO: ('MusicVideo', ['art', 'file', 'title', 'artist'], None),
     mediatypes.ARTIST: ('Artist', ['art', 'musicbrainzartistid'], None),
     mediatypes.ALBUM: ('Album', ['art', 'musicbrainzreleasegroupid'], None),
@@ -129,7 +129,7 @@ def _inner_get_seasons(tvshow_id=-1):
     json_request = get_base_json_request('VideoLibrary.GetSeasons')
     if tvshow_id != -1:
         json_request['params']['tvshowid'] = tvshow_id
-    json_request['params']['properties'] = ['season', 'art']
+    json_request['params']['properties'] = typemap[mediatypes.SEASON][1]
 
     json_result = pykodi.execute_jsonrpc(json_request)
 
@@ -151,6 +151,24 @@ def set_item_details(dbid, mediatype, **details):
     json_request = get_base_json_request(basestr.format(mapped[0]))
     json_request['params'] = details
     json_request['params'][mediatype + 'id'] = dbid
+
+    json_result = pykodi.execute_jsonrpc(json_request)
+    if not check_json_result(json_result, 'OK', json_request):
+        log(json_result)
+
+def get_textures(url):
+    json_request = get_base_json_request('Textures.GetTextures')
+    json_request['params']['filter'] = {'field': 'url', 'operator': 'is', 'value': url}
+
+    json_result = pykodi.execute_jsonrpc(json_request)
+    if check_json_result(json_result, 'textures', json_request):
+        return json_result['result']['textures']
+    else:
+        return []
+
+def remove_texture(textureid):
+    json_request = get_base_json_request('Textures.RemoveTexture')
+    json_request['params']['textureid'] = textureid
 
     json_result = pykodi.execute_jsonrpc(json_request)
     if not check_json_result(json_result, 'OK', json_request):

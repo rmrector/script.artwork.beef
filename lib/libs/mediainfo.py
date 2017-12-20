@@ -31,19 +31,18 @@ class MediaItem(object):
 
         self.art = get_own_artwork(jsondata)
         self.uniqueids = _get_uniqueids(jsondata, self.mediatype)
-        if self.mediatype == mediatypes.EPISODE:
+        if self.mediatype in (mediatypes.EPISODE, mediatypes.SEASON):
             self.tvshowid = jsondata['tvshowid']
             self.showtitle = jsondata['showtitle']
             self.season = jsondata['season']
+        if self.mediatype == mediatypes.EPISODE:
             self.episode = jsondata['episode']
         elif self.mediatype == mediatypes.TVSHOW:
             self.season = jsondata['season']
         elif self.mediatype == mediatypes.MOVIESET:
             self.movies = jsondata.get('movies', [])
-            if settings.setartwork_fromcentral and settings.setartwork_dir:
-                # TODO: What about finding artwork in both setartwork_dir and parent dir?
-                #  parent dir currently overrides setartwork_dir if it is found
-                self.file = settings.setartwork_dir + self.label + '.ext'
+            if mediatypes.central_directories[mediatypes.MOVIESET]:
+                self.file = mediatypes.central_directories[mediatypes.MOVIESET] + self.label + '.ext'
         elif self.mediatype == mediatypes.MUSICVIDEO:
             self.label = jsondata['artist'][0] + ' - ' + jsondata['title']
 
@@ -53,6 +52,7 @@ class MediaItem(object):
         self.selectedart = {}
         self.forcedart = {}
         self.updatedart = []
+        self.downloadedart = {}
         self.error = None
 
 def is_known_mediatype(jsondata):
@@ -84,15 +84,25 @@ def iter_base_arttypes(artkeys):
             yield basetype
             usedtypes.add(basetype)
 
-def iter_renumbered_artlist(urllist, basetype, original_arttypes):
-    i = 0
-    for url in urllist:
-        yield format_arttype(basetype, i), url
-        i += 1
-    for arttype in sorted(original_arttypes, key=natural_sort):
-        type_base, index = split_arttype(arttype)
-        if type_base == basetype and index >= i:
-            yield arttype, None
+def fill_multiart(original_art, basetype, artchanges=((), ())):
+    result = dict(original_art)
+    if artchanges[1]:
+        result.update((atype, None) for atype, url in result.iteritems()
+            if url in artchanges[1] and arttype_matches_base(atype, basetype))
+    canmove = lambda atype, url: arttype_matches_base(atype, basetype) and url and url.startswith(pykodi.notlocalimages)
+    toadd = [url for atype, url in result.iteritems() if canmove(atype, url)]
+    toadd.extend(artchanges[0])
+    result.update((atype, None) for atype, url in result.iteritems() if canmove(atype, url))
+    if toadd:
+        have = [split_arttype(atype)[1] for atype, url in result.iteritems()
+            if url and arttype_matches_base(atype, basetype)]
+        idx = -1
+        while toadd:
+            idx += 1
+            if idx in have:
+                continue
+            result[basetype + (str(idx) if idx else '')] = toadd.pop(0)
+    return result
 
 def iter_missing_arttypes(mediaitem, fromtypes):
     for arttype, artinfo in mediatypes.artinfo[mediaitem.mediatype].iteritems():
@@ -141,13 +151,6 @@ def split_arttype(arttype):
 def format_arttype(basetype, index):
     return "{0}{1}".format(basetype, index if index else '')
 
-def renumber_all_artwork(art):
-    result = {}
-    for basetype in iter_base_arttypes(art.keys()):
-        urllist = [art[key] for key in sorted(art.keys(), key=natural_sort) if arttype_matches_base(key, basetype)]
-        result.update(iter_renumbered_artlist(urllist, basetype, art.keys()))
-    return result
-
 def update_art_in_library(mediatype, dbid, updatedart):
     if updatedart:
         quickjson.set_item_details(dbid, mediatype, art=updatedart)
@@ -166,6 +169,9 @@ def add_additional_iteminfo(mediaitem, processed, search):
             resultids = search.get_more_uniqueids(mediaitem.uniqueids, mediaitem.mediatype)
             if 'tvdb' in resultids:
                 mediaitem.uniqueids['tvdb'] = resultids['tvdb']
+    elif mediaitem.mediatype == mediatypes.SEASON:
+        tvshow = quickjson.get_item_details(mediaitem.tvshowid, mediatypes.TVSHOW)
+        mediaitem.file = tvshow['file']
     elif mediaitem.mediatype == mediatypes.EPISODE:
         if settings.default_tvidsource == 'tmdb':
             # TheMovieDB scraper sets episode IDs that can't be used in the API, but seriesID/season/episode works
