@@ -32,7 +32,7 @@ class TheAudioDBAbstractProvider(AbstractImageProvider):
 
     def _get_data(self, url, params):
         self.log('uncached', xbmc.LOGINFO)
-        response = self.doget(url, params)
+        response = self.doget(url, params=params)
         return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
 
 

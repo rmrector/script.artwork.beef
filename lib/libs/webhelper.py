@@ -20,14 +20,16 @@ class Getter(object):
         if contenttype:
             self.session.headers['Accept'] = contenttype
 
-    def __call__(self, url, params=None, headers=None, timeout=20):
+    def __call__(self, url, **kwargs):
         # callers still need to handle most `RequestException`s
-        result = self.session.get(url, params=params, headers=headers, timeout=timeout)
+        if 'timeout' not in kwargs:
+            kwargs['timeout'] = 20
+        result = self.session.get(url, **kwargs)
         if result is None:
             return
         if result.status_code == 401:
             if self.login():
-                result = self.session.get(url, params=params, headers=headers, timeout=timeout)
+                result = self.session.get(url, **kwargs)
                 if result is None:
                     return
 

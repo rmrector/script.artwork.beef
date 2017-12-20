@@ -37,9 +37,9 @@ class AbstractProvider(object):
         self.getter = Getter(self.contenttype, self.login)
         self.getter.session.headers['User-Agent'] = settings.useragent
 
-    def doget(self, url, params=None, headers=None):
+    def doget(self, url, **kwargs):
         try:
-            return self.getter(url, params, headers)
+            return self.getter(url, **kwargs)
         except (Timeout, ConnectionError) as ex:
             raise ProviderError, (L(CANT_CONTACT_PROVIDER), ex), sys.exc_info()[2]
         except HTTPError as ex:
