@@ -8,7 +8,7 @@ class SeriesSelector(xbmcgui.WindowXMLDialog):
     def __init__(self, *args, **kwargs):
         super(SeriesSelector, self).__init__(args, kwargs)
         self.serieslist = kwargs.get('serieslist')
-        self.originalselected = list(kwargs.get('selected', []))
+        self.originalselected = kwargs.get('selected', [])
         self.selected = []
         self.guilist = None
 
@@ -39,6 +39,7 @@ class SeriesSelector(xbmcgui.WindowXMLDialog):
                 listitem.select(True)
                 self.selected.append(series['imdbnumber'])
             self.guilist.addItem(listitem)
+        self.originalselected = list(self.selected)
         self.setFocus(self.guilist)
 
     def onClick(self, controlid):
