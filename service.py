@@ -164,7 +164,8 @@ class ArtworkService(xbmc.Monitor):
 
     def watchitem(self, data):
         can_use_data = 'item' in data and data['item'].get('id') and data['item'].get('id') != -1
-        return can_use_data and 'playcount' not in data and data['item'].get('type') in self.recentvideos
+        return can_use_data and 'playcount' not in data and data['item'].get('type') in self.recentvideos \
+            and (pykodi.get_kodi_version() < 18 or data['item'].get('added'))
 
     def process_allvideos(self, shouldinclude_fn=None):
         allvideos = False
