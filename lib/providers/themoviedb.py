@@ -166,7 +166,7 @@ class TheMovieDBSearch(AbstractProvider):
             params = {'api_key': apikey}
         else:
             params = dict(params, api_key=apikey)
-        response = self.doget(url, params)
+        response = self.doget(url, params=params)
         return 'Empty' if response is None else response.json()
 
     def search(self, query, mediatype):
