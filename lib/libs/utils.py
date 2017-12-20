@@ -1,9 +1,11 @@
 import re
 import xbmc
+import xbmcvfs
 from collections import namedtuple
 from os.path import split, basename, dirname
 
 from lib.libs.pykodi import log
+from lib.libs import mediatypes
 
 SortedDisplay = namedtuple('SortedDisplay', ['sort', 'display'])
 
@@ -78,3 +80,33 @@ def iter_possible_cleannames(originalname):
                     cleaned = filename.replace(char, newchar)
                     yield cleaned
                     filenames.append(cleaned)
+
+def find_central_infodir(mediaitem, create=False):
+    fromtv = mediaitem.mediatype in (mediatypes.SEASON, mediatypes.EPISODE)
+    cdtype =  mediatypes.TVSHOW if fromtv else mediaitem.mediatype
+    if not mediatypes.central_directories.get(cdtype):
+        return None
+    basedir = mediatypes.central_directories[cdtype]
+    dirs, files = xbmcvfs.listdir(basedir)
+    cleantitletarget = mediaitem.showtitle if fromtv else mediaitem.label
+    if mediaitem.file:
+        pass
+    for dir_ in dirs:
+        cleantitle, diryear = xbmc.getCleanMovieTitle(dir_) if mediaitem.mediatype == mediatypes.MOVIE else (dir_, '')
+        if (not diryear or int(diryear) == mediaitem.year) and any(title in (cleantitle, dir_)
+                for title in iter_possible_cleannames(cleantitletarget)):
+            return basedir + dir_ + get_pathsep(basedir)
+
+    if not create:
+        return None
+    label = mediaitem.label if not mediaitem.mediatype == mediatypes.MOVIE else \
+        '{0} ({1})'.format(mediaitem.label, mediaitem.year)
+    newdir = basedir + build_cleanest_name(label) + get_pathsep(basedir)
+    if xbmcvfs.mkdir(newdir):
+        return newdir
+
+def build_cleanest_name(originalname):
+    result = originalname.rstrip(' .')
+    for char in replace_chars:
+        result = result.replace(char, '')
+    return result

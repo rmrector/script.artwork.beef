@@ -47,7 +47,8 @@ class ArtFilesSeriesProvider(ArtFilesAbstractProvider):
 
     alttypes = {'logo': 'clearlogo', 'character': 'characterart'}
 
-    def get_exact_images(self, path):
+    def get_exact_images(self, mediaitem):
+        path = mediaitem.file
         dirs, files = xbmcvfs.listdir(path)
         files.sort(key=natural_sort)
         result = {}
@@ -97,7 +98,8 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
 
     alttypes = {'logo': 'clearlogo', 'disc': 'discart'}
 
-    def get_exact_images(self, path):
+    def get_exact_images(self, mediaitem):
+        path = mediaitem.file
         paths = get_movie_path_list(path)
         result = {}
         sep = get_pathsep(path)
@@ -137,8 +139,8 @@ class ArtFilesMovieSetProvider(ArtFilesAbstractProvider):
 
     alttypes = {'logo': 'clearlogo', 'folder': 'thumb'}
 
-    def get_exact_images(self, path):
-        path, inputfilename = os.path.split(path)
+    def get_exact_images(self, mediaitem):
+        path, inputfilename = os.path.split(mediaitem.file)
         sep = get_pathsep(path)
         path += sep
         dirs, files = xbmcvfs.listdir(path)
@@ -189,8 +191,8 @@ class ArtFilesMovieSetProvider(ArtFilesAbstractProvider):
 class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
     mediatype = mediatypes.EPISODE
 
-    def get_exact_images(self, path):
-        path, inputfilename = os.path.split(path)
+    def get_exact_images(self, mediaitem):
+        path, inputfilename = os.path.split(mediaitem.file)
         path += get_pathsep(path)
         _, files = xbmcvfs.listdir(path)
         check_inputbase = os.path.splitext(inputfilename)[0].lower()
@@ -214,8 +216,8 @@ class ArtFilesMusicVideoProvider(ArtFilesAbstractProvider):
 
     alttypes = {'logo': 'clearlogo', 'disc': 'discart', 'cdart': 'discart'}
 
-    def get_exact_images(self, path):
-        path, inputfilename = os.path.split(path)
+    def get_exact_images(self, mediaitem):
+        path, inputfilename = os.path.split(mediaitem.file)
         path += get_pathsep(path)
         dirs, files = xbmcvfs.listdir(path)
         check_inputbase = os.path.splitext(inputfilename)[0].lower()

@@ -6,6 +6,7 @@ from datetime import timedelta
 
 from lib import cleaner, reporting
 from lib.artworkselection import prompt_for_artwork
+from lib.downloader import Downloader, DownloaderError
 from lib.gatherer import Gatherer
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings
@@ -41,6 +42,8 @@ class ArtworkProcessor(object):
         self.visible = False
         self.freshstart = "0"
         self.processed = ProcessedItems()
+        self.gatherer = None
+        self.downloader = None
 
     def create_progress(self):
         if not self.visible:
@@ -58,6 +61,8 @@ class ArtworkProcessor(object):
 
     def init_run(self, show_progress=False):
         self.setlanguages()
+        self.gatherer = Gatherer(self.monitor, settings.only_filesystem, self.autolanguages)
+        self.downloader = Downloader()
         self.freshstart = str(datetime_now() - timedelta(days=365))
         if show_progress:
             self.create_progress()
@@ -110,7 +115,7 @@ class ArtworkProcessor(object):
             self.process_medialist(medialist, True)
 
     def _manual_item_process(self, mediaitem, busy):
-        self._process_item(Gatherer(self.monitor, settings.only_filesystem, self.autolanguages), mediaitem, True, False)
+        self._process_item(mediaitem, True, False)
         busy.close()
         if mediaitem.availableart or mediaitem.forcedart:
             availableart = dict(mediaitem.availableart)
@@ -132,21 +137,29 @@ class ArtworkProcessor(object):
                 return
             if selectedarttype and selectedart:
                 if mediatypes.get_artinfo(mediaitem.mediatype, selectedarttype)['multiselect']:
-                    existingurls = [url for exacttype, url in mediaitem.art.iteritems()
-                        if info.arttype_matches_base(exacttype, selectedarttype)]
-                    urls_toset = [url for url in existingurls if url not in selectedart[1]]
-                    urls_toset.extend([url for url in selectedart[0] if url not in urls_toset])
-                    selectedart = dict(info.iter_renumbered_artlist(urls_toset, selectedarttype, mediaitem.art.keys()))
+                    selectedart = info.fill_multiart(mediaitem.art, selectedarttype, selectedart)
                 else:
                     selectedart = {selectedarttype: selectedart}
 
                 selectedart = get_simpledict_updates(mediaitem.art, selectedart)
-                if selectedart:
-                    mediaitem.selectedart = selectedart
-                    mediaitem.updatedart = selectedart.keys()
-                    add_art_to_library(mediaitem.mediatype, mediaitem.seasons, mediaitem.dbid, selectedart)
+                mediaitem.selectedart = selectedart
+                toset = dict(selectedart)
+                if settings.download_artwork:
+                    try:
+                        self.downloader.downloadfor(mediaitem, False)
+                        toset.update(mediaitem.downloadedart)
+                        toset = dict((k, v) for k, v in toset.iteritems() if not v or not v.startswith('http'))
+                    except DownloaderError as ex:
+                        mediaitem.error = ex.message
+                        log(ex.message, xbmc.LOGERROR)
+                        xbmcgui.Dialog().notification("Artwork Beef", ex.message, xbmcgui.NOTIFICATION_ERROR)
+                        toset = {}
+                if toset:
+                    mediaitem.updatedart = toset.keys()
+                    add_art_to_library(mediaitem.mediatype, mediaitem.seasons, mediaitem.dbid, toset)
                 reporting.report_item(mediaitem, True, True)
-                notifycount(len(selectedart))
+                if not mediaitem.error:
+                    notifycount(len(toset))
         else:
             xbmcgui.Dialog().notification(L(NOT_AVAILABLE_MESSAGE),
                 L(SOMETHING_MISSING) + ' ' + L(FINAL_MESSAGE), '-', 8000)
@@ -160,16 +173,22 @@ class ArtworkProcessor(object):
         singleitemlist = len(medialist) == 1
         if not singleitemlist:
             reporting.report_start(medialist)
-        if medialist:
-            gatherer = Gatherer(self.monitor, settings.only_filesystem, self.autolanguages)
         for mediaitem in medialist:
             if mediaitem.mediatype in mediatypes.audiotypes:
                 continue
             self.update_progress(currentitem * 100 // len(medialist), mediaitem.label)
             info.add_additional_iteminfo(mediaitem, self.processed, search)
             currentitem += 1
-            services_hit = self._process_item(gatherer, mediaitem)
-            reporting.report_item(mediaitem, singleitemlist)
+            try:
+                services_hit = self._process_item(mediaitem)
+            except DownloaderError as ex:
+                mediaitem.error = ex.message
+                log(ex.message, xbmc.LOGERROR)
+                xbmcgui.Dialog().notification("Artwork Beef", ex.message, xbmcgui.NOTIFICATION_ERROR)
+                reporting.report_item(mediaitem, True)
+                aborted = True
+                break
+            reporting.report_item(mediaitem, singleitemlist or mediaitem.error)
             artcount += len(mediaitem.updatedart)
 
             if not services_hit:
@@ -180,7 +199,7 @@ class ArtworkProcessor(object):
                 aborted = True
                 break
 
-        reporting.report_end(medialist, currentitem if aborted else 0)
+        reporting.report_end(medialist, currentitem if aborted else 0, self.downloader.size)
         if alwaysnotify:
             notifycount(artcount)
         elif artcount:
@@ -190,7 +209,7 @@ class ArtworkProcessor(object):
         self.finish_run()
         return not aborted
 
-    def _process_item(self, gatherer, mediaitem, singleitem=False, auto=True):
+    def _process_item(self, mediaitem, singleitem=False, auto=True):
         mediatype = mediaitem.mediatype
         if not mediaitem.uniqueids and not settings.only_filesystem:
             header = L(NO_IDS_MESSAGE)
@@ -212,21 +231,18 @@ class ArtworkProcessor(object):
         existingkeys = [key for key, url in mediaitem.art.iteritems() if url]
         mediaitem.missingart = list(info.iter_missing_arttypes(mediaitem, existingkeys))
 
-        services_hit, error = gatherer.getartwork(mediaitem, auto)
+        services_hit, error = self.gatherer.getartwork(mediaitem, auto)
 
         if auto:
-            nolocal = pykodi.thumbnailimages + ('http',)
             # Remove existing local artwork if it is no longer available
             existingart = dict(mediaitem.art)
             newlocalart = [(arttype, image['url']) for arttype, image in mediaitem.forcedart.iteritems()
-                if not image['url'].startswith(nolocal)]
+                if not image['url'].startswith(pykodi.notlocalimages)]
             selectedart = dict((arttype, None) for arttype, url in existingart.iteritems()
-                if not url.startswith(nolocal) and (arttype, url) not in newlocalart
+                if not url.startswith(pykodi.notlocalimages) and (arttype, url) not in newlocalart
                     and not xbmcvfs.exists(url))
 
             selectedart.update((key, image['url']) for key, image in mediaitem.forcedart.iteritems())
-            selectedart = info.renumber_all_artwork(selectedart)
-
             existingart.update(selectedart)
 
             # Then add the rest of the missing art
@@ -234,12 +250,18 @@ class ArtworkProcessor(object):
             selectedart.update(self.get_top_missing_art(info.iter_missing_arttypes(mediaitem, existingkeys),
                 mediatype, existingart, mediaitem.availableart))
 
-            # Identify actual changes, and save them
             selectedart = get_simpledict_updates(mediaitem.art, selectedart)
-            if selectedart:
-                mediaitem.selectedart = selectedart
-                mediaitem.updatedart = list(set(mediaitem.updatedart + selectedart.keys()))
-                add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, mediaitem.selectedart)
+            mediaitem.selectedart = selectedart
+            toset = dict(selectedart)
+            if settings.download_artwork:
+                sh, er = self.downloader.downloadfor(mediaitem)
+                services_hit = services_hit or sh
+                error = error or er
+                toset.update(mediaitem.downloadedart)
+                toset = dict((k, v) for k, v in toset.iteritems() if not v or not v.startswith('http'))
+            if toset:
+                mediaitem.updatedart = list(set(mediaitem.updatedart + toset.keys()))
+                add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, toset)
 
         if error:
             if 'message' in error:
@@ -352,6 +374,13 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
             for arttype, url in selectedart.iteritems() if '.' not in arttype))
     else:
         info.update_art_in_library(mediatype, dbid, selectedart)
+    for arttype, url in selectedart.iteritems():
+        # Remove local images from cache so Kodi caches the new ones
+        if not url or url.startswith(pykodi.notlocalimages):
+            continue
+        textures = quickjson.get_textures(url)
+        if textures:
+            quickjson.remove_texture(textures[0]['textureid'])
 
 def finalmessages(count):
     return (L(ARTWORK_UPDATED_MESSAGE).format(count), L(FINAL_MESSAGE)) if count else \

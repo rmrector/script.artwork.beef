@@ -31,6 +31,7 @@ UPDATED_LABEL = 32812
 ERROR_MESSAGE = 32813
 ERRORS_MESSAGE = 32814
 RUNNING_VERSION = 32815
+DOWNLOAD_COUNT = 32816
 
 def report_startup():
     if not xbmcvfs.exists(settings.datapath):
@@ -58,7 +59,7 @@ def report_start(medialist):
         write(reportfile, L(ITEM_COUNT).format(len(medialist)) + " - " +
             ', '.join('{0}: {1}'.format(mt, mediatypecount[mt]) for mt in mediatypecount))
 
-def report_end(medialist, abortedcount):
+def report_end(medialist, abortedcount, downloaded_size):
     if len(medialist) <= 1:
         if _should_rotate():
             _rotate_file()
@@ -69,6 +70,7 @@ def report_end(medialist, abortedcount):
             write(reportfile, L(PROCESSED_COUNT).format(abortedcount))
         arttypecount = {}
         total = 0
+        downloaded = 0
         errorcount = 0
         for item in medialist:
             for arttype in item.updatedart:
@@ -77,7 +79,11 @@ def report_end(medialist, abortedcount):
                 total += 1
             if item.error:
                 errorcount += 1
+            downloaded += len(item.downloadedart)
 
+        if downloaded:
+            write(reportfile, L(DOWNLOAD_COUNT).format(downloaded)
+                + ' - {0:0.2f}MB'.format(downloaded_size // 1000000.00))
         if not total:
             write(reportfile, L(NO_UPDATES))
         else:
@@ -104,6 +110,8 @@ def report_item(mediaitem, forcedreport=False, manual=False):
         else:
             write(reportfile, L(MISSING_LABEL).format(', '.join(mediaitem.missingart)))
 
+        if mediaitem.downloadedart:
+            write(reportfile, L(DOWNLOAD_COUNT).format(len(mediaitem.downloadedart)))
         if mediaitem.updatedart:
             write(reportfile, L(UPDATED_LABEL).format(', '.join(mediaitem.updatedart)))
         elif manual or mediaitem.missingart:

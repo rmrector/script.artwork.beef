@@ -5,6 +5,7 @@ from itertools import chain
 
 from lib import cleaner, reporting
 from lib.artworkprocessor import ArtworkProcessor
+from lib.downloader import Downloader, DownloaderError
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
 from lib.libs.processeditems import ProcessedItems
@@ -27,6 +28,8 @@ class M(object):
     IDENTIFY_UNMATCHED_MVIDS = 32415
     REMOVE_EXTRA_ARTWORK = 32407
     REMOVE_SPECIFIC_TYPES = 32414
+    MAKE_LOCAL = 32423
+    DOWNLOAD_COUNT = 32816
     REMOVED_ART_COUNT = 32027
     NO_UNMATCHED_ITEMS = 32029
     UNMATCHED_ITEMS = 32056
@@ -66,6 +69,7 @@ def main():
                 (L(M.IDENTIFY_UNMATCHED_SETS), lambda: identify_unmatched(mediatypes.MOVIESET)),
                 (L(M.IDENTIFY_UNMATCHED_MVIDS), lambda: identify_unmatched(mediatypes.MUSICVIDEO)),
                 (L(M.REMOVE_SPECIFIC_TYPES), remove_specific_arttypes),
+                (L(M.MAKE_LOCAL), make_local),
                 ("Quick fix: Reset all movie set IDs", remove_movieset_matches),
                 ("Quick fix: Reset all music video IDs", remove_musicvideo_matches)]
         selected = xbmcgui.Dialog().select('Artwork Beef', [option[0] for option in options])
@@ -117,6 +121,21 @@ def remove_specific_arttypes():
                 L(M.REMOVE_SPECIFIC_TYPES), allitems, options[selected][0])
             notify_count(L(M.REMOVED_ART_COUNT), fixcount)
 
+def make_local():
+    downloader = Downloader()
+    def downloadforitem(mediaitem):
+        try:
+            downloader.downloadfor(mediaitem)
+            return dict((k, v) for k, v in mediaitem.downloadedart.iteritems() if not v or not v.startswith('http'))
+        except DownloaderError as ex:
+            mediaitem.error = ex.message
+            log(ex.message, xbmc.LOGERROR)
+            xbmcgui.Dialog().notification("Artwork Beef", ex.message, xbmcgui.NOTIFICATION_ERROR)
+            return {}
+    downloaded = runon_medialist(downloadforitem, L(M.MAKE_LOCAL), fg=True)
+    xbmcgui.Dialog().ok("Artwork Beef", L(M.DOWNLOAD_COUNT).format(downloaded)
+        + ' - {0:0.2f}MB'.format(downloader.size / 1000000.00))
+
 def identify_unmatched(mediatype):
     busy = pykodi.get_busydialog()
     busy.create()
@@ -163,43 +182,49 @@ def set_autoaddepisodes():
         if xbmcgui.Dialog().yesno(L(M.ADD_MISSING_HEADER), L(M.ADD_MISSING_MESSAGE)):
             pykodi.execute_builtin('NotifyAll(script.artwork.beef:control, ProcessAfterSettings)')
 
-def runon_medialist(function, heading, medialist=None, typelabel=None):
-    ''' medialist defaults to every item in the library! '''
-    progress = xbmcgui.DialogProgressBG()
+def runon_medialist(function, heading, medialist='videos', typelabel=None, fg=False):
+    progress = xbmcgui.DialogProgress() if fg else xbmcgui.DialogProgressBG()
     progress.create(heading)
     monitor = xbmc.Monitor()
 
-    if medialist is None:
-        steps_to_run = [(lambda: quickjson.get_item_list(mediatypes.MOVIE), L(M.LISTING_ALL).format(L(M.MOVIES))),
-            (quickjson.get_tvshows, L(M.LISTING_ALL).format(L(M.SERIES))),
-            (quickjson.get_seasons, L(M.LISTING_ALL).format(L(M.SEASONS))),
-            (lambda: quickjson.get_item_list(mediatypes.MOVIESET), L(M.LISTING_ALL).format(L(M.MOVIESETS))),
-            (quickjson.get_episodes, L(M.LISTING_ALL).format(L(M.EPISODES))),
-            (lambda: quickjson.get_item_list(mediatypes.MUSICVIDEO), L(M.LISTING_ALL).format(L(M.MUSICVIDEOS)))]
+    if medialist == 'videos':
+        steps_to_run = [(lambda: quickjson.get_item_list(mediatypes.MOVIE), L(M.MOVIES)),
+            (quickjson.get_tvshows, L(M.SERIES)),
+            (quickjson.get_seasons, L(M.SEASONS)),
+            (lambda: quickjson.get_item_list(mediatypes.MOVIESET), L(M.MOVIESETS)),
+            (quickjson.get_episodes, L(M.EPISODES)),
+            (lambda: quickjson.get_item_list(mediatypes.MUSICVIDEO), L(M.MUSICVIDEOS))]
     else:
-        steps_to_run = ((lambda: medialist, L(M.LISTING_ALL).format(typelabel)),)
+        steps_to_run = ((lambda: medialist, typelabel),)
     stepsize = 100 // len(steps_to_run)
 
     def update_art_for_items(items, start):
         changedcount = 0
         for i, item in enumerate(items):
-            progress.update(start + i * stepsize // len(items))
+            if fg:
+                progress.update(start + i * stepsize // len(items), item['label'])
+            else:
+                progress.update(start + i * stepsize // len(items))
             item = info.MediaItem(item)
-
+            if item.mediatype == mediatypes.SEASON:
+                item.file = quickjson.get_item_details(item.tvshowid, mediatypes.TVSHOW)['file']
             processed = utils.get_simpledict_updates(item.art, function(item))
             if processed:
                 info.update_art_in_library(item.mediatype, item.dbid, processed)
                 changedcount += len(processed)
-            if monitor.abortRequested():
+            if monitor.abortRequested() or fg and progress.iscanceled():
                 break
         return changedcount
 
     fixcount = 0
-    for i, (list_fn, message) in enumerate(steps_to_run):
+    for i, (list_fn, listtype) in enumerate(steps_to_run):
         start = i * stepsize
-        progress.update(start, message=message)
+        if fg:
+            progress.update(start, line1=L(M.LISTING_ALL).format(listtype))
+        else:
+            progress.update(start, message=L(M.LISTING_ALL).format(listtype))
         fixcount += update_art_for_items(list_fn(), start)
-        if monitor.abortRequested():
+        if monitor.abortRequested() or fg and progress.iscanceled():
             break
     progress.close()
     return fixcount

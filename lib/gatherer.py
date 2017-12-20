@@ -18,8 +18,7 @@ class Gatherer(object):
     def getartwork(self, mediaitem, skipexisting=True):
         services_hit = False
         error = None
-        mediaitem.forcedart = self.get_forced_artwork(mediaitem.mediatype, mediaitem.file,
-            mediaitem.seasons, not skipexisting)
+        mediaitem.forcedart = self.get_forced_artwork(mediaitem, not skipexisting)
         existingtypes = [key for key, url in mediaitem.art.iteritems() if url]
         existingtypes.extend(mediaitem.forcedart.keys())
         if skipexisting:
@@ -35,15 +34,15 @@ class Gatherer(object):
             _sort_images(arttype, imagelist, mediaitem.sourcemedia, self.language)
         return services_hit, error
 
-    def get_forced_artwork(self, mediatype, mediafile, seasons, allowmutiple=False):
-        if not mediafile:
+    def get_forced_artwork(self, mediaitem, allowmutiple=False):
+        if not mediaitem.file:
             return {}
         resultimages = {}
-        for provider in providers.forced.get(mediatype, ()):
-            for arttype, image in provider.get_exact_images(mediafile).iteritems():
+        for provider in providers.forced.get(mediaitem.mediatype, ()):
+            for arttype, image in provider.get_exact_images(mediaitem).iteritems():
                 if arttype.startswith('season.'):
                     season = arttype.rsplit('.', 2)[1]
-                    if int(season) not in seasons:
+                    if int(season) not in mediaitem.seasons:
                         continue
                 if allowmutiple:
                     if arttype not in resultimages:

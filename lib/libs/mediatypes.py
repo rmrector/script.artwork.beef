@@ -225,16 +225,28 @@ artinfo = {
     }
 }
 
-settings = [m[0] + '.' + art[0] + ('_limit' if art[1]['multiselect'] else '')
+central_directories = {MOVIESET: False}
+arttype_settingskeys = [m[0] + '.' + art[0] + ('_limit' if art[1]['multiselect'] else '')
     for m in artinfo.iteritems() for art in m[1].iteritems()]
 
 def update_settings():
-    for settingid in settings:
+    for settingid in arttype_settingskeys:
         splitsetting = re.split(r'\.|_', settingid)
         try:
             artinfo[splitsetting[0]][splitsetting[1]]['autolimit'] = _get_autolimit_from_setting(settingid)
         except ValueError:
             addon.set_setting(settingid, artinfo[splitsetting[0]][splitsetting[1]]['autolimit'])
+    oldset_enabled = addon.get_setting('setartwork_fromcentral')
+    if oldset_enabled != '':
+        addon.set_setting('centraldir.set_enabled', oldset_enabled)
+        addon.set_setting('setartwork_fromcentral', '')
+        if oldset_enabled:
+            addon.set_setting('centraldir.set_dir', addon.get_setting('setartwork_dir'))
+            addon.get_setting('setartwork_dir', '')
+    for mediatype in central_directories:
+        central_directories[mediatype] = addon.get_setting('centraldir.{0}_enabled'.format(mediatype))
+        if central_directories[mediatype]:
+            central_directories[mediatype] = addon.get_setting('centraldir.{0}_dir'.format(mediatype))
 
 def _get_autolimit_from_setting(settingid):
     result = addon.get_setting(settingid)

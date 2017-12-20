@@ -35,9 +35,8 @@ class NFOFileAbstractProvider(object):
 class NFOFileSeriesProvider(NFOFileAbstractProvider):
     mediatype = mediatypes.TVSHOW
 
-    def get_exact_images(self, path):
-        path += 'tvshow.nfo'
-        root = read_nfofile(path)
+    def get_exact_images(self, mediaitem):
+        root = read_nfofile(mediaitem.file + 'tvshow.nfo')
         if root is None or root.find('art') is None:
             return {}
 
@@ -67,8 +66,8 @@ class NFOFileSeriesProvider(NFOFileAbstractProvider):
 class NFOFileMovieProvider(NFOFileAbstractProvider):
     mediatype = mediatypes.MOVIE
 
-    def get_exact_images(self, path):
-        paths = get_movie_path_list(path)
+    def get_exact_images(self, mediaitem):
+        paths = get_movie_path_list(mediaitem.file)
         paths = [os.path.splitext(p)[0] + '.nfo' for p in paths]
         paths.append(os.path.dirname(paths[0]) + '/movie.nfo')
 
@@ -93,7 +92,8 @@ class NFOFileMovieProvider(NFOFileAbstractProvider):
 class NFOFileMovieSetProvider(NFOFileAbstractProvider):
     mediatype = mediatypes.MOVIESET
 
-    def get_exact_images(self, path):
+    def get_exact_images(self, mediaitem):
+        path = mediaitem.file
         if os.path.basename(path):
             paths = [os.path.splitext(path)[0] + '.nfo', os.path.splitext(path)[0] + '/set.nfo']
         else:
@@ -119,9 +119,8 @@ class NFOFileMovieSetProvider(NFOFileAbstractProvider):
 class NFOFileEpisodeProvider(NFOFileAbstractProvider):
     mediatype = mediatypes.EPISODE
 
-    def get_exact_images(self, path):
-        path = os.path.splitext(path)[0] + '.nfo'
-        root = read_nfofile(path)
+    def get_exact_images(self, mediaitem):
+        root = read_nfofile(os.path.splitext(mediaitem.file)[0] + '.nfo')
         if root is None or root.find('art') is None:
             return {}
 
@@ -137,7 +136,8 @@ class NFOFileEpisodeProvider(NFOFileAbstractProvider):
 class NFOFileMusicVideoProvider(NFOFileAbstractProvider):
     mediatype = mediatypes.MUSICVIDEO
 
-    def get_exact_images(self, path):
+    def get_exact_images(self, mediaitem):
+        path = mediaitem.file
         artlist = None
         for nfopath in (os.path.splitext(path)[0] + '.nfo', os.path.dirname(path) + '/musicvideo.nfo'):
             root = read_nfofile(nfopath)
