@@ -94,15 +94,17 @@ def iter_renumbered_artlist(urllist, basetype, original_arttypes):
         if type_base == basetype and index >= i:
             yield arttype, None
 
-def iter_missing_arttypes(mediaitem, existingarttypes):
+def iter_missing_arttypes(mediaitem, fromtypes):
     for arttype, artinfo in mediatypes.artinfo[mediaitem.mediatype].iteritems():
         if arttype in mediaitem.skip_artwork or not artinfo['autolimit']:
             continue
         elif artinfo['autolimit'] == 1:
-            if arttype not in existingarttypes:
+            if arttype not in fromtypes:
                 yield arttype
         else:
-            artcount = sum(1 for art in existingarttypes if arttype_matches_base(art, arttype))
+            if _has_localart(arttype, mediaitem.art, fromtypes):
+                continue # Can't easily tell if existing art matches new URLs, so don't add new on updates
+            artcount = sum(1 for art in fromtypes if arttype_matches_base(art, arttype))
             if artcount < artinfo['autolimit']:
                 yield arttype
 
@@ -114,12 +116,20 @@ def iter_missing_arttypes(mediaitem, existingarttypes):
                 if not artinfo['autolimit']:
                     continue
                 elif artinfo['autolimit'] == 1:
-                    if arttype not in existingarttypes:
+                    if arttype not in fromtypes:
                         yield arttype
                 else:
-                    artcount = sum(1 for art in existingarttypes if arttype_matches_base(art, arttype))
+                    artcount = sum(1 for art in fromtypes if arttype_matches_base(art, arttype))
                     if artcount < artinfo['autolimit']:
                         yield arttype
+
+def _has_localart(arttype, existingart, fromtypes):
+    for art in fromtypes:
+        if not arttype_matches_base(art, arttype):
+            continue
+        if art in existingart and not existingart[art].startswith(pykodi.notlocalimages):
+            return True
+    return False
 
 def get_basetype(arttype):
     return arttype.rstrip('0123456789')
