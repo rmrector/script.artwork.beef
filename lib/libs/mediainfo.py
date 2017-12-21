@@ -178,7 +178,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
             tvshowids = quickjson.get_item_details(mediaitem.tvshowid, mediatypes.TVSHOW)['uniqueid']
             tvshowid = tvshowids.get('tmdb', tvshowids.get('unknown'))
             if tvshowid:
-                mediaitem.uniqueids['tmdb_se'] = '{0}/{1}/{2}'.format(tvshowid, mediaitem.season, mediaitem.episode)
+                mediaitem.uniqueids['tmdbse'] = '{0}/{1}/{2}'.format(tvshowid, mediaitem.season, mediaitem.episode)
     elif mediaitem.mediatype == mediatypes.MOVIESET:
         if not mediaitem.uniqueids.get('tmdb'):
             uniqueid = processed.get_data(mediaitem.dbid, mediaitem.mediatype, mediaitem.label)
@@ -257,7 +257,7 @@ def _get_uniqueids(jsondata, mediatype):
     uniqueids = jsondata.get('uniqueid', {})
     if '/' in uniqueids.get('tvdb', ''):
         # PlexKodiConnect sets these
-        uniqueids['tvdb_se'] = uniqueids['tvdb']
+        uniqueids['tvdbse'] = uniqueids['tvdb']
         del uniqueids['tvdb']
     if 'unknown' in uniqueids:
         uniqueid = uniqueids['unknown']
