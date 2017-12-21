@@ -103,13 +103,13 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
             return {}
         if not self.baseurl:
             return {}
-        mediaid = get_mediaid(uniqueids, ('tmdb_se', 'tvdb', 'tvdb_se', 'unknown'))
+        mediaid = get_mediaid(uniqueids, ('tmdbse', 'tvdb', 'tvdbse', 'unknown'))
         if not mediaid:
             return {}
-        if 'tmdb_se' in uniqueids:
+        if 'tmdbse' in uniqueids:
             splits = mediaid.split('/')
             data = {'show_id': splits[0], 'season_number': splits[1], 'episode_number': splits[2]}
-        elif 'tvdb_se' in uniqueids and 'tvdb' not in uniqueids:
+        elif 'tvdbse' in uniqueids and 'tvdb' not in uniqueids:
             splits = mediaid.split('/')
             data = self.get_data(self.tvdbidsearch_url % mediaid)
             if not data or not data['tv_results']:
