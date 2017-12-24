@@ -170,9 +170,9 @@ class ArtworkSelector(xbmcgui.WindowXMLDialog):
             listitem.setLabel2(summary)
             # DEPRECATED: Above Krypton and higher (only), below Jarvis and lower (only)
             listitem.setProperty('Addon.Summary', summary)
-            listitem.setIconImage(image['url'] if settings.hqpreview else image['preview'])
+            listitem.setIconImage(image['preview'])
             # DEPRECATED: Above is deprecated in Jarvis, but still works through Krypton (at least)
-            # listitem.setArt({'icon': image['url'] if settings.hqpreview else image['preview']})
+            # listitem.setArt({'icon': image['preview']})
             listitem.setPath(image['url'])
             if image.get('existing'):
                 listitem.select(True)
