@@ -67,7 +67,6 @@
 		<setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />
 		<setting id="fanarttv_key" label="32905" type="text" />
 		<setting id="report_peritem" label="32916" type="bool" default="false" />
-		<setting id="highquality_preview" label="32903" type="bool" default="false" />
 		<setting label="$LOCALIZE[744]" type="lsep" />
 		<setting id="episode.thumb_generate" label="32914" type="bool" default="false" />
 		<setting id="movie.thumb_generate" label="32915" type="bool" default="false" />
