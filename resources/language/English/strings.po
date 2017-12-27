@@ -337,6 +337,26 @@ msgctxt "#32923"
 msgid "Download all processed artwork to file system"
 msgstr ""
 
+msgctxt "#32924"
+msgid "Progress display for automatic processing"
+msgstr ""
+
+msgctxt "#32925"
+msgid "full progress bar"
+msgstr ""
+
+msgctxt "#32926"
+msgid "just warnings and errors"
+msgstr ""
+
+msgctxt "#32927"
+msgid "only add-on crashes"
+msgstr ""
+
+msgctxt "#32928"
+msgid "Show final artwork update count notification"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"

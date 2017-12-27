@@ -9,7 +9,7 @@ from lib.artworkselection import prompt_for_artwork
 from lib.downloader import Downloader, DownloaderError
 from lib.gatherer import Gatherer
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
-from lib.libs.addonsettings import settings
+from lib.libs.addonsettings import settings, PROGRESS_DISPLAY_FULLPROGRESS, PROGRESS_DISPLAY_NONE
 from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import datetime_now, localize as L, log
 from lib.libs.utils import SortedDisplay, natural_sort, get_simpledict_updates
@@ -46,18 +46,31 @@ class ArtworkProcessor(object):
         self.downloader = None
 
     def create_progress(self):
-        if not self.visible:
+        if not self.visible and settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
             self.progress.create("Artwork Beef: " + L(ADDING_ARTWORK_MESSAGE), "")
             self.visible = True
 
     def update_progress(self, percent, message, heading=None):
-        if self.visible:
+        if self.visible and settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
             self.progress.update(percent, heading, message)
 
+    def finalupdate(self, header, message):
+        if settings.final_notification:
+            xbmcgui.Dialog().notification("Artwork Beef: " + header, message, '-', 8000)
+        elif settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
+            self.update_progress(100, message, header)
+            self.monitor.waitForAbort(8)
+
     def close_progress(self):
-        if self.visible:
+        if self.visible and settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
             self.progress.close()
             self.visible = False
+
+    def notify_warning(self, message, header=None, error=False):
+        if settings.progressdisplay != PROGRESS_DISPLAY_NONE:
+            header = "Artwork Beef: " + header if header else "Artwork Beef"
+            xbmcgui.Dialog().notification(header, message,
+                xbmcgui.NOTIFICATION_ERROR if error else xbmcgui.NOTIFICATION_WARNING)
 
     def init_run(self, show_progress=False):
         self.setlanguages()
@@ -184,7 +197,7 @@ class ArtworkProcessor(object):
             except DownloaderError as ex:
                 mediaitem.error = ex.message
                 log(ex.message, xbmc.LOGERROR)
-                xbmcgui.Dialog().notification("Artwork Beef", ex.message, xbmcgui.NOTIFICATION_ERROR)
+                self.notify_warning(ex.message, None, True)
                 reporting.report_item(mediaitem, True)
                 aborted = True
                 break
@@ -200,12 +213,8 @@ class ArtworkProcessor(object):
                 break
 
         reporting.report_end(medialist, currentitem if aborted else 0, self.downloader.size)
-        if alwaysnotify:
-            notifycount(artcount)
-        elif artcount:
-            header, message = finalmessages(artcount)
-            self.update_progress(100, message, header)
-            self.monitor.waitForAbort(8)
+        if artcount or alwaysnotify:
+            self.finalupdate(*finalmessages(artcount))
         self.finish_run()
         return not aborted
 
@@ -269,7 +278,7 @@ class ArtworkProcessor(object):
                 msg = '{0}: {1}'.format(header, error['message'])
                 mediaitem.error = msg
                 log(msg, xbmc.LOGWARNING)
-                xbmcgui.Dialog().notification(header, error['message'], xbmcgui.NOTIFICATION_WARNING)
+                self.notify_warning(error['message'], header)
         elif auto:
             if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.skip_artwork) and \
                     mediatype != mediatypes.SONG:
