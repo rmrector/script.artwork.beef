@@ -7,6 +7,10 @@ addon = pykodi.get_main_addon()
 DEFAULT_IMAGESIZE = '1920x1080'
 AVAILABLE_IMAGESIZES = {'1920x1080': (1920, 1080, 700), '1280x720': (1280, 720, 520)}
 
+PROGRESS_DISPLAY_FULLPROGRESS = '0'
+PROGRESS_DISPLAY_WARNINGSERRORS = '1'
+PROGRESS_DISPLAY_NONE = '2' # Only add-on crashes
+
 class Settings(object):
     def __init__(self):
         self.addon_path = addon.path
@@ -37,6 +41,8 @@ class Settings(object):
         self.fanarttv_clientkey = addon.get_setting('fanarttv_key')
         self.default_tvidsource = addon.get_setting('default_tvidsource')
         self.prefer_tmdbartwork = addon.get_setting('prefer_tmdbartwork')
+        self.progressdisplay = addon.get_setting('progress_display')
+        self.final_notification = addon.get_setting('final_notification')
 
         self.language_override = addon.get_setting('language_override')
         if self.language_override == 'None':
