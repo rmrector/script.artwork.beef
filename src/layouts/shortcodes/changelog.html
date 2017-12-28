@@ -1,0 +1,7 @@
+{{ if eq (.Get 0) "feature" }}
+<span class="changelogtag featuretag">Feature</span>
+{{ else if eq (.Get 0) "fix" }}
+<span class="changelogtag fixtag">Fix</span>
+{{ else if eq (.Get 0) "cleanup" }}
+<span class="changelogtag cleanuptag">Cleanup</span>
+{{ end }}

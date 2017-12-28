@@ -1,0 +1,13 @@
+baseURL = "https://rmrector.github.io/script.artwork.beef/"
+canonifyURLs = true
+languageCode = "en-us"
+title = "Artwork Beef"
+theme = "hugo-theme-learn"
+publishDir = "../"
+
+[outputs]
+home = ["HTML", "RSS", "JSON"]
+
+[params]
+disableInlineCopyToClipBoard = false
+disableAssetsBusting = true

@@ -393,7 +393,7 @@ h1 .subtitle {
 
 
 <p>For the most part, skins will still access images in the same Kodi standard way.
-Episode and season backdrops may just work, depending on how your skin accesses them when listing
+Episode and season fanart may just work, depending on how your skin accesses them when listing
 episodes or seasons. <code>$INFO[ListItem.Art(fanart)]</code> pulls the episode or season backdrop if it exists,
 otherwise, Kodi falls back to the series backdrop.</p>
 
@@ -407,7 +407,9 @@ it can still have a noticeable delay compared to directly accessing other artwor
 (especially on Windows). There is a way to gather these images without an add-on, but it&rsquo;s a bit more
 work. See <a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/">Fun without add-ons</a> for an example.</p>
 
-<p>Skins should not list Artwork Beef as a dependency.</p>
+<p>Skins should not list Artwork Beef as a dependency, nor depend on its installation for displaying
+artwork, as Artwork Beef isn&rsquo;t the only one that can set these. Check for the existence of
+<code>fanart1</code> to tell if the ListItem has these multiple fanart.</p>
 
 
 <footer class=" footline" >

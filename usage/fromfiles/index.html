@@ -392,7 +392,7 @@ h1 .subtitle {
 <li><a href="#legacy-names">Legacy names</a></li>
 </ul></li>
 <li><a href="#from-nfo-files">From NFO files</a></li>
-<li><a href="#exporting-artwork-from-here">Exporting artwork from here</a></li>
+<li><a href="#downloading-artwork-to-share-with-multiple-kodi-devices">Downloading artwork to share with multiple Kodi devices</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -419,7 +419,7 @@ h1 .subtitle {
 
 <p>Artwork Beef will pick up any properly named artwork files next to your media. It has two
 conventions for loading most artwork: <code>[media file name]-[art type].[ext]</code> for movies,
-episodes, and music videos, and <code>[art type].[ext]</code> for TV shows and as an alternative for
+episodes, and music videos, and <code>[art type].[ext]</code> for TV shows and as a less specific alternative for
 movies and music videos with their own directories.</p>
 
 <p><code>[art type]</code> must be alphanumeric, lowercase, and no longer than 20 characters, but can
@@ -484,9 +484,9 @@ in the same directory as the original as the original version.</p>
 <h3 id="movie-collection-artwork">Movie collection artwork</h3>
 
 <p>Movie collection artwork can be pulled from a central directory (configured in the add-on settings)
-containing artwork named in a similar fashion to both options above.
+containing artwork named in a similar fashion to the second option above.
 Movie collections generally don&rsquo;t have an individual file nor folder they can call their own,
-so instead use the set&rsquo;s name as the base file or directory name. Remove characters which are not
+so instead use the set&rsquo;s name as the directory name. Remove characters which are not
 file system safe, like <code>:?&quot;/\&lt;&gt;*|</code>, and make sure directories do not end with a space or period.
 Artwork Beef will be more lenient in its matching to catch styles that other tools may use,
 but those two simple rules should always steer true.</p>
@@ -494,41 +494,24 @@ but those two simple rules should always steer true.</p>
 <p>A few specific examples are</p>
 
 <ul>
-<li><code>... /collectionart/Movie Collection Name-poster.jpg</code></li>
-<li><code>... /collectionart/Movie Collection Name-fanart.jpg</code></li>
-<li><code>... /collectionart/Movie Collection Name-fanart1.jpg</code></li>
-<li><code>... /collectionart/Movie Collection Name-clearlogo.png</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name/poster.jpg</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name/fanart.jpg</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name/fanart1.jpg</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name/clearlogo.png</code></li>
 <li>an NFO file named
 
 <ul>
-<li><code>... /collectionart/Movie Collection Name.nfo</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name/set.nfo</code></li>
 </ul></li>
 </ul>
-
-<p>Or</p>
-
-<ul>
-<li><code>... /collectionart/Movie Collection Name/poster.jpg</code></li>
-<li><code>... /collectionart/Movie Collection Name/fanart.jpg</code></li>
-<li><code>... /collectionart/Movie Collection Name/fanart1.jpg</code></li>
-<li><code>... /collectionart/Movie Collection Name/clearlogo.png</code></li>
-<li>an NFO file named
-
-<ul>
-<li><code>... /collectionart/Movie Collection Name/set.nfo</code></li>
-</ul></li>
-</ul>
-
-<p>Artwork Beef can also be configured to pull collection artwork from a parent directory of movies,
-if one of the directory names exactly matches the cleaned collection name, with artwork
-named <code>[art type].[ext]</code>, NFO file named set.nfo.</p>
 
 <h3 id="legacy-names">Legacy names</h3>
 
 <p>It will also pull in artwork files that match Artwork Downloader file names, in cases where
 they are different than the art types used in Kodi; for instance, logo.png is added as clearlogo
 and extrafanart are added as fanart#. Ditto Movie Set Artwork Automator, but only for its
-default filenames (logo.png to clearlogo, folder.jpg to thumb).</p>
+default file names (logo.png to clearlogo, folder.jpg to thumb). This is controlled with an
+add-on setting, enabled by default.</p>
 
 <h2 id="from-nfo-files">From NFO files</h2>
 
@@ -539,7 +522,6 @@ exact artwork type and a URL to the image.</p>
 <pre><code class="language-xml">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; ?&gt;
 &lt;tvshow&gt; &lt;!-- Or 'movie', 'episodedetails', 'set', 'musicvideo' --&gt;
   &lt;title&gt;TV Show 1&lt;/title&gt;
-  &lt;year&gt;2012&lt;/year&gt;
   &lt;!-- ... --&gt;
   &lt;art&gt;
     &lt;!-- The tag is the exact artwork type, freely named (lowercase alphanumeric), and the content is the URL to the image --&gt;
@@ -572,23 +554,12 @@ exact artwork type and a URL to the image.</p>
 &lt;/tvshow&gt;
 </code></pre>
 
-<h2 id="exporting-artwork-from-here">Exporting artwork from here</h2>
+<h2 id="downloading-artwork-to-share-with-multiple-kodi-devices">Downloading artwork to share with multiple Kodi devices</h2>
 
-<p>Artwork Beef doesn&rsquo;t download artwork, and this makes things rough if you want Artwork Beef
-to manage artwork AND keep local copies of artwork.</p>
-
-<p>It can be done, though. Kodi includes most of this artwork in its export, except movie collections.
-However, it will only export images that it has already cached, and that cached image is frequently
-resized, so this may not be the best way to go if you want to share artwork among several regularly used Kodi clients.</p>
-
-<p>There is another option if you don&rsquo;t mind running a console command every now and then.
-The <a href="https://github.com/MilhouseVH/texturecache.py">Texture Cache Maintenance</a> utility has
-a separate tool <code>mklocal.py</code> that will download the full-sized version of each image in the
-library to exactly the right filename, and replace all URLs in the library with local paths.
-So run Artwork Beef on one master Kodi to grab new images from web services, then run mklocal
-to stick them all in the file system. Configure Artwork Beef on the other Kodi clients to
-&ldquo;Automatically add from filesystem only&rdquo; to prevent them from repeating the same API
-calls. If you have a shared MySQL library, Artwork Beef isn&rsquo;t necessary on other clients.</p>
+<p>Enable the option &ldquo;Download all processed artwork to file system&rdquo; and
+Artwork Beef will download all artwork for each item processed automatically, and any images
+selected manually. Images will be saved next to the media files with the most specific
+file names detailed above.</p>
 
 
 <footer class=" footline" >

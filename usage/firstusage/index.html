@@ -403,12 +403,18 @@ h1 .subtitle {
 in the collection. You may want to run Artwork Beef from Program Add-ons and remove all existing artwork from
 movie collections before running Artwork Beef&rsquo;s full process.</li>
 <li>If you manage all of your artwork with <strong>image files</strong> and/or NFO files, the add-on setting
-&ldquo;Auto add artwork from filesystem only&rdquo; under &ldquo;Advanced&rdquo; will prevent the add-on from
-querying the web services during automatic processing, saving time and network resources.</li>
-<li>It defaults to download a wide array of artwork, but there are add-on settings to specify
-exactly which types of artwork and how many to download automatically.</li>
-<li>If you have multiple Kodi installations sharing a database, only enable the automatic
-processing on one of them.</li>
+&ldquo;Auto add artwork from file system only&rdquo; under &ldquo;Advanced&rdquo; will prevent the add-on from
+querying the web services during automatic processing, saving time and network resources.
+
+<ul>
+<li>You may want to disable &ldquo;Update artwork for old items daily&rdquo; if you don&rsquo;t frequently add
+new artwork for existing items in the library.</li>
+</ul></li>
+<li>If you have multiple Kodi devices sharing a MySQL database, only enable the
+automatic processing on one of them.</li>
+<li>For multiple Kodi devices with their own databases and you want Artwork Beef to download
+<strong>image files</strong> to be shared across them, enable &ldquo;Auto add artwork from file system only&rdquo; on
+all but the master Kodi device.</li>
 </ul>
 
 <p>Okay, so these are more interesting just <em>after</em> the first run:</p>
