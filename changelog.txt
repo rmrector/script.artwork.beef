@@ -1,3 +1,10 @@
+v0.13.0 (2017-12-27)
+- feature: add option to download artwork
+- feature: add options to change the in progress display
+- fix: don't automatically add fanart for old items from web services if they have
+  any local fanart to avoid adding duplicates
+- fix: set music video 'discart' rather than 'cdart'
+
 v0.12.4 (2017-12-05)
 - Feature: 'clearart' for music videos (from artist)
 - Fix: warn instead of error when music video IDs not found
