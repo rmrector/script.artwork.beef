@@ -1,6 +1,6 @@
 ---
 title: "NFO and image files"
-date: 2017-11-21T22:45:58-07:00
+date: 2017-12-28T22:45:58-07:00
 weight: 3
 ---
 
@@ -9,7 +9,7 @@ weight: 3
 Artwork Beef will pick up any properly named artwork files next to your media. It has two
 conventions for loading most artwork: `[media file name]-[art type].[ext]` for movies,
 episodes, and music videos, and `[art type].[ext]` for TV shows and as a less specific alternative for
-movies and music videos with their own directories.
+movies and music videos with their own directories. This generally matches Kodi's file naming conventions.
 
 `[art type]` must be alphanumeric, lowercase, and no longer than 20 characters, but can
 otherwise be freely named. They should exactly match the name that skins can use to access
@@ -45,7 +45,7 @@ base file name to use. Artwork for `//MRHOOD/TVShows/TV Show 1/` can generally b
 `//MRHOOD/TVShows/TV Show 1/[art type].[ext]`. Movies and music videos stored in separate directories
 can also use this style, though if both styles exist for one movie it will choose the other,
 more specific, one -- handy for 3D or special editions that have their own artwork, if you keep them
-in the same directory as the original as the original version.
+in the same directory.
 
 A few specific examples
 
@@ -85,7 +85,8 @@ It will also pull in artwork files that match Artwork Downloader file names, in 
 they are different than the art types used in Kodi; for instance, logo.png is added as clearlogo
 and extrafanart are added as fanart#. Ditto Movie Set Artwork Automator, but only for its
 default file names (logo.png to clearlogo, folder.jpg to thumb). This is controlled with an
-add-on setting, enabled by default.
+add-on setting, enabled by default. It also supports other file paths that MSAA supported,
+though I do not suggest you use them for a new setup.
 
 ## From NFO files
 
