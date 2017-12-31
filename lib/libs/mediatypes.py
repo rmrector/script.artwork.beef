@@ -242,7 +242,7 @@ def update_settings():
         addon.set_setting('setartwork_fromcentral', '')
         if oldset_enabled:
             addon.set_setting('centraldir.set_dir', addon.get_setting('setartwork_dir'))
-            addon.get_setting('setartwork_dir', '')
+            addon.set_setting('setartwork_dir', '')
     for mediatype in central_directories:
         central_directories[mediatype] = addon.get_setting('centraldir.{0}_enabled'.format(mediatype))
         if central_directories[mediatype]:
