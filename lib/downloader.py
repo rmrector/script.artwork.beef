@@ -22,6 +22,13 @@ class Downloader(object):
         self.size = 0
 
     def downloadfor(self, mediaitem, allartwork=True):
+        if allartwork:
+            nowart = dict(mediaitem.art)
+            nowart.update(mediaitem.selectedart)
+        else:
+            nowart = dict(mediaitem.selectedart)
+        if not something_todownload(nowart):
+            return False, ''
         basefile = utils.find_central_infodir(mediaitem, True)
         path = basefile
         if not basefile:
@@ -30,11 +37,6 @@ class Downloader(object):
             path = utils.get_movie_path_list(mediaitem.file)[0] \
                 if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
             basefile = os.path.splitext(path)[0]
-        if allartwork:
-            nowart = dict(mediaitem.art)
-            nowart.update(mediaitem.selectedart)
-        else:
-            nowart = dict(mediaitem.selectedart)
         services_hit = False
         error = None
         def st(num):
@@ -87,6 +89,12 @@ class Downloader(object):
             return None, L(HTTP_ERROR).format(message)
         except RequestException as ex:
             return None, L(HTTP_ERROR).format(type(ex).__name__)
+
+def something_todownload(artmap):
+    for arttype, url in artmap.iteritems():
+        if url and url.startswith('http'):
+            return True
+    return False
 
 class DownloaderError(Exception):
     def __init__(self, message, cause=None):
