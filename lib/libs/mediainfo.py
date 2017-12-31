@@ -44,7 +44,7 @@ class MediaItem(object):
             if mediatypes.central_directories[mediatypes.MOVIESET]:
                 self.file = mediatypes.central_directories[mediatypes.MOVIESET] + self.label + '.ext'
         elif self.mediatype == mediatypes.MUSICVIDEO:
-            self.label = jsondata['artist'][0] + ' - ' + jsondata['title']
+            self.label = musicvideo_label(jsondata)
 
         self.seasons = None
         self.availableart = {}
@@ -54,6 +54,9 @@ class MediaItem(object):
         self.updatedart = []
         self.downloadedart = {}
         self.error = None
+
+def musicvideo_label(jsondata):
+    return jsondata['artist'][0] + ' - ' + jsondata['title'] if len(jsondata['artist']) else jsondata['title']
 
 def is_known_mediatype(jsondata):
     return any(x[0] in jsondata for x in idmap)
