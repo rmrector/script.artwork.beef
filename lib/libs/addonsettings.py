@@ -21,6 +21,12 @@ class Settings(object):
 
     def update_useragent(self):
         beefversion = pykodi.get_main_addon().version
+        if pykodi.get_kodi_version() < 17:
+            from lib.libs import quickjson
+            props = quickjson.get_application_properties(['name', 'version'])
+            appversion = '{0}.{1}'.format(props['version']['major'], props['version']['minor'])
+            self.useragent = 'ArtworkBeef/{0} {1}/{2}'.format(beefversion, props['name'], appversion)
+            return
         self.useragent = 'ArtworkBeef/{0} '.format(beefversion) + xbmc.getUserAgent()
 
     def update_settings(self):
