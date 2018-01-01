@@ -10,7 +10,8 @@ api_key = '***REMOVED***'
 # url param i=MB track/album/artist ID
 artmap = {'mbtrack': {'datakey':'track', 'artmap': {'strTrackThumb': 'thumb'},
         'url': 'http://www.theaudiodb.com/api/v1/json/{0}/track-mb.php'.format(api_key)},
-    'mbgroup': {'datakey':'album', 'artmap': {'strAlbumThumb': 'thumb', 'strAlbumCDart': 'discart'},
+    'mbgroup': {'datakey':'album', 'artmap': {'strAlbumThumb': 'thumb', 'strAlbumCDart': 'discart',
+            'strAlbumThumbBack': 'back', 'strAlbumSpine': 'spine'},
         'url': 'http://www.theaudiodb.com/api/v1/json/{0}/album-mb.php'.format(api_key)},
     'mbartist': {'datakey':'artists', 'artmap': {'strArtistThumb': 'thumb', 'strArtistLogo': 'clearlogo',
             'strArtistBanner': 'banner', 'strArtistFanart': 'fanart', 'strArtistFanart2': 'fanart',
@@ -20,7 +21,7 @@ artmap = {'mbtrack': {'datakey':'track', 'artmap': {'strTrackThumb': 'thumb'},
 provtypes = set(x for data in artmap.values() for x in data['artmap'].values())
 
 def provides(types):
-    return set(types) & provtypes
+    return bool(set(types) & provtypes)
 
 class TheAudioDBAbstractProvider(AbstractImageProvider):
     name = SortedDisplay('theaudiodb.com', 'TheAudioDB.com')

@@ -92,6 +92,13 @@ class ArtworkService(xbmc.Monitor):
                         self.last_videoupdate = get_date()
                 elif signal == 'recentvideos_really':
                     self.process_recentvideos()
+                elif signal == 'allmusic':
+                    self.process_allmusic()
+                elif signal == 'unprocessedmusic':
+                    self.process_allmusic(self.processed.does_not_exist)
+                elif signal == 'oldmusic':
+                    if self.process_allmusic(self.processed.is_stale):
+                        self.last_musicupdate = get_date()
                 self.status = STATUS_IDLE
 
     def abortRequested(self):
@@ -254,6 +261,26 @@ class ArtworkService(xbmc.Monitor):
 
         self.reset_recent()
         self.processor.process_medialist(newitems)
+
+    def process_allmusic(self, shouldinclude_fn=None):
+        if not shouldinclude_fn:
+            shouldinclude_fn = lambda id, type, label: True
+        items = [info.MediaItem(artist) for artist in quickjson.get_item_list(mediatypes.ARTIST)
+            if shouldinclude_fn(artist['artistid'], mediatypes.ARTIST, artist['label'])]
+        if self.abortRequested():
+            return False
+        albums = quickjson.get_albums()
+        if self.abortRequested():
+            return False
+        for album in albums:
+            if not shouldinclude_fn(album['albumid'], mediatypes.ALBUM, album['label']):
+                continue
+            items.append(info.MediaItem(album))
+            if len(albums) < 200:
+                items.extend(info.MediaItem(song) for song in quickjson.get_songs(mediatypes.ALBUM, album['albumid']))
+            if self.abortRequested():
+                return False
+        return self.processor.process_medialist(items)
 
     def onSettingsChanged(self):
         settings.update_settings()

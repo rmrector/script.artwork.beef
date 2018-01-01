@@ -11,7 +11,7 @@ from lib.gatherer import Gatherer
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings, PROGRESS_DISPLAY_FULLPROGRESS, PROGRESS_DISPLAY_NONE
 from lib.libs.processeditems import ProcessedItems
-from lib.libs.pykodi import datetime_now, localize as L, log
+from lib.libs.pykodi import datetime_now, get_kodi_version, localize as L, log
 from lib.libs.utils import SortedDisplay, natural_sort, get_simpledict_updates
 from lib.providers import search
 
@@ -94,7 +94,7 @@ class ArtworkProcessor(object):
         if mode == MODE_GUI:
             busy = pykodi.get_busydialog()
             busy.create()
-        if mediatype in mediatypes.artinfo and mediatype not in mediatypes.audiotypes:
+        if mediatype in mediatypes.artinfo and (mediatype not in mediatypes.audiotypes or get_kodi_version() >= 18):
             mediaitem = info.MediaItem(quickjson.get_item_details(dbid, mediatype))
         else:
             if mode == MODE_GUI:
@@ -125,6 +125,10 @@ class ArtworkProcessor(object):
                             episode = info.MediaItem(episode)
                             episode.skip_artwork = ['fanart']
                             medialist.append(episode)
+            elif mediatype == mediatypes.ARTIST:
+                medialist.extend(info.MediaItem(album) for album in quickjson.get_albums(mediaitem.dbid))
+            if mediatype in (mediatypes.ALBUM, mediatypes.ARTIST):
+                medialist.extend(info.MediaItem(song) for song in quickjson.get_songs(mediaitem.dbid))
             self.process_medialist(medialist, True)
 
     def _manual_item_process(self, mediaitem, busy):
@@ -187,7 +191,7 @@ class ArtworkProcessor(object):
         if not singleitemlist:
             reporting.report_start(medialist)
         for mediaitem in medialist:
-            if mediaitem.mediatype in mediatypes.audiotypes:
+            if mediaitem.mediatype in mediatypes.audiotypes and get_kodi_version() < 18:
                 continue
             self.update_progress(currentitem * 100 // len(medialist), mediaitem.label)
             info.add_additional_iteminfo(mediaitem, self.processed, search)

@@ -88,6 +88,9 @@ def notify_count(message, count):
 def add_missing_for():
     options =[(L(M.FOR_NEW_VIDEOS), 'ProcessUnprocessedVideos'), (L(M.FOR_OLD_VIDEOS), 'ProcessOldVideos'),
         (L(M.FOR_ALL_VIDEOS), 'ProcessAllVideos')]
+    if get_kodi_version() >= 18:
+        options.extend(((L(M.FOR_NEW_AUDIO), 'ProcessUnprocessedMusic'), (L(M.FOR_OLD_AUDIO), 'ProcessOldMusic'),
+            (L(M.FOR_ALL_AUDIO), 'ProcessAllMusic')))
 
     selected = xbmcgui.Dialog().select(L(M.ADD_MISSING_FOR), [option[0] for option in options])
     if selected >= 0 and selected < len(options):
@@ -100,6 +103,10 @@ def remove_specific_arttypes():
         (L(M.MOVIESETS), lambda: quickjson.get_item_list(mediatypes.MOVIESET)),
         (L(M.EPISODES), quickjson.get_episodes),
         (L(M.MUSICVIDEOS), lambda: quickjson.get_item_list(mediatypes.MUSICVIDEO))]
+    if get_kodi_version() >= 18:
+        options.extend(((L(M.ARTISTS), lambda: quickjson.get_item_list(mediatypes.ARTIST)),
+            (L(M.ALBUMS), lambda: quickjson.get_item_list(mediatypes.ALBUM)),
+            (L(M.SONGS), lambda: quickjson.get_item_list(mediatypes.SONG))))
 
     selected = xbmcgui.Dialog().select(L(M.REMOVE_SPECIFIC_TYPES), [option[0] + " ..." for option in options])
     if selected >= 0 and selected < len(options):
@@ -194,6 +201,10 @@ def runon_medialist(function, heading, medialist='videos', typelabel=None, fg=Fa
             (lambda: quickjson.get_item_list(mediatypes.MOVIESET), L(M.MOVIESETS)),
             (quickjson.get_episodes, L(M.EPISODES)),
             (lambda: quickjson.get_item_list(mediatypes.MUSICVIDEO), L(M.MUSICVIDEOS))]
+    elif medialist == 'music' and get_kodi_version() >= 18:
+        steps_to_run = [(lambda: quickjson.get_item_list(mediatypes.ARTIST), L(M.ARTISTS)),
+            (lambda: quickjson.get_item_list(mediatypes.ALBUM), L(M.ALBUMS)),
+            (lambda: quickjson.get_item_list(mediatypes.SONG), L(M.SONGS))]
     else:
         steps_to_run = ((lambda: medialist, typelabel),)
     stepsize = 100 // len(steps_to_run)
