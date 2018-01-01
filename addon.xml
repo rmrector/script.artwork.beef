@@ -42,6 +42,7 @@ v0.14.0 (2018-01-??)
 - Feature: music library support (for latest Leia nightlies only)
 - Fix: crash when processing music video without an artist
 - Fix: don't create movie set central directory unless there is artwork to download
+- Fix: crash on Jarvis when building UA
 
 v0.13.0 (2017-12-27)
 - Feature: add option to download artwork
