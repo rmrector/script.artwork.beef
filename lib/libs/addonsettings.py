@@ -26,6 +26,7 @@ class Settings(object):
     def update_settings(self):
         self._autoadd_episodes = addon.get_setting('autoaddepisodes_list') if addon.get_setting('episode.fanart') else ()
         self.enableservice = addon.get_setting('enableservice')
+        self.enableservice_music = addon.get_setting('enableservice_music')
         self.enable_olditem_updates = addon.get_setting('enable_olditem_updates')
         self.generate_episode_thumb = addon.get_setting('episode.thumb_generate')
         self.generate_movie_thumb = addon.get_setting('movie.thumb_generate')

@@ -21,6 +21,7 @@ Full documentation available at https://rmrector.github.io/script.artwork.beef/.
 
 - Scrapers and NFO files need to set web service IDs like IMDB number, TVDB ID, or TMDB ID
   for media types that Kodi supports such IDs for: movies, TV shows, and episodes
+  - Music files need to be tagged with MusicBrainz IDs; Artist, Release Group, and Track IDs
 - It doesn't add animated artwork, yet
 - It's not in the official Kodi repo, yet
 - It cannot set artwork for "all seasons". [related trac ticket](https://trac.kodi.tv/ticket/16139)

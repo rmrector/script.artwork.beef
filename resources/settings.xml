@@ -2,8 +2,10 @@
 <settings>
 	<category label="$LOCALIZE[128]">
 		<setting id="enableservice" label="32900" type="bool" default="true" />
+		<setting id="enableservice_music" label="32922" type="bool" default="false"
+			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
 		<setting id="enable_olditem_updates" subsetting="true" label="32912" type="bool"
-			default="true" visible="eq(-1,true)" />
+			default="true" visible="eq(-1,true) | eq(-2,true)" />
 		<setting id="only_filesystem" label="32904" type="bool" default="false" />
 		<setting id="download_artwork" label="32923" type="bool" default="false" />
 		<setting label="32412" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)"
@@ -62,6 +64,20 @@
 		<setting id="musicvideo.clearart" label="clearart" type="bool" default="true" />
 		<setting id="musicvideo.discart" label="discart" type="bool" default="true" />
 		<setting id="musicvideo.artistthumb" label="artistthumb" type="bool" default="true" />
+	</category>
+	<category label="$LOCALIZE[2]">
+		<setting label="32036" type="lsep" visible="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)]" />
+		<setting label="32053" type="lsep" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.thumb" label="$LOCALIZE[557] thumb" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.fanart_limit" label="$LOCALIZE[557] fanart" type="slider" option="int" default="3" range="0,1,20" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.banner" label="$LOCALIZE[557] banner" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.clearlogo" label="$LOCALIZE[557] clearlogo" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.clearart" label="$LOCALIZE[557] clearart" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="album.discart" label="$LOCALIZE[558] discart" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="album.thumb" label="$LOCALIZE[558] thumb" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="album.back" label="$LOCALIZE[558] back" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="album.spine" label="$LOCALIZE[558] spine" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="song.thumb" label="$LOCALIZE[179] thumb" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
 	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />
