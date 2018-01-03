@@ -8,7 +8,8 @@ import xbmcaddon
 import xbmcgui
 from datetime import datetime
 
-if sys.version_info < (2, 7):
+oldpython = sys.version_info < (2, 7)
+if oldpython:
     import simplejson as json
 else:
     import json
@@ -101,7 +102,16 @@ def execute_jsonrpc(jsonrpc_command):
         jsonrpc_command = json.dumps(jsonrpc_command)
 
     json_result = xbmc.executeJSONRPC(jsonrpc_command)
-    return json.loads(json_result, cls=UTF8JSONDecoder)
+    try:
+        return json.loads(json_result, cls=UTF8JSONDecoder)
+    except UnicodeDecodeError as e:
+        xbmc.log(json_result, xbmc.LOGERROR)
+        try:
+            json.loads(json_result)
+        except UnicodeDecodeError as e2:
+            xbmc.log("Even with regular json.loads", xbmc.LOGERROR)
+            raise e2
+        raise e
 
 def log(message, level=xbmc.LOGDEBUG, tag=None):
     if is_addon_watched() and level < xbmc.LOGNOTICE:
@@ -228,7 +238,8 @@ class UTF8PrettyJSONEncoder(ObjectJSONEncoder):
 
 class UTF8JSONDecoder(json.JSONDecoder):
     def raw_decode(self, s, idx=0):
-        result, end = super(UTF8JSONDecoder, self).raw_decode(s)
+        args = (s,) if oldpython else (s, idx)
+        result, end = super(UTF8JSONDecoder, self).raw_decode(*args)
         result = self._json_unicode_to_str(result)
         return result, end
 
