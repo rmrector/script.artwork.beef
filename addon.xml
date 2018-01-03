@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.14.0~adev" provider-name="rmrector">
+<addon id="script.artwork.beef" name="Artwork Beef" version="0.14.0" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -38,7 +38,7 @@
 		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the file system.</description>
 		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB</disclaimer>
 		<news>
-v0.14.0 (2018-01-??)
+v0.14.0 (2018-01-02)
 - Feature: music library support (for latest Leia nightlies only)
 - Fix: crash when processing music video without an artist
 - Fix: don't create movie set central directory unless there is artwork to download
