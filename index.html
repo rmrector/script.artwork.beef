@@ -359,7 +359,7 @@ h1 .subtitle {
 
 <h1 id="artwork-beef-span-class-subtitle-an-add-on-for-kodi-span">Artwork Beef <span class="subtitle">An add-on for Kodi</span></h1>
 
-<p>Artwork Beef automatically adds extra artwork for media in your video library. It is generally intended to
+<p>Artwork Beef automatically adds extra artwork for media in your media libraries. It is generally intended to
 handle extended artwork just as Kodi and scrapers already do for basic artwork. It grabs artwork from the wonderful web
 services <a href="https://fanart.tv/">fanart.tv</a>, <a href="http://thetvdb.com/">TheTVDB.com</a>, <a href="https://www.themoviedb.org/">The Movie Database</a>, and <a href="https://www.theaudiodb.com/">TheAudioDB.com</a>.</p>
 
@@ -372,15 +372,17 @@ services <a href="https://fanart.tv/">fanart.tv</a>, <a href="http://thetvdb.com
 and season artwork from fanart.tv; movie and movie set artwork from The Movie Database;
 and music video artwork from TheAudioDB.
 For those series that really pop, <a href="https://rmrector.github.io/script.artwork.beef/examples/#episode-fanart">high-quality fanart</a> for each episode can be
-added from The Movie Database.</p>
+added from The Movie Database.
+The music library is supported in Kodi 18 Leia for artists, albums, and songs, with artwork
+from TheAudioDB and fanart.tv.</p>
 
 <p>The full list of artwork types grabbed from external web services:</p>
 
 <table>
 <thead>
 <tr>
-<th></th>
-<th></th>
+<th>media type</th>
+<th>art types</th>
 </tr>
 </thead>
 
@@ -409,11 +411,26 @@ added from The Movie Database.</p>
 <td><strong>episodes</strong></td>
 <td><em>fanart</em></td>
 </tr>
+
+<tr>
+<td><strong>artists</strong></td>
+<td><em>thumb</em>, <em>fanart</em>, <em>banner</em>, <em>clearlogo</em>, <em>clearart</em></td>
+</tr>
+
+<tr>
+<td><strong>albums</strong></td>
+<td><em>thumb</em> (album cover), <em>discart</em>, <em>back</em>, <em>spine</em></td>
+</tr>
+
+<tr>
+<td><strong>songs</strong></td>
+<td><em>thumb</em> (single cover)</td>
+</tr>
 </tbody>
 </table>
 
 <p>Local artwork stored in the file system is preferred if it exists, and Artwork Beef can be configured
-to download other artwork that is added.</p>
+to download other artwork that is added. Local artwork is currently only supported for the video library.</p>
 	
   
         

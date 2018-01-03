@@ -23,11 +23,10 @@
     <item>
       <title>NFO and image files</title>
       <link>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</link>
-      <pubDate>Tue, 21 Nov 2017 22:45:58 -0700</pubDate>
+      <pubDate>Thu, 28 Dec 2017 22:45:58 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</guid>
-      <description>Artwork file naming conventions Artwork Beef will pick up any properly named artwork files next to your media. It has two conventions for loading most artwork: [media file name]-[art type].[ext] for movies, episodes, and music videos, and [art type].[ext] for TV shows and as a less specific alternative for movies and music videos with their own directories.
-[art type] must be alphanumeric, lowercase, and no longer than 20 characters, but can otherwise be freely named.</description>
+      <description>Artwork file naming conventions for the video library Artwork Beef will pick up any properly named artwork files next to your video files. It has two conventions for loading most artwork: [media file name]-[art type].[ext] for movies, episodes, and music videos, and [art type].[ext] for TV shows and as a less specific alternative for movies and music videos with their own directories. This generally matches Kodi&amp;rsquo;s file naming conventions.</description>
     </item>
     
     <item>

@@ -384,7 +384,7 @@ h1 .subtitle {
 <ul>
 <li>
 <ul>
-<li><a href="#artwork-file-naming-conventions">Artwork file naming conventions</a>
+<li><a href="#artwork-file-naming-conventions-for-the-video-library">Artwork file naming conventions for the video library</a>
 <ul>
 <li><a href="#movies-episodes-and-music-videos">Movies, episodes, and music videos</a></li>
 <li><a href="#tv-shows-and-alternative-for-movies-and-music-videos">TV shows and alternative for movies and music videos</a></li>
@@ -415,12 +415,12 @@ h1 .subtitle {
 
 
 
-<h2 id="artwork-file-naming-conventions">Artwork file naming conventions</h2>
+<h2 id="artwork-file-naming-conventions-for-the-video-library">Artwork file naming conventions for the video library</h2>
 
-<p>Artwork Beef will pick up any properly named artwork files next to your media. It has two
+<p>Artwork Beef will pick up any properly named artwork files next to your video files. It has two
 conventions for loading most artwork: <code>[media file name]-[art type].[ext]</code> for movies,
 episodes, and music videos, and <code>[art type].[ext]</code> for TV shows and as a less specific alternative for
-movies and music videos with their own directories.</p>
+movies and music videos with their own directories. This generally matches Kodi&rsquo;s file naming conventions.</p>
 
 <p><code>[art type]</code> must be alphanumeric, lowercase, and no longer than 20 characters, but can
 otherwise be freely named. They should exactly match the name that skins can use to access
@@ -461,7 +461,7 @@ base file name to use. Artwork for <code>//MRHOOD/TVShows/TV Show 1/</code> can 
 <code>//MRHOOD/TVShows/TV Show 1/[art type].[ext]</code>. Movies and music videos stored in separate directories
 can also use this style, though if both styles exist for one movie it will choose the other,
 more specific, one &ndash; handy for 3D or special editions that have their own artwork, if you keep them
-in the same directory as the original as the original version.</p>
+in the same directory.</p>
 
 <p>A few specific examples</p>
 
@@ -511,7 +511,8 @@ but those two simple rules should always steer true.</p>
 they are different than the art types used in Kodi; for instance, logo.png is added as clearlogo
 and extrafanart are added as fanart#. Ditto Movie Set Artwork Automator, but only for its
 default file names (logo.png to clearlogo, folder.jpg to thumb). This is controlled with an
-add-on setting, enabled by default.</p>
+add-on setting, enabled by default. It also supports other file paths that MSAA supported,
+though I do not suggest you use them for a new setup.</p>
 
 <h2 id="from-nfo-files">From NFO files</h2>
 

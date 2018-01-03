@@ -393,7 +393,6 @@ h1 .subtitle {
 <li><a href="#combining-multiple-paths">Combining multiple paths</a></li>
 </ul></li>
 <li><a href="#does-an-episode-or-season-have-its-own-fanart">Does an episode or season have its own fanart?</a></li>
-<li><a href="#show-details-of-movies-in-set-when-focusing-set-or-any-other-list">Show details of movies in set when focusing set (or any other list)</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -536,13 +535,6 @@ image alone, because an episode with its own fanart is fancy.</p>
 
 <pre><code class="language-xml">&lt;value condition=&quot;[Container.Content(episodes) | Container.Content(seasons)] + !String.IsEqual(ListItem.Art(tvshow.fanart), ListItem.Art(fanart))&quot;&gt;$INFO[ListItem.Art(fanart)]&lt;/value&gt;
 </code></pre>
-
-<h3 id="show-details-of-movies-in-set-when-focusing-set-or-any-other-list">Show details of movies in set when focusing set (or any other list)</h3>
-
-<p>This works very similar to &ldquo;Grab random fanart (plus any other info) from items in any library path&rdquo;,
-but the list itself is often used directly, rarely randomized, and autoscroll may not be desired.</p>
-
-<p>Estuary does this for movie sets, see <code>InfoList</code> in <code>Includes.xml</code>.</p>
 
 
 <footer class=" footline" >
