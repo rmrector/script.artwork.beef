@@ -15,7 +15,7 @@ but does require skins to access them differently. Extrathumbs can be similarly 
 `multiimage` control either way.
 
 While Artwork Helper is consistently faster than loading extrafanart from a spinning hard drive,
-it can still have a noticeable delay compared to directly accessing other artwork with `ListItem.Art(clearlog)`
+it can still have a noticeable delay compared to directly accessing other artwork with `ListItem.Art(clearlogo)`
 (especially on Windows). There is a way to gather these images without an add-on, but it's a bit more
 work. See [Fun without add-ons] for an example.
 

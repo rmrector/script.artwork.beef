@@ -4,6 +4,13 @@ date: 2017-12-27T22:44:34-07:00
 weight: 100
 ---
 
+{{< version "0.14.0" "2018-01-02" >}}
+
+- {{< changelog feature >}} music library support (for latest Leia nightlies only)
+- {{< changelog fix >}} crash when processing music video without an artist
+- {{< changelog fix >}} don't create movie set central directory unless there is artwork to download
+- {{< changelog fix >}} crash on Jarvis when building UA
+
 {{< version "0.13.0" "2017-12-27" >}}
 
 - {{< changelog feature >}} add option to download artwork

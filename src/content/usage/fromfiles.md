@@ -4,9 +4,9 @@ date: 2017-12-28T22:45:58-07:00
 weight: 3
 ---
 
-## Artwork file naming conventions
+## Artwork file naming conventions for the video library
 
-Artwork Beef will pick up any properly named artwork files next to your media. It has two
+Artwork Beef will pick up any properly named artwork files next to your video files. It has two
 conventions for loading most artwork: `[media file name]-[art type].[ext]` for movies,
 episodes, and music videos, and `[art type].[ext]` for TV shows and as a less specific alternative for
 movies and music videos with their own directories. This generally matches Kodi's file naming conventions.

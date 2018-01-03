@@ -122,10 +122,3 @@ image alone, because an episode with its own fanart is fancy.
 ```xml
 <value condition="[Container.Content(episodes) | Container.Content(seasons)] + !String.IsEqual(ListItem.Art(tvshow.fanart), ListItem.Art(fanart))">$INFO[ListItem.Art(fanart)]</value>
 ```
-
-### Show details of movies in set when focusing set (or any other list)
-
-This works very similar to "Grab random fanart (plus any other info) from items in any library path",
-but the list itself is often used directly, rarely randomized, and autoscroll may not be desired.
-
-Estuary does this for movie sets, see `InfoList` in `Includes.xml`.
