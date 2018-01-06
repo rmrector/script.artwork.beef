@@ -128,7 +128,8 @@ class ArtworkProcessor(object):
             elif mediatype == mediatypes.ARTIST:
                 medialist.extend(info.MediaItem(album) for album in quickjson.get_albums(mediaitem.dbid))
             if mediatype in (mediatypes.ALBUM, mediatypes.ARTIST):
-                medialist.extend(info.MediaItem(song) for song in quickjson.get_songs(mediaitem.dbid))
+                medialist.extend(info.MediaItem(song)
+                    for song in quickjson.get_songs(mediaitem.mediatype, mediaitem.dbid))
             self.process_medialist(medialist, True)
 
     def _manual_item_process(self, mediaitem, busy):
