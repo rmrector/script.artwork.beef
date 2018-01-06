@@ -91,8 +91,8 @@
 		<setting id="musicvideo.thumb_generate" label="32920" type="bool" default="false" />
 		<setting id="centraldir.set_enabled" label="32909" type="bool" default="false" />
 		<setting id="centraldir.set_dir" subsetting="true" label="32910" type="folder" visible="eq(-1,true)" />
-		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" />
 		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
+		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" />
 		<!-- For add-on inner workings -->
 		<setting id="last_videoupdate" type="text" default="0" visible="false" />
 		<setting id="last_musicupdate" type="text" default="0" visible="false" />
