@@ -1,7 +1,7 @@
 ---
 title: "Artwork helper"
 date: 2017-11-21T22:45:47-07:00
-weight: 10
+weight: 11
 ---
 
 Artwork Helper provides skins with a few options for building a list of images for a `multiimage`

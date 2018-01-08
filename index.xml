@@ -30,6 +30,18 @@
     </item>
     
     <item>
+      <title>Fun without add-ons</title>
+      <link>https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/</link>
+      <pubDate>Tue, 21 Nov 2017 22:44:56 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/</guid>
+      <description>Because who wants another dependency?
+Display multiple fanart Artwork Helper isn&amp;rsquo;t strictly needed, how about that? It is a bit more work though.
+The trick is to use a fadelabel control to gather multiple InfoLabels and randomize them, then use that control&amp;rsquo;s label as the final image to be displayed.
+&amp;lt;control type=&amp;quot;fadelabel&amp;quot; id=&amp;quot;398045&amp;quot;&amp;gt; &amp;lt;description&amp;gt;Randomizer for plugin-free multiple fanart&amp;lt;/description&amp;gt; &amp;lt;top&amp;gt;-1000&amp;lt;/top&amp;gt; &amp;lt;!-- Don&#39;t need to see it, but can&#39;t change its visibility.</description>
+    </item>
+    
+    <item>
       <title>Artwork helper</title>
       <link>https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/</link>
       <pubDate>Tue, 21 Nov 2017 22:45:47 -0700</pubDate>
@@ -41,24 +53,12 @@ Add-on setting There is an add-on setting to pull extrafanart and extrathumbs fr
     </item>
     
     <item>
-      <title>Fun without add-ons</title>
-      <link>https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/</link>
-      <pubDate>Tue, 21 Nov 2017 22:44:56 -0700</pubDate>
-      
-      <guid>https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/</guid>
-      <description>Because who wants another dependency?
-Display multiple fanart Artwork Helper isn&amp;rsquo;t strictly needed, how about that? It is a bit more work though.
-The trick is to use a fadelabel control to gather multiple InfoLabels and randomize them, then use that control&amp;rsquo;s label as the final image to be displayed.
-&amp;lt;control type=&amp;quot;fadelabel&amp;quot; id=&amp;quot;9998&amp;quot;&amp;gt; &amp;lt;description&amp;gt;Randomizer for plugin-free multiple fanart&amp;lt;/description&amp;gt; &amp;lt;top&amp;gt;-1000&amp;lt;/top&amp;gt; &amp;lt;!-- Don&#39;t need to see it, but can&#39;t change its visibility.</description>
-    </item>
-    
-    <item>
       <title>Why replace extrafanart/extrathumbs</title>
       <link>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</link>
       <pubDate>Tue, 21 Nov 2017 22:46:53 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</guid>
-      <description>Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it! Avoid filesystem delays/access issues (unavailable network filesystem, removable media) when the images have been cached. Classic extrafanart always had to hit the filesystem at least once when the path changed to get a list of all extrafanart, even if they were all cached. Skins can more easily work with all fanart together (main + extra fanart)  There are plugin:// paths to stitch together fanart images for &amp;lsquo;multiimage&amp;rsquo; controls, &amp;lsquo;fanart&amp;rsquo; and &amp;lsquo;fanart#&amp;rsquo; alike!</description>
+      <description>Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it! Avoid filesystem delays/access issues (unavailable network file system, removable media) when the images have been cached. Classic extrafanart always had to hit the file system at least once when the path changed to get a list of all extrafanart, even if they were all cached. Skins can more easily work with all fanart together (main + extra fanart)  There are plugin:// paths to stitch together fanart images for &amp;lsquo;multiimage&amp;rsquo; controls, &amp;lsquo;fanart&amp;rsquo; and &amp;lsquo;fanart#&amp;rsquo; alike!</description>
     </item>
     
   </channel>

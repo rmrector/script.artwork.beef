@@ -217,9 +217,9 @@ h1 .subtitle {
  
   
     
-      <li data-nav-id="/skins/artworkhelper/" title="Artwork helper" class="dd-item ">
-        <a href="https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/">
-        Artwork helper
+      <li data-nav-id="/skins/addonfreefun/" title="Fun without add-ons" class="dd-item active">
+        <a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/">
+        Fun without add-ons
         
         </a>
     </li>
@@ -236,9 +236,9 @@ h1 .subtitle {
  
   
     
-      <li data-nav-id="/skins/addonfreefun/" title="Fun without add-ons" class="dd-item active">
-        <a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/">
-        Fun without add-ons
+      <li data-nav-id="/skins/artworkhelper/" title="Artwork helper" class="dd-item ">
+        <a href="https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/">
+        Artwork helper
         
         </a>
     </li>
@@ -425,7 +425,7 @@ h1 .subtitle {
 <p>The trick is to use a <code>fadelabel</code> control to gather multiple InfoLabels and randomize them,
 then use that control&rsquo;s label as the final image to be displayed.</p>
 
-<pre><code class="language-xml">&lt;control type=&quot;fadelabel&quot; id=&quot;9998&quot;&gt;
+<pre><code class="language-xml">&lt;control type=&quot;fadelabel&quot; id=&quot;398045&quot;&gt;
 	&lt;description&gt;Randomizer for plugin-free multiple fanart&lt;/description&gt;
 	&lt;top&gt;-1000&lt;/top&gt; &lt;!-- Don't need to see it, but can't change its visibility. Put it off screen --&gt;
 	&lt;width&gt;1&lt;/width&gt;
@@ -441,6 +441,13 @@ then use that control&rsquo;s label as the final image to be displayed.</p>
 	&lt;info&gt;ListItem.Art(tvshow.fanart2)&lt;/info&gt;
 	&lt;!-- ... repeat for each numbered fanart --&gt;
 	&lt;info&gt;ListItem.Art(tvshow.fanart9)&lt;/info&gt;
+	&lt;!-- Container.ListItem.Art() are filled based on the focused ListItem in the **focused container** in Leia --&gt;
+	&lt;info&gt;Container.ListItem.Art(fanart)&lt;/info&gt;
+	&lt;info&gt;Container.ListItem.Art(fanart1)&lt;/info&gt;
+	&lt;info&gt;Container.ListItem.Art(fanart2)&lt;/info&gt;
+	&lt;info&gt;Container.ListItem.Art(tvshow.fanart)&lt;/info&gt;
+	&lt;info&gt;Container.ListItem.Art(tvshow.fanart1)&lt;/info&gt;
+	&lt;info&gt;Container.ListItem.Art(tvshow.fanart2)&lt;/info&gt;
 	&lt;randomize&gt;true&lt;/randomize&gt;
 	&lt;pauseatend&gt;30000&lt;/pauseatend&gt; &lt;!-- Time to show each image, in milliseconds --&gt;
 	&lt;!-- No scrolling so only the pauseatend above (plus a short fade-in) affects length of time each
@@ -453,10 +460,12 @@ then use that control&rsquo;s label as the final image to be displayed.</p>
 &lt;/control&gt;
 </code></pre>
 
-<p>With that on your window, the InfoLabel <code>$INFO[Control.GetLabel(9998)]</code> will contain the URL/path
+<p>With that on your window, the InfoLabel <code>$INFO[Control.GetLabel(398045)]</code> will contain the URL/path
 to a single image that can be given to an <code>image</code> or <code>multiimage</code> path, and it will randomly
 rotate through every available image. It will skip any that are empty, so no blank spaces will be
 left.</p>
+
+<p>You can make another structure with Player.Art for music visualization or a fullscreen now-playing window.</p>
 
 <h3 id="grab-random-fanart-plus-any-other-info-from-items-in-any-library-path">Grab random fanart (plus any other info) from items in any library path</h3>
 
@@ -636,25 +645,6 @@ image alone, because an episode with its own fanart is fancy.</p>
             
                 
                     
-                        
-                        
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
                     
                 
                 
@@ -674,6 +664,22 @@ image alone, because an episode with its own fanart is fancy.</p>
                     
                         
                         
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
                     
                 
                 
@@ -728,10 +734,10 @@ image alone, because an episode with its own fanart is fancy.</p>
 
 
         
-            <a class="nav nav-prev" href="https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/" title="Artwork helper"> <i class="fa fa-chevron-left"></i></a>
+            <a class="nav nav-prev" href="https://rmrector.github.io/script.artwork.beef/skins/" title="Skin support"> <i class="fa fa-chevron-left"></i></a>
         
         
-            <a class="nav nav-next" href="https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/" title="Why replace extrafanart/extrathumbs" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+            <a class="nav nav-next" href="https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/" title="Artwork helper" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
         
     </div>
 
