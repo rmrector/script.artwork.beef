@@ -5,7 +5,7 @@ from itertools import chain
 
 from lib import cleaner, reporting
 from lib.artworkprocessor import ArtworkProcessor
-from lib.downloader import Downloader, DownloaderError
+from lib.filemanager import FileManager, FileError
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
 from lib.libs.processeditems import ProcessedItems
@@ -129,19 +129,19 @@ def remove_specific_arttypes():
             notify_count(L(M.REMOVED_ART_COUNT), fixcount)
 
 def make_local():
-    downloader = Downloader()
+    fileman = FileManager()
     def downloadforitem(mediaitem):
         try:
-            downloader.downloadfor(mediaitem)
+            fileman.downloadfor(mediaitem)
             return dict((k, v) for k, v in mediaitem.downloadedart.iteritems() if not v or not v.startswith('http'))
-        except DownloaderError as ex:
+        except FileError as ex:
             mediaitem.error = ex.message
             log(ex.message, xbmc.LOGERROR)
             xbmcgui.Dialog().notification("Artwork Beef", ex.message, xbmcgui.NOTIFICATION_ERROR)
             return {}
     downloaded = runon_medialist(downloadforitem, L(M.MAKE_LOCAL), fg=True)
     xbmcgui.Dialog().ok("Artwork Beef", L(M.DOWNLOAD_COUNT).format(downloaded)
-        + ' - {0:0.2f}MB'.format(downloader.size / 1000000.00))
+        + ' - {0:0.2f}MB'.format(fileman.size / 1000000.00))
 
 def identify_unmatched(mediatype):
     busy = pykodi.get_busydialog()
