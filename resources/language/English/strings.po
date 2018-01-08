@@ -365,6 +365,10 @@ msgctxt "#32930"
 msgid "Save additional music videos fanart to 'extrafanart' directory instead"
 msgstr ""
 
+msgctxt "#32931"
+msgid "Recycle replaced artwork files to temp/cache directory"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"
