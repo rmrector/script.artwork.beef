@@ -4,7 +4,7 @@ import xbmcvfs
 from contextlib import closing
 from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException
 
-from lib.libs import mediatypes, utils
+from lib.libs import mediainfo as info, mediatypes, utils
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import localize as L
 from lib.libs.webhelper import Getter
@@ -14,8 +14,10 @@ HTTP_ERROR = 32035
 CANT_WRITE_TO_FILE = 32037
 
 typemap = {'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif'}
+# REVIEW: there may be other protocols that just can't be written to
+blacklisted_protocols = ('plugin', 'http')
 
-class Downloader(object):
+class FileManager(object):
     def __init__(self):
         self.getter = Getter()
         self.getter.session.headers['User-Agent'] = settings.useragent
@@ -32,8 +34,8 @@ class Downloader(object):
         basefile = utils.find_central_infodir(mediaitem, True)
         path = basefile
         if not basefile:
-            if not mediaitem.file or mediaitem.file.startswith(('plugin', 'http')):
-                return False, '' # REVIEW: there may be other protocols that just can't be written to
+            if not mediaitem.file or mediaitem.file.startswith(blacklisted_protocols):
+                return False, ''
             path = utils.get_movie_path_list(mediaitem.file)[0] \
                 if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
             basefile = os.path.splitext(path)[0]
@@ -69,13 +71,13 @@ class Downloader(object):
                 if not re.search('\.\w*$', url):
                     continue
                 ext = url.rsplit('.', 1)[1]
-
-            filename = basefile + ('-' if basefile != path else '') + type_for_file + '.' + ext
+            sep = '' if basefile == path else '-'
+            filename = basefile + sep + type_for_file + '.' + ext
             # For now this just downloads the whole thing in memory, then saves it to file.
             #  Maybe chunking it will be better when GIFs are handled
             with closing(xbmcvfs.File(filename, 'wb')) as file_:
                 if not file_.write(result.content):
-                    raise DownloaderError(L(CANT_WRITE_TO_FILE).format(filename))
+                    raise FileError(L(CANT_WRITE_TO_FILE).format(filename))
             mediaitem.downloadedart[arttype] = filename
         return services_hit, error
 
@@ -96,7 +98,7 @@ def something_todownload(artmap):
             return True
     return False
 
-class DownloaderError(Exception):
+class FileError(Exception):
     def __init__(self, message, cause=None):
-        super(DownloaderError, self).__init__(message)
+        super(FileError, self).__init__(message)
         self.cause = cause

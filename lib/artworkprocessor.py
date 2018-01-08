@@ -6,7 +6,7 @@ from datetime import timedelta
 
 from lib import cleaner, reporting
 from lib.artworkselection import prompt_for_artwork
-from lib.downloader import Downloader, DownloaderError
+from lib.filemanager import FileManager, FileError
 from lib.gatherer import Gatherer
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings, PROGRESS_DISPLAY_FULLPROGRESS, PROGRESS_DISPLAY_NONE
@@ -75,7 +75,7 @@ class ArtworkProcessor(object):
     def init_run(self, show_progress=False):
         self.setlanguages()
         self.gatherer = Gatherer(self.monitor, settings.only_filesystem, self.autolanguages)
-        self.downloader = Downloader()
+        self.downloader = FileManager()
         self.freshstart = str(datetime_now() - timedelta(days=365))
         if show_progress:
             self.create_progress()
@@ -167,7 +167,7 @@ class ArtworkProcessor(object):
                         self.downloader.downloadfor(mediaitem, False)
                         toset.update(mediaitem.downloadedart)
                         toset = dict((k, v) for k, v in toset.iteritems() if not v or not v.startswith('http'))
-                    except DownloaderError as ex:
+                    except FileError as ex:
                         mediaitem.error = ex.message
                         log(ex.message, xbmc.LOGERROR)
                         xbmcgui.Dialog().notification("Artwork Beef", ex.message, xbmcgui.NOTIFICATION_ERROR)
@@ -199,7 +199,7 @@ class ArtworkProcessor(object):
             currentitem += 1
             try:
                 services_hit = self._process_item(mediaitem)
-            except DownloaderError as ex:
+            except FileError as ex:
                 mediaitem.error = ex.message
                 log(ex.message, xbmc.LOGERROR)
                 self.notify_warning(ex.message, None, True)
