@@ -357,6 +357,14 @@ msgctxt "#32928"
 msgid "Show final artwork update count notification"
 msgstr ""
 
+msgctxt "#32929"
+msgid "Save additional movie and TV show fanart to 'extrafanart' directory instead"
+msgstr ""
+
+msgctxt "#32930"
+msgid "Save additional music videos fanart to 'extrafanart' directory instead"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"

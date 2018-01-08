@@ -50,6 +50,8 @@ class Settings(object):
         self.prefer_tmdbartwork = addon.get_setting('prefer_tmdbartwork')
         self.progressdisplay = addon.get_setting('progress_display')
         self.final_notification = addon.get_setting('final_notification')
+        self.save_extrafanart = addon.get_setting('save_extrafanart')
+        self.save_extrafanart_mvids = addon.get_setting('save_extrafanart_mvids')
 
         self.language_override = addon.get_setting('language_override')
         if self.language_override == 'None':

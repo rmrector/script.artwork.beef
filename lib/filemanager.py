@@ -44,6 +44,12 @@ class FileManager(object):
         def st(num):
             return '-specials' if num == 0 else '-all' if num == -1 else '{0:02d}'.format(num)
         seasonpre = None if mediaitem.mediatype != mediatypes.SEASON else 'season{0}-'.format(st(mediaitem.season))
+        if save_extrafanart(mediaitem, nowart):
+            basefile = os.path.dirname(basefile) + utils.get_pathsep(basefile) \
+                if mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.MUSICVIDEO) else basefile
+            basefile += 'extrafanart' + utils.get_pathsep(basefile)
+            if not xbmcvfs.exists(basefile):
+                xbmcvfs.mkdir(basefile)
         for arttype, url in nowart.iteritems():
             if not url or not url.startswith('http'):
                 continue
@@ -71,7 +77,7 @@ class FileManager(object):
                 if not re.search('\.\w*$', url):
                     continue
                 ext = url.rsplit('.', 1)[1]
-            sep = '' if basefile == path else '-'
+            sep = '' if basefile == path or save_thisextrafanart(arttype, mediaitem.mediatype) else '-'
             filename = basefile + sep + type_for_file + '.' + ext
             # For now this just downloads the whole thing in memory, then saves it to file.
             #  Maybe chunking it will be better when GIFs are handled
@@ -97,6 +103,17 @@ def something_todownload(artmap):
         if url and url.startswith('http'):
             return True
     return False
+
+def save_extrafanart(mediaitem, allart):
+    return _saveextra_thistype(mediaitem.mediatype) \
+        and any(1 for art in allart if info.arttype_matches_base(art, 'fanart') and info.split_arttype(art)[1] > 0)
+
+def save_thisextrafanart(arttype, mediatype):
+    return _saveextra_thistype(mediatype) and info.arttype_matches_base(arttype, 'fanart') and info.split_arttype(arttype)[1] > 0
+
+def _saveextra_thistype(mediatype):
+    return settings.save_extrafanart and mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) \
+    or settings.save_extrafanart_mvids and mediatype == mediatypes.MUSICVIDEO
 
 class FileError(Exception):
     def __init__(self, message, cause=None):

@@ -92,6 +92,8 @@
 		<setting id="centraldir.set_enabled" label="32909" type="bool" default="false" />
 		<setting id="centraldir.set_dir" subsetting="true" label="32910" type="folder" visible="eq(-1,true)" />
 		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
+		<setting id="save_extrafanart" label="32929" type="bool" default="false" />
+		<setting id="save_extrafanart_mvids" label="32930" type="bool" default="false" />
 		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" />
 		<!-- For add-on inner workings -->
 		<setting id="last_videoupdate" type="text" default="0" visible="false" />
