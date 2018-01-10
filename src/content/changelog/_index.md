@@ -4,6 +4,13 @@ date: 2017-12-27T22:44:34-07:00
 weight: 100
 ---
 
+{{< version "0.15.0" "2018-01-09" >}}
+
+- {{< changelog feature >}} add option to save additional fanart to 'extrafanart' directory
+  rather than matching Kodi export names
+- {{< changelog feature >}} remove deselected local artwork, add option to recycle changed local artwork
+- {{< changelog fix >}} limit songs when processing single album/artist
+
 {{< version "0.14.0" "2018-01-02" >}}
 
 - {{< changelog feature >}} music library support (for latest Leia nightlies only)
