@@ -37,10 +37,12 @@ class FileManager(object):
         basefile = utils.find_central_infodir(mediaitem, True)
         path = basefile
         if not basefile:
-            if not mediaitem.file or mediaitem.file.startswith(blacklisted_protocols):
+            if not mediaitem.file:
                 return False, ''
             path = utils.get_movie_path_list(mediaitem.file)[0] \
                 if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
+            if path.startswith(blacklisted_protocols):
+                return False, ''
             basefile = os.path.splitext(path)[0]
         services_hit = False
         error = None
@@ -110,8 +112,8 @@ def handle_removed(mediaitem):
             xbmcvfs.delete(url)
             continue
         directory = os.path.basename(os.path.dirname(url))
-        directory = TEMP_DIR + '/' + os.path.basename(os.path.dirname(os.path.dirname(url))) + '/' + directory \
-            if directory == 'extrafanart' else TEMP_DIR + '/' + directory
+        directory = TEMP_DIR + os.path.basename(os.path.dirname(os.path.dirname(url))) + '/' + directory \
+            if directory == 'extrafanart' else TEMP_DIR + directory
         if not xbmcvfs.exists(directory):
             xbmcvfs.mkdirs(directory)
         filename = directory + '/' + os.path.basename(url)
