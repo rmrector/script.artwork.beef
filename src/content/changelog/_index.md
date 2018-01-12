@@ -4,6 +4,11 @@ date: 2017-12-27T22:44:34-07:00
 weight: 100
 ---
 
+{{< version "0.15.1" "2018-01-11" >}}
+
+- {{< changelog fix >}} incorrect names for all artwork when 'extrafanart' enabled
+- {{< changelog fix >}} missing artwork identification when files are moved
+
 {{< version "0.15.0" "2018-01-09" >}}
 
 - {{< changelog feature >}} add option to save additional fanart to 'extrafanart' directory
