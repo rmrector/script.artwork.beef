@@ -1,6 +1,8 @@
 import sys
 import urllib
+import xbmcvfs
 
+from lib.libs import pykodi
 from lib.libs.addonsettings import settings
 from lib.libs.mediainfo import iter_base_arttypes, fill_multiart
 
@@ -14,6 +16,11 @@ def clean_artwork(mediaitem):
         if not updated_art.get('discart'):
             updated_art['discart'] = updated_art['cdart']
             updated_art['cdart'] = None
+
+    # Remove local artwork if it is no longer available
+    for arttype, url in updated_art.iteritems():
+        if url and not url.startswith(pykodi.notlocalimages) and not xbmcvfs.exists(url):
+            updated_art[arttype] = None
     return updated_art
 
 def remove_otherartwork(mediaitem):

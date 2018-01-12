@@ -1,7 +1,6 @@
 import random
 import xbmc
 import xbmcgui
-import xbmcvfs
 from datetime import timedelta
 
 from lib import cleaner, reporting
@@ -248,15 +247,8 @@ class ArtworkProcessor(object):
         services_hit, error = self.gatherer.getartwork(mediaitem, auto)
 
         if auto:
-            # Remove existing local artwork if it is no longer available
             existingart = dict(mediaitem.art)
-            newlocalart = [(arttype, image['url']) for arttype, image in mediaitem.forcedart.iteritems()
-                if not image['url'].startswith(pykodi.notlocalimages)]
-            selectedart = dict((arttype, None) for arttype, url in existingart.iteritems()
-                if not url.startswith(pykodi.notlocalimages) and (arttype, url) not in newlocalart
-                    and not xbmcvfs.exists(url))
-
-            selectedart.update((key, image['url']) for key, image in mediaitem.forcedart.iteritems())
+            selectedart = dict((key, image['url']) for key, image in mediaitem.forcedart.iteritems())
             existingart.update(selectedart)
 
             # Then add the rest of the missing art
