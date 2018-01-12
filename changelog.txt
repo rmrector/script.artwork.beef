@@ -1,3 +1,11 @@
+v0.15.1 (2018-01-11)
+- Fix: incorrect names for all artwork when 'extrafanart' enabled
+
+v0.15.0 (2018-01-09)
+- Feature: add option to save additional fanart to 'extrafanart' directory rather than matching Kodi export names
+- Feature: remove deselected local artwork, add option to recycle changed local artwork
+- Fix: limit songs when processing single album/artist
+
 v0.14.0 (2018-01-02)
 - Feature: music library support (for latest Leia nightlies only)
 - Fix: crash when processing music video without an artist
