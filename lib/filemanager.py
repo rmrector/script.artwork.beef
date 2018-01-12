@@ -50,11 +50,11 @@ class FileManager(object):
             return '-specials' if num == 0 else '-all' if num == -1 else '{0:02d}'.format(num)
         seasonpre = None if mediaitem.mediatype != mediatypes.SEASON else 'season{0}-'.format(st(mediaitem.season))
         if save_extrafanart(mediaitem, nowart):
-            basefile = os.path.dirname(basefile) + utils.get_pathsep(basefile) \
+            extrafanartdir = os.path.dirname(basefile) + utils.get_pathsep(basefile) \
                 if mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.MUSICVIDEO) else basefile
-            basefile += 'extrafanart' + utils.get_pathsep(basefile)
-            if not xbmcvfs.exists(basefile):
-                xbmcvfs.mkdir(basefile)
+            extrafanartdir += 'extrafanart' + utils.get_pathsep(basefile)
+            if not xbmcvfs.exists(extrafanartdir):
+                xbmcvfs.mkdir(extrafanartdir)
         for arttype, url in nowart.iteritems():
             if not url or not url.startswith('http'):
                 continue
@@ -82,8 +82,11 @@ class FileManager(object):
                 if not re.search('\.\w*$', url):
                     continue
                 ext = url.rsplit('.', 1)[1]
-            sep = '' if basefile == path or save_thisextrafanart(arttype, mediaitem.mediatype) else '-'
-            filename = basefile + sep + type_for_file + '.' + ext
+            if save_thisextrafanart(arttype, mediaitem.mediatype):
+                filename = extrafanartdir + type_for_file + '.' + ext
+            else:
+                sep = '' if basefile == path else '-'
+                filename = basefile + sep + type_for_file + '.' + ext
             # For now this just downloads the whole thing in memory, then saves it to file.
             #  Maybe chunking it will be better when GIFs are handled
             with closing(xbmcvfs.File(filename, 'wb')) as file_:
