@@ -15,7 +15,7 @@ artmap = {'mbtrack': {'datakey':'track', 'artmap': {'strTrackThumb': 'thumb'},
         'url': 'http://www.theaudiodb.com/api/v1/json/{0}/album-mb.php'.format(api_key)},
     'mbartist': {'datakey':'artists', 'artmap': {'strArtistThumb': 'thumb', 'strArtistLogo': 'clearlogo',
             'strArtistBanner': 'banner', 'strArtistFanart': 'fanart', 'strArtistFanart2': 'fanart',
-            'strArtistFanart3': 'fanart', 'strArtistClearart': 'clearart'},
+            'strArtistFanart3': 'fanart', 'strArtistClearart': 'clearart', 'strArtistWideThumb': 'landscape'},
         'url': 'http://www.theaudiodb.com/api/v1/json/{0}/artist-mb.php'.format(api_key)}
 }
 provtypes = set(x for data in artmap.values() for x in data['artmap'].values())
@@ -116,7 +116,7 @@ def _get_imagesize(arttype):
         return SortedDisplay(400, '400x155 or 800x310')
     if arttype in ('strArtistBanner',):
         return SortedDisplay(1000, '1000x185')
-    if arttype in ('strArtistClearart',):
+    if arttype in ('strArtistClearart', 'strArtistWideThumb'):
         return SortedDisplay(1000, '1000x562')
     if arttype in ('strArtistFanart', 'strArtistFanart2', 'strArtistFanart3'):
         return SortedDisplay(1280, '1280x720 or 1920x1080')
