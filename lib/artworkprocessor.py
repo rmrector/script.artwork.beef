@@ -165,7 +165,6 @@ class ArtworkProcessor(object):
                     try:
                         self.downloader.downloadfor(mediaitem, False)
                         toset.update(mediaitem.downloadedart)
-                        toset = dict((k, v) for k, v in toset.iteritems() if not v or not v.startswith('http'))
                     except FileError as ex:
                         mediaitem.error = ex.message
                         log(ex.message, xbmc.LOGERROR)
@@ -264,7 +263,6 @@ class ArtworkProcessor(object):
                 services_hit = services_hit or sh
                 error = error or er
                 toset.update(mediaitem.downloadedart)
-                toset = dict((k, v) for k, v in toset.iteritems() if not v or not v.startswith('http'))
             if toset:
                 mediaitem.updatedart = list(set(mediaitem.updatedart + toset.keys()))
                 add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, toset)
