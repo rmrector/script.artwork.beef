@@ -369,6 +369,38 @@ msgctxt "#32931"
 msgid "Recycle replaced artwork files to temp/cache directory"
 msgstr ""
 
+msgctxt "#32932"
+msgid "Disable all automatic processing for movies"
+msgstr ""
+
+msgctxt "#32933"
+msgid "Disable all automatic processing for TV shows"
+msgstr ""
+
+msgctxt "#32934"
+msgid "Disable all automatic processing for episodes"
+msgstr ""
+
+msgctxt "#32935"
+msgid "Disable all automatic processing for music videos"
+msgstr ""
+
+msgctxt "#32936"
+msgid "Disable all automatic processing for artists"
+msgstr ""
+
+msgctxt "#32937"
+msgid "Disable all automatic processing for albums"
+msgstr ""
+
+msgctxt "#32938"
+msgid "Disable all automatic processing for songs"
+msgstr ""
+
+msgctxt "#32939"
+msgid "Disable all automatic processing for movie sets"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"
