@@ -3,7 +3,7 @@ import xbmc
 
 from lib.libs import mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings
-from lib.libs.pykodi import log, unquoteimage, localize as L
+from lib.libs.pykodi import log, unquoteimage, unquotearchive, localize as L
 from lib.libs.utils import natural_sort, get_pathsep, iter_possible_cleannames
 
 CANT_FIND_MOVIESET = 32032
@@ -23,7 +23,7 @@ idmap = (('episodeid', mediatypes.EPISODE),
 class MediaItem(object):
     def __init__(self, jsondata):
         self.label = jsondata['label']
-        self.file = jsondata.get('file')
+        self.file = unquotearchive(jsondata.get('file'))
         self.premiered = jsondata.get('premiered')
         self.sourcemedia = _get_sourcemedia(self.file)
         self.mediatype, self.dbid = get_mediatype_id(jsondata)
