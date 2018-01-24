@@ -226,8 +226,12 @@ artinfo = {
 }
 
 central_directories = {MOVIESET: False}
+disabled_mediatypes = dict((mediatype, False) for mediatype in artinfo)
 arttype_settingskeys = [m[0] + '.' + art[0] + ('_limit' if art[1]['multiselect'] else '')
     for m in artinfo.iteritems() for art in m[1].iteritems()]
+
+def disabled(mediatype):
+    return disabled_mediatypes.get(mediatype)
 
 def update_settings():
     for settingid in arttype_settingskeys:
@@ -236,6 +240,8 @@ def update_settings():
             artinfo[splitsetting[0]][splitsetting[1]]['autolimit'] = _get_autolimit_from_setting(settingid)
         except ValueError:
             addon.set_setting(settingid, artinfo[splitsetting[0]][splitsetting[1]]['autolimit'])
+    for mediatype in artinfo:
+        disabled_mediatypes[mediatype] = addon.get_setting(mediatype + '.disabled')
     oldset_enabled = addon.get_setting('setartwork_fromcentral')
     if oldset_enabled != '':
         addon.set_setting('centraldir.set_enabled', oldset_enabled)

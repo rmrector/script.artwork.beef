@@ -115,7 +115,7 @@ class ArtworkProcessor(object):
             self._manual_item_process(mediaitem, busy)
         else:
             medialist = [mediaitem]
-            if mediatype == mediatypes.TVSHOW:
+            if mediatype == mediatypes.TVSHOW and not mediatypes.disabled(mediatypes.EPISODE):
                 if mediaitem.uniqueids and any(x in mediaitem.uniqueids.itervalues() for x in settings.autoadd_episodes):
                     medialist.extend(info.MediaItem(ep) for ep in quickjson.get_episodes(dbid))
                 elif settings.generate_episode_thumb:
@@ -124,9 +124,9 @@ class ArtworkProcessor(object):
                             episode = info.MediaItem(episode)
                             episode.skip_artwork = ['fanart']
                             medialist.append(episode)
-            elif mediatype == mediatypes.ARTIST:
+            elif mediatype == mediatypes.ARTIST and not mediatypes.disabled(mediatypes.ALBUM):
                 medialist.extend(info.MediaItem(album) for album in quickjson.get_albums(mediaitem.dbid))
-            if mediatype in (mediatypes.ALBUM, mediatypes.ARTIST):
+            if mediatype in (mediatypes.ALBUM, mediatypes.ARTIST) and not mediatypes.disabled(mediatypes.SONG):
                 medialist.extend(info.MediaItem(song)
                     for song in quickjson.get_songs(mediaitem.mediatype, mediaitem.dbid))
             self.process_medialist(medialist, True)

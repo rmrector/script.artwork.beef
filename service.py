@@ -179,12 +179,16 @@ class ArtworkService(xbmc.Monitor):
         if not shouldinclude_fn:
             allvideos = True
             shouldinclude_fn = lambda id, type, label: True
-        items = [info.MediaItem(movie) for movie in quickjson.get_item_list(mediatypes.MOVIE)
-            if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE, movie['label'])]
-        items.extend([info.MediaItem(mset) for mset in quickjson.get_item_list(mediatypes.MOVIESET)
-            if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label'])])
-        items.extend([info.MediaItem(mvid) for mvid in quickjson.get_item_list(mediatypes.MUSICVIDEO)
-            if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, info.musicvideo_label(mvid))])
+        items = []
+        if not mediatypes.disabled(mediatypes.MOVIE):
+            items.extend(info.MediaItem(movie) for movie in quickjson.get_item_list(mediatypes.MOVIE)
+                if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE, movie['label']))
+        if not mediatypes.disabled(mediatypes.MOVIESET):
+            items.extend(info.MediaItem(mset) for mset in quickjson.get_item_list(mediatypes.MOVIESET)
+                if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label']))
+        if not mediatypes.disabled(mediatypes.MUSICVIDEO):
+            items.extend(info.MediaItem(mvid) for mvid in quickjson.get_item_list(mediatypes.MUSICVIDEO)
+                if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, info.musicvideo_label(mvid)))
 
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
@@ -192,24 +196,26 @@ class ArtworkService(xbmc.Monitor):
         serieseps_added = set()
         for series in serieslist:
             processed_season = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW, series['label'])
-            if not processed_season or series['season'] > int(processed_season) or \
-                    shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW, series['label']):
-                items.append(info.MediaItem(series))
+            if not processed_season or series['season'] > int(processed_season) \
+            or shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW, series['label']):
+                if not mediatypes.disabled(mediatypes.TVSHOW):
+                    items.append(info.MediaItem(series))
                 if series['imdbnumber'] not in settings.autoadd_episodes and not allvideos:
-                    if settings.generate_episode_thumb:
+                    if settings.generate_episode_thumb and not mediatypes.disabled(mediatypes.EPISODE):
                         for episode in quickjson.get_episodes(series['tvshowid']):
                             if not info.has_generated_thumbnail(episode):
                                 ep = info.MediaItem(episode)
                                 ep.skip_artwork = ['fanart']
                                 items.append(ep)
                     serieseps_added.add(series['tvshowid'])
-            if series['imdbnumber'] in settings.autoadd_episodes and series['tvshowid'] not in serieseps_added:
+            if series['imdbnumber'] in settings.autoadd_episodes and series['tvshowid'] not in serieseps_added \
+            and not mediatypes.disabled(mediatypes.EPISODE):
                 episodes = quickjson.get_episodes(series['tvshowid'])
                 items.extend(info.MediaItem(ep) for ep in episodes if shouldinclude_fn(ep['episodeid'], mediatypes.EPISODE, ep['label']))
                 serieseps_added.add(series['tvshowid'])
             if self.abortRequested():
                 return False
-        if settings.generate_episode_thumb:
+        if settings.generate_episode_thumb and not mediatypes.disabled(mediatypes.EPISODE):
             # Too many to get all of them, and filtering by a specific date for dateadded isn't much better
             for episode in quickjson.get_episodes() if allvideos else quickjson.get_episodes(limit=500):
                 if episode['tvshowid'] not in serieseps_added and not info.has_generated_thumbnail(episode):
@@ -225,6 +231,8 @@ class ArtworkService(xbmc.Monitor):
         seriesadded = set()
         newitems = []
         for mtype in ('movie', 'musicvideo', 'tvshow'):
+            if mediatypes.disabled(mtype):
+                continue
             for mediaid in self.recentvideos[mtype]:
                 if mtype == 'tvshow':
                     seriesadded.add(mediaid)
@@ -234,11 +242,15 @@ class ArtworkService(xbmc.Monitor):
         for episodeid in self.recentvideos['episode']:
             episode = info.MediaItem(quickjson.get_item_details(episodeid, mediatypes.EPISODE))
             series = None
-            if episode.tvshowid not in seriesadded and (episode.season >
-                    self.processed.get_data(episode.tvshowid, mediatypes.TVSHOW, episode.label)):
+            if not mediatypes.disabled(mediatypes.TVSHOW) and episode.tvshowid not in seriesadded \
+            and episode.season > self.processed.get_data(episode.tvshowid, mediatypes.TVSHOW, episode.label):
                 seriesadded.add(episode.tvshowid)
                 series = info.MediaItem(quickjson.get_item_details(episode.tvshowid, mediatypes.TVSHOW))
                 newitems.append(series)
+            if mediatypes.disabled(mediatypes.EPISODE):
+                if self.abortRequested():
+                    return
+                continue
             if episode.tvshowid in addepisodesfrom:
                 newitems.append(episode)
             elif episode.tvshowid in ignoreepisodesfrom:
@@ -265,21 +277,24 @@ class ArtworkService(xbmc.Monitor):
     def process_allmusic(self, shouldinclude_fn=None):
         if not shouldinclude_fn:
             shouldinclude_fn = lambda id, type, label: True
-        items = [info.MediaItem(artist) for artist in quickjson.get_item_list(mediatypes.ARTIST)
-            if shouldinclude_fn(artist['artistid'], mediatypes.ARTIST, artist['label'])]
+        items = []
+        if not mediatypes.disabled(mediatypes.ARTIST):
+            items.extend(info.MediaItem(artist) for artist in quickjson.get_item_list(mediatypes.ARTIST)
+                if shouldinclude_fn(artist['artistid'], mediatypes.ARTIST, artist['label']))
         if self.abortRequested():
             return False
-        albums = quickjson.get_albums()
-        if self.abortRequested():
-            return False
-        for album in albums:
-            if not shouldinclude_fn(album['albumid'], mediatypes.ALBUM, album['label']):
-                continue
-            items.append(info.MediaItem(album))
-            if len(albums) < 200:
-                items.extend(info.MediaItem(song) for song in quickjson.get_songs(mediatypes.ALBUM, album['albumid']))
+        if not mediatypes.disabled(mediatypes.ALBUM):
+            albums = quickjson.get_albums()
             if self.abortRequested():
                 return False
+            for album in albums:
+                if not shouldinclude_fn(album['albumid'], mediatypes.ALBUM, album['label']):
+                    continue
+                items.append(info.MediaItem(album))
+                if len(albums) < 200 and not mediatypes.disabled(mediatypes.SONG):
+                    items.extend(info.MediaItem(song) for song in quickjson.get_songs(mediatypes.ALBUM, album['albumid']))
+                if self.abortRequested():
+                    return False
         return self.processor.process_medialist(items)
 
     def onSettingsChanged(self):
