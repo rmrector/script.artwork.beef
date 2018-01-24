@@ -149,6 +149,13 @@ def unquoteimage(imagestring):
         return urllib.unquote(imagestring[8:-1])
     return imagestring
 
+def unquotearchive(filepath):
+    # DEPRECATED: Krypton and below need this, Leia changed archive support to be a standard file path
+    if not filepath or not filepath.startswith(('rar://', 'zip://')):
+        return filepath
+    result = filepath[6:].split('/', 1)[0]
+    return urllib.unquote(result)
+
 def get_command(*first_arg_keys):
     command = {}
     start = len(first_arg_keys) if first_arg_keys else 1
