@@ -229,7 +229,6 @@ class ArtworkProcessor(object):
             if singleitem:
                 message = "{0} '{1}'".format(mediatype, mediaitem.label)
                 log(header + ": " + message, xbmc.LOGNOTICE)
-                log(mediaitem, xbmc.LOGNOTICE)
                 xbmcgui.Dialog().notification("Artwork Beef: " + header, message, xbmcgui.NOTIFICATION_INFO)
 
         if auto:
