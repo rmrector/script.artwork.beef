@@ -1,3 +1,10 @@
+v0.16.0 (2018-01-24)
+- Feature: artist 'landscape' images
+- Feature: option to disable all automatic processing per media type
+- Fix: support rar/zip archived media for Krypton and below
+- Fix: single item updates in Leia
+- Fix: music artwork when video library artwork downloading is enabled
+
 v0.15.1 (2018-01-11)
 - Fix: incorrect names for all artwork when 'extrafanart' enabled
 
