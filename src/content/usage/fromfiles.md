@@ -135,4 +135,5 @@ exact artwork type and a URL to the image.
 Enable the option "Download all processed artwork to file system" and
 Artwork Beef will download all artwork for each item processed automatically, and any images
 selected manually. Images will be saved next to the media files with the most specific
-file names detailed above.
+file names detailed above. There are also options to save fanart# to an "extrafanart"
+directory to support skins using the classic style.
