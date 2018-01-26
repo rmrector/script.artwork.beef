@@ -34,13 +34,15 @@ The full list of artwork types grabbed from external web services:
 media type | art types
 --- | ---
 **movies** and **movie sets** | _poster_, _fanart_, _banner_, _clearlogo_, _landscape_, _clearart_, _discart_
-**music videos** | _poster_ (album/single cover), _discart_, _fanart_, _artistthumb_, _banner_, _clearlogo_, _clearart_
+**music videos** | _poster_ (album/single cover), _discart_, _fanart_, _artistthumb_, _banner_, _clearlogo_, _clearart_, _landscape_
 **series** | _poster_, _fanart_, _banner_, _clearlogo_, _landscape_, _clearart_, _characterart_
 **seasons** | _poster_, _fanart_, _banner_, _landscape_
 **episodes** | _fanart_
-**artists** | _thumb_, _fanart_, _banner_, _clearlogo_, _clearart_
+**artists** | _thumb_, _fanart_, _banner_, _clearlogo_, _clearart_, _landscape_
 **albums** | _thumb_ (album cover), _discart_, _back_, _spine_
 **songs** | _thumb_ (single cover)
 
 Local artwork stored in the file system is preferred if it exists, and Artwork Beef can be configured
 to download other artwork that is added. Local artwork is currently only supported for the video library.
+
+[Version changelog](https://github.com/rmrector/script.artwork.beef/blob/master/changelog.txt)

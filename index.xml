@@ -17,7 +17,7 @@
       <pubDate>Wed, 27 Dec 2017 22:45:06 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/usage/firstusage/</guid>
-      <description>If you haven&amp;rsquo;t been managing movie collection artwork, Kodi sets posters and fanart to those of one of the movies in the collection. You may want to run Artwork Beef from Program Add-ons and remove all existing artwork from movie collections before running Artwork Beef&amp;rsquo;s full process. If you manage all of your artwork with image files and/or NFO files, the add-on setting &amp;ldquo;Auto add artwork from file system only&amp;rdquo; under &amp;ldquo;Advanced&amp;rdquo; will prevent the add-on from querying the web services during automatic processing, saving time and network resources.</description>
+      <description>The first time Artwork Beef runs it will process all items in your library. There are some artwork in the file system that isn&amp;rsquo;t added to Kodi&amp;rsquo;s database with any/many other tools. It will also check web services for new artwork to fill out any media items still missing some, unless &amp;ldquo;Automatically add artwork from file system only&amp;rdquo; is enabled. If you haven&amp;rsquo;t been managing movie collection artwork, Kodi sets posters and fanart to those of one of the movies in the collection.</description>
     </item>
     
     <item>

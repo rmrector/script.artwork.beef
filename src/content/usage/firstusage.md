@@ -4,18 +4,22 @@ date: 2017-12-27T22:45:06-07:00
 weight: 2
 ---
 
+- The first time Artwork Beef runs it will process all items in your library. There are some
+  artwork in the file system that isn't added to Kodi's database with any/many other tools. It
+  will also check web services for new artwork to fill out any media items still missing some, unless
+  "Automatically add artwork from file system only" is enabled.
 - If you haven't been managing **movie collection** artwork, Kodi sets posters and fanart to those of one of the movies
   in the collection. You may want to run Artwork Beef from Program Add-ons and remove all existing artwork from
   movie collections before running Artwork Beef's full process.
 - If you manage all of your artwork with **image files** and/or NFO files, the add-on setting
-  "Auto add artwork from file system only" under "Advanced" will prevent the add-on from
+  "Automatically add artwork from file system only" under "Advanced" will prevent the add-on from
   querying the web services during automatic processing, saving time and network resources.
-  - You may want to disable "Update artwork for old items daily" if you don't frequently add
+  - You may also want to disable "Update artwork for old items daily" if you don't frequently add
     new artwork for existing items in the library.
 - If you have multiple Kodi devices sharing a MySQL database, only enable the
   automatic processing on one of them.
 - For multiple Kodi devices with their own databases and you want Artwork Beef to download
-  **image files** to be shared across them, enable "Auto add artwork from file system only" on
+  **image files** to be shared across them, enable "Automatically add artwork from file system only" on
   all but the master Kodi device.
 
 Okay, so these are more interesting just _after_ the first run:
