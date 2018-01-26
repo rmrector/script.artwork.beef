@@ -1,3 +1,6 @@
+v0.16.1 (2018-01-25)
+- Fix: add option to automatically add artist landscape images
+
 v0.16.0 (2018-01-24)
 - Feature: artist 'landscape' images
 - Feature: option to disable all automatic processing per media type
