@@ -203,7 +203,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
             mediaitem.uniqueids['tmdb'] = uniqueid
         if not processed.exists(mediaitem.dbid, mediaitem.mediatype, mediaitem.label):
             _remove_set_movieposters(mediaitem)
-        if settings.setartwork_fromparent:
+        if settings.setartwork_fromparent and not mediaitem.file:
             _identify_parent_movieset(mediaitem)
     elif mediaitem.mediatype == mediatypes.MUSICVIDEO:
         if not mediaitem.uniqueids.get('mbtrack') or not mediaitem.uniqueids.get('mbgroup') \
@@ -253,7 +253,7 @@ def _identify_parent_movieset(mediaitem):
             setmatch = pathsep + cleanlabel + pathsep
             if setmatch in movie['file']:
                 result = movie['file'].split(setmatch)[0] + setmatch
-                mediaitem.file = result if not mediaitem.file else (result, mediaitem.file)
+                mediaitem.file = result
                 return
 
 def _get_uniqueids(jsondata, mediatype):
