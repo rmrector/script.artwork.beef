@@ -366,7 +366,7 @@ msgid "Save additional music videos fanart to 'extrafanart' directory instead"
 msgstr ""
 
 msgctxt "#32931"
-msgid "Recycle replaced artwork files to temp/cache directory"
+msgid "Recycle removed artwork files to temp/cache directory"
 msgstr ""
 
 msgctxt "#32932"
@@ -399,6 +399,10 @@ msgstr ""
 
 msgctxt "#32939"
 msgid "Disable all automatic processing for movie sets"
+msgstr ""
+
+msgctxt "#32940"
+msgid "Remove deselected artwork files"
 msgstr ""
 
 # Used in the artwork report

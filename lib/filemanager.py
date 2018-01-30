@@ -31,7 +31,6 @@ class FileManager(object):
             nowart.update(mediaitem.selectedart)
         else:
             nowart = dict(mediaitem.selectedart)
-        handle_removed(mediaitem)
         if not something_todownload(nowart):
             return False, ''
         basefile = utils.find_central_infodir(mediaitem, True)
@@ -106,24 +105,24 @@ class FileManager(object):
         except RequestException as ex:
             return None, L(HTTP_ERROR).format(type(ex).__name__)
 
-def handle_removed(mediaitem):
-    for arttype, url in mediaitem.art.iteritems():
-        if not url or url.startswith(notlocalimages) or arttype not in mediaitem.selectedart \
-        or url == mediaitem.selectedart[arttype]:
-            continue
-        if not settings.recycle_removed:
-            xbmcvfs.delete(url)
-            continue
-        directory = os.path.basename(os.path.dirname(url))
-        directory = TEMP_DIR + os.path.basename(os.path.dirname(os.path.dirname(url))) + '/' + directory \
-            if directory == 'extrafanart' else TEMP_DIR + directory
-        if not xbmcvfs.exists(directory):
-            xbmcvfs.mkdirs(directory)
-        filename = directory + '/' + os.path.basename(url)
-        if xbmcvfs.copy(url, filename):
-            xbmcvfs.delete(url)
-        else:
-            raise FileError(L(CANT_WRITE_TO_FILE).format(filename))
+    def handle_removed_files(self, mediaitem):
+        for arttype, url in mediaitem.art.iteritems():
+            if not url or url.startswith(notlocalimages) or arttype not in mediaitem.selectedart \
+            or url in mediaitem.selectedart.itervalues():
+                continue
+            if not settings.recycle_removed:
+                xbmcvfs.delete(url)
+                continue
+            directory = os.path.basename(os.path.dirname(url))
+            directory = TEMP_DIR + os.path.basename(os.path.dirname(os.path.dirname(url))) + '/' + directory \
+                if directory in ('extrafanart', 'extrathumbs') else TEMP_DIR + directory
+            if not xbmcvfs.exists(directory):
+                xbmcvfs.mkdirs(directory)
+            filename = directory + '/' + os.path.basename(url)
+            if xbmcvfs.copy(url, filename):
+                xbmcvfs.delete(url)
+            else:
+                raise FileError(L(CANT_WRITE_TO_FILE).format(filename))
 
 def something_todownload(artmap):
     for arttype, url in artmap.iteritems():

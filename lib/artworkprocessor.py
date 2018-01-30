@@ -161,15 +161,16 @@ class ArtworkProcessor(object):
                 selectedart = get_simpledict_updates(mediaitem.art, selectedart)
                 mediaitem.selectedart = selectedart
                 toset = dict(selectedart)
+                if settings.remove_deselected_files:
+                    self.downloader.handle_removed_files(mediaitem)
                 if settings.download_artwork:
                     try:
                         self.downloader.downloadfor(mediaitem, False)
-                        toset.update(mediaitem.downloadedart)
                     except FileError as ex:
                         mediaitem.error = ex.message
                         log(ex.message, xbmc.LOGERROR)
                         xbmcgui.Dialog().notification("Artwork Beef", ex.message, xbmcgui.NOTIFICATION_ERROR)
-                        toset = {}
+                    toset.update(mediaitem.downloadedart)
                 if toset:
                     mediaitem.updatedart = toset.keys()
                     add_art_to_library(mediaitem.mediatype, mediaitem.seasons, mediaitem.dbid, toset)
@@ -257,6 +258,8 @@ class ArtworkProcessor(object):
             selectedart = get_simpledict_updates(mediaitem.art, selectedart)
             mediaitem.selectedart = selectedart
             toset = dict(selectedart)
+            if settings.remove_deselected_files:
+                self.downloader.handle_removed_files(mediaitem)
             if settings.download_artwork:
                 sh, er = self.downloader.downloadfor(mediaitem)
                 services_hit = services_hit or sh

@@ -8,6 +8,7 @@
 			default="true" visible="eq(-1,true) | eq(-2,true)" />
 		<setting id="only_filesystem" label="32904" type="bool" default="false" />
 		<setting id="download_artwork" label="32923" type="bool" default="false" />
+		<setting id="remove_deselected_files" label="32940" type="bool" default="true" />
 		<setting id="recycle_removed" subsetting="true" label="32931" type="bool" default="false" visible="eq(-1,true)" />
 		<setting label="32412" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)"
 			visible="!Skin.HasSetting(disablecontext:script.artwork.beef)" />
