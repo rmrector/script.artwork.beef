@@ -157,6 +157,10 @@ msgctxt "#32058"
 msgid "Enter the artist and track name"
 msgstr ""
 
+msgctxt "#32059"
+msgid "Compatibility options"
+msgstr ""
+
 # Actions
 
 msgctxt "#32400"
