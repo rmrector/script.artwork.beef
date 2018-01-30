@@ -52,6 +52,7 @@ class Settings(object):
         self.final_notification = addon.get_setting('final_notification')
         self.save_extrafanart = addon.get_setting('save_extrafanart')
         self.save_extrafanart_mvids = addon.get_setting('save_extrafanart_mvids')
+        self.remove_deselected_files = addon.get_setting('remove_deselected_files')
         self.recycle_removed = addon.get_setting('recycle_removed')
 
         self.language_override = addon.get_setting('language_override')
