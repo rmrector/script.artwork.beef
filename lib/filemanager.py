@@ -33,8 +33,7 @@ class FileManager(object):
             nowart = dict(mediaitem.selectedart)
         if not something_todownload(nowart):
             return False, ''
-        basefile = utils.find_central_infodir(mediaitem, True)
-        path = basefile
+        path = basefile = utils.find_central_infodir(mediaitem, True)
         if not basefile:
             if not mediaitem.file:
                 return False, ''
@@ -42,6 +41,8 @@ class FileManager(object):
                 if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
             if path.startswith(blacklisted_protocols):
                 return False, ''
+            if remove_basename(mediaitem.mediatype):
+                path = basefile = os.path.dirname(basefile) + utils.get_pathsep(basefile)
             basefile = os.path.splitext(path)[0]
         services_hit = False
         error = None
@@ -140,6 +141,10 @@ def save_thisextrafanart(arttype, mediatype):
 def _saveextra_thistype(mediatype):
     return settings.save_extrafanart and mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) \
     or settings.save_extrafanart_mvids and mediatype == mediatypes.MUSICVIDEO
+
+def remove_basename(mediatype):
+    return mediatype == mediatypes.MOVIE and not settings.savewith_basefilename \
+    or mediatype == mediatypes.MUSICVIDEO and not settings.savewith_basefilename_mvids
 
 class FileError(Exception):
     def __init__(self, message, cause=None):
