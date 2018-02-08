@@ -409,6 +409,14 @@ msgctxt "#32940"
 msgid "Remove deselected artwork files"
 msgstr ""
 
+msgctxt "#32941"
+msgid "Save movie artwork with movie base file name"
+msgstr ""
+
+msgctxt "#32942"
+msgid "Save music video artwork with music video base file name"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"
