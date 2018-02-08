@@ -164,7 +164,7 @@ msgstr ""
 # Actions
 
 msgctxt "#32400"
-msgid "Select series to auto add episode artwork..."
+msgid "Select series for episode 'fanart'..."
 msgstr ""
 
 msgctxt "#32401"
@@ -370,7 +370,7 @@ msgid "Save additional music videos fanart to 'extrafanart' directory instead"
 msgstr ""
 
 msgctxt "#32931"
-msgid "Recycle removed artwork files to temp/cache directory"
+msgid "Recycle removed and replaced artwork files to temp/cache directory"
 msgstr ""
 
 msgctxt "#32932"
