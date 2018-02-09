@@ -117,6 +117,7 @@
 		<!-- For add-on inner workings -->
 		<setting id="last_videoupdate" type="text" default="0" visible="false" />
 		<setting id="last_musicupdate" type="text" default="0" visible="false" />
+		<setting id="check_allepisodes" type="bool" default="true" visible="false" />
 		<setting id="autoaddepisodes_list" type="text" default="" visible="false" />
 	</category>
 </settings>
