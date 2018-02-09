@@ -31,7 +31,7 @@ class FileManager(object):
             nowart.update(mediaitem.selectedart)
         else:
             nowart = dict(mediaitem.selectedart)
-        if not something_todownload(nowart):
+        if not info.has_art_todownload(nowart):
             return False, ''
         path = basefile = utils.find_central_infodir(mediaitem, True)
         if not basefile:
@@ -124,12 +124,6 @@ class FileManager(object):
                 xbmcvfs.delete(url)
             else:
                 raise FileError(L(CANT_WRITE_TO_FILE).format(filename))
-
-def something_todownload(artmap):
-    for arttype, url in artmap.iteritems():
-        if url and url.startswith('http'):
-            return True
-    return False
 
 def save_extrafanart(mediaitem, allart):
     return _saveextra_thistype(mediaitem.mediatype) \

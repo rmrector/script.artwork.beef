@@ -71,6 +71,12 @@ def get_own_artwork(jsondata):
 def has_generated_thumbnail(jsondata):
     return jsondata['art'].get('thumb', '').startswith(pykodi.thumbnailimages)
 
+def has_art_todownload(artmap):
+    for arttype, url in artmap.iteritems():
+        if url and url.startswith('http'):
+            return True
+    return False
+
 def arttype_matches_base(arttype, basetype):
     return re.match(r'{0}\d*$'.format(basetype), arttype)
 
@@ -106,6 +112,9 @@ def fill_multiart(original_art, basetype, artchanges=((), ())):
                 continue
             result[basetype + (str(idx) if idx else '')] = toadd.pop(0)
     return result
+
+def item_has_generated_thumbnail(mediaitem):
+    return mediaitem.art.get('thumb', '').startswith(pykodi.thumbnailimages)
 
 def iter_missing_arttypes(mediaitem, fromtypes):
     for arttype, artinfo in mediatypes.artinfo[mediaitem.mediatype].iteritems():

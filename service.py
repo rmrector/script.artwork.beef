@@ -25,6 +25,7 @@ class ArtworkService(xbmc.Monitor):
         self._status = None
         self._last_videoupdate = addon.get_setting('last_videoupdate')
         self._last_musicupdate = addon.get_setting('last_musicupdate')
+        self._check_allepisodes = addon.get_setting('check_allepisodes')
         self.status = STATUS_IDLE
 
     @property
@@ -48,6 +49,15 @@ class ArtworkService(xbmc.Monitor):
     def last_musicupdate(self, value):
         addon.set_setting('last_musicupdate', value)
         self._last_musicupdate = value
+
+    @property
+    def check_allepisodes(self):
+        return self._check_allepisodes
+
+    @check_allepisodes.setter
+    def check_allepisodes(self, value):
+        addon.set_setting('check_allepisodes', value)
+        self._check_allepisodes = value
 
     @property
     def status(self):
@@ -175,7 +185,7 @@ class ArtworkService(xbmc.Monitor):
             and (pykodi.get_kodi_version() < 18 or data.get('added'))
 
     def process_allvideos(self, shouldinclude_fn=None):
-        allvideos = False
+        allvideos = self.check_allepisodes
         if not shouldinclude_fn:
             allvideos = True
             shouldinclude_fn = lambda id, type, label: True
@@ -193,35 +203,30 @@ class ArtworkService(xbmc.Monitor):
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
             return False
-        serieseps_added = set()
-        for series in serieslist:
-            processed_season = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW, series['label'])
-            if not processed_season or series['season'] > int(processed_season) \
-            or shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW, series['label']):
-                if not mediatypes.disabled(mediatypes.TVSHOW):
+        if not mediatypes.disabled(mediatypes.TVSHOW):
+            for series in serieslist:
+                processed_season = self.processed.get_data(series['tvshowid'], mediatypes.TVSHOW, series['label'])
+                if not processed_season or series['season'] > int(processed_season) \
+                or shouldinclude_fn(series['tvshowid'], mediatypes.TVSHOW, series['label']):
                     items.append(info.MediaItem(series))
-                if series['imdbnumber'] not in settings.autoadd_episodes and not allvideos:
-                    if settings.generate_episode_thumb and not mediatypes.disabled(mediatypes.EPISODE):
-                        for episode in quickjson.get_episodes(series['tvshowid']):
-                            if not info.has_generated_thumbnail(episode):
-                                ep = info.MediaItem(episode)
-                                ep.skip_artwork = ['fanart']
-                                items.append(ep)
-                    serieseps_added.add(series['tvshowid'])
-            if series['imdbnumber'] in settings.autoadd_episodes and series['tvshowid'] not in serieseps_added \
-            and not mediatypes.disabled(mediatypes.EPISODE):
-                episodes = quickjson.get_episodes(series['tvshowid'])
-                items.extend(info.MediaItem(ep) for ep in episodes if shouldinclude_fn(ep['episodeid'], mediatypes.EPISODE, ep['label']))
-                serieseps_added.add(series['tvshowid'])
-            if self.abortRequested():
-                return False
-        if settings.generate_episode_thumb and not mediatypes.disabled(mediatypes.EPISODE):
-            # Too many to get all of them, and filtering by a specific date for dateadded isn't much better
-            for episode in quickjson.get_episodes() if allvideos else quickjson.get_episodes(limit=500):
-                if episode['tvshowid'] not in serieseps_added and not info.has_generated_thumbnail(episode):
-                    ep = info.MediaItem(episode)
-                    ep.skip_artwork = ['fanart']
-                    items.append(ep)
+                if self.abortRequested():
+                    return False
+        if include_any_episode():
+            seriesmap = dict((s['tvshowid'], s['imdbnumber']) for s in serieslist)
+            episodes = []
+            for episode in (quickjson.get_episodes() if allvideos else quickjson.get_episodes(limit=500)):
+                ep = info.MediaItem(episode)
+                if include_episode(ep):
+                    episodes.append(ep)
+            self.check_allepisodes = len(episodes) > 400
+            for episode in episodes:
+                if seriesmap.get(episode.tvshowid) not in settings.autoadd_episodes:
+                    episode.skip_artwork = ['fanart']
+                    items.append(episode)
+                elif shouldinclude_fn(episode.dbid, mediatypes.EPISODE, episode.label):
+                    items.append(episode)
+                if self.abortRequested():
+                    return False
         self.reset_recent()
         return self.processor.process_medialist(items)
 
@@ -247,14 +252,14 @@ class ArtworkService(xbmc.Monitor):
                 seriesadded.add(episode.tvshowid)
                 series = info.MediaItem(quickjson.get_item_details(episode.tvshowid, mediatypes.TVSHOW))
                 newitems.append(series)
-            if mediatypes.disabled(mediatypes.EPISODE):
+            if not include_any_episode():
                 if self.abortRequested():
                     return
                 continue
             if episode.tvshowid in addepisodesfrom:
                 newitems.append(episode)
             elif episode.tvshowid in ignoreepisodesfrom:
-                if settings.generate_episode_thumb:
+                if include_episode(episode):
                     episode.skip_artwork = ['fanart']
                     newitems.append(episode)
             else:
@@ -265,7 +270,7 @@ class ArtworkService(xbmc.Monitor):
                     newitems.append(episode)
                 else:
                     ignoreepisodesfrom.add(episode.tvshowid)
-                    if settings.generate_episode_thumb:
+                    if include_episode(episode):
                         episode.skip_artwork = ['fanart']
                         newitems.append(episode)
             if self.abortRequested():
@@ -308,6 +313,14 @@ class ArtworkService(xbmc.Monitor):
 
 def get_date():
     return pykodi.get_infolabel('System.Date(yyyy-mm-dd)')
+
+def include_any_episode():
+    return not mediatypes.disabled(mediatypes.EPISODE) \
+        and (settings.generate_episode_thumb or settings.download_artwork)
+
+def include_episode(episode):
+    return settings.generate_episode_thumb and not info.item_has_generated_thumbnail(episode) \
+        or settings.download_artwork and info.has_art_todownload(episode.art)
 
 if __name__ == '__main__':
     log('Service started', xbmc.LOGINFO)
