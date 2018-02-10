@@ -1,3 +1,6 @@
+v0.17.1 (2018-02-10)
+- Fix: episode handling with a special combination of settings
+
 v0.17.0 (2018-02-09)
 - Feature: add option to save artwork with/without base filename
 - Fix: better selection of episodes for processing
