@@ -41,9 +41,9 @@ class FileManager(object):
                 if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
             if path.startswith(blacklisted_protocols):
                 return False, ''
+            basefile = os.path.splitext(path)[0]
             if remove_basename(mediaitem.mediatype):
                 path = basefile = os.path.dirname(basefile) + utils.get_pathsep(basefile)
-            basefile = os.path.splitext(path)[0]
         services_hit = False
         error = None
         def st(num):
