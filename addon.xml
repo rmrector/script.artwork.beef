@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.17.1" provider-name="rmrector">
+<addon id="script.artwork.beef" name="Artwork Beef" version="0.17.2" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -38,6 +38,9 @@
 		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the file system.</description>
 		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB</disclaimer>
 		<news>
+v0.17.2 (2018-02-10)
+- Fix: base filename handling
+
 v0.17.1 (2018-02-10)
 - Fix: episode handling with a special combination of settings
 
@@ -45,24 +48,6 @@ v0.17.0 (2018-02-09)
 - Feature: add option to save artwork with/without base filename
 - Fix: better selection of episodes for processing
 - Fix: prefer central directory for movie set artwork
-
-v0.16.1 (2018-01-25)
-- Fix: add option to automatically add artist landscape images
-
-v0.16.0 (2018-01-24)
-- Feature: artist 'landscape' images
-- Feature: option to disable all automatic processing per media type
-- Fix: support rar/zip archived media for Krypton and below
-- Fix: single item updates in Leia
-- Fix: music artwork when video library artwork downloading is enabled
-
-v0.15.1 (2018-01-11)
-- Fix: incorrect names for all artwork when 'extrafanart' enabled
-
-v0.15.0 (2018-01-09)
-- Feature: add option to save additional fanart to 'extrafanart' directory rather than matching Kodi export names
-- Feature: remove deselected local artwork, add option to recycle changed local artwork
-- Fix: limit songs when processing single album/artist
 		</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
 		<forum>https://forum.kodi.tv/showthread.php?tid=258886</forum>
