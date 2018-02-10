@@ -216,7 +216,7 @@ class ArtworkService(xbmc.Monitor):
             episodes = []
             for episode in (quickjson.get_episodes() if allvideos else quickjson.get_episodes(limit=500)):
                 ep = info.MediaItem(episode)
-                if include_episode(ep):
+                if seriesmap.get(ep.tvshowid) in settings.autoadd_episodes or include_episode(ep):
                     episodes.append(ep)
             self.check_allepisodes = len(episodes) > 400
             for episode in episodes:
@@ -316,7 +316,7 @@ def get_date():
 
 def include_any_episode():
     return not mediatypes.disabled(mediatypes.EPISODE) \
-        and (settings.generate_episode_thumb or settings.download_artwork)
+        and (settings.generate_episode_thumb or settings.download_artwork or settings.autoadd_episodes)
 
 def include_episode(episode):
     return settings.generate_episode_thumb and not info.item_has_generated_thumbnail(episode) \

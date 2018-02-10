@@ -118,8 +118,7 @@ class ArtworkProcessor(object):
             if mediatype == mediatypes.TVSHOW and not mediatypes.disabled(mediatypes.EPISODE):
                 if mediaitem.uniqueids and any(x in mediaitem.uniqueids.itervalues() for x in settings.autoadd_episodes):
                     medialist.extend(info.MediaItem(ep) for ep in quickjson.get_episodes(dbid))
-                elif not mediatypes.disabled(mediatypes.EPISODE) \
-                and (settings.generate_episode_thumb or settings.download_artwork):
+                elif settings.generate_episode_thumb or settings.download_artwork:
                     for episode in quickjson.get_episodes(dbid):
                         if settings.generate_episode_thumb and not info.has_generated_thumbnail(episode) \
                         or settings.download_artwork and info.has_art_todownload(episode['art']):
