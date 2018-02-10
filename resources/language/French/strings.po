@@ -157,11 +157,15 @@ msgctxt "#32058"
 msgid "Enter the artist and track name"
 msgstr "Entrer le nom de l'artiste et de la chanson"
 
+msgctxt "#32059"
+msgid "Compatibility options"
+msgstr "Options de compatibilité"
+
 # Actions
 
 msgctxt "#32400"
-msgid "Select series to auto add episode artwork..."
-msgstr "Sélectionner les séries TV pour ajouter automatiquement les artworks des épisodes..."
+msgid "Select series for episode 'fanart'..."
+msgstr "Sélectionner les séries TV pour les fanarts des épisodes..."
 
 msgctxt "#32401"
 msgid "Add missing artwork now?"
@@ -366,8 +370,8 @@ msgid "Save additional music videos fanart to 'extrafanart' directory instead"
 msgstr "Enregistrer les fanarts supplémentaires des clips vidéos dans un répertoire 'extrafanart'"
 
 msgctxt "#32931"
-msgid "Recycle replaced artwork files to temp/cache directory"
-msgstr "Recycler les artworks remplacés dans le répertoire temp/cache"
+msgid "Recycle removed and replaced artwork files to temp/cache directory"
+msgstr "Recycler les artworks supprimés et remplacés dans le répertoire temp/cache"
 
 msgctxt "#32932"
 msgid "Disable all automatic processing for movies"
@@ -400,6 +404,18 @@ msgstr "Désactiver tous les traitements automatiques pour les chansons"
 msgctxt "#32939"
 msgid "Disable all automatic processing for movie sets"
 msgstr "Désactiver tous les traitements automatiques pour les sagas de films"
+
+msgctxt "#32940"
+msgid "Remove deselected artwork files"
+msgstr "Supprimer les artworks désélectionnés"
+
+msgctxt "#32941"
+msgid "Save movie artwork with movie base file name"
+msgstr "Sauvegarder les artworks des films avec les mêmes noms de fichiers des films"
+
+msgctxt "#32942"
+msgid "Save music video artwork with music video base file name"
+msgstr "Sauvegarder les artworks des clips vidéos avec les mêmes noms de fichiers des clips vidéos"
 
 # Used in the artwork report
 
