@@ -1,3 +1,8 @@
+v0.17.0 (2018-02-09)
+- Feature: add option to save artwork with/without base filename
+- Fix: better selection of episodes for processing
+- Fix: prefer central directory for movie set artwork
+
 v0.16.1 (2018-01-25)
 - Fix: add option to automatically add artist landscape images
 
