@@ -10,6 +10,7 @@ from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.providers import ProviderError
 from lib.libs.utils import SortedDisplay
+from projectkeys import THETVDB_PROJECTKEY as apikey
 
 # designed for version 2.1.0 of TheTVDB API
 class TheTVDBProvider(AbstractImageProvider):
@@ -17,7 +18,6 @@ class TheTVDBProvider(AbstractImageProvider):
     mediatype = mediatypes.TVSHOW
     contenttype = 'application/json'
 
-    apikey = '***REMOVED***'
     apiurl = 'https://api.thetvdb.com/series/%s/images/query'
     loginurl = 'https://api.thetvdb.com/login'
     imageurl_base = 'https://thetvdb.com/banners/'
@@ -95,7 +95,7 @@ class TheTVDBProvider(AbstractImageProvider):
         return result
 
     def login(self):
-        response = self.getter.session.post(self.loginurl, json={'apikey': self.apikey},
+        response = self.getter.session.post(self.loginurl, json={'apikey': apikey},
             headers={'Content-Type': 'application/json', 'User-Agent': settings.useragent}, timeout=15)
         if not response or not response.headers['Content-Type'].startswith('application/json'):
             raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]

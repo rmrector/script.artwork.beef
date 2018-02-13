@@ -8,6 +8,7 @@ from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
+from projectkeys import FANARTTV_PROJECTKEY as apikey
 
 class FanartTVAbstractProvider(AbstractImageProvider):
     __metaclass__ = ABCMeta
@@ -16,7 +17,6 @@ class FanartTVAbstractProvider(AbstractImageProvider):
     contenttype = 'application/json'
 
     name = SortedDisplay('fanart.tv', 'fanart.tv')
-    apikey = '***REMOVED***'
     apiurl = 'https://webservice.fanart.tv/v3/%s/%s'
 
     def get_images(self, uniqueids, types=None):
@@ -43,7 +43,7 @@ class FanartTVAbstractProvider(AbstractImageProvider):
 
     def _get_data(self, mediaid):
         self.log('uncached', xbmc.LOGINFO)
-        headers = {'api-key': self.apikey}
+        headers = {'api-key': apikey}
         if settings.fanarttv_clientkey:
             headers['client-key'] = settings.fanarttv_clientkey
         response = self.doget(self.apiurl % (self.api_section, mediaid), headers=headers)

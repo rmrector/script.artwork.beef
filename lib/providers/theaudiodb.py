@@ -4,19 +4,18 @@ from lib.libs import mediatypes
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 from lib.providers.base import AbstractProvider, AbstractImageProvider, cache
-
-api_key = '***REMOVED***'
+from projectkeys import TADB_PROJECTKEY as apikey
 
 # url param i=MB track/album/artist ID
 artmap = {'mbtrack': {'datakey':'track', 'artmap': {'strTrackThumb': 'thumb'},
-        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/track-mb.php'.format(api_key)},
+        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/track-mb.php'.format(apikey)},
     'mbgroup': {'datakey':'album', 'artmap': {'strAlbumThumb': 'thumb', 'strAlbumCDart': 'discart',
             'strAlbumThumbBack': 'back', 'strAlbumSpine': 'spine'},
-        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/album-mb.php'.format(api_key)},
+        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/album-mb.php'.format(apikey)},
     'mbartist': {'datakey':'artists', 'artmap': {'strArtistThumb': 'thumb', 'strArtistLogo': 'clearlogo',
             'strArtistBanner': 'banner', 'strArtistFanart': 'fanart', 'strArtistFanart2': 'fanart',
             'strArtistFanart3': 'fanart', 'strArtistClearart': 'clearart', 'strArtistWideThumb': 'landscape'},
-        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/artist-mb.php'.format(api_key)}
+        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/artist-mb.php'.format(apikey)}
 }
 provtypes = set(x for data in artmap.values() for x in data['artmap'].values())
 
@@ -134,7 +133,7 @@ class TheAudioDBSearch(AbstractProvider):
     contenttype = 'application/json'
 
     # s=[artist], t=[track title]
-    url_trackby_artistandtrack = 'http://www.theaudiodb.com/api/v1/json/{0}/searchtrack.php'.format(api_key)
+    url_trackby_artistandtrack = 'http://www.theaudiodb.com/api/v1/json/{0}/searchtrack.php'.format(apikey)
 
     def get_data(self, url, params=None):
         result = cache.cacheFunction(self._get_data, url, params)

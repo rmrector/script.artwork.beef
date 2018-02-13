@@ -6,8 +6,8 @@ from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 from lib.providers.base import AbstractProvider, AbstractImageProvider, cache
+from projectkeys import TMDB_PROJECTKEY as apikey
 
-apikey = '***REMOVED***'
 cfgurl = 'https://api.themoviedb.org/3/configuration'
 
 class TheMovieDBAbstractProvider(AbstractImageProvider):
