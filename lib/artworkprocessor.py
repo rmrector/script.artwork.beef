@@ -175,7 +175,7 @@ class ArtworkProcessor(object):
                 if toset:
                     mediaitem.updatedart = toset.keys()
                     add_art_to_library(mediaitem.mediatype, mediaitem.seasons, mediaitem.dbid, toset)
-                reporting.report_item(mediaitem, True, True)
+                reporting.report_item(mediaitem, True, True, self.downloader.size)
                 if not mediaitem.error:
                     notifycount(len(toset))
         else:

@@ -83,7 +83,7 @@ def report_end(medialist, abortedcount, downloaded_size):
 
         if downloaded:
             write(reportfile, L(DOWNLOAD_COUNT).format(downloaded)
-                + ' - {0:0.2f}MB'.format(downloaded_size // 1000000.00))
+                + ' - {0:0.2f}MB'.format(downloaded_size / 1000000.00))
         if not total:
             write(reportfile, L(NO_UPDATES))
         else:
@@ -95,7 +95,7 @@ def report_end(medialist, abortedcount, downloaded_size):
     if _should_rotate():
         _rotate_file()
 
-def report_item(mediaitem, forcedreport=False, manual=False):
+def report_item(mediaitem, forcedreport=False, manual=False, downloaded_size=0):
     if not forcedreport and not settings.report_peritem:
         return
     with _get_file() as reportfile:
@@ -111,7 +111,10 @@ def report_item(mediaitem, forcedreport=False, manual=False):
             write(reportfile, L(MISSING_LABEL).format(', '.join(mediaitem.missingart)))
 
         if mediaitem.downloadedart:
-            write(reportfile, L(DOWNLOAD_COUNT).format(len(mediaitem.downloadedart)))
+            message = L(DOWNLOAD_COUNT).format(len(mediaitem.downloadedart))
+            if downloaded_size:
+                message += ' - {0:0.2f}MB'.format(downloaded_size / 1000000.00)
+            write(reportfile, message)
         if mediaitem.updatedart:
             write(reportfile, L(UPDATED_LABEL).format(', '.join(mediaitem.updatedart)))
         elif manual or mediaitem.missingart:
