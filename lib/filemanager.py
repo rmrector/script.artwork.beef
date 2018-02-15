@@ -79,7 +79,7 @@ class FileManager(object):
             if contenttype in typemap:
                 ext = typemap[contenttype]
             else:
-                if not re.search('\.\w*$', url):
+                if not re.search(r'\.\w*$', url):
                     continue
                 ext = url.rsplit('.', 1)[1]
             if save_thisextrafanart(arttype, mediaitem.mediatype):
@@ -89,7 +89,8 @@ class FileManager(object):
                 filename = basefile + sep + type_for_file + '.' + ext
             # For now this just downloads the whole thing in memory, then saves it to file.
             #  Maybe chunking it will be better when GIFs are handled
-            with closing(xbmcvfs.File(filename, 'wb')) as file_:
+            file_ = xbmcvfs.File(filename, 'wb')
+            with closing(file_):
                 if not file_.write(result.content):
                     raise FileError(L(CANT_WRITE_TO_FILE).format(filename))
             mediaitem.downloadedart[arttype] = filename
@@ -142,5 +143,5 @@ def remove_basename(mediatype):
 
 class FileError(Exception):
     def __init__(self, message, cause=None):
-        super(FileError, self).__init__(message)
         self.cause = cause
+        self.message = message

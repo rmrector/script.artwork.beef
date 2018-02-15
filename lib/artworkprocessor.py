@@ -191,6 +191,7 @@ class ArtworkProcessor(object):
         singleitemlist = len(medialist) == 1
         if not singleitemlist:
             reporting.report_start(medialist)
+        fileerrors = 0
         for mediaitem in medialist:
             if mediaitem.mediatype in mediatypes.audiotypes and get_kodi_version() < 18:
                 continue
@@ -199,13 +200,17 @@ class ArtworkProcessor(object):
             currentitem += 1
             try:
                 services_hit = self._process_item(mediaitem)
+                fileerrors = 0
             except FileError as ex:
                 mediaitem.error = ex.message
                 log(ex.message, xbmc.LOGERROR)
                 self.notify_warning(ex.message, None, True)
-                reporting.report_item(mediaitem, True)
-                aborted = True
-                break
+                if fileerrors < 2:
+                    fileerrors += 1
+                else:
+                    reporting.report_item(mediaitem, True)
+                    aborted = True
+                    break
             reporting.report_item(mediaitem, singleitemlist or mediaitem.error)
             artcount += len(mediaitem.updatedart)
 
@@ -381,7 +386,7 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
             for arttype, url in selectedart.iteritems() if '.' not in arttype))
     else:
         info.update_art_in_library(mediatype, dbid, selectedart)
-    for arttype, url in selectedart.iteritems():
+    for url in selectedart.values():
         # Remove local images from cache so Kodi caches the new ones
         if not url or url.startswith(pykodi.notlocalimages):
             continue

@@ -58,7 +58,7 @@ class FanartTVAbstractProvider(AbstractImageProvider):
         return result
 
     @abstractmethod
-    def _get_images(self, data):
+    def _get_images(self, data, mediaid=None):
         pass
 
     @abstractmethod
