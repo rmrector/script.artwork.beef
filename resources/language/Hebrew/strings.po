@@ -1,0 +1,239 @@
+# Kodi Media Center language file
+# Addon Name: Artwork Beef
+# Addon id: service.artwork.beef
+msgid ""
+msgstr ""
+"Project-Id-Version: KODI Main\n"
+"Report-Msgid-Bugs-To: http://trac.kodi.tv/\n"
+"POT-Creation-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2017-10-16 09:52+0300\n"
+"Last-Translator: A. Dambledore\n"
+"Language-Team: Eng2Heb\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: he_IL\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+
+msgctxt "#32000"
+msgid "Unknown source"
+msgstr "מקור לא ידוע"
+
+# Prefixed to 32019 if no artwork found or updated
+msgctxt "#32001"
+msgid "Something missing?"
+msgstr "משהו חסר?"
+
+# Messages
+msgctxt "#32019"
+msgid "Contribute or donate to the source: fanart.tv, thetvdb.com, themoviedb.org"
+msgstr "אנא המשיכו לתרום ולנדב עזרה למקורות: fanart.tv, thetvdb.com, themoviedb.org"
+
+msgctxt "#32020"
+msgid "Adding extended artwork"
+msgstr "מוסיף גרפיקה מורחבת"
+
+msgctxt "#32021"
+msgid "No artwork available"
+msgstr "אין גרפיקה זמינה"
+
+msgctxt "#32022"
+msgid "{0} artwork updated"
+msgstr "{0} הגרפיקה מעודכנת"
+
+msgctxt "#32023"
+msgid "No artwork updated"
+msgstr "הגרפיקה לא עודכנה"
+
+msgctxt "#32024"
+msgid "Error with provider '{0}'"
+msgstr "שגיאה עם ספק '{0}'"
+
+msgctxt "#32025"
+msgid "Media type '{0}' not supported"
+msgstr "סוג מדיה '{0}' אינו נתמך"
+
+# Unused "#32026"
+msgctxt "#32027"
+msgid "Removed {0} images"
+msgstr "הוסרו {0} תמונות"
+
+# 0: media type - movie/series/seasons/episodes
+msgctxt "#32028"
+msgid "Listing all {0}"
+msgstr "רישום כל {0}"
+
+msgctxt "#32029"
+msgid "All sets identified. Hurray!"
+msgstr "כל הערכות זוהו. איזה כיף!"
+
+# Headings
+# 0: media title
+msgctxt "#32050"
+msgid "Choose art type for {0}"
+msgstr "בחר סוג אומנות עבור {0}"
+
+# 0: art type (poster/fanart/etc), 1: media title
+msgctxt "#32051"
+msgid "Choose {0} for {1}"
+msgstr "בחר {0} עבור {1}"
+
+msgctxt "#32056"
+msgid "Unmatched sets"
+msgstr "מארזים לא תואמים"
+
+msgctxt "#32057"
+msgid "Enter TheMovieDB collection name"
+msgstr "הזן שם אוסף TheMovieDB"
+
+msgctxt "#32052"
+msgid "Actions"
+msgstr "פעולות"
+
+msgctxt "#32053"
+msgid "Automatically add these artwork types from web services"
+msgstr "הוסף באופן אוטומטי את סוגי גרפיקה הללו משירותי האינטרנט"
+
+msgctxt "#32054"
+msgid "Sorting and auto filters"
+msgstr "מיון ומסננים אוטומטים"
+
+msgctxt "#32055"
+msgid "Maintenance actions [I](save all changes to add-on settings first)[/I]"
+msgstr "פעולות תחזוקה [I](שמור את כל השינויים להגדרות ההרחבה)[/I]"
+
+# Actions
+msgctxt "#32400"
+msgid "Select series to auto add episode artwork..."
+msgstr "בחר סידרה להוספת גרפיקה לפרק באופן אוטומטי..."
+
+msgctxt "#32401"
+msgid "Add missing artwork now?"
+msgstr "להוסיף גרפיקה חסרה עכשיו?"
+
+msgctxt "#32402"
+msgid "Add missing episode artwork for newly selected series after add-on settings are closed?"
+msgstr "להוסיף גרפיקה חסרה לפרק עבור הסדרה החדשה שנבחרה, לאחר שהגדרות ההרחבה יאושרו?"
+
+msgctxt "#32403"
+msgid "stop current process"
+msgstr "עצור את התהליך הנוכחי"
+
+msgctxt "#32404"
+msgid "add missing artwork for new items"
+msgstr "הוסף גרפיקה חסרה עבור פריטים חדשים"
+
+msgctxt "#32405"
+msgid "add missing artwork for all items"
+msgstr "הוסף גרפיקה חסרה עבור כל הפריטים"
+
+msgctxt "#32406"
+msgid "add missing artwork for old items"
+msgstr "הוסף גרפיקה חסרה עבור פריטים ישנים"
+
+msgctxt "#32408"
+msgid "identify unmatched sets with TheMovieDB ..."
+msgstr "זיהוי ערכות לא תואמות בעזרת TheMovieDB..."
+
+msgctxt "#32407"
+msgid "Remove extra artwork not configured in the add-on"
+msgstr "הסרת הגרפיקה הנוספת אינה מוגדרת בהרחבה"
+
+msgctxt "#32409"
+msgid "Search for set"
+msgstr "חפש ערכה"
+
+msgctxt "#32410"
+msgid "Add missing artwork"
+msgstr "הוסף גרפיקה חסרה"
+
+msgctxt "#32411"
+msgid "Select artwork..."
+msgstr "בחרו בגרפיקה..."
+
+msgctxt "#32412"
+msgid "Disable Artwork Beef context items [I](per skin)[/I]"
+msgstr "השבת פרטי תפריט קישור של Artwork Beef [I](לכל מעטפת)[/I]"
+
+msgctxt "#32413"
+msgid "Enable Artwork Beef context items [I](per skin)[/I]"
+msgstr "אפשר פרטי תפריט קישור של Artwork Beef [I](לכל מעטפת)[/I]"
+
+msgctxt "#32414"
+msgid "Remove specific type of artwork for ..."
+msgstr "הסר סוג מסוים של גרפיקה עבור..."
+
+# Settings
+msgctxt "#32900"
+msgid "Automatically add artwork for new items"
+msgstr "הוסף גרפיקה עבור פריטים חדשים באופן אוטומטי"
+
+msgctxt "#32912"
+msgid "Update artwork for old items daily"
+msgstr "עדכן את הגרפיקה עבור פריטים ישנים מדי יום"
+
+msgctxt "#32904"
+msgid "Automatically add from filesystem only"
+msgstr "הוסף באופן אוטומטי מתוך מערכת הקבצים בלבד"
+
+msgctxt "#32901"
+msgid "Prefer fanart with no title"
+msgstr "העדף פאנארט ללא כותרת"
+
+msgctxt "#32917"
+msgid "Prefer posters with no title"
+msgstr "העדף פוסטרים ללא כותרת"
+
+msgctxt "#32902"
+msgid "Preferred artwork size"
+msgstr "גודל הגרפיקה המועדף"
+
+msgctxt "#32907"
+msgid "Minimum image rating"
+msgstr "דירוג התמונה המינימלי"
+
+msgctxt "#32913"
+msgid "Override image language (defaults to Kodi interface)"
+msgstr "עקוף את הגדרת השפה של התמונה (ערך ברירת המחדל מוגדר בממשק של קודי)"
+
+msgctxt "#32903"
+msgid "Use high quality preview images"
+msgstr "תשתמש בתצוגה מקדימה של תמונות באיכות גבוהה"
+
+msgctxt "#32905"
+msgid "fanart.tv personal API key"
+msgstr "מפתח API מותאם אישית ל-Fanart.tv"
+
+msgctxt "#32906"
+msgid "Identify alternate Artwork Downloader and MSAA artwork file names"
+msgstr "זהה חלופי מ-Artwork Downloader ושמות של קבצי גרפיקה מ- MSAA"
+
+# subsetting of action #32407
+msgctxt "#32908"
+msgid "Additional artwork types to keep"
+msgstr "סוגי גרפיקה נוספים לשמירה"
+
+msgctxt "#32909"
+msgid "grab movie set artwork from central artwork directory"
+msgstr "הורד גרפיקת מארז סרטים מתוך ספריית הגרפיקה המרכזית"
+
+msgctxt "#32910"
+msgid "central movie set artwork directory"
+msgstr "תיקיית גרפיקה מרכזית של מארז הסרטים"
+
+msgctxt "#32911"
+msgid "grab movie set artwork from movie parent directory"
+msgstr "הורד גרפיקת מארז סרטים מתוך ספריית האב של הסרט"
+
+msgctxt "#32914"
+msgid "Always generate episode thumb from video file"
+msgstr "תמיד תיצור תמונות ממוזערות לפרק מתוך קובץ הווידאו"
+
+msgctxt "#32915"
+msgid "Always generate movie thumb from video file"
+msgstr "תמיד תיצור תמונות ממוזערות לסרט מתוך קובץ הווידאו"
+
+msgctxt "#32916"
+msgid "Include detailed per item changes in the reports"
+msgstr "כלול שינויים מפורטים בכל פריט בדוחות"
