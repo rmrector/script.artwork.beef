@@ -58,7 +58,10 @@ class ArtworkProcessor(object):
             xbmcgui.Dialog().notification("Artwork Beef: " + header, message, '-', 8000)
         elif settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
             self.update_progress(100, message, header)
-            self.monitor.waitForAbort(8)
+            try:
+                self.monitor.really_waitforabort(8)
+            except AttributeError:
+                self.monitor.waitForAbort(8)
 
     def close_progress(self):
         if self.visible and settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
