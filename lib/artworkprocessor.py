@@ -121,10 +121,10 @@ class ArtworkProcessor(object):
             if mediatype == mediatypes.TVSHOW and not mediatypes.disabled(mediatypes.EPISODE):
                 if mediaitem.uniqueids and any(x in mediaitem.uniqueids.itervalues() for x in settings.autoadd_episodes):
                     medialist.extend(info.MediaItem(ep) for ep in quickjson.get_episodes(dbid))
-                elif settings.generate_episode_thumb or settings.download_artwork:
+                elif settings.generate_episode_thumb or mediatypes.downloadartwork(mediatypes.EPISODE):
                     for episode in quickjson.get_episodes(dbid):
                         if settings.generate_episode_thumb and not info.has_generated_thumbnail(episode) \
-                        or settings.download_artwork and info.has_art_todownload(episode['art']):
+                        or mediatypes.downloadartwork(mediatypes.EPISODE) and info.has_art_todownload(episode['art']):
                             episode = info.MediaItem(episode)
                             episode.skip_artwork = ['fanart']
                             medialist.append(episode)
@@ -167,7 +167,7 @@ class ArtworkProcessor(object):
                 toset = dict(selectedart)
                 if settings.remove_deselected_files:
                     self.downloader.handle_removed_files(mediaitem)
-                if settings.download_artwork:
+                if mediatypes.downloadartwork(mediaitem.mediatype):
                     try:
                         self.downloader.downloadfor(mediaitem, False)
                     except FileError as ex:
@@ -269,10 +269,11 @@ class ArtworkProcessor(object):
             toset = dict(selectedart)
             if settings.remove_deselected_files:
                 self.downloader.handle_removed_files(mediaitem)
-            if settings.download_artwork:
+            if mediatypes.downloadartwork(mediaitem.mediatype):
                 sh, er = self.downloader.downloadfor(mediaitem)
                 services_hit = services_hit or sh
-                error = error or er
+                if er:
+                    mediaitem.error = er
                 toset.update(mediaitem.downloadedart)
             if toset:
                 mediaitem.updatedart = list(set(mediaitem.updatedart + toset.keys()))

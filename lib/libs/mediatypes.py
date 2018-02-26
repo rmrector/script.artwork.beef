@@ -227,11 +227,15 @@ artinfo = {
 
 central_directories = {MOVIESET: False}
 disabled_mediatypes = dict((mediatype, False) for mediatype in artinfo)
+todownload = dict((mediatype, False) for mediatype in artinfo)
 arttype_settingskeys = [m[0] + '.' + art[0] + ('_limit' if art[1]['multiselect'] else '')
     for m in artinfo.iteritems() for art in m[1].iteritems()]
 
 def disabled(mediatype):
     return disabled_mediatypes.get(mediatype)
+
+def downloadartwork(mediatype):
+    return todownload.get(mediatype)
 
 def update_settings():
     for settingid in arttype_settingskeys:
@@ -242,14 +246,19 @@ def update_settings():
             addon.set_setting(settingid, artinfo[splitsetting[0]][splitsetting[1]]['autolimit'])
     for mediatype in artinfo:
         disabled_mediatypes[mediatype] = addon.get_setting(mediatype + '.disabled')
-    oldset_enabled = addon.get_setting('setartwork_fromcentral')
-    if oldset_enabled != '':
-        addon.set_setting('centraldir.set_enabled', oldset_enabled)
-        addon.set_setting('setartwork_fromcentral', '')
-        if oldset_enabled:
-            addon.set_setting('centraldir.set_dir', addon.get_setting('setartwork_dir'))
-            addon.set_setting('setartwork_dir', '')
-    for mediatype in central_directories:
+    for mediatype in artinfo:
+        todownload[mediatype] = addon.get_setting(mediatype + '.downloadartwork')
+    olddownload_enabled = addon.get_setting('download_artwork')
+    if olddownload_enabled != '':
+        # DEPRECATED: 2018-02-23
+        olddownload_enabled = bool(olddownload_enabled)
+        addon.set_setting('tvshow.downloadartwork', olddownload_enabled)
+        addon.set_setting('episode.downloadartwork', olddownload_enabled)
+        addon.set_setting('movie.downloadartwork', olddownload_enabled)
+        addon.set_setting('set.downloadartwork', olddownload_enabled)
+        addon.set_setting('musicvideo.downloadartwork', olddownload_enabled)
+        addon.set_setting('download_artwork', '')
+    for mediatype in (MOVIESET,):
         central_directories[mediatype] = addon.get_setting('centraldir.{0}_enabled'.format(mediatype))
         if central_directories[mediatype]:
             central_directories[mediatype] = addon.get_setting('centraldir.{0}_dir'.format(mediatype))

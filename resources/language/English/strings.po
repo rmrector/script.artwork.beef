@@ -337,9 +337,7 @@ msgctxt "#32922"
 msgid "Automatically add artwork for new music"
 msgstr ""
 
-msgctxt "#32923"
-msgid "Download all processed artwork to file system"
-msgstr ""
+# 32923 retired 2018-02-23
 
 msgctxt "#32924"
 msgid "Progress display for automatic processing"
@@ -415,6 +413,38 @@ msgstr ""
 
 msgctxt "#32942"
 msgid "Save music video artwork with music video base file name"
+msgstr ""
+
+msgctxt "#32943"
+msgid "Download artwork for processed TV shows and seasons"
+msgstr ""
+
+msgctxt "#32944"
+msgid "Download artwork for processed episodes"
+msgstr ""
+
+msgctxt "#32945"
+msgid "Download artwork for processed movies"
+msgstr ""
+
+msgctxt "#32946"
+msgid "Download artwork for processed movie sets"
+msgstr ""
+
+msgctxt "#32947"
+msgid "Download artwork for processed music videos"
+msgstr ""
+
+msgctxt "#32948"
+msgid "Download artwork for processed artists"
+msgstr ""
+
+msgctxt "#32949"
+msgid "Download artwork for processed albums"
+msgstr ""
+
+msgctxt "#32950"
+msgid "Download artwork for processed songs"
 msgstr ""
 
 # Used in the artwork report

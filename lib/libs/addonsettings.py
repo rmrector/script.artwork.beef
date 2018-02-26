@@ -38,7 +38,6 @@ class Settings(object):
         self.generate_movie_thumb = addon.get_setting('movie.thumb_generate')
         self.generate_musicvideo_thumb = addon.get_setting('musicvideo.thumb_generate')
         self.only_filesystem = addon.get_setting('only_filesystem')
-        self.download_artwork = addon.get_setting('download_artwork')
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
         self.titlefree_poster = addon.get_setting('titlefree_poster')
         self.setartwork_fromparent = addon.get_setting('setartwork_fromparent')

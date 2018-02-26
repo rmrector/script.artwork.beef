@@ -7,7 +7,6 @@
 		<setting id="enable_olditem_updates" subsetting="true" label="32912" type="bool"
 			default="true" visible="eq(-1,true) | eq(-2,true)" />
 		<setting id="only_filesystem" label="32904" type="bool" default="false" />
-		<setting id="download_artwork" label="32923" type="bool" default="false" />
 		<setting id="remove_deselected_files" label="32940" type="bool" default="true" />
 		<setting id="recycle_removed" subsetting="true" label="32931" type="bool" default="false" visible="eq(-1,true)" />
 		<setting label="32412" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)"
@@ -25,6 +24,8 @@
 		<setting label="32919" type="action" action="RunScript(script.artwork.beef, command=show_artwork_log)" />
 	</category>
 	<category label="$LOCALIZE[20343]">
+		<setting id="tvshow.downloadartwork" label="32943" type="bool" default="false" />
+		<setting id="episode.downloadartwork" label="32944" type="bool" default="false" />
 		<setting id="tvshow.disabled" label="32933" type="bool" default="false" />
 		<setting id="episode.disabled" label="32934" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
@@ -43,6 +44,8 @@
 		<setting label="32400" type="action" subsetting="true" action="RunScript(script.artwork.beef, command=set_autoaddepisodes)" visible="eq(-1,true) + eq(-14,false)" />
 	</category>
 	<category label="$LOCALIZE[20342]">
+		<setting id="movie.downloadartwork" label="32945" type="bool" default="false" />
+		<setting id="set.downloadartwork" label="32946" type="bool" default="false" />
 		<setting id="movie.disabled" label="32932" type="bool" default="false" />
 		<setting id="set.disabled" label="32939" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
@@ -62,6 +65,7 @@
 		<setting id="set.discart" label="$LOCALIZE[20457] discart" type="bool" default="true" visible="eq(-15,false)" />
 	</category>
 	<category label="$LOCALIZE[20389]">
+		<setting id="musicvideo.downloadartwork" label="32947" type="bool" default="false" />
 		<setting id="musicvideo.disabled" label="32935" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
 		<setting id="musicvideo.poster" label="poster" type="bool" default="true" visible="eq(-2,false)" />
@@ -74,6 +78,13 @@
 		<setting id="musicvideo.artistthumb" label="artistthumb" type="bool" default="true" visible="eq(-9,false)" />
 	</category>
 	<category label="$LOCALIZE[2]">
+		<setting label="32060" type="lsep" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.downloadartwork" label="32948" type="bool" default="false"
+			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="album.downloadartwork" label="32949" type="bool" default="false"
+			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="song.downloadartwork" label="32950" type="bool" default="false"
+			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
 		<setting id="artist.disabled" label="32936" type="bool" default="false"
 			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
 		<setting id="album.disabled" label="32937" type="bool" default="false"

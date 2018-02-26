@@ -316,11 +316,13 @@ def get_date():
 
 def include_any_episode():
     return not mediatypes.disabled(mediatypes.EPISODE) \
-        and (settings.generate_episode_thumb or settings.download_artwork or settings.autoadd_episodes)
+        and (settings.generate_episode_thumb or mediatypes.downloadartwork(mediatypes.EPISODE) \
+            or settings.autoadd_episodes)
 
 def include_episode(episode):
     return settings.generate_episode_thumb and not info.item_has_generated_thumbnail(episode) \
-        or settings.download_artwork and info.has_art_todownload(episode.art)
+        or mediatypes.downloadartwork(mediatypes.EPISODE) and info.has_art_todownload(episode.art)
+
 
 if __name__ == '__main__':
     log('Service started', xbmc.LOGINFO)
