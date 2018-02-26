@@ -108,7 +108,7 @@ class FileManager(object):
             return None, L(HTTP_ERROR).format(type(ex).__name__)
 
     def handle_removed_files(self, mediaitem):
-        for arttype, url in mediaitem.art.iteritems():
+        for arttype, url in mediaitem.forcedart.iteritems():
             if not url or url.startswith(notlocalimages) or arttype not in mediaitem.selectedart \
             or url in mediaitem.selectedart.itervalues():
                 continue
