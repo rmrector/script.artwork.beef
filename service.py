@@ -10,6 +10,8 @@ STATUS_IDLE = 'idle'
 STATUS_SIGNALLED = 'signalled'
 STATUS_PROCESSING = 'processing'
 
+ALBUM_CHUNK_SIZE = 200
+
 addon = pykodi.get_main_addon()
 
 class ArtworkService(xbmc.Monitor):
@@ -280,27 +282,48 @@ class ArtworkService(xbmc.Monitor):
         self.processor.process_medialist(newitems)
 
     def process_allmusic(self, shouldinclude_fn=None):
+        if mediatypes.disabled(mediatypes.ALBUM) and mediatypes.disabled(mediatypes.ARTIST):
+            return True
         if not shouldinclude_fn:
             shouldinclude_fn = lambda id, type, label: True
-        items = []
+        albums = []
+        if not mediatypes.disabled(mediatypes.ALBUM):
+            albums.extend(info.MediaItem(album) for album in quickjson.get_albums()
+                if shouldinclude_fn(album['albumid'], mediatypes.ALBUM, album['label']))
+        if self.abortRequested():
+            return False
+        artists = []
         if not mediatypes.disabled(mediatypes.ARTIST):
-            items.extend(info.MediaItem(artist) for artist in quickjson.get_item_list(mediatypes.ARTIST)
+            artists.extend(info.MediaItem(artist) for artist in quickjson.get_item_list(mediatypes.ARTIST)
                 if shouldinclude_fn(artist['artistid'], mediatypes.ARTIST, artist['label']))
         if self.abortRequested():
             return False
-        if not mediatypes.disabled(mediatypes.ALBUM):
-            albums = quickjson.get_albums()
-            if self.abortRequested():
-                return False
-            for album in albums:
-                if not shouldinclude_fn(album['albumid'], mediatypes.ALBUM, album['label']):
-                    continue
-                items.append(info.MediaItem(album))
-                if len(albums) < 200 and not mediatypes.disabled(mediatypes.SONG):
-                    items.extend(info.MediaItem(song) for song in quickjson.get_songs(mediatypes.ALBUM, album['albumid']))
+        if not albums and not artists:
+            return True
+        chunkedalbums = [albums[x:x+ALBUM_CHUNK_SIZE] for x in xrange(0, len(albums), ALBUM_CHUNK_SIZE)]
+        def chunk_filler():
+            for albumgroup in chunkedalbums:
+                songs = _buildsongs(albumgroup)
                 if self.abortRequested():
-                    return False
-        return self.processor.process_medialist(items)
+                    yield False
+                itemgroup = []
+                for album in albumgroup:
+                    if not mediatypes.disabled(mediatypes.ARTIST):
+                        artist = next((a for a in artists if a.dbid == album.artistid), None)
+                        if artist:
+                            itemgroup.append(artist)
+                            artists.remove(artist)
+                    if not mediatypes.disabled(mediatypes.ALBUM):
+                        itemgroup.append(album)
+                    if not mediatypes.disabled(mediatypes.SONG) and album.dbid in songs:
+                        itemgroup.extend(info.MediaItem(song) for song in songs[album.dbid])
+                    if self.abortRequested():
+                        yield False
+
+                yield itemgroup
+            if artists: # New artists that didn't match an album
+                yield artists
+        return self.processor.process_chunkedlist(chunk_filler(), len(chunkedalbums))
 
     def onSettingsChanged(self):
         settings.update_settings()
@@ -323,6 +346,17 @@ def include_episode(episode):
     return settings.generate_episode_thumb and not info.item_has_generated_thumbnail(episode) \
         or mediatypes.downloadartwork(mediatypes.EPISODE) and info.has_art_todownload(episode.art)
 
+def _buildsongs(albumgroup):
+    result = {}
+    if mediatypes.disabled(mediatypes.SONG):
+        return result
+    songfilter = {'field': 'album', 'operator': 'is',
+        'value': [album.label for album in albumgroup]}
+    for song in quickjson.get_songs(songfilter=songfilter):
+        if song['albumid'] not in result:
+            result[song['albumid']] = []
+        result[song['albumid']].append(song)
+    return result
 
 if __name__ == '__main__':
     log('Service started', xbmc.LOGINFO)

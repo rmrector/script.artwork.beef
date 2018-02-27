@@ -1,10 +1,12 @@
+import os
 import re
 import xbmc
+import xbmcvfs
+from functools import wraps
 
-from lib.libs import mediatypes, pykodi, quickjson
+from lib.libs import mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import log, unquoteimage, unquotearchive, localize as L
-from lib.libs.utils import natural_sort, get_pathsep, iter_possible_cleannames
 
 CANT_FIND_MOVIESET = 32032
 CANT_FIND_MUSICVIDEO = 32033
@@ -45,6 +47,20 @@ class MediaItem(object):
                 self.file = mediatypes.central_directories[mediatypes.MOVIESET] + self.label + '.ext'
         elif self.mediatype == mediatypes.MUSICVIDEO:
             self.label = musicvideo_label(jsondata)
+        elif self.mediatype in mediatypes.audiotypes:
+            if self.mediatype in (mediatypes.ALBUM, mediatypes.SONG):
+                self.albumid = jsondata['albumid']
+            self.artistid = None if self.mediatype == mediatypes.ARTIST \
+                else jsondata['albumartistid'][0] if jsondata.get('albumartistid') \
+                else jsondata['artistid'][0] if jsondata.get('artistid') \
+                else None
+            self.artist = jsondata['label'] if self.mediatype == mediatypes.ARTIST \
+                else jsondata['albumartist'][0] if jsondata.get('albumartist') \
+                else jsondata['artist'][0] if jsondata.get('artist') \
+                else None
+            self.album = jsondata['label'] if self.mediatype == mediatypes.ALBUM \
+                else jsondata['album'] if self.mediatype == mediatypes.SONG \
+                else None
 
         self.seasons = None
         self.availableart = {}
@@ -54,6 +70,7 @@ class MediaItem(object):
         self.updatedart = []
         self.downloadedart = {}
         self.error = None
+        self.missingid = False
 
 def musicvideo_label(jsondata):
     return jsondata['artist'][0] + ' - ' + jsondata['title'] if len(jsondata['artist']) else jsondata['title']
@@ -72,22 +89,19 @@ def has_generated_thumbnail(jsondata):
     return jsondata['art'].get('thumb', '').startswith(pykodi.thumbnailimages)
 
 def has_art_todownload(artmap):
-    for arttype, url in artmap.iteritems():
-        if url and url.startswith('http'):
-            return True
-    return False
+    return next((True for url in artmap.values() if url and url.startswith('http')), False)
 
 def arttype_matches_base(arttype, basetype):
     return re.match(r'{0}\d*$'.format(basetype), arttype)
 
 def iter_urls_for_arttype(art, arttype):
-    for exact in sorted(art, key=natural_sort):
+    for exact in sorted(art, key=utils.natural_sort):
         if arttype_matches_base(exact, arttype):
             yield art[exact]
 
 def iter_base_arttypes(artkeys):
     usedtypes = set()
-    for arttype in sorted(artkeys, key=natural_sort):
+    for arttype in sorted(artkeys, key=utils.natural_sort):
         basetype = get_basetype(arttype)
         if basetype not in usedtypes:
             yield basetype
@@ -187,10 +201,10 @@ def add_additional_iteminfo(mediaitem, processed, search):
     elif mediaitem.mediatype == mediatypes.EPISODE:
         if settings.default_tvidsource == 'tmdb':
             # TheMovieDB scraper sets episode IDs that can't be used in the API, but seriesID/season/episode works
-            tvshowids = quickjson.get_item_details(mediaitem.tvshowid, mediatypes.TVSHOW)['uniqueid']
-            tvshowid = tvshowids.get('tmdb', tvshowids.get('unknown'))
-            if tvshowid:
-                mediaitem.uniqueids['tmdbse'] = '{0}/{1}/{2}'.format(tvshowid, mediaitem.season, mediaitem.episode)
+            uniqueids = quickjson.get_item_details(mediaitem.tvshowid, mediatypes.TVSHOW)['uniqueid']
+            uniqueid = uniqueids.get('tmdb', uniqueids.get('unknown'))
+            if uniqueid:
+                mediaitem.uniqueids['tmdbse'] = '{0}/{1}/{2}'.format(uniqueid, mediaitem.season, mediaitem.episode)
     elif mediaitem.mediatype == mediatypes.MOVIESET:
         if not mediaitem.uniqueids.get('tmdb'):
             uniqueid = processed.get_data(mediaitem.dbid, mediaitem.mediatype, mediaitem.label)
@@ -232,6 +246,8 @@ def add_additional_iteminfo(mediaitem, processed, search):
                     processed.set_data(mediaitem.dbid, mediatypes.MUSICVIDEO, mediaitem.label, None)
                     mediaitem.error = L(CANT_FIND_MUSICVIDEO)
                     log("Could not find music video '{0}' on TheAudioDB".format(mediaitem.label), xbmc.LOGNOTICE)
+    elif mediaitem.mediatype == mediatypes.ALBUM:
+        mediaitem.file = _identify_album_folder(mediaitem)
 
 def _get_seasons_artwork(seasons):
     resultseasons = {}
@@ -256,14 +272,24 @@ def _identify_parent_movieset(mediaitem):
     # Identify set folder among movie parent dirs
     if not mediaitem.movies:
         mediaitem.movies = quickjson.get_item_details(mediaitem.dbid, mediatypes.MOVIESET)['movies']
-    for cleanlabel in iter_possible_cleannames(mediaitem.label):
+    for cleanlabel in utils.iter_possible_cleannames(mediaitem.label):
         for movie in mediaitem.movies:
-            pathsep = get_pathsep(movie['file'])
+            pathsep = utils.get_pathsep(movie['file'])
             setmatch = pathsep + cleanlabel + pathsep
             if setmatch in movie['file']:
                 result = movie['file'].split(setmatch)[0] + setmatch
                 mediaitem.file = result
                 return
+
+def _identify_album_folder(mediaitem):
+    songs = get_cached_songs(mediaitem.albumid)
+    folders = set(os.path.dirname(song['file']) for song in songs)
+    if len(folders) == 1: # all songs only in one folder
+        thefolder = folders.pop()
+        songs = get_cached_songs_bypath(thefolder + utils.get_pathsep(thefolder))
+        albums = set(song['albumid'] for song in songs)
+        if len(albums) == 1: # and not shared with another album
+            return thefolder + utils.get_pathsep(thefolder)
 
 def _get_uniqueids(jsondata, mediatype):
     uniqueids = jsondata.get('uniqueid', {})
@@ -281,8 +307,12 @@ def _get_uniqueids(jsondata, mediatype):
             # but maybe not this guy
             uniqueids[settings.default_tvidsource] = uniqueid
             del uniqueids['unknown']
-    if 'musicbrainzartistid' in jsondata and jsondata['musicbrainzartistid'][0]:
+    if jsondata.get('musicbrainzartistid'):
         uniqueids['mbartist'] = jsondata['musicbrainzartistid'][0]
+    elif jsondata.get('musicbrainzalbumartistid'):
+        uniqueids['mbartist'] = jsondata['musicbrainzalbumartistid'][0]
+    if jsondata.get('musicbrainzalbumid'):
+        uniqueids['mbalbum'] = jsondata['musicbrainzalbumid']
     if jsondata.get('musicbrainzreleasegroupid'):
         uniqueids['mbgroup'] = jsondata['musicbrainzreleasegroupid']
     if jsondata.get('musicbrainztrackid'):
@@ -301,3 +331,115 @@ def _get_sourcemedia(mediapath):
     if re.search(r'\bdvd', mediapath) or mediapath.endswith('.ifo'):
         return 'dvd'
     return 'unknown'
+
+def find_central_infodir(mediaitem, create=False):
+    fromtv = mediaitem.mediatype in (mediatypes.SEASON, mediatypes.EPISODE)
+    fromartist = mediaitem.mediatype in mediatypes.audiotypes
+    fromalbum = mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG)
+    cdtype = mediatypes.TVSHOW if fromtv else mediatypes.ARTIST if fromartist else mediaitem.mediatype
+    basedir = mediatypes.central_directories.get(cdtype)
+    if not basedir:
+        return None
+    slug1 = _get_uniqueslug(mediaitem, mediatypes.ARTIST) if fromartist else None
+    slug2 = _get_uniqueslug(mediaitem, mediatypes.ALBUM) if fromalbum else None
+    title1 = mediaitem.showtitle if fromtv \
+        else mediaitem.artist if fromartist else mediaitem.label
+    title2 = mediaitem.album if fromalbum \
+        else mediaitem.label if mediaitem.mediatype == mediatypes.EPISODE \
+        else None
+    title3 = mediaitem.label if mediaitem.mediatype == mediatypes.SONG else None
+    sep = utils.get_pathsep(basedir)
+    mediayear = mediaitem.year if mediaitem.mediatype == mediatypes.MOVIE else None
+
+    mkdir = lambda file_: xbmcvfs.mkdir(os.path.dirname(file_))
+    finish = lambda result: result if not create or mkdir(result) else None
+    thisdir = _find_existing(basedir, title1, slug1, mediayear)
+    if not thisdir:
+        if not create:
+            return None
+        if mediaitem.mediatype == mediatypes.MOVIE:
+            title1 = '{0} ({1})'.format(mediaitem.label, mediaitem.year)
+        thisdir = utils.build_cleanest_name(title1, slug1)
+    result = basedir + thisdir + sep
+    if not title2:
+        return finish(result)
+    if create and not mkdir(result):
+        return None
+    usefiles = mediaitem.mediatype == mediatypes.EPISODE
+    thisdir = _find_existing(result, title2, slug2, files=usefiles)
+    if not thisdir:
+        if not create:
+            return None
+        thisdir = utils.build_cleanest_name(title2, slug2)
+    result += thisdir
+    if not usefiles:
+        result += sep
+    if not title3:
+        return finish(result)
+    if create and not mkdir(result):
+        return None
+    final = _find_existing(result, title3, files=True)
+    if not final:
+        if not create:
+            return None
+        final = utils.build_cleanest_name(title3)
+    result += final
+    return finish(result)
+
+def _find_existing(basedir, name, uniqueslug=None, mediayear=None, files=False):
+    for item in get_cached_listdir(basedir)[1 if files else 0]:
+        cleantitle, diryear = xbmc.getCleanMovieTitle(item) if mediayear else (item, '')
+        if diryear and int(diryear) != mediayear:
+            continue
+        if files:
+            item = item.rsplit('-', 1)[0]
+        for title in utils.iter_possible_cleannames(name, uniqueslug):
+            if title in (cleantitle, item):
+                return item
+
+def _get_uniqueslug(mediaitem, slug_mediatype):
+    if slug_mediatype == mediatypes.ARTIST and mediaitem.artist is not None:
+        if len(get_cached_artists(mediaitem.artist)) > 1:
+            return mediaitem.uniqueids.get('mbartist', '')[:4]
+    elif slug_mediatype == mediatypes.ALBUM and mediaitem.artistid is not None:
+        foundone = False
+        for album in get_cached_albums(mediaitem.artist, mediaitem.artistid):
+            if album['label'] != mediaitem.album:
+                continue
+            if foundone:
+                return mediaitem.uniqueids.get('mbalbum', '')[:4]
+            foundone = True
+    return None
+
+def cacheit(func):
+    @wraps(func)
+    def wrapper(*args):
+        key = (func.__name__,) + args
+        if key not in quickcache:
+            quickcache[key] = func(*args)
+        return quickcache[key]
+    return wrapper
+
+@cacheit
+def get_cached_listdir(path):
+    return xbmcvfs.listdir(path)
+
+@cacheit
+def get_cached_artists(artistname):
+    return quickjson.get_artists_byname(artistname)
+
+@cacheit
+def get_cached_albums(artistname, dbid):
+    return quickjson.get_albums(artistname, dbid)
+
+@cacheit
+def get_cached_songs(dbid):
+    return quickjson.get_songs(mediatypes.ALBUM, dbid)
+
+@cacheit
+def get_cached_songs_bypath(path):
+    return quickjson.get_songs(songfilter={'field': 'path', 'operator': 'is', 'value': path})
+
+quickcache = {}
+def clear_cache():
+    quickcache.clear()

@@ -63,13 +63,20 @@ def get_movie_path_list(stackedpath):
 replace_chars = ':?"/\\<>*|'
 replace_with = ('', '_', '+', '-')
 replace_colon_with = (' -',)
-def iter_possible_cleannames(originalname):
-    yield originalname
-    filenames = [originalname]
-    cleanend = originalname.rstrip(' .')
-    if cleanend != originalname:
-        yield cleanend
-        filenames.append(cleanend)
+def iter_possible_cleannames(originalname, uniqueslug=None):
+    if uniqueslug:
+        firstname = originalname + '_' + uniqueslug
+        yield firstname
+        filenames = [firstname]
+    else:
+        yield originalname
+        filenames = [originalname]
+    cleaned = originalname.rstrip(' .')
+    if cleaned != originalname:
+        if uniqueslug:
+            cleaned += '_' + uniqueslug
+        yield cleaned
+        filenames.append(cleaned)
     for char in replace_chars:
         if char in originalname:
             for filename in list(filenames):
@@ -81,32 +88,11 @@ def iter_possible_cleannames(originalname):
                     yield cleaned
                     filenames.append(cleaned)
 
-def find_central_infodir(mediaitem, create=False):
-    fromtv = mediaitem.mediatype in (mediatypes.SEASON, mediatypes.EPISODE)
-    cdtype =  mediatypes.TVSHOW if fromtv else mediaitem.mediatype
-    if not mediatypes.central_directories.get(cdtype):
-        return None
-    basedir = mediatypes.central_directories[cdtype]
-    dirs, files = xbmcvfs.listdir(basedir)
-    cleantitletarget = mediaitem.showtitle if fromtv else mediaitem.label
-    if mediaitem.file:
-        pass
-    for dir_ in dirs:
-        cleantitle, diryear = xbmc.getCleanMovieTitle(dir_) if mediaitem.mediatype == mediatypes.MOVIE else (dir_, '')
-        if (not diryear or int(diryear) == mediaitem.year) and any(title in (cleantitle, dir_)
-                for title in iter_possible_cleannames(cleantitletarget)):
-            return basedir + dir_ + get_pathsep(basedir)
-
-    if not create:
-        return None
-    label = mediaitem.label if not mediaitem.mediatype == mediatypes.MOVIE else \
-        '{0} ({1})'.format(mediaitem.label, mediaitem.year)
-    newdir = basedir + build_cleanest_name(label) + get_pathsep(basedir)
-    if xbmcvfs.mkdir(newdir):
-        return newdir
-
-def build_cleanest_name(originalname):
-    result = originalname.rstrip(' .')
+def build_cleanest_name(originalname, uniqueslug=None):
+    result = originalname
     for char in replace_chars:
-        result = result.replace(char, '')
+        result = result.replace(char, '_')
+    result = result.rstrip(' .')
+    if uniqueslug:
+        result += '_' + uniqueslug
     return result

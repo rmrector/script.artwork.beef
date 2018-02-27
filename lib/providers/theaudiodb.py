@@ -47,8 +47,8 @@ class TheAudioDBMusicVideoProvider(TheAudioDBAbstractProvider):
     mediatype = mediatypes.MUSICVIDEO
 
     def get_images(self, uniqueids, types=None):
-        if types is not None and not provides(types) or not ('mbtrack' in uniqueids or
-                'mbgroup' in uniqueids or 'mbartist' in uniqueids):
+        if types is not None and not provides(types) or not (uniqueids.get('mbtrack') or
+                uniqueids.get('mbgroup') or uniqueids.get('mbartist')):
             return {}
 
         images = {}
@@ -75,6 +75,8 @@ class TheAudioDBMusicVideoProvider(TheAudioDBAbstractProvider):
 
 class TheAudioDBAbstractMusicProvider(TheAudioDBAbstractProvider):
     def _inner_get_images(self, uniqueids, idsource, types):
+        if not uniqueids.get(idsource):
+            return {}
         artdata = artmap[idsource]
         if types and not any(x in types for x in artdata['artmap'].itervalues()):
             return {}

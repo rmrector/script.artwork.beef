@@ -11,8 +11,10 @@ typemap = {mediatypes.MOVIE: ('Movie', ['art', 'imdbnumber', 'file', 'premiered'
     mediatypes.SEASON: ('Season', ['season', 'art', 'tvshowid', 'showtitle'], None),
     mediatypes.MUSICVIDEO: ('MusicVideo', ['art', 'file', 'title', 'artist'], None),
     mediatypes.ARTIST: ('Artist', ['art', 'musicbrainzartistid'], None),
-    mediatypes.ALBUM: ('Album', ['art', 'musicbrainzreleasegroupid'], None),
-    mediatypes.SONG: ('Song', ['art', 'musicbrainztrackid'], None)}
+    mediatypes.ALBUM: ('Album', ['art', 'musicbrainzalbumid', 'musicbrainzreleasegroupid',
+        'musicbrainzalbumartistid', 'artist', 'artistid'], None),
+    mediatypes.SONG: ('Song', ['art', 'musicbrainztrackid', 'musicbrainzalbumartistid', 'album',
+        'albumartist', 'albumartistid', 'albumid', 'file'], None)}
 
 def _needupgrade(mediatype):
     return mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) and get_kodi_version() < 17
@@ -55,14 +57,14 @@ def get_item_details(dbid, mediatype):
             _upgradeitem(result, mediatype)
         return result
 
-def get_item_list(mediatype, extraparams=None):
+def get_item_list(mediatype, extraparams=None, overrideprops=None):
     assert mediatype in typemap
 
     mapped = typemap[mediatype]
     basestr = 'VideoLibrary.Get{0}s' if mediatype not in mediatypes.audiotypes else 'AudioLibrary.Get{0}s'
     json_request = get_base_json_request(basestr.format(mapped[0]))
     json_request['params']['sort'] = {'method': 'sorttitle', 'order': 'ascending'}
-    json_request['params']['properties'] = mapped[1]
+    json_request['params']['properties'] = mapped[1] if overrideprops is None else overrideprops
     if extraparams:
         json_request['params'].update(extraparams)
     json_result = pykodi.execute_jsonrpc(json_request)
@@ -77,15 +79,25 @@ def get_item_list(mediatype, extraparams=None):
     else:
         return []
 
-def get_albums(dbid=None):
-    if dbid is None:
+def get_albums(artistname=None, dbid=None):
+    if artistname is None or dbid is None:
         return get_item_list(mediatypes.ALBUM)
-    return get_item_list(mediatypes.ALBUM, {'filter': {'artistid': dbid}})
+    # filter artistid is slow for artists with many albums, much faster to filter based on
+    # artist name and then filter the result for proper artistID. songs are good, though
+    allalbums = get_item_list(mediatypes.ALBUM, {'filter':
+        {'field': 'artist', 'operator': 'is', 'value': artistname}})
+    return [album for album in allalbums if album['artistid'] and album['artistid'][0] == dbid]
 
-def get_songs(mediatype=None, dbid=None):
-    if mediatype is None or dbid is None:
+def get_artists_byname(artistname):
+    return get_item_list(mediatypes.ARTIST,
+           {'filter': {"field": "artist", "operator": "is", "value": artistname}}, [])
+
+def get_songs(mediatype=None, dbid=None, songfilter=None):
+    if songfilter is None and (mediatype is None or dbid is None):
         return get_item_list(mediatypes.SONG)
-    return get_item_list(mediatypes.SONG, {'filter': {mediatype + 'id': dbid}})
+    if not songfilter:
+        songfilter = {mediatype + 'id': dbid}
+    return get_item_list(mediatypes.SONG, {'filter': songfilter})
 
 def get_tvshows(moreprops=False, includeprops=True):
     json_request = get_base_json_request('VideoLibrary.GetTVShows')
@@ -183,6 +195,13 @@ def get_application_properties(properties):
     json_result = pykodi.execute_jsonrpc(json_request)
     if check_json_result(json_result, None, json_request):
         return json_result['result']
+
+def get_settingvalue(setting):
+    json_request = get_base_json_request('Settings.GetSettingValue')
+    json_request['params']['setting'] = setting
+    json_result = pykodi.execute_jsonrpc(json_request)
+    if check_json_result(json_result, None, json_request):
+        return json_result['result']['value']
 
 def check_json_result(json_result, result_key, json_request):
     if 'error' in json_result:

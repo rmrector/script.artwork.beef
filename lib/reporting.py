@@ -32,6 +32,7 @@ ERROR_MESSAGE = 32813
 ERRORS_MESSAGE = 32814
 RUNNING_VERSION = 32815
 DOWNLOAD_COUNT = 32816
+NO_IDS_MESSAGE = 32030
 
 def report_startup():
     if not xbmcvfs.exists(settings.datapath):
@@ -104,11 +105,10 @@ def report_item(mediaitem, forcedreport=False, manual=False, downloaded_size=0):
         message = "== {0}: ".format(get_datetime()) if forcedreport else ""
         message += L(PROCESSING_MANUALLY if manual else PROCESSING)
         write(reportfile, message.format(itemtitle))
-        if not mediaitem.missingart:
-            if not manual:
-                write(reportfile, L(NO_MISSING_ARTWORK))
-        else:
-            write(reportfile, L(MISSING_LABEL).format(', '.join(mediaitem.missingart)))
+        message = L(NO_IDS_MESSAGE) if mediaitem.missingid \
+            else L(MISSING_LABEL).format(', '.join(mediaitem.missingart)) if mediaitem.missingart \
+            else L(NO_MISSING_ARTWORK)
+        write(reportfile, message)
 
         if mediaitem.downloadedart:
             message = L(DOWNLOAD_COUNT).format(len(mediaitem.downloadedart))
@@ -152,7 +152,11 @@ def get_latest_report():
 def _should_rotate():
     if not _exists():
         return False
-    return xbmcvfs.Stat(_get_filepath()).st_size() > (REPORT_SIZE * (PER_ITEM_MULT if settings.report_peritem else 1))
+    return xbmcvfs.Stat(_get_filepath()).st_size() > _get_maxsize()
+
+def _get_maxsize():
+    mult = PER_ITEM_MULT if settings.report_peritem else 1
+    return REPORT_SIZE * mult
 
 def _rotate_file():
     newdate = ndate = pykodi.get_infolabel('System.Date(yyyy-mm-dd)')

@@ -33,7 +33,11 @@ class FileManager(object):
             nowart = dict(mediaitem.selectedart)
         if not info.has_art_todownload(nowart):
             return False, ''
-        path = basefile = utils.find_central_infodir(mediaitem, True)
+        path = basefile = mediaitem.file if settings.albumartwithmediafiles \
+                and mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG) and mediaitem.file \
+            else info.find_central_infodir(mediaitem, True)
+        if basefile and mediaitem.mediatype in (mediatypes.EPISODE, mediatypes.SONG):
+            path = os.path.dirname(basefile) + utils.get_pathsep(basefile)
         if not basefile:
             if not mediaitem.file:
                 return False, ''
@@ -108,7 +112,8 @@ class FileManager(object):
             return None, L(HTTP_ERROR).format(type(ex).__name__)
 
     def handle_removed_files(self, mediaitem):
-        for arttype, url in mediaitem.forcedart.iteritems():
+        for arttype, image in mediaitem.forcedart.iteritems():
+            url = image['url'] if isinstance(image, dict) else image[0]['url']
             if not url or url.startswith(notlocalimages) or arttype not in mediaitem.selectedart \
             or url in mediaitem.selectedart.itervalues():
                 continue
@@ -143,5 +148,6 @@ def remove_basename(mediatype):
 
 class FileError(Exception):
     def __init__(self, message, cause=None):
+        super(FileError, self).__init__()
         self.cause = cause
         self.message = message

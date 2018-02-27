@@ -23,8 +23,7 @@ class Gatherer(object):
         existingtypes = [key for key, url in mediaitem.art.iteritems() if url]
         existingtypes.extend(mediaitem.forcedart.keys())
         if skipexisting:
-            if (not self.only_filesystem or mediaitem.mediatype in mediatypes.audiotypes) \
-                    and mediaitem.uniqueids and mediaitem.missingart:
+            if not self.only_filesystem and mediaitem.uniqueids and mediaitem.missingart:
                 mediaitem.availableart, error = self.get_external_artwork(mediaitem.mediatype, mediaitem.seasons,
                     mediaitem.uniqueids, mediaitem.missingart)
                 services_hit = True
@@ -38,7 +37,9 @@ class Gatherer(object):
 
     def get_forced_artwork(self, mediaitem, allowmutiple=False):
         if not mediaitem.file:
-            return {}
+            if mediaitem.mediatype not in mediatypes.audiotypes \
+            or not mediatypes.central_directories[mediatypes.ARTIST]:
+                return {}
         resultimages = {}
         for provider in providers.forced.get(mediaitem.mediatype, ()):
             for arttype, image in provider.get_exact_images(mediaitem).iteritems():

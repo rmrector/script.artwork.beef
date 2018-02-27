@@ -43,6 +43,8 @@ class ArtworkProcessor(object):
         self.processed = ProcessedItems()
         self.gatherer = None
         self.downloader = None
+        self.chunkcount = 1
+        self.currentchunk = 1
 
     def create_progress(self):
         if not self.visible and settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
@@ -50,6 +52,9 @@ class ArtworkProcessor(object):
             self.visible = True
 
     def update_progress(self, percent, message, heading=None):
+        if self.chunkcount > 1:
+            onechunkp = 100 / (self.chunkcount * 1.0)
+            percent = int(onechunkp * (self.currentchunk - 1) + percent / (self.chunkcount * 1.0))
         if self.visible and settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
             self.progress.update(percent, heading, message)
 
@@ -74,15 +79,20 @@ class ArtworkProcessor(object):
             xbmcgui.Dialog().notification(header, message,
                 xbmcgui.NOTIFICATION_ERROR if error else xbmcgui.NOTIFICATION_WARNING)
 
-    def init_run(self, show_progress=False):
+    def init_run(self, show_progress=False, chunkcount=1):
         self.setlanguages()
         self.gatherer = Gatherer(self.monitor, settings.only_filesystem, self.autolanguages)
         self.downloader = FileManager()
         self.freshstart = str(datetime_now() - timedelta(days=365))
+        self.chunkcount = chunkcount
+        self.currentchunk = 1
+        if get_kodi_version() >= 18:
+            populate_musiccentraldir()
         if show_progress:
             self.create_progress()
 
     def finish_run(self):
+        info.clear_cache()
         self.close_progress()
 
     @property
@@ -129,8 +139,9 @@ class ArtworkProcessor(object):
                             episode.skip_artwork = ['fanart']
                             medialist.append(episode)
             elif mediatype == mediatypes.ARTIST and not mediatypes.disabled(mediatypes.ALBUM):
-                medialist.extend(info.MediaItem(album) for album in quickjson.get_albums(mediaitem.dbid))
-            if mediatype in (mediatypes.ALBUM, mediatypes.ARTIST) and not mediatypes.disabled(mediatypes.SONG):
+                medialist.extend(info.MediaItem(album) for album in quickjson.get_albums(mediaitem.label, mediaitem.dbid))
+            if mediatype in (mediatypes.ALBUM, mediatypes.ARTIST) and not mediatypes.disabled(mediatypes.ALBUM) \
+            and not mediatypes.disabled(mediatypes.SONG):
                 medialist.extend(info.MediaItem(song)
                     for song in quickjson.get_songs(mediaitem.mediatype, mediaitem.dbid))
             self.process_medialist(medialist, True)
@@ -187,14 +198,36 @@ class ArtworkProcessor(object):
         self.finish_run()
 
     def process_medialist(self, medialist, alwaysnotify=False):
-        self.init_run(len(medialist) > 0)
+        return self.process_chunkedlist([medialist], alwaysnotify)
+
+    def process_chunkedlist(self, chunkedlist, chunkcount, alwaysnotify=False):
+        self.init_run(True, chunkcount)
+        aborted = False
+        artcount = 0
+        for idx, medialist in enumerate(chunkedlist):
+            if self.monitor.abortRequested() or medialist is False:
+                aborted = True
+                break
+            if idx or len(medialist) > 1:
+                reporting.report_start(medialist)
+            this_aborted, updateditemcount, this_artcount = self._process_chunk(medialist, idx + 1)
+            artcount += this_artcount
+            reporting.report_end(medialist, updateditemcount if this_aborted else 0, self.downloader.size)
+            self.downloader.size = 0
+            if this_aborted:
+                aborted = True
+                break
+        if artcount or alwaysnotify:
+            self.finalupdate(*finalmessages(artcount))
+        self.finish_run()
+        return not aborted
+
+    def _process_chunk(self, medialist, currentchunk):
+        self.currentchunk = currentchunk
         artcount = 0
         currentitem = 0
         aborted = False
-        singleitemlist = len(medialist) == 1
-        if not singleitemlist:
-            reporting.report_start(medialist)
-        fileerrors = 0
+        singleitemlist = len(medialist) == 1 and currentchunk == 1
         for mediaitem in medialist:
             if mediaitem.mediatype in mediatypes.audiotypes and get_kodi_version() < 18:
                 continue
@@ -203,17 +236,10 @@ class ArtworkProcessor(object):
             currentitem += 1
             try:
                 services_hit = self._process_item(mediaitem)
-                fileerrors = 0
             except FileError as ex:
                 mediaitem.error = ex.message
                 log(ex.message, xbmc.LOGERROR)
                 self.notify_warning(ex.message, None, True)
-                if fileerrors < 2:
-                    fileerrors += 1
-                else:
-                    reporting.report_item(mediaitem, True)
-                    aborted = True
-                    break
             reporting.report_item(mediaitem, singleitemlist or mediaitem.error)
             artcount += len(mediaitem.updatedart)
 
@@ -224,19 +250,14 @@ class ArtworkProcessor(object):
             elif self.monitor.waitForAbort(THROTTLE_TIME):
                 aborted = True
                 break
-
-        reporting.report_end(medialist, currentitem if aborted else 0, self.downloader.size)
-        if artcount or alwaysnotify:
-            self.finalupdate(*finalmessages(artcount))
-        self.finish_run()
-        return not aborted
+        return aborted, currentitem, artcount
 
     def _process_item(self, mediaitem, singleitem=False, auto=True):
         mediatype = mediaitem.mediatype
         if not mediaitem.uniqueids and not settings.only_filesystem:
-            header = L(NO_IDS_MESSAGE)
-            mediaitem.error = header
+            mediaitem.missingid = True
             if singleitem:
+                header = L(NO_IDS_MESSAGE)
                 message = "{0} '{1}'".format(mediatype, mediaitem.label)
                 log(header + ": " + message, xbmc.LOGNOTICE)
                 xbmcgui.Dialog().notification("Artwork Beef: " + header, message, xbmcgui.NOTIFICATION_INFO)
@@ -296,19 +317,12 @@ class ArtworkProcessor(object):
         return services_hit
 
     def get_nextcheckdelay(self, mediaitem):
-        if settings.only_filesystem and not mediaitem.mediatype in (mediatypes.ARTIST, mediatypes.ALBUM):
-            return plus_some(15, 3)
-        elif not mediaitem.uniqueids:
-            return plus_some(30, 5)
-        elif not mediaitem.missingart:
-            return plus_some(120, 25)
-        elif mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) and \
-                mediaitem.premiered > self.freshstart:
-            return plus_some(30, 10)
-        elif mediaitem.mediatype in (mediatypes.ARTIST, mediatypes.ALBUM):
-            return plus_some(120, 25)
-        else:
-            return plus_some(60, 15)
+        weeks = 4 if settings.only_filesystem \
+            else 52 if mediaitem.missingid or not mediaitem.missingart \
+            else 18 if mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) and \
+                mediaitem.premiered > self.freshstart \
+            else 34
+        return plus_some(weeks * 7, weeks)
 
     def manual_id(self, mediaitem):
         label = ENTER_COLLECTION_NAME if mediaitem.mediatype == mediatypes.MOVIESET else ENTER_ARTIST_TRACK_NAMES
@@ -408,6 +422,10 @@ def notifycount(count):
 
 def plus_some(start, rng):
     return start + (random.randrange(-rng, rng + 1))
+
+def populate_musiccentraldir():
+    artistpath = quickjson.get_settingvalue('musiclibrary.artistsfolder')
+    mediatypes.central_directories[mediatypes.ARTIST] = artistpath
 
 def tag_forcedandexisting_art(availableart, forcedart, existingart):
     typeinsert = {}

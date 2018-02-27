@@ -4,18 +4,20 @@ from abc import ABCMeta
 
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
-from lib.libs.mediainfo import arttype_matches_base, format_arttype
+from lib.libs.mediainfo import arttype_matches_base, format_arttype, find_central_infodir
 from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep, iter_possible_cleannames
 
 ARTWORK_EXTS = ('.jpg', '.png', '.gif')
+ARTIST_INFOFOLDER_PRIVDIER = SortedDisplay('file:art', 20223)
 
 class ArtFilesAbstractProvider(object):
     __metaclass__ = ABCMeta
     # 13514 = Local art
     name = SortedDisplay('file:art', 13514)
 
-    def buildimage(self, url, title):
-        result = {'url': url, 'provider': self.name, 'preview': url}
+    def buildimage(self, url, title, fromartistfolder=False):
+        provider = ARTIST_INFOFOLDER_PRIVDIER if fromartistfolder else self.name
+        result = {'url': url, 'provider': provider, 'preview': url}
         result['title'] = title
         result['rating'] = SortedDisplay(0, '')
         result['size'] = SortedDisplay(0, '')
@@ -250,6 +252,96 @@ class ArtFilesMusicVideoProvider(ArtFilesAbstractProvider):
             if 'extrathumbs' in dirs:
                 result.update(self.getextra(path, result.keys(), True))
 
+        return result
+
+class ArtFilesArtistProvider(ArtFilesAbstractProvider):
+    mediatype = mediatypes.ARTIST
+
+    alttypes = {'folder': 'thumb', 'logo': 'clearlogo'}
+
+    def get_exact_images(self, mediaitem):
+        path = find_central_infodir(mediaitem)
+        if not path:
+            return {}
+        _, files = xbmcvfs.listdir(path)
+        result = {}
+        for filename in files:
+            check_filename = filename.lower()
+            if not check_filename.endswith(ARTWORK_EXTS):
+                continue
+            arttype = os.path.splitext(check_filename)[0]
+            if not arttype.isalnum() or len(arttype) > 20:
+                continue
+            if settings.identify_alternatives and arttype in self.alttypes.keys():
+                arttype = self.alttypes[arttype]
+                if arttype in result.keys():
+                    continue
+            result[arttype] = self.buildimage(path + filename, filename, True)
+        return result
+
+class ArtFilesAlbumProvider(ArtFilesArtistProvider):
+    mediatype = mediatypes.ALBUM
+
+    alttypes = {'folder': 'thumb', 'cover': 'thumb', 'disc': 'discart', 'cdart': 'discart'}
+
+    def get_exact_images(self, mediaitem):
+        paths = (mediaitem.file, find_central_infodir(mediaitem))
+        if not paths[0] and not paths[1]:
+            return {}
+        if settings.albumartwithmediafiles:
+            paths = (paths[1], paths[0])
+        result = {}
+        for path in paths:
+            if not path:
+                continue
+            _, files = xbmcvfs.listdir(path)
+            for filename in files:
+                check_filename = filename.lower()
+                if not check_filename.endswith(ARTWORK_EXTS):
+                    continue
+                arttype = os.path.splitext(check_filename)[0]
+                if not arttype.isalnum() or len(arttype) > 20:
+                    continue
+                if settings.identify_alternatives and arttype in self.alttypes.keys():
+                    arttype = self.alttypes[arttype]
+                    if arttype in result.keys():
+                        continue
+                result[arttype] = self.buildimage(path + filename, filename, path != mediaitem.file)
+        return result
+
+class ArtFilesSongProvider(ArtFilesAbstractProvider):
+    mediatype = mediatypes.SONG
+
+    def get_exact_images(self, mediaitem):
+        paths = (mediaitem.file, find_central_infodir(mediaitem))
+        if not paths[0] and not paths[1]:
+            return {}
+        if settings.albumartwithmediafiles:
+            paths = (paths[1], paths[0])
+        if mediaitem.file:
+            check_inputbase = os.path.splitext(os.path.basename(mediaitem.file))[0].lower()
+        result = {}
+        for path in paths:
+            if not path:
+                continue
+            centraldir = path != mediaitem.file
+            path = os.path.dirname(path) + get_pathsep(path)
+            _, files = xbmcvfs.listdir(path)
+            for filename in files:
+                check_filename = filename.lower()
+                if not check_filename.endswith(ARTWORK_EXTS):
+                    continue
+                basefile = os.path.splitext(check_filename)[0]
+                if '-' not in basefile:
+                    continue
+                firstbit, arttype = basefile.rsplit('-', 1)
+                if not arttype.isalnum():
+                    continue
+                if not centraldir and firstbit != check_inputbase:
+                    continue
+                if centraldir and firstbit not in (i.lower() for i in iter_possible_cleannames(mediaitem.label)):
+                    continue
+                result[arttype] = self.buildimage(path + filename, filename, centraldir)
         return result
 
 def getopentypes(existingtypes, arttype):

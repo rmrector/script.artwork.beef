@@ -161,6 +161,10 @@ msgctxt "#32059"
 msgid "Compatibility options"
 msgstr ""
 
+msgctxt "#32060"
+msgid "Artwork Beef will [I]only[/I] process local music artwork in the 'Artist information folder'[CR]configured in Kodi settings under Media > Music"
+msgstr ""
+
 # Actions
 
 msgctxt "#32400"
@@ -445,6 +449,10 @@ msgstr ""
 
 msgctxt "#32950"
 msgid "Download artwork for processed songs"
+msgstr ""
+
+msgctxt "#32951"
+msgid "Save album and song art with song files if possible"
 msgstr ""
 
 # Used in the artwork report

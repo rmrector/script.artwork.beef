@@ -55,6 +55,7 @@ class Settings(object):
         self.recycle_removed = addon.get_setting('recycle_removed')
         self.savewith_basefilename = addon.get_setting('savewith_basefilename')
         self.savewith_basefilename_mvids = addon.get_setting('savewith_basefilename_mvids')
+        self.albumartwithmediafiles = addon.get_setting('albumartwithmediafiles')
 
         self.language_override = addon.get_setting('language_override')
         if self.language_override == 'None':

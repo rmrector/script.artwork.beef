@@ -89,22 +89,22 @@
 			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
 		<setting id="album.disabled" label="32937" type="bool" default="false"
 			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="song.disabled" label="32938" type="bool" default="false"
-			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting label="32036" type="lsep" visible="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)]" />
+		<setting id="song.disabled" label="32938" type="bool" default="true"
+			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" disabled="eq(-1,false)" />
+		<setting label="32036" type="lsep" visible="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
 		<setting label="32053" type="lsep" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.thumb" label="$LOCALIZE[557] thumb" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.fanart_limit" label="$LOCALIZE[557] fanart" type="slider" option="int" default="3" range="0,1,20" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.banner" label="$LOCALIZE[557] banner" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.clearlogo" label="$LOCALIZE[557] clearlogo" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.clearart" label="$LOCALIZE[557] clearart" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.thumb" label="$LOCALIZE[557] thumb" type="bool" default="true" visible="eq(-5,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.fanart_limit" label="$LOCALIZE[557] fanart" type="slider" option="int" default="3" range="0,1,20" visible="eq(-6,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.banner" label="$LOCALIZE[557] banner" type="bool" default="true" visible="eq(-7,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.clearlogo" label="$LOCALIZE[557] clearlogo" type="bool" default="true" visible="eq(-8,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.clearart" label="$LOCALIZE[557] clearart" type="bool" default="true" visible="eq(-9,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
 		<setting id="artist.landscape" label="$LOCALIZE[557] landscape" type="bool" default="true"
-			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="album.discart" label="$LOCALIZE[558] discart" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="album.thumb" label="$LOCALIZE[558] thumb" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="album.back" label="$LOCALIZE[558] back" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="album.spine" label="$LOCALIZE[558] spine" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="song.thumb" label="$LOCALIZE[179] thumb" type="bool" default="true" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+			visible="eq(-10,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting id="album.discart" label="$LOCALIZE[558] discart" type="bool" default="true" visible="eq(-10,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting id="album.thumb" label="$LOCALIZE[558] thumb" type="bool" default="true" visible="eq(-11,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting id="album.back" label="$LOCALIZE[558] back" type="bool" default="true" visible="eq(-12,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting id="album.spine" label="$LOCALIZE[558] spine" type="bool" default="true" visible="eq(-13,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting id="song.thumb" label="$LOCALIZE[179] thumb" type="bool" default="false" visible="eq(-13,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
 	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />
@@ -120,11 +120,14 @@
 		<setting id="musicvideo.thumb_generate" label="32920" type="bool" default="false" />
 		<setting id="centraldir.set_enabled" label="32909" type="bool" default="false" />
 		<setting id="centraldir.set_dir" subsetting="true" label="32910" type="folder" visible="eq(-1,true)" />
+		<setting id="albumartwithmediafiles" label="32951" type="bool" default="false" />
+		<setting id="savewith_basefilename" label="32941" type="bool" default="true" />
+		<setting id="savewith_basefilename_mvids" label="32942" type="bool" default="true" />
 		<setting label="32059" type="lsep" />
 		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
 		<setting id="save_extrafanart" label="32929" type="bool" default="false" />
 		<setting id="save_extrafanart_mvids" label="32930" type="bool" default="false" />
-		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" visible="eq(-6,false)" />
+		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" visible="eq(-9,false)" />
 		<!-- For add-on inner workings -->
 		<setting id="last_videoupdate" type="text" default="0" visible="false" />
 		<setting id="last_musicupdate" type="text" default="0" visible="false" />
