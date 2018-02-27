@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
 	<category label="$LOCALIZE[128]">
-		<setting id="enableservice" label="32900" type="bool" default="true" />
+		<setting id="enableservice" label="32900" type="bool" default="false" />
 		<setting id="enableservice_music" label="32922" type="bool" default="false"
 			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
 		<setting id="enable_olditem_updates" subsetting="true" label="32912" type="bool"
 			default="true" visible="eq(-1,true) | eq(-2,true)" />
 		<setting id="only_filesystem" label="32904" type="bool" default="false" />
-		<setting id="remove_deselected_files" label="32940" type="bool" default="true" />
+		<setting id="remove_deselected_files" label="32940" type="bool" default="false" />
 		<setting id="recycle_removed" subsetting="true" label="32931" type="bool" default="false" visible="eq(-1,true)" />
 		<setting label="32412" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)"
 			visible="!Skin.HasSetting(disablecontext:script.artwork.beef)" />
@@ -113,8 +113,6 @@
 		<setting id="progress_display" label="32924" type="select" default="0" lvalues="32925|32926|32927" />
 		<setting id="final_notification" label="32928" type="bool" default="false" />
 		<setting label="$LOCALIZE[744]" type="lsep" />
-		<setting id="savewith_basefilename" label="32941" type="bool" default="true" />
-		<setting id="savewith_basefilename_mvids" label="32942" type="bool" default="true" />
 		<setting id="episode.thumb_generate" label="32914" type="bool" default="false" />
 		<setting id="movie.thumb_generate" label="32915" type="bool" default="false" />
 		<setting id="musicvideo.thumb_generate" label="32920" type="bool" default="false" />

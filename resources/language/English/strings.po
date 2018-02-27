@@ -162,7 +162,7 @@ msgid "Compatibility options"
 msgstr ""
 
 msgctxt "#32060"
-msgid "Artwork Beef will [I]only[/I] process local music artwork in the 'Artist information folder'[CR]configured in Kodi settings under Media > Music"
+msgid "Artist artwork will [I]only[/I] be processed in the 'Artist information folder'[CR]configured in Kodi settings under Media > Music"
 msgstr ""
 
 # Actions
@@ -252,7 +252,7 @@ msgstr ""
 # Settings
 
 msgctxt "#32900"
-msgid "Automatically add artwork for new videos"
+msgid "Add artwork for new videos after library updates"
 msgstr ""
 
 msgctxt "#32912"
@@ -260,7 +260,7 @@ msgid "Update artwork for old items daily"
 msgstr ""
 
 msgctxt "#32904"
-msgid "Automatically add from file system only"
+msgid "Do not automatically add artwork from web services, only identify local files"
 msgstr ""
 
 msgctxt "#32901"
@@ -310,11 +310,11 @@ msgid "grab movie set artwork from movie parent directory"
 msgstr ""
 
 msgctxt "#32914"
-msgid "Always generate episode thumb from video file"
+msgid "Replace episode 'thumb' with Kodi generated thumb"
 msgstr ""
 
 msgctxt "#32915"
-msgid "Always generate movie thumb from video file"
+msgid "Replace movie 'thumb' with Kodi generated thumb"
 msgstr ""
 
 msgctxt "#32916"
@@ -322,7 +322,7 @@ msgid "Include detailed per item changes in the reports"
 msgstr ""
 
 msgctxt "#32918"
-msgid "Default TV show / episode ID source if unknown"
+msgid "TV show scraper (if ID source is unknown)"
 msgstr ""
 
 msgctxt "#32919"
@@ -330,7 +330,7 @@ msgid "Show latest artwork log"
 msgstr ""
 
 msgctxt "#32920"
-msgid "Always generate music video thumb from video file"
+msgid "Replace music video 'thumb' with Kodi generated thumb"
 msgstr ""
 
 msgctxt "#32921"
@@ -338,7 +338,7 @@ msgid "Prefer artwork from The Movie Database when available"
 msgstr ""
 
 msgctxt "#32922"
-msgid "Automatically add artwork for new music"
+msgid "Add artwork for new music after library updates"
 msgstr ""
 
 # 32923 retired 2018-02-23
@@ -372,7 +372,7 @@ msgid "Save additional music videos fanart to 'extrafanart' directory instead"
 msgstr ""
 
 msgctxt "#32931"
-msgid "Recycle removed and replaced artwork files to temp/cache directory"
+msgid "Recycle deleted and replaced artwork files to temp/cache directory"
 msgstr ""
 
 msgctxt "#32932"
@@ -380,7 +380,7 @@ msgid "Disable all automatic processing for movies"
 msgstr ""
 
 msgctxt "#32933"
-msgid "Disable all automatic processing for TV shows"
+msgid "Disable all automatic processing for TV shows and seasons"
 msgstr ""
 
 msgctxt "#32934"
@@ -408,7 +408,7 @@ msgid "Disable all automatic processing for movie sets"
 msgstr ""
 
 msgctxt "#32940"
-msgid "Remove deselected artwork files"
+msgid "Delete deselected artwork files"
 msgstr ""
 
 msgctxt "#32941"
