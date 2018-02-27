@@ -106,6 +106,7 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
         result = {}
         sep = get_pathsep(path)
         path = os.path.dirname(paths[0]) + sep
+        havespecific = []
         for dirname, moviefile in (os.path.split(p) for p in paths):
             dirname += sep
             check_moviebase = os.path.splitext(moviefile)[0].lower()
@@ -115,10 +116,12 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
                 if not check_filename.endswith(ARTWORK_EXTS):
                     continue
                 imagefile = os.path.splitext(check_filename)[0]
+                specific = False
                 if '-' in imagefile:
                     firstbit, imagefile = imagefile.rsplit('-', 1)
                     if firstbit != check_moviebase:
                         continue
+                    specific = True
                 if not imagefile.isalnum() or len(imagefile) > 20:
                     continue
                 arttype = imagefile
@@ -126,7 +129,10 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
                     arttype = self.alttypes[arttype]
                     if arttype in result.keys():
                         continue
-                result[arttype] = self.buildimage(dirname + filename, filename)
+                if specific or arttype not in havespecific:
+                    result[arttype] = self.buildimage(dirname + filename, filename)
+                if specific:
+                    havespecific.append(arttype)
 
             if settings.identify_alternatives and dirs:
                 if 'extrafanart' in dirs:
@@ -223,20 +229,22 @@ class ArtFilesMusicVideoProvider(ArtFilesAbstractProvider):
         path += get_pathsep(path)
         dirs, files = xbmcvfs.listdir(path)
         check_inputbase = os.path.splitext(inputfilename)[0].lower()
-        result = {}
         paths = get_movie_path_list(path)
         result = {}
         sep = get_pathsep(path)
         path = os.path.dirname(paths[0]) + sep
+        havespecific = []
         for filename in files:
             check_filename = filename.lower()
             if not check_filename.endswith(ARTWORK_EXTS):
                 continue
             basefile = os.path.splitext(check_filename)[0]
+            specific = False
             if '-' in basefile:
                 firstbit, basefile = basefile.rsplit('-', 1)
                 if firstbit != check_inputbase:
                     continue
+                specific = True
             if not basefile.isalnum() or len(basefile) > 20:
                 continue
             arttype = basefile
@@ -244,7 +252,10 @@ class ArtFilesMusicVideoProvider(ArtFilesAbstractProvider):
                 arttype = self.alttypes[arttype]
                 if arttype in result.keys():
                     continue
-            result[arttype] = self.buildimage(path + filename, filename)
+            if specific or arttype not in havespecific:
+                result[arttype] = self.buildimage(path + filename, filename)
+            if specific:
+                havespecific.append(arttype)
 
         if settings.identify_alternatives and dirs:
             if 'extrafanart' in dirs:
