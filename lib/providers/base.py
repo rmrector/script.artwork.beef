@@ -43,7 +43,8 @@ class AbstractProvider(object):
         except (Timeout, ConnectionError) as ex:
             raise ProviderError, (L(CANT_CONTACT_PROVIDER), ex), sys.exc_info()[2]
         except HTTPError as ex:
-            message = ex.response.reason if ex.response else type(ex).__name__
+            message = ex.response.reason if ex.response else \
+                ex.message if hasattr(ex, 'message') else type(ex).__name__
             raise ProviderError, (L(HTTP_ERROR).format(message), ex), sys.exc_info()[2]
         except RequestException as ex:
             raise ProviderError, (L(HTTP_ERROR).format(type(ex).__name__), ex), sys.exc_info()[2]
