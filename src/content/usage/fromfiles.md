@@ -1,15 +1,33 @@
 ---
-title: "NFO and image files"
+title: "Image files"
 date: 2017-12-28T22:45:58-07:00
 weight: 3
 ---
 
+## Downloading and managing local artwork files
+
+By default, Artwork Beef does not modify existing local artwork files. There are some options
+to change that, though. With the settings "Download artwork for processed [media type]"
+enabled for a media type it will download all remote artwork for processed items, and any new images
+selected manually. By default most video library images will be saved next to the media files
+with the most specific file names detailed below, with options to save movie and music video artwork
+without the base file name if you like, and options to save movie and music video fanart# to an
+"extrafanart" directory for skins using the classic style.
+
+- The add-on setting "Delete deselected artwork files" will delete existing "fanart" files that are
+  deselected manually in the GUI, to prevent that artwork file from being added back to the library
+  when the media item is next processed.
+- The add-on setting "Recycle deleted and replaced files to temp/cache directory" will move
+  deleted and replaced artwork to Kodi's temp or cache directory. This is fairly simple and
+  does not check the available space on the drive, and can overwrite the first recycled file
+  if the same art type is modified again.
+
 ## Artwork file naming conventions for the video library
 
 Artwork Beef will pick up any properly named artwork files next to your video files. It has two
-conventions for loading most artwork: `[media file name]-[art type].[ext]` for movies,
+conventions for loading most artwork: `[media base file name]-[art type].[ext]` for movies,
 episodes, and music videos, and `[art type].[ext]` for TV shows and as a less specific alternative for
-movies and music videos with their own directories. This generally matches Kodi's file naming conventions.
+movies and music videos within their own directories. This generally matches Kodi's file naming conventions.
 
 `[art type]` must be alphanumeric, lowercase, and no longer than 20 characters, but can
 otherwise be freely named. They should exactly match the name that skins can use to access
@@ -31,8 +49,6 @@ A few specific examples are
 - `... /Movie Name (2017)/Movie File Name-fanart2.jpg`
 - `... /Movie Name (2017)/Movie File Name-fanart3.jpg`
 - `... /Movie Name (2017)/Movie File Name-clearlogo.png`
-- Artwork can also be pulled from an NFO file named
-  - `... /Movie Name (2017)/Movie File Name.nfo`
 
 If your movie or music video library is large, I suggest you keep each item in their own directory
 for performance reasons. Artwork Beef doesn't work any differently if you keep them all in one directory,
@@ -55,20 +71,13 @@ A few specific examples
 - `... /TV Show 1/fanart2.jpg`
 - `... /TV Show 1/fanart3.jpg`
 - `... /TV Show 1/clearlogo.png`
-- Artwork can also be pulled from an NFO file named
-  - `... /TV Show 1/tvshow.nfo`
-  - `... /Movie Name (2017)/movie.nfo`
-  - `... /Music Artist - Track Title/musicvideo.nfo`
 
 ### Movie collection artwork
 
 Movie collection artwork can be pulled from a central directory (configured in the add-on settings)
 containing artwork named in a similar fashion to the second option above.
 Movie collections generally don't have an individual file nor folder they can call their own,
-so instead use the set's name as the directory name. Remove characters which are not
-file system safe, like `:?"/\<>*|`, and make sure directories do not end with a space or period.
-Artwork Beef will be more lenient in its matching to catch styles that other tools may use,
-but those two simple rules should always steer true.
+so instead use the set's name as the directory name.
 
 A few specific examples are
 
@@ -76,8 +85,39 @@ A few specific examples are
 - `... /[central movie set info directory]/Movie Collection Name/fanart.jpg`
 - `... /[central movie set info directory]/Movie Collection Name/fanart1.jpg`
 - `... /[central movie set info directory]/Movie Collection Name/clearlogo.png`
-- an NFO file named
-  - `... /[central movie set info directory]/Movie Collection Name/set.nfo`
+
+### Music artwork
+
+Music artwork is gathered from and downloaded to the "Artist information folder" setting in Kodi,
+added in 18 Leia under "Media settings", "Music", "Library". The results are structured as
+
+- `... /[Artist information folder]/[artist name]/thumb.jpg`
+- `... /[Artist information folder]/[artist name]/fanart.jpg`
+- `... /[Artist information folder]/[artist name]/fanart1.jpg`
+- `... /[Artist information folder]/[artist name]/clearlogo.png` for artist artwork
+- `... /[Artist information folder]/[artist name]/[album name]/thumb.jpg`
+- `... /[Artist information folder]/[artist name]/[album name]/back.jpg`
+- `... /[Artist information folder]/[artist name]/[album name]/spine.jpg`
+- `... /[Artist information folder]/[artist name]/[album name]/discart.png` for album artwork
+- `... /[Artist information folder]/[artist name]/[album name]/[song name]-thumb.jpg` for song artwork
+
+When there is more than one artist with the same name, the first four characters of the
+artist MusicBrainz ID is add to the end of the folder like `[artist name]_12fe`. Same goes
+when there is more than one album with the same name for a single artist (like remasters or
+other recordings), with the album / release MusicBrainz ID (not release group).
+
+Artwork Beef will also identify album and song artwork next to the song files if all songs for
+one album are in a single folder, and don't share that folder with songs from any other album.
+Song artwork organized this way must match the base name of the song file, rather than just the
+song name as when in the artist folder. There is also an option to save album and song artwork
+to this directory if possible.
+
+### File system safe names
+For music and movie set artwork, the file name is made from the title or name of items, which
+may not be safe for the file system with characters like `:?"/\<>*|`. Replace these characters
+with an underscore '_', and make sure file names do not end with a space or period.
+Artwork Beef will be more lenient in its matching to catch other styles,
+but those two simple rules should steer true.
 
 ### Legacy names
 
@@ -87,54 +127,3 @@ and extrafanart are added as fanart#. Ditto Movie Set Artwork Automator, but onl
 default file names (logo.png to clearlogo, folder.jpg to thumb). This is controlled with an
 add-on setting, enabled by default. It also supports other file paths that MSAA supported,
 though I do not suggest you use them for a new setup.
-
-## From NFO files
-
-Artwork Beef will also add artwork specified in a standard Kodi NFO file next to your media. Add an
-`art` element to the root element whose children are individual artwork tagged with the
-exact artwork type and a URL to the image.
-
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<tvshow> <!-- Or 'movie', 'episodedetails', 'set', 'musicvideo' -->
-  <title>TV Show 1</title>
-  <!-- ... -->
-  <art>
-    <!-- The tag is the exact artwork type, freely named (lowercase alphanumeric), and the content is the URL to the image -->
-    <arttype>https://example.frank/artstuff/maidbilberry/1234.jpg</arttype>
-    <banner>https://thetvdb.com/banners/graphical/110381-g5.jpg</banner>
-    <characterart>https://assets.fanart.tv/fanart/tv/110381/characterart/archer-2009-514f89ade07a7.png</characterart>
-    <characterart1>https://assets.fanart.tv/fanart/tv/110381/characterart/archer-2009-54a8d64278ea4.png</characterart1>
-    <clearart>https://assets.fanart.tv/fanart/tv/110381/hdclearart/archer-2009-54053c1930642.png</clearart>
-    <clearlogo>https://assets.fanart.tv/fanart/tv/110381/hdtvlogo/archer-2009-505429fee4b03.png</clearlogo>
-    <fanart>https://thetvdb.com/banners/fanart/original/110381-23.jpg</fanart>
-    <fanart1>https://thetvdb.com/banners/fanart/original/110381-22.jpg</fanart1>
-    <fanart2>https://thetvdb.com/banners/fanart/original/110381-18.jpg</fanart2>
-    <fanart3>https://thetvdb.com/banners/fanart/original/110381-20.jpg</fanart3>
-    <fanart4>https://thetvdb.com/banners/fanart/original/110381-16.jpg</fanart4>
-    <landscape>https://assets.fanart.tv/fanart/tv/110381/tvthumb/A_110381.jpg</landscape>
-    <poster>https://thetvdb.com/banners/posters/110381-1.jpg</poster>
-    <!-- 'season' elements only for 'tvshow' -->
-    <season num="0"> <!-- 0 = Specials -->
-      <!-- Also freely named -->
-      <banner>https://thetvdb.com/banners/seasonswide/110381-0.jpg</banner>
-      <landscape>https://assets.fanart.tv/fanart/tv/110381/seasonthumb/archer-2009-51484c7a15cb2.jpg</landscape>
-      <poster>https://thetvdb.com/banners/seasons/110381-0-2.jpg</poster>
-    </season>
-    <season num="1"> <!-- Repeat for each season -->
-      <banner>https://thetvdb.com/banners/seasonswide/110381-1.jpg</banner>
-      <landscape>https://assets.fanart.tv/fanart/tv/110381/seasonthumb/archer-2009-51484c8624d76.jpg</landscape>
-      <poster>https://thetvdb.com/banners/seasons/110381-1-3.jpg</poster>
-    </season>
-  </art>
-</tvshow>
-```
-
-## Downloading artwork to share with multiple Kodi devices
-
-Enable the option "Download all processed artwork to file system" and
-Artwork Beef will download all artwork for each item processed automatically, and any images
-selected manually. Images will be saved next to the media files with the most specific
-file names detailed above. There are options to save movie and music video artwork without
-the base file name if you like, and options to save fanart# to an "extrafanart"
-directory to support skins using the classic style.

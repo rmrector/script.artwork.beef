@@ -76,6 +76,9 @@ h1 .subtitle {
 .changelogtag.cleanuptag {
 	background-color: #f94;
 }
+.header-wrapper {
+	background-color: #70269a;
+}
 </style>
 
   </head>
@@ -166,9 +169,9 @@ h1 .subtitle {
  
   
     
-      <li data-nav-id="/usage/fromfiles/" title="NFO and image files" class="dd-item ">
+      <li data-nav-id="/usage/fromfiles/" title="Image files" class="dd-item ">
         <a href="https://rmrector.github.io/script.artwork.beef/usage/fromfiles/">
-        NFO and image files
+        Image files
         
         </a>
     </li>
@@ -393,21 +396,22 @@ its way into Leia so it will probably see some feature churn before long.</p>
 
 <h2 id="usage">Usage</h2>
 
-<p>Install it. Tada! It will automatically run after library updates, grabbing extended
-artwork for new items, much like Kodi and scrapers do for info and basic artwork.</p>
+<p>Install it, and configure it to your liking. It is designed to run after library updates with the
+add-on settings &ldquo;Automatically add artwork for new videos&rdquo; and &ldquo;Automatically add artwork for new music&rdquo;.</p>
 
 <div class="notices note" ><p>There are a few actions and settings you may want to flip before letting Artwork Beef do its thing.
 See <a href="https://rmrector.github.io/script.artwork.beef/usage/firstusage/">First usage</a> for details.</p>
 </div>
 
 
+<p>Over time it will re-process media items still missing artwork, checking for new artwork from
+web services and the file system. After they have gone out of date they are considered
+&ldquo;old&rdquo; items affected by a couple of actions and settings.</p>
+
 <p>You can also run it from Program add-ons to trigger the automatic process for new or all items, or items old
 enough to need an update; a currently running process can also be canceled here. To operate on a single
 media item, open the context menu on that item, then under &ldquo;Manage&hellip;&rdquo; there are options
 to automatically &ldquo;Add missing artwork&rdquo; or manually &ldquo;Select artwork&hellip;&rdquo;.</p>
-
-<p>Over time it will re-process media items still missing artwork, checking for new artwork from
-web services and the file system.</p>
 
 <p><strong>Episode fanart</strong> requires using a scraper that grabs the TheTVDB ID for each episode, like the
 standard TheTVDB scraper and The Movie Database <em>TV show</em> scraper, or an NFO manager that does the same.

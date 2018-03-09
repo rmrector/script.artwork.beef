@@ -21,21 +21,22 @@ its way into Leia so it will probably see some feature churn before long.
 
 ## Usage
 
-Install it. Tada! It will automatically run after library updates, grabbing extended
-artwork for new items, much like Kodi and scrapers do for info and basic artwork.
+Install it, and configure it to your liking. It is designed to run after library updates with the
+add-on settings "Automatically add artwork for new videos" and "Automatically add artwork for new music".
 
 {{% notice note %}}
 There are a few actions and settings you may want to flip before letting Artwork Beef do its thing.
 See [First usage]({{< ref "usage/firstusage.md" >}}) for details.
 {{% /notice %}}
 
+Over time it will re-process media items still missing artwork, checking for new artwork from
+web services and the file system. After they have gone out of date they are considered
+"old" items affected by a couple of actions and settings.
+
 You can also run it from Program add-ons to trigger the automatic process for new or all items, or items old
 enough to need an update; a currently running process can also be canceled here. To operate on a single
 media item, open the context menu on that item, then under "Manage..." there are options
 to automatically "Add missing artwork" or manually "Select artwork...".
-
-Over time it will re-process media items still missing artwork, checking for new artwork from
-web services and the file system.
 
 **Episode fanart** requires using a scraper that grabs the TheTVDB ID for each episode, like the
 standard TheTVDB scraper and The Movie Database _TV show_ scraper, or an NFO manager that does the same.

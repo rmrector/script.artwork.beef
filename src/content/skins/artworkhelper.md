@@ -25,19 +25,22 @@ These paths use InfoLabels to gather image URLs just like skins do.
 ### ListItem multi image plugin path
 
 The simplest form grabs multiple images for the currently focused ListItem.  
-`plugin://script.artwork.helper/multiimage/listitem/?refresh=$INFO[ListItem.DBID]`
+`plugin://script.artwork.helper/multiimage/listitem/?refresh=$INFO[ListItem.Label]`
 
 Mostly for fanart (fanart#), but works for any art type that has one or more images.
 Additional query params are available to modify its behavior, separate them with `&amp;&amp;`.
 
 - `refresh` is required to get Kodi to fire off the plugin when the focused item changes. Set it
-  to something that will change when the fanart should change, like ListItem.DBID or Label
+  to something that will change when the fanart should change, like ListItem.Label
 - `containerid` points to the current ListItem in a specific container; either leave blank for the currently selected
   container on the **Kodi 18 home window**, or set to the desired container's skin ID
 - `arttype` lets you select different artwork. Defaults to 'fanart'.
+- `allartists` includes artwork for all artists, including 'artist' and 'albumartist' plus 'artist1',
+  'albumartist1' for duets or more. For the music library in **Kodi 18** and up. Only takes effect
+  when arttype is "artist.[arttype]" or "albumartist.[arttype]".
 
 With the full complement of options:  
-`plugin://script.artwork.helper/multiimage/listitem/?refresh=$INFO[Container.ListItem.DBID]&amp;&amp;containerid=&amp;&amp;arttype=tvshow.fanart`
+`plugin://script.artwork.helper/multiimage/listitem/?refresh=$INFO[Container.ListItem.Label]&amp;&amp;containerid=&amp;&amp;arttype=artist.fanart&amp;&amp;allartists=true`
 
 ### Container multi image plugin path
 
@@ -49,9 +52,27 @@ Additional query params are available to modify its behavior, separate them with
 - `refresh` is required to get Kodi to fire off the plugin when the focused item changes. Set it
   to something that will change when the fanart should change, like Container.FolderName
 - `arttype` lets you select different artwork. Defaults to 'tvshow.fanart'.
+- `allartists` includes artwork for all artists. Only takes effect
+  when arttype is "artist.[arttype]" or "albumartist.[arttype]".
+
+With some options:  
+`plugin://script.artwork.helper/multiimage/container/?refresh=$INFO[ListItem.Label]&amp;&amp;arttype=set.fanart`
+
+### Player multi image plugin path
+
+This grabs multiple images for the currently playing media.  
+`plugin://script.artwork.helper/multiimage/player/?refresh=$INFO[Player.FolderName]`
+
+Additional query params are available to modify its behavior, separate them with `&amp;&amp;`.
+
+- `refresh` is required to get Kodi to fire off the plugin when the focused item changes. Set it
+  to something that will change when the fanart should change, like Container.FolderName
+- `arttype` lets you select different artwork. Defaults to 'artist.fanart'.
+- `allartists` includes artwork for all artists. Defaults to 'true' when arttype
+  is "artist.[arttype]" or "albumartist.[arttype]", no effect otherwise.
 
 With the full complement of options:  
-`plugin://script.artwork.helper/multiimage/container/?refresh=$INFO[ListItem.DBID]&amp;&amp;arttype=set.fanart`
+`plugin://script.artwork.helper/multiimage/container/?refresh=$INFO[ListItem.Label]&amp;&amp;arttype=albumartist.fanart&amp;&amp;allartists=false`
 
 ### Smart series multi image plugin path
 
@@ -68,7 +89,8 @@ Additional query params are available to modify its behavior, separate them with
   art type like 'fanart', the plugin will decide if tvshow.* is needed.
 
 With the full complement of options:  
-`plugin://script.artwork.helper/multiimage/smartseries/?title=$INFO[ListItem.Title]&amp;&amp;arttype=fanart`
+`plugin://script.artwork.helper/multiimage/smartseries/?title=$INFO[ListItem.Title]&amp;&amp;arttype=fanart`  
+`plugin://script.artwork.helper/multiimage/smartseries/?title=$INFO[Container.TVShowTitle]&amp;&amp;arttype=fanart`
 
 ### Arbitrary images plugin path
 

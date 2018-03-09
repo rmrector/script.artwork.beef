@@ -76,6 +76,9 @@ h1 .subtitle {
 .changelogtag.cleanuptag {
 	background-color: #f94;
 }
+.header-wrapper {
+	background-color: #70269a;
+}
 </style>
 
   </head>
@@ -166,9 +169,9 @@ h1 .subtitle {
  
   
     
-      <li data-nav-id="/usage/fromfiles/" title="NFO and image files" class="dd-item ">
+      <li data-nav-id="/usage/fromfiles/" title="Image files" class="dd-item ">
         <a href="https://rmrector.github.io/script.artwork.beef/usage/fromfiles/">
-        NFO and image files
+        Image files
         
         </a>
     </li>
@@ -367,6 +370,7 @@ h1 .subtitle {
 <ul>
 <li><a href="#listitem-multi-image-plugin-path">ListItem multi image plugin path</a></li>
 <li><a href="#container-multi-image-plugin-path">Container multi image plugin path</a></li>
+<li><a href="#player-multi-image-plugin-path">Player multi image plugin path</a></li>
 <li><a href="#smart-series-multi-image-plugin-path">Smart series multi image plugin path</a></li>
 <li><a href="#arbitrary-images-plugin-path">Arbitrary images plugin path</a></li>
 </ul></li>
@@ -413,21 +417,24 @@ The Settings level may need to be set to Advanced to see dependencies in &ldquo;
 <h3 id="listitem-multi-image-plugin-path">ListItem multi image plugin path</h3>
 
 <p>The simplest form grabs multiple images for the currently focused ListItem.<br />
-<code>plugin://script.artwork.helper/multiimage/listitem/?refresh=$INFO[ListItem.DBID]</code></p>
+<code>plugin://script.artwork.helper/multiimage/listitem/?refresh=$INFO[ListItem.Label]</code></p>
 
 <p>Mostly for fanart (fanart#), but works for any art type that has one or more images.
 Additional query params are available to modify its behavior, separate them with <code>&amp;amp;&amp;amp;</code>.</p>
 
 <ul>
 <li><code>refresh</code> is required to get Kodi to fire off the plugin when the focused item changes. Set it
-to something that will change when the fanart should change, like ListItem.DBID or Label</li>
+to something that will change when the fanart should change, like ListItem.Label</li>
 <li><code>containerid</code> points to the current ListItem in a specific container; either leave blank for the currently selected
 container on the <strong>Kodi 18 home window</strong>, or set to the desired container&rsquo;s skin ID</li>
 <li><code>arttype</code> lets you select different artwork. Defaults to &lsquo;fanart&rsquo;.</li>
+<li><code>allartists</code> includes artwork for all artists, including &lsquo;artist&rsquo; and &lsquo;albumartist&rsquo; plus &lsquo;artist1&rsquo;,
+&lsquo;albumartist1&rsquo; for duets or more. For the music library in <strong>Kodi 18</strong> and up. Only takes effect
+when arttype is &ldquo;artist.[arttype]&rdquo; or &ldquo;albumartist.[arttype]&ldquo;.</li>
 </ul>
 
 <p>With the full complement of options:<br />
-<code>plugin://script.artwork.helper/multiimage/listitem/?refresh=$INFO[Container.ListItem.DBID]&amp;amp;&amp;amp;containerid=&amp;amp;&amp;amp;arttype=tvshow.fanart</code></p>
+<code>plugin://script.artwork.helper/multiimage/listitem/?refresh=$INFO[Container.ListItem.Label]&amp;amp;&amp;amp;containerid=&amp;amp;&amp;amp;arttype=artist.fanart&amp;amp;&amp;amp;allartists=true</code></p>
 
 <h3 id="container-multi-image-plugin-path">Container multi image plugin path</h3>
 
@@ -440,10 +447,30 @@ container on the <strong>Kodi 18 home window</strong>, or set to the desired con
 <li><code>refresh</code> is required to get Kodi to fire off the plugin when the focused item changes. Set it
 to something that will change when the fanart should change, like Container.FolderName</li>
 <li><code>arttype</code> lets you select different artwork. Defaults to &lsquo;tvshow.fanart&rsquo;.</li>
+<li><code>allartists</code> includes artwork for all artists. Only takes effect
+when arttype is &ldquo;artist.[arttype]&rdquo; or &ldquo;albumartist.[arttype]&ldquo;.</li>
+</ul>
+
+<p>With some options:<br />
+<code>plugin://script.artwork.helper/multiimage/container/?refresh=$INFO[ListItem.Label]&amp;amp;&amp;amp;arttype=set.fanart</code></p>
+
+<h3 id="player-multi-image-plugin-path">Player multi image plugin path</h3>
+
+<p>This grabs multiple images for the currently playing media.<br />
+<code>plugin://script.artwork.helper/multiimage/player/?refresh=$INFO[Player.FolderName]</code></p>
+
+<p>Additional query params are available to modify its behavior, separate them with <code>&amp;amp;&amp;amp;</code>.</p>
+
+<ul>
+<li><code>refresh</code> is required to get Kodi to fire off the plugin when the focused item changes. Set it
+to something that will change when the fanart should change, like Container.FolderName</li>
+<li><code>arttype</code> lets you select different artwork. Defaults to &lsquo;artist.fanart&rsquo;.</li>
+<li><code>allartists</code> includes artwork for all artists. Defaults to &lsquo;true&rsquo; when arttype
+is &ldquo;artist.[arttype]&rdquo; or &ldquo;albumartist.[arttype]&ldquo;, no effect otherwise.</li>
 </ul>
 
 <p>With the full complement of options:<br />
-<code>plugin://script.artwork.helper/multiimage/container/?refresh=$INFO[ListItem.DBID]&amp;amp;&amp;amp;arttype=set.fanart</code></p>
+<code>plugin://script.artwork.helper/multiimage/container/?refresh=$INFO[ListItem.Label]&amp;amp;&amp;amp;arttype=albumartist.fanart&amp;amp;&amp;amp;allartists=false</code></p>
 
 <h3 id="smart-series-multi-image-plugin-path">Smart series multi image plugin path</h3>
 
@@ -462,7 +489,8 @@ art type like &lsquo;fanart&rsquo;, the plugin will decide if tvshow.* is needed
 </ul>
 
 <p>With the full complement of options:<br />
-<code>plugin://script.artwork.helper/multiimage/smartseries/?title=$INFO[ListItem.Title]&amp;amp;&amp;amp;arttype=fanart</code></p>
+<code>plugin://script.artwork.helper/multiimage/smartseries/?title=$INFO[ListItem.Title]&amp;amp;&amp;amp;arttype=fanart</code><br />
+<code>plugin://script.artwork.helper/multiimage/smartseries/?title=$INFO[Container.TVShowTitle]&amp;amp;&amp;amp;arttype=fanart</code></p>
 
 <h3 id="arbitrary-images-plugin-path">Arbitrary images plugin path</h3>
 

@@ -17,16 +17,16 @@
       <pubDate>Wed, 27 Dec 2017 22:45:06 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/usage/firstusage/</guid>
-      <description>The first time Artwork Beef runs it will process all items in your library. There are some artwork in the file system that isn&amp;rsquo;t added to Kodi&amp;rsquo;s database with any/many other tools. It will also check web services for new artwork to fill out any media items still missing some, unless &amp;ldquo;Automatically add artwork from file system only&amp;rdquo; is enabled. If you haven&amp;rsquo;t been managing movie collection artwork, Kodi sets posters and fanart to those of one of the movies in the collection.</description>
+      <description>Artwork Beef must process all items in your library, and will do so automatically. There are some artwork in the file system that isn&amp;rsquo;t added to Kodi&amp;rsquo;s database with any/many other tools. It will also check web services for new artwork to fill out any media items still missing some, unless &amp;ldquo;Automatically add artwork from file system only&amp;rdquo; is enabled. If you haven&amp;rsquo;t been managing movie collection artwork, Kodi sets posters and fanart to those of one of the movies in the collection.</description>
     </item>
     
     <item>
-      <title>NFO and image files</title>
+      <title>Image files</title>
       <link>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</link>
       <pubDate>Thu, 28 Dec 2017 22:45:58 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</guid>
-      <description>Artwork file naming conventions for the video library Artwork Beef will pick up any properly named artwork files next to your video files. It has two conventions for loading most artwork: [media file name]-[art type].[ext] for movies, episodes, and music videos, and [art type].[ext] for TV shows and as a less specific alternative for movies and music videos with their own directories. This generally matches Kodi&amp;rsquo;s file naming conventions.</description>
+      <description>Downloading and managing local artwork files By default, Artwork Beef does not modify existing local artwork files. There are some options to change that, though. With the settings &amp;ldquo;Download artwork for processed [media type]&amp;rdquo; enabled for a media type it will download all remote artwork for processed items, and any new images selected manually. By default most video library images will be saved next to the media files with the most specific file names detailed below, with options to save movie and music video artwork without the base file name if you like, and options to save movie and music video fanart# to an &amp;ldquo;extrafanart&amp;rdquo; directory for skins using the classic style.</description>
     </item>
     
     <item>
@@ -58,7 +58,7 @@ Add-on setting There is an add-on setting to pull extrafanart and extrathumbs fr
       <pubDate>Tue, 21 Nov 2017 22:46:53 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</guid>
-      <description>Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it! Avoid filesystem delays/access issues (unavailable network file system, removable media) when the images have been cached. Classic extrafanart always had to hit the file system at least once when the path changed to get a list of all extrafanart, even if they were all cached. Skins can more easily work with all fanart together (main + extra fanart)  There are plugin:// paths to stitch together fanart images for &amp;lsquo;multiimage&amp;rsquo; controls, &amp;lsquo;fanart&amp;rsquo; and &amp;lsquo;fanart#&amp;rsquo; alike!</description>
+      <description>Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it! Placing artwork in the library allows skins to work with multiple fanart no matter where they are stored. Avoid filesystem delays/access issues (unavailable network file system, removable media) when the images have been cached. Classic extrafanart always hits the file system at least once when first listing the path to get a list of the images, even if they are all cached.</description>
     </item>
     
   </channel>

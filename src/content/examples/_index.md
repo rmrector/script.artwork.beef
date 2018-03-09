@@ -8,7 +8,7 @@ weight: 3
 
 ![Episode fanart](/episode-fanart.jpg)
 
-Early look at [episode fanart from Copacetic](https://imgur.com/a/HfL6w).
+Early look at [episode fanart from Copacetic skin](https://imgur.com/a/HfL6w).
 
 ### Characterart
 

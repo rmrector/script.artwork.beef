@@ -76,6 +76,9 @@ h1 .subtitle {
 .changelogtag.cleanuptag {
 	background-color: #f94;
 }
+.header-wrapper {
+	background-color: #70269a;
+}
 </style>
 
   </head>
@@ -166,9 +169,9 @@ h1 .subtitle {
  
   
     
-      <li data-nav-id="/usage/fromfiles/" title="NFO and image files" class="dd-item ">
+      <li data-nav-id="/usage/fromfiles/" title="Image files" class="dd-item ">
         <a href="https://rmrector.github.io/script.artwork.beef/usage/fromfiles/">
-        NFO and image files
+        Image files
         
         </a>
     </li>
@@ -378,22 +381,26 @@ h1 .subtitle {
 
 <ul>
 <li>Kodi&rsquo;s support for freely named artwork in the library is pretty great, so let&rsquo;s use it!</li>
+<li>Placing artwork in the library allows skins to work with multiple fanart no matter where they
+are stored.</li>
 <li>Avoid filesystem delays/access issues (unavailable network file system, removable media) when
-the images have been cached. Classic extrafanart always had to hit the file system at least
-once when the path changed to get a list of all extrafanart, even if they were all cached.</li>
+the images have been cached. Classic extrafanart always hits the file system at least once
+when first listing the path to get a list of the images, even if they are all cached.</li>
 <li>Skins can more easily work with all fanart together (main + extra fanart)
 
 <ul>
-<li>There are <strong>plugin://</strong> paths to stitch together fanart images for &lsquo;multiimage&rsquo; controls,
-&lsquo;fanart&rsquo; and &lsquo;fanart#&rsquo; alike! See <a href="https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/">Artwork Helper</a>.</li>
-<li>It is also possible to do without an add-on dependency at all, see
+<li>Display them in a <code>multiimage</code> control with a skin structure described in
 <a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/">Fun without add-ons</a>.</li>
+<li>There are also <strong>plugin://</strong> paths to accomplish this.
+See <a href="https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/">Artwork Helper</a>.</li>
 </ul></li>
-<li>Skins don&rsquo;t have to worry about detecting if the media item has extrafanart, so that they
-need to display the main fanart or risk leaving a gaping hole.</li>
 <li>Skins can look up each fanart image directly, which makes it simpler to display more than
-one at a time in arbitrary locations. I think I remember playing around with a Nox way back
-in the day that did this with extrathumbs.</li>
+one at a time in arbitrary locations.
+
+<ul>
+<li>Probably overkill for fanart, but other art types could be multiplied for great effect.
+I&rsquo;ve been playing with <a href="https://rmrector.github.io/script.artwork.beef/examples/#and-multiple-characterart">characterart</a>.</li>
+</ul></li>
 <li>It works for items in the library that may not point to a location on a file system that
 should even care about artwork on this/any level, maybe a movie from UPNP or whatever.</li>
 <li>Plugins can fill their own ListItems with this artwork, which skins can access in exactly the same way.</li>

@@ -6,8 +6,8 @@ date: 2017-11-21T22:44:39-07:00
 # Artwork Beef <span class="subtitle">An add-on for Kodi</span>
 
 Artwork Beef automatically adds extra artwork for media in your media libraries. It is generally intended to
-handle extended artwork just as Kodi and scrapers already do for basic artwork. It grabs artwork from the wonderful web
-services [fanart.tv], [TheTVDB.com], [The Movie Database], and [TheAudioDB.com].
+handle extended artwork just as Kodi and scrapers already do for basic artwork. It grabs artwork from
+the file system and wonderful web services [fanart.tv], [TheTVDB.com], [The Movie Database], and [TheAudioDB.com].
 
 [fanart.tv]: https://fanart.tv/
 [TheTVDB.com]: http://thetvdb.com/
@@ -43,6 +43,6 @@ media type | art types
 **songs** | _thumb_ (single cover)
 
 Local artwork stored in the file system is preferred if it exists, and Artwork Beef can be configured
-to download other artwork that is added. Local artwork is currently only supported for the video library.
+to download other artwork that is added.
 
 [Version changelog](https://github.com/rmrector/script.artwork.beef/blob/master/changelog.txt)

@@ -4,7 +4,7 @@ date: 2017-12-27T22:45:06-07:00
 weight: 2
 ---
 
-- The first time Artwork Beef runs it will process all items in your library. There are some
+- Artwork Beef must process all items in your library, and will do so automatically. There are some
   artwork in the file system that isn't added to Kodi's database with any/many other tools. It
   will also check web services for new artwork to fill out any media items still missing some, unless
   "Automatically add artwork from file system only" is enabled.
