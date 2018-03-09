@@ -37,3 +37,9 @@ Full documentation available at https://rmrector.github.io/script.artwork.beef/.
 - It would be nice to have a Kodi built-in way for skins to feed multiple art to a `multiimage`,
   maybe something like `$INFO[ListItem.MultiArt(fanart)]` to pull all `fanart` and `fanart#` together.
   I have no idea how it could be implemented in Kodi, though.
+
+### Running from source
+
+The API keys have been removed from the repo, and are only included in the final installable zip.
+Individual users that need to run from source can copy projectkeys.py from the installable zip
+to the same directory in source.

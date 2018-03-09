@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.17.3~adev" provider-name="rmrector">
+<addon id="script.artwork.beef" name="Artwork Beef" version="0.18.0" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -38,16 +38,12 @@
 		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the file system.</description>
 		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB</disclaimer>
 		<news>
-v0.17.2 (2018-02-10)
-- Fix: base filename handling
-
-v0.17.1 (2018-02-10)
-- Fix: episode handling with a special combination of settings
-
-v0.17.0 (2018-02-09)
-- Feature: add option to save artwork with/without base filename
-- Fix: better selection of episodes for processing
-- Fix: prefer central directory for movie set artwork
+v0.18.0 (2018-03-08)
+- Feature: save and load local artwork for items in the music library
+- Feature: separate artwork downloading options by media type
+- Fix: arrange and reword some settings for safety and clarity
+- Fix: only remove existing artwork files if they would be added back
+- Cleanup: remove API keys from git repo, only in final distributed zip
 		</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
 		<forum>https://forum.kodi.tv/showthread.php?tid=258886</forum>
