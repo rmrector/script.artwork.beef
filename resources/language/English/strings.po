@@ -420,35 +420,35 @@ msgid "Save music video artwork with music video base file name"
 msgstr ""
 
 msgctxt "#32943"
-msgid "Download artwork for processed TV shows and seasons"
+msgid "Download image files for processed TV shows and seasons"
 msgstr ""
 
 msgctxt "#32944"
-msgid "Download artwork for processed episodes"
+msgid "Download image files for processed episodes"
 msgstr ""
 
 msgctxt "#32945"
-msgid "Download artwork for processed movies"
+msgid "Download image files for processed movies"
 msgstr ""
 
 msgctxt "#32946"
-msgid "Download artwork for processed movie sets"
+msgid "Download image files for processed movie sets"
 msgstr ""
 
 msgctxt "#32947"
-msgid "Download artwork for processed music videos"
+msgid "Download image files for processed music videos"
 msgstr ""
 
 msgctxt "#32948"
-msgid "Download artwork for processed artists"
+msgid "Download image files for processed artists"
 msgstr ""
 
 msgctxt "#32949"
-msgid "Download artwork for processed albums"
+msgid "Download image files for processed albums"
 msgstr ""
 
 msgctxt "#32950"
-msgid "Download artwork for processed songs"
+msgid "Download image files for processed songs"
 msgstr ""
 
 msgctxt "#32951"
