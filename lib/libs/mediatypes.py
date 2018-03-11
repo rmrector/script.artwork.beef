@@ -248,6 +248,10 @@ def update_settings():
         disabled_mediatypes[mediatype] = addon.get_setting(mediatype + '.disabled')
     for mediatype in artinfo:
         todownload[mediatype] = addon.get_setting(mediatype + '.downloadartwork')
+    for mediatype in ('tvshow', 'episode', 'movie', 'set', 'musicvideo'):
+        # DEPRECATED: 2018-03-10
+        if addon.get_setting(mediatype + '.downloadartwork') == 'False':
+            addon.set_setting(mediatype + '.downloadartwork', False)
     olddownload_enabled = addon.get_setting('download_artwork')
     if olddownload_enabled != '':
         # DEPRECATED: 2018-02-23

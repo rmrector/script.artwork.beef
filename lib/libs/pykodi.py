@@ -200,8 +200,11 @@ class Addon(xbmcaddon.Addon):
         return result
 
     def set_setting(self, settingid, value):
-        if settingid.endswith('_list') and not isinstance(value, basestring) and isinstance(value, collections.Iterable):
+        if settingid.endswith('_list') and not isinstance(value, basestring) \
+        and isinstance(value, collections.Sequence):
             value = '|'.join(value)
+        elif isinstance(value, bool):
+            value = 'true' if value else 'false'
         elif not isinstance(value, basestring):
             value = str(value)
         self.setSetting(settingid, value)
