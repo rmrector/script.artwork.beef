@@ -1,3 +1,6 @@
+v0.18.1 (2018-03-10)
+- Fix: downloading video artwork when the settings should be disabled
+
 v0.18.0 (2018-03-08)
 - Feature: save and load local artwork for items in the music library
 - Feature: separate artwork downloading options by media type
