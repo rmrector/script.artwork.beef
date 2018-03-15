@@ -161,6 +161,10 @@ msgctxt "#32059"
 msgid "Compatibility options"
 msgstr "Options de compatibilité"
 
+msgctxt "#32060"
+msgid "Artist artwork will [I]only[/I] be processed in the 'Artist information folder'[CR]configured in Kodi settings under Media > Music"
+msgstr "Les artworks des artistes seront [I]seulement[/I] traités dans le 'dossier des informations des artistes' configuré dans les paramètres de Kodi dans Médias > Musiques"
+
 # Actions
 
 msgctxt "#32400"
@@ -248,16 +252,16 @@ msgstr "Télécharger les images distantes existantes"
 # Settings
 
 msgctxt "#32900"
-msgid "Automatically add artwork for new videos"
-msgstr "Ajouter automatiquement les artworks pour les nouvelles vidéos"
+msgid "Add artwork for new videos after library updates"
+msgstr "Ajouter les artworks pour les nouvelles vidéos après la mise à jour de la bibliothèque"
 
 msgctxt "#32912"
 msgid "Update artwork for old items daily"
 msgstr "Mettre à jour quotidiennement les artworks pour les anciens éléments"
 
 msgctxt "#32904"
-msgid "Automatically add from file system only"
-msgstr "Ajouter automatiquement à partir du système de fichiers uniquement"
+msgid "Do not automatically add artwork from web services, only identify local files"
+msgstr "Ne pas ajouter les artworks automatiquement à partir des services web, identifier seulement les fichiers locaux"
 
 msgctxt "#32901"
 msgid "Prefer fanart with no title"
@@ -306,40 +310,38 @@ msgid "grab movie set artwork from movie parent directory"
 msgstr "Récupérer les artworks des sagas de films à partir du répertoire parents des films"
 
 msgctxt "#32914"
-msgid "Always generate episode thumb from video file"
-msgstr "Toujours générer les vignettes des épisodes à partir du fichier vidéo"
+msgid "Replace episode 'thumb' with Kodi generated thumb"
+msgstr "Remplacer les vignettes des épisodes par celles générées par Kodi"
 
 msgctxt "#32915"
-msgid "Always generate movie thumb from video file"
-msgstr "Toujours générer les vignettes des films à partir du fichier vidéo"
+msgid "Replace movie 'thumb' with Kodi generated thumb"
+msgstr "Remplacer les vignettes des films par celles générées par Kodi"
 
 msgctxt "#32916"
 msgid "Include detailed per item changes in the reports"
 msgstr "Inclure les changements détaillés par élément dans les rapports"
 
 msgctxt "#32918"
-msgid "Default TV show / episode ID source if unknown"
-msgstr "Fournisseur d'informations par défaut des séries TV et épisodes"
+msgid "TV show scraper (if ID source is unknown)"
+msgstr "Fournisseur d'informations des séries TV (si l'ID source est inconnu)"
 
 msgctxt "#32919"
 msgid "Show latest artwork log"
 msgstr "Afficher le dernier journal"
 
 msgctxt "#32920"
-msgid "Always generate music video thumb from video file"
-msgstr "Toujours générer les vignettes des clips vidéos à partir du fichier vidéo"
+msgid "Replace music video 'thumb' with Kodi generated thumb"
+msgstr "Remplacer les vignettes des clips vidéos par celles générées par Kodi"
 
 msgctxt "#32921"
 msgid "Prefer artwork from The Movie Database when available"
 msgstr "Préférer les artworks de TheMovieDB si disponibles"
 
 msgctxt "#32922"
-msgid "Automatically add artwork for new music"
-msgstr "Ajouter automatiquement les artworks pour les nouvelles musiques"
+msgid "Add artwork for new music after library updates"
+msgstr "Ajouter les artworks pour les nouvelles musiques après la mise à jour de la bibliothèque"
 
-msgctxt "#32923"
-msgid "Download all processed artwork to file system"
-msgstr "Télécharger toutes les artworks traités dans le système de fichiers"
+# 32923 retired 2018-02-23
 
 msgctxt "#32924"
 msgid "Progress display for automatic processing"
@@ -370,7 +372,7 @@ msgid "Save additional music videos fanart to 'extrafanart' directory instead"
 msgstr "Enregistrer les fanarts supplémentaires des clips vidéos dans un répertoire 'extrafanart'"
 
 msgctxt "#32931"
-msgid "Recycle removed and replaced artwork files to temp/cache directory"
+msgid "Recycle deleted and replaced artwork files to temp/cache directory"
 msgstr "Recycler les artworks supprimés et remplacés dans le répertoire temp/cache"
 
 msgctxt "#32932"
@@ -378,8 +380,8 @@ msgid "Disable all automatic processing for movies"
 msgstr "Désactiver tous les traitements automatiques pour les films"
 
 msgctxt "#32933"
-msgid "Disable all automatic processing for TV shows"
-msgstr "Désactiver tous les traitements automatiques pour les séries TV"
+msgid "Disable all automatic processing for TV shows and seasons"
+msgstr "Désactiver tous les traitements automatiques pour les séries TV et les saisons"
 
 msgctxt "#32934"
 msgid "Disable all automatic processing for episodes"
@@ -406,7 +408,7 @@ msgid "Disable all automatic processing for movie sets"
 msgstr "Désactiver tous les traitements automatiques pour les sagas de films"
 
 msgctxt "#32940"
-msgid "Remove deselected artwork files"
+msgid "Delete deselected artwork files"
 msgstr "Supprimer les artworks désélectionnés"
 
 msgctxt "#32941"
@@ -416,6 +418,42 @@ msgstr "Sauvegarder les artworks des films avec les mêmes noms de fichiers des 
 msgctxt "#32942"
 msgid "Save music video artwork with music video base file name"
 msgstr "Sauvegarder les artworks des clips vidéos avec les mêmes noms de fichiers des clips vidéos"
+
+msgctxt "#32943"
+msgid "Download image files for processed TV shows and seasons"
+msgstr "Télécharger les fichiers images pour les séries TV et les saisons traités"
+
+msgctxt "#32944"
+msgid "Download image files for processed episodes"
+msgstr "Télécharger les fichiers images pour les épisodes traités"
+
+msgctxt "#32945"
+msgid "Download image files for processed movies"
+msgstr "Télécharger les fichiers images pour les films traités"
+
+msgctxt "#32946"
+msgid "Download image files for processed movie sets"
+msgstr "Télécharger les fichiers images pour les saga de films traités"
+
+msgctxt "#32947"
+msgid "Download image files for processed music videos"
+msgstr "Télécharger les fichiers images pour les clips vidéos traités"
+
+msgctxt "#32948"
+msgid "Download image files for processed artists"
+msgstr "Télécharger les fichiers images pour les artistes traités"
+
+msgctxt "#32949"
+msgid "Download image files for processed albums"
+msgstr "Télécharger les fichiers images pour les albums traités"
+
+msgctxt "#32950"
+msgid "Download image files for processed songs"
+msgstr "Télécharger les fichiers images pour les chansons traitées"
+
+msgctxt "#32951"
+msgid "Save album and song art with song files if possible"
+msgstr "Sauvegarder les artworks des albums et des chansons avec les fichiers des chansons si possible"
 
 # Used in the artwork report
 
