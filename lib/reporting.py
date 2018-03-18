@@ -121,7 +121,7 @@ def report_item(mediaitem, forcedreport=False, manual=False, downloaded_size=0):
             write(reportfile, L(NO_UPDATES))
 
         if mediaitem.error:
-            write(reportfile, L(ERROR_MESSAGE).format(mediaitem.error))
+            write(reportfile, L(ERROR_MESSAGE).format(pykodi.scrub_message(mediaitem.error)))
         if forcedreport:
             finish_chunk(reportfile)
     if forcedreport and _should_rotate():

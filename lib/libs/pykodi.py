@@ -8,6 +8,8 @@ import xbmcaddon
 import xbmcgui
 from datetime import datetime
 
+from projectkeys import TMDB_PROJECTKEY, TADB_PROJECTKEY
+
 oldpython = sys.version_info < (2, 7)
 if oldpython:
     import simplejson as json
@@ -23,6 +25,9 @@ _log_level_tag_lookup = {
     xbmc.LOGDEBUG: 'D',
     xbmc.LOGINFO: 'I'
 }
+
+LOG_SCRUB_STRINGS = [TMDB_PROJECTKEY, TADB_PROJECTKEY]
+_log_scrub_strings = {}
 
 ADDONID = 'script.artwork.beef'
 thumbnailimages = ('image://video@',)
@@ -129,8 +134,19 @@ def log(message, level=xbmc.LOGDEBUG, tag=None):
         message = json.dumps(message, cls=UTF8PrettyJSONEncoder)
 
     addontag = ADDONID if not tag else ADDONID + ':' + tag
-    file_message = '%s[%s] %s' % (level_tag, addontag, message)
+    file_message = '%s[%s] %s' % (level_tag, addontag, scrub_message(message))
     xbmc.log(file_message, level)
+
+def scrub_message(message):
+    for string in LOG_SCRUB_STRINGS + _log_scrub_strings.values():
+        message = message.replace(string, "XXXXX")
+    return message
+
+def set_log_scrubstring(key, string):
+    if string and len(string) > 4:
+        _log_scrub_strings[key] = string
+    else:
+        del _log_scrub_strings[key]
 
 def get_language(language_format=xbmc.ENGLISH_NAME, region=False):
     language = xbmc.getLanguage(language_format, region)
