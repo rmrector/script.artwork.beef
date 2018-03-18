@@ -1,3 +1,7 @@
+v0.18.2 (2018-03-18)
+- Fix: auto download music 'landscape' image
+- Fix: "Stop current process" not working in some configurations
+
 v0.18.1 (2018-03-10)
 - Fix: downloading video artwork when the settings should be disabled
 
