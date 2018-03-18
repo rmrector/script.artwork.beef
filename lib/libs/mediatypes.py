@@ -173,6 +173,10 @@ artinfo = {
         'clearart': {
             'autolimit': 1,
             'multiselect': False
+        },
+        'landscape': {
+            'autolimit': 1,
+            'multiselect': False
         }
     },
     ARTIST: {
@@ -193,6 +197,10 @@ artinfo = {
             'multiselect': False
         },
         'clearart': {
+            'autolimit': 1,
+            'multiselect': False
+        },
+        'landscape': {
             'autolimit': 1,
             'multiselect': False
         }
