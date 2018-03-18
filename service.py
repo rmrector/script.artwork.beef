@@ -114,12 +114,12 @@ class ArtworkService(xbmc.Monitor):
                 self.status = STATUS_IDLE
 
     def abortRequested(self):
-        return self.abort or super(ArtworkService, self).abortRequested()
+        return self.waitForAbort(0.0001)
 
-    def waitForAbort(self, timeout=None):
+    def waitForAbort(self, timeout=0):
         return self.abort or super(ArtworkService, self).waitForAbort(timeout)
 
-    def really_waitforabort(self, timeout=None):
+    def really_waitforabort(self, timeout=0):
         return super(ArtworkService, self).waitForAbort(timeout)
 
     def onNotification(self, sender, method, data):
