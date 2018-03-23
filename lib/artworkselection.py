@@ -33,27 +33,20 @@ def prompt_for_artwork(mediatype, medialabel, availableart, monitor):
     arttypes.sort(key=lambda art: sort_arttype(art['arttype']))
     typeselectwindow = ArtworkTypeSelector('DialogSelect.xml', settings.addon_path, arttypes=arttypes,
         medialabel=medialabel, show_refresh=mediatype in (mediatypes.MOVIESET, mediatypes.MUSICVIDEO))
-    singletype = arttypes[0]['arttype'] if mediatype == 'episode' and len(arttypes) == 1 else None
     selectedarttype = None
     selectedart = None
     typelist = [at['arttype'] for at in arttypes]
     while selectedart is None and not monitor.abortRequested():
         # The loop shows the first window if viewer backs out of the second
-        if singletype:
-            selectedarttype = singletype
-        else:
-            selectedarttype = typeselectwindow.prompt()
-            if selectedarttype not in typelist:
-                return selectedarttype, None
+        selectedarttype = typeselectwindow.prompt()
+        if selectedarttype not in typelist:
+            return selectedarttype, None
         if not selectedarttype:
             break
         multi = mediatypes.get_artinfo(mediatype, selectedarttype)['multiselect']
         artselectwindow = ArtworkSelector('DialogSelect.xml', settings.addon_path, artlist=availableart[selectedarttype],
             arttype=selectedarttype, medialabel=medialabel, multi=multi)
         selectedart = artselectwindow.prompt()
-        if singletype and selectedart is None:
-            selectedarttype = None
-            break
     return selectedarttype, selectedart
 
 class ArtworkTypeSelector(xbmcgui.WindowXMLDialog):
