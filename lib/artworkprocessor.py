@@ -198,7 +198,7 @@ class ArtworkProcessor(object):
         self.finish_run()
 
     def process_medialist(self, medialist, alwaysnotify=False):
-        return self.process_chunkedlist([medialist], alwaysnotify)
+        return self.process_chunkedlist([medialist], 1, alwaysnotify)
 
     def process_chunkedlist(self, chunkedlist, chunkcount, alwaysnotify=False):
         self.init_run(True, chunkcount)
@@ -210,7 +210,8 @@ class ArtworkProcessor(object):
                 break
             if idx or len(medialist) > 1:
                 reporting.report_start(medialist)
-            this_aborted, updateditemcount, this_artcount = self._process_chunk(medialist, idx + 1)
+            this_aborted, updateditemcount, this_artcount = \
+                self._process_chunk(medialist, idx + 1, alwaysnotify)
             artcount += this_artcount
             reporting.report_end(medialist, updateditemcount if this_aborted else 0, self.downloader.size)
             self.downloader.size = 0
@@ -222,7 +223,7 @@ class ArtworkProcessor(object):
         self.finish_run()
         return not aborted
 
-    def _process_chunk(self, medialist, currentchunk):
+    def _process_chunk(self, medialist, currentchunk, singleitem):
         self.currentchunk = currentchunk
         artcount = 0
         currentitem = 0
@@ -235,7 +236,7 @@ class ArtworkProcessor(object):
             info.add_additional_iteminfo(mediaitem, self.processed, search)
             currentitem += 1
             try:
-                services_hit = self._process_item(mediaitem)
+                services_hit = self._process_item(mediaitem, singleitem)
             except FileError as ex:
                 mediaitem.error = ex.message
                 log(ex.message, xbmc.LOGERROR)
