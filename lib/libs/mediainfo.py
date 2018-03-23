@@ -292,7 +292,10 @@ def _identify_album_folder(mediaitem):
             return thefolder + utils.get_pathsep(thefolder)
 
 def _get_uniqueids(jsondata, mediatype):
-    uniqueids = jsondata.get('uniqueid', {})
+    uniqueids = {}
+    for uid in jsondata.get('uniqueid', {}):
+        if jsondata['uniqueid'][uid]:
+            uniqueids[uid] = jsondata['uniqueid'][uid]
     if '/' in uniqueids.get('tvdb', ''):
         # PlexKodiConnect sets these
         uniqueids['tvdbse'] = uniqueids['tvdb']
