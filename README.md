@@ -21,7 +21,6 @@ Full documentation available at https://rmrector.github.io/script.artwork.beef/.
 
 - Music library support is for Kodi 18 Leia only, and requires a recent nightly from 2018
 - It doesn't add animated artwork, yet
-- It's not in the official Kodi repo, yet
 - It cannot set artwork for "all seasons". [related trac ticket](https://trac.kodi.tv/ticket/16139)
 
 ### Thoughts

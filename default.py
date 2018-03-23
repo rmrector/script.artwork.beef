@@ -69,9 +69,7 @@ def main():
                 (L(M.IDENTIFY_UNMATCHED_SETS), lambda: identify_unmatched(mediatypes.MOVIESET)),
                 (L(M.IDENTIFY_UNMATCHED_MVIDS), lambda: identify_unmatched(mediatypes.MUSICVIDEO)),
                 (L(M.REMOVE_SPECIFIC_TYPES), remove_specific_arttypes),
-                (L(M.MAKE_LOCAL), make_local),
-                ("Quick fix: Reset all movie set IDs", remove_movieset_matches),
-                ("Quick fix: Reset all music video IDs", remove_musicvideo_matches)]
+                (L(M.MAKE_LOCAL), make_local)]
         selected = xbmcgui.Dialog().select('Artwork Beef', [option[0] for option in options])
         if selected >= 0 and selected < len(options):
             action = options[selected][1]
@@ -167,16 +165,6 @@ def show_artwork_log():
         xbmcgui.Dialog().notification("Artwork Beef", L(M.VERSION_REQUIRED).format("Kodi 16"), xbmcgui.NOTIFICATION_INFO)
         return
     xbmcgui.Dialog().textviewer("Artwork Beef: " + L(M.REPORT_TITLE), reporting.get_latest_report())
-
-def remove_movieset_matches():
-    # DEPRECATED short 2017-09-02: just a quick fix until the processeditems medialabel change has fully taken effect
-    ProcessedItems().db.execute("DELETE FROM processeditems where mediatype = 'set'")
-    xbmcgui.Dialog().notification("Artwork Beef", "Done resetting all movie set IDs")
-
-def remove_musicvideo_matches():
-    # DEPRECATED short 2017-11-04: good grief, I did it again
-    ProcessedItems().db.execute("DELETE FROM processeditems where mediatype = 'musicvideo'")
-    xbmcgui.Dialog().notification("Artwork Beef", "Done resetting all music video IDs")
 
 def set_autoaddepisodes():
     busy = pykodi.get_busydialog()
