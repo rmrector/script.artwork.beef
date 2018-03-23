@@ -1,3 +1,6 @@
+v0.18.3 (2018-03-23)
+- Fix: show "missing web service ID" message when appropriate
+
 v0.18.2 (2018-03-18)
 - Fix: auto download music 'landscape' image
 - Fix: "Stop current process" not working in some configurations
