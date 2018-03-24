@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="https://rmrector.github.io/script.artwork.beef/images/favicon.png" type="image/x-icon" />
 <link rel="icon" href="https://rmrector.github.io/script.artwork.beef/images/favicon.png" type="image/x-icon" />
 
-    <title>Why replace extrafanart/extrathumbs :: Artwork Beef</title>
+    <title>Problems and other questions :: Artwork Beef</title>
     
     
     <link href="https://rmrector.github.io/script.artwork.beef/css/nucleus.css" rel="stylesheet">
@@ -81,7 +81,7 @@ h1 .subtitle {
 </style>
 
   </head>
-  <body class="" data-url="/skins/whyreplaceextra/">
+  <body class="" data-url="/otherdetails/">
     <nav id="sidebar" class="">
 
 
@@ -195,8 +195,8 @@ h1 .subtitle {
   
     
     <li data-nav-id="/otherdetails/" title="Problems and other questions" class="dd-item 
-        
-        
+        parent
+        active
         
         ">
       <a href="https://rmrector.github.io/script.artwork.beef/otherdetails/">
@@ -217,7 +217,7 @@ h1 .subtitle {
   
     
     <li data-nav-id="/skins/" title="Skin support" class="dd-item 
-        parent
+        
         
         
         ">
@@ -279,7 +279,7 @@ h1 .subtitle {
  
   
     
-      <li data-nav-id="/skins/whyreplaceextra/" title="Why replace extrafanart/extrathumbs" class="dd-item active">
+      <li data-nav-id="/skins/whyreplaceextra/" title="Why replace extrafanart/extrathumbs" class="dd-item ">
         <a href="https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/">
         Why replace extrafanart/extrathumbs
         
@@ -366,13 +366,7 @@ h1 .subtitle {
             
           
           
-            
-            
-          
-          
-            <a href='https://rmrector.github.io/script.artwork.beef/'>Artwork Beef</a> > <a href='https://rmrector.github.io/script.artwork.beef/skins/'>Skin support</a> > Why replace extrafanart/extrathumbs
-          
-         
+            <a href='https://rmrector.github.io/script.artwork.beef/'>Artwork Beef</a> > Problems and other questions
           
          
           
@@ -382,7 +376,24 @@ h1 .subtitle {
                 
                     <div class="progress">
     <div class="wrapper">
-
+<nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li>
+<ul>
+<li><a href="#how-do-i-quick-start-this-thing">How do I quick-start this thing?</a></li>
+<li><a href="#why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</a></li>
+<li><a href="#manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</a></li>
+<li><a href="#where-do-i-put-my-api-keys-for-other-web-services">Where do I put my API keys for other web services?</a></li>
+<li><a href="#where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</a></li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
     </div>
 </div>
 
@@ -394,45 +405,104 @@ h1 .subtitle {
         
         <div id="body-inner">
           
-            <h1>Why replace extrafanart/extrathumbs</h1>
+            <h1>Problems and other questions</h1>
           
 
         
 
 
-<ul>
-<li>Kodi&rsquo;s support for freely named artwork in the library is pretty great, so let&rsquo;s use it!</li>
-<li>It works for items in the library that may not point to a location on a file system that
-should even care about artwork on this/any level, maybe a movie from UPNP or whatever.</li>
-<li>Plugins can fill their own ListItems with this artwork, which skins can access in exactly the same way.</li>
-<li>Should generally work for other library items that can have freely named artwork;
-movie sets, music videos, TV show seasons, episodes, even music artists, albums, and songs.</li>
-<li>Placing artwork in the library allows skins to work with multiple fanart without demanding one
-specific location for the files. Users can decide to keep them with their media files, or keep
-them in a secondary location so non-Kodi client</li>
-<li>Avoid file system delays or access issues (unavailable network file system, removable media) once
-the images have been cached. Classic extrafanart always hits the file system at least once
-when first listing the path to get a list of the images, even if they are all cached.</li>
-<li>Skins can more easily work with all fanart together (main + extra fanart)
+
+
+<h4 id="how-do-i-quick-start-this-thing">How do I quick-start this thing?</h4>
 
 <ul>
-<li>Display them in a <code>multiimage</code> control with a skin structure described in
-<a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/">Fun without add-ons</a>.</li>
-<li>There are also <strong>plugin://</strong> paths to accomplish this.
-See <a href="https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/">Artwork Helper</a>.</li>
+<li>The quickest way to get started is to install it and configure it to your liking.</li>
+<li>Do you want Artwork Beef to automatically add artwork for new media?
+
+<ul>
+<li>Enable the setting &ldquo;Add artwork for new videos after library updates&rdquo; and / or
+&ldquo;Add artwork for new music after library updates&rdquo;.</li>
 </ul></li>
-<li>Skins can look up each fanart image directly, which makes it simpler to display more than
-one at a time in arbitrary locations.
+<li>Do you want Artwork Beef to download image files to your local file system?
 
 <ul>
-<li>Probably overkill for fanart, but other art types could be multiplied for great effect.
-I&rsquo;ve been playing with <a href="https://rmrector.github.io/script.artwork.beef/examples/#and-multiple-characterart">characterart</a>.</li>
+<li>Then enable the settings &ldquo;Download image files for processed &hellip;&rdquo; for each media type
+at the top of the &lsquo;TV shows&rsquo;, &lsquo;Movies&rsquo;, &lsquo;Music videos&rsquo;, and &lsquo;Music&rsquo; tabs.</li>
 </ul></li>
-<li>Get that gross nasty other stuff out of your file system, if you also think it is gross and nasty.
+<li>Do you want Artwork Beef to only identify artwork you have already gathered locally with
+a media manager, avoiding web services for automatic processing?
 
 <ul>
-<li>Ugh. This is of course the simplest and most obvious way to share information among different
-Kodi installs, so maybe I&rsquo;m a bit unreasonable here.</li>
+<li>Enable the setting &ldquo;Do not automatically add artwork from web services, only identify local files&rdquo;.</li>
+</ul></li>
+<li>Do you want Artwork Beef to ignore certain media types during automatic processing?
+
+<ul>
+<li>Turn on the settings &ldquo;Disable all automatic processing &hellip;&rdquo; for that media type.</li>
+</ul></li>
+<li>See <a href="https://rmrector.github.io/script.artwork.beef/usage/firstusage/">First usage</a> for more details.</li>
+</ul>
+
+<h4 id="why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</h4>
+
+<ul>
+<li>It may take a few days for new artwork to be available.</li>
+<li>Artwork Beef caches the previous image results from web services for 72 hours.</li>
+</ul>
+
+<h4 id="manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</h4>
+
+<ul>
+<li>Does it happen for all media items of a particular type?
+
+<ul>
+<li>Have you futzed with API keys other than the Fanart.tv personal API key?
+
+<ul>
+<li>Reinstall Artwork Beef from the latest <em>stable</em> zip and try again before changing
+the API keys.</li>
+</ul></li>
+<li>Or maybe the web service is temporarily unavailable, or your Kodi device&rsquo;s internet connection
+is broken. The Kodi log and Artwork Beef&rsquo;s artwork report may have more details.</li>
+<li>Otherwise post a reply on the forum thread with a description of the problem, a
+<a href="https://kodi.wiki/view/Debug-log">Kodi debug log</a>, and the latest group of artwork-report.txt.</li>
+</ul></li>
+<li>Or just a handful of media items?
+
+<ul>
+<li>Artwork Beef requires web service IDs (like an IMDB number) in the Kodi library. These
+should be included in NFO files or scrapers.
+
+<ul>
+<li>If you use scrapers for the media item, make sure your scrapers are up to date and
+refresh the item.</li>
+<li>If you have NFO files, make sure there is a &ldquo;uniqueid&rdquo; element in it.
+An &ldquo;imdbnumber&rdquo; element should also work (for movies and TV shows), and an &ldquo;id&rdquo; element might work.
+If your NFOs don&rsquo;t have these elements then upgrade your media manager and recreate the NFOs,
+then refresh the item in Kodi.</li>
+<li>Music must be tagged with MusicBrainz IDs. Use MusicBrainz Picard for tagging files.</li>
+</ul></li>
+</ul></li>
+</ul>
+
+<h4 id="where-do-i-put-my-api-keys-for-other-web-services">Where do I put my API keys for other web services?</h4>
+
+<ul>
+<li>You don&rsquo;t.</li>
+<li>The only web service that has an API key for users is Fanart.tv with their
+personal API key, which you can change in the add-on settings under &ldquo;Advanced&rdquo;.</li>
+<li>There is nothing to gain from using your own API keys now; it will only have a noticeable
+effect <em>IF</em> Artwork Beef&rsquo;s API keys are revoked, which won&rsquo;t happen if they aren&rsquo;t co-opted
+by shitty stream pirate hack add-ons.</li>
+</ul>
+
+<h4 id="where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</h4>
+
+<ul>
+<li>No such option is available, Artwork Beef will not duplicate image files for this purpose.
+
+<ul>
+<li><a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/#grab-random-fanart-plus-any-other-info-from-items-in-any-library-path">Skins have other options</a> that don&rsquo;t require duplicating files.</li>
 </ul></li>
 </ul>
 
@@ -440,7 +510,6 @@ Kodi installs, so maybe I&rsquo;m a bit unreasonable here.</li>
 <footer class=" footline" >
 	
 </footer>
-
 
         
         </div> 
@@ -522,38 +591,6 @@ Kodi installs, so maybe I&rsquo;m a bit unreasonable here.</li>
             
                 
                     
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-                        
-            
-            
-                
-                    
-                        
-                        
                     
                 
                 
@@ -565,6 +602,22 @@ Kodi installs, so maybe I&rsquo;m a bit unreasonable here.</li>
                     
             
         
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
                     
                         
             
@@ -587,6 +640,21 @@ Kodi installs, so maybe I&rsquo;m a bit unreasonable here.</li>
             
                 
                     
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
                     
                 
                 
@@ -607,9 +675,6 @@ Kodi installs, so maybe I&rsquo;m a bit unreasonable here.</li>
             
                 
                     
-                        
-                        
-                    
                 
                 
 
@@ -628,10 +693,10 @@ Kodi installs, so maybe I&rsquo;m a bit unreasonable here.</li>
 
 
         
-            <a class="nav nav-prev" href="https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/" title="Artwork helper"> <i class="fa fa-chevron-left"></i></a>
+            <a class="nav nav-prev" href="https://rmrector.github.io/script.artwork.beef/usage/fromfiles/" title="Image files"> <i class="fa fa-chevron-left"></i></a>
         
         
-            <a class="nav nav-next" href="https://rmrector.github.io/script.artwork.beef/examples/" title="Examples" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+            <a class="nav nav-next" href="https://rmrector.github.io/script.artwork.beef/skins/" title="Skin support" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
         
     </div>
 
@@ -661,4 +726,3 @@ Kodi installs, so maybe I&rsquo;m a bit unreasonable here.</li>
 
   </body>
 </html>
-

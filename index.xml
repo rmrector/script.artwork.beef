@@ -17,7 +17,7 @@
       <pubDate>Wed, 27 Dec 2017 22:45:06 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/usage/firstusage/</guid>
-      <description>Artwork Beef must process all items in your library, and will do so automatically. There are some artwork in the file system that isn&amp;rsquo;t added to Kodi&amp;rsquo;s database with any/many other tools. It will also check web services for new artwork to fill out any media items still missing some, unless &amp;ldquo;Automatically add artwork from file system only&amp;rdquo; is enabled. If you haven&amp;rsquo;t been managing movie collection artwork, Kodi sets posters and fanart to those of one of the movies in the collection.</description>
+      <description>Artwork Beef must process all items in your library, and will do so automatically. There are some artwork in the file system that isn&amp;rsquo;t added to Kodi&amp;rsquo;s database with any/many other tools. It will also check web services for new artwork to fill out any media items still missing some, unless &amp;ldquo;Do not automatically add artwork from web services, only identify local files&amp;rdquo; is enabled. If you haven&amp;rsquo;t been managing movie collection artwork, Kodi sets posters and fanart to those of one of the movies in the collection.</description>
     </item>
     
     <item>
@@ -58,7 +58,7 @@ Add-on setting There is an add-on setting to pull extrafanart and extrathumbs fr
       <pubDate>Tue, 21 Nov 2017 22:46:53 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</guid>
-      <description>Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it! Placing artwork in the library allows skins to work with multiple fanart no matter where they are stored. Avoid filesystem delays/access issues (unavailable network file system, removable media) when the images have been cached. Classic extrafanart always hits the file system at least once when first listing the path to get a list of the images, even if they are all cached.</description>
+      <description>Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it! It works for items in the library that may not point to a location on a file system that should even care about artwork on this/any level, maybe a movie from UPNP or whatever. Plugins can fill their own ListItems with this artwork, which skins can access in exactly the same way. Should generally work for other library items that can have freely named artwork; movie sets, music videos, TV show seasons, episodes, even music artists, albums, and songs.</description>
     </item>
     
   </channel>

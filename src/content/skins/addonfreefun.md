@@ -78,14 +78,14 @@ in the list. Use any other ListItem InfoLabels as you need them.
 
 On `MyVideoNav`, when navigating categories like genres, studios, and years, this can pull fanart from items
 in just the focused category item by using `$INFO[ListItem.FolderPath]` for the `<content>` element.
-Big lists can take some time to fill when a new path is added, so add a `limit="20"` attribute to the
-element.
+Big lists can take some time to fill when a new item is focused, so try a `limit="20"` attribute to the
+content element.
 
 This can be combined with "Display multiple fanart" above to pick from all fanart set for all items
 in the list. Set the `fadelabel` timer to be longer than this list to still display just one image
 from each item, or shorter to flip through more than one fanart for each item.
 
-#### Fun path options
+#### Interesting path options
 
 - All movies - `videodb://movies/titles/`
 - All TV shows - `videodb://tvshows/titles/`

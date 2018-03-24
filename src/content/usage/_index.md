@@ -29,12 +29,14 @@ There are a few actions and settings you may want to flip before letting Artwork
 See [First usage]({{< ref "usage/firstusage.md" >}}) for details.
 {{% /notice %}}
 
+It must process all items in your library, and will do so automatically the first time it runs.
 Over time it will re-process media items still missing artwork, checking for new artwork from
 web services and the file system. After they have gone out of date they are considered
 "old" items affected by a couple of actions and settings.
 
 You can also run it from Program add-ons to trigger the automatic process for new or all items, or items old
-enough to need an update; a currently running process can also be canceled here. To operate on a single
+enough to need an update; a currently running process can also be canceled here. Some other
+actions are available here. To operate on a single
 media item, open the context menu on that item, then under "Manage..." there are options
 to automatically "Add missing artwork" or manually "Select artwork...".
 
@@ -46,3 +48,6 @@ API calls to The Movie Database and just aren't available for many series.
 Don't use Artwork Beef's automatic processing with Artwork Downloader's
 full library mode. The results won't be terrible, but they'll step all over each
 other and take up extra time and network resources.
+
+It generates a report of changes to
+[userdata](http://kodi.wiki/view/Userdata)/addon_data/script.artwork.beef/artwork-report.txt.

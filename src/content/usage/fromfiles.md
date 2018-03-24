@@ -106,6 +106,10 @@ artist MusicBrainz ID is add to the end of the folder like `[artist name]_12fe`.
 when there is more than one album with the same name for a single artist (like remasters or
 other recordings), with the album / release MusicBrainz ID (not release group).
 
+For albums with multiple discs, you can add disc artwork as 'discart1.png' for disc 1, 'discart2.png'
+for disc 2, and so on. You may still want to keep a 'discart.png' image, though. Skins still
+need to do a bit of magic to line these up with selected songs and discart is an easy fallback.
+
 Artwork Beef will also identify album and song artwork next to the song files if all songs for
 one album are in a single folder, and don't share that folder with songs from any other album.
 Song artwork organized this way must match the base name of the song file, rather than just the

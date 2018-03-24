@@ -97,7 +97,7 @@ With the full complement of options:
 This format lets you stitch any images together into a list by specifying their paths.  
 `plugin://script.artwork.helper/multiimage/?image=<image_path>&amp;&amp;image=<image_path>&amp;&amp;image=<image_path>&amp;&amp;image=<image_path>&amp;&amp;image=<image_path>&amp;&amp;image=<image_path>`
 
-When the ListItem option above doesn't work for you, this is your very wordy friend. Repeat the
+When the ListItem options above doesn't work for you, this is your very wordy friend. Repeat the
 image block for as many images as you like, and it will ignore empty ones. The
 double ampersand `&amp;&amp;` separator between images is required.
 

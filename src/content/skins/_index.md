@@ -1,7 +1,7 @@
 ---
 title: "Skin support"
 date: 2017-11-21T22:46:49-07:00
-weight: 2
+weight: 3
 ---
 
 For the most part, skins will still access images in the same Kodi standard way.
