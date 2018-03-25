@@ -211,7 +211,7 @@ class FanartTVMusicVideoProvider(FanartTVAbstractProvider):
 
 class FanartTVAlbumProvider(FanartTVMovieProvider):
     mediatype = mediatypes.ALBUM
-    api_section = 'music'
+    api_section = 'music/albums'
     artmap = {
         'albumcover': 'thumb',
         'cdart': 'discart'
@@ -219,7 +219,7 @@ class FanartTVAlbumProvider(FanartTVMovieProvider):
 
 class FanartTVArtistProvider(FanartTVMovieProvider):
     mediatype = mediatypes.ARTIST
-    api_section = 'music/albums'
+    api_section = 'music'
     artmap = {
         'artistthumb': 'thumb',
         'artistbackground': 'fanart',
