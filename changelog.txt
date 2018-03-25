@@ -1,3 +1,6 @@
+v0.18.4 (2018-03-24)
+- Fix: missing artwork from fanart.tv for the music library
+
 v0.18.3 (2018-03-23)
 - Fix: show "missing web service ID" message when appropriate
 
