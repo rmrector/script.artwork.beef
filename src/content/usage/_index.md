@@ -31,14 +31,15 @@ See [First usage]({{< ref "usage/firstusage.md" >}}) for details.
 
 It must process all items in your library, and will do so automatically the first time it runs.
 Over time it will re-process media items still missing artwork, checking for new artwork from
-web services and the file system. After they have gone out of date they are considered
+web services and the file system. After some time (4-12 months) they will be considered
 "old" items affected by a couple of actions and settings.
 
 You can also run it from Program add-ons to trigger the automatic process for new or all items, or items old
 enough to need an update; a currently running process can also be canceled here. Some other
 actions are available here. To operate on a single
 media item, open the context menu on that item, then under "Manage..." there are options
-to automatically "Add missing artwork" or manually "Select artwork...".
+to automatically "Add missing artwork" or manually "Select artwork...". "Add missing artwork"
+will also check the file system for changed files.
 
 **Episode fanart** requires using a scraper that grabs the TheTVDB ID for each episode, like the
 standard TheTVDB scraper and The Movie Database _TV show_ scraper, or an NFO manager that does the same.
