@@ -52,7 +52,7 @@ class FanartTVAbstractProvider(AbstractImageProvider):
     def build_image(self, url, arttype, image, likediv=5.0):
         result = {'url': url, 'provider': self.name}
         result['preview'] = url.replace('.fanart.tv/fanart/', '.fanart.tv/preview/')
-        result['rating'] = SortedDisplay(6 + int(image['likes']) / float(likediv), '{0} likes'.format(image['likes']))
+        result['rating'] = SortedDisplay(5.25 + int(image['likes']) / float(likediv), '{0} likes'.format(image['likes']))
         result['size'] = _get_imagesize(arttype)
         result['language'] = _get_imagelanguage(arttype, image)
         return result
