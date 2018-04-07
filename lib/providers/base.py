@@ -2,7 +2,7 @@ import StorageServer
 import sys
 import xbmc
 from abc import ABCMeta, abstractmethod
-from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException
+from requests.exceptions import Timeout, ConnectionError, RequestException
 from requests.packages import urllib3
 
 from lib.libs.addonsettings import settings
@@ -42,12 +42,10 @@ class AbstractProvider(object):
             return self.getter(url, **kwargs)
         except (Timeout, ConnectionError) as ex:
             raise ProviderError, (L(CANT_CONTACT_PROVIDER), ex), sys.exc_info()[2]
-        except HTTPError as ex:
-            message = ex.response.reason if ex.response else \
+        except RequestException as ex:
+            message = ex.response.reason if hasattr(ex, 'response') else \
                 ex.message if hasattr(ex, 'message') else type(ex).__name__
             raise ProviderError, (L(HTTP_ERROR).format(message), ex), sys.exc_info()[2]
-        except RequestException as ex:
-            raise ProviderError, (L(HTTP_ERROR).format(type(ex).__name__), ex), sys.exc_info()[2]
 
     def log(self, message, level=xbmc.LOGDEBUG):
         if self.mediatype:
