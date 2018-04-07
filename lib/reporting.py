@@ -139,7 +139,7 @@ def finish_chunk(reportfile):
 def get_latest_report():
     if not _exists(): return ""
     result = []
-    with _get_file() as reportfile:
+    with _get_file(True) as reportfile:
         inserti = 0
         for line in reportfile.readlines():
             result.insert(inserti, line)
@@ -183,8 +183,8 @@ def _rotate_file():
     report_startup()
     return True
 
-def _get_file():
-    return open(xbmc.translatePath(_get_filepath()), 'a+')
+def _get_file(readonly=False):
+    return open(xbmc.translatePath(_get_filepath()), 'r' if readonly else 'a+')
 
 def _exists(filetag=''):
     return xbmcvfs.exists(_get_filepath(filetag))
