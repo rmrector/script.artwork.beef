@@ -318,6 +318,30 @@ class ArtFilesAlbumProvider(ArtFilesArtistProvider):
                     if arttype in result.keys():
                         continue
                 result[arttype] = self.buildimage(path + filename, filename, path != mediaitem.file)
+
+        for disc in sorted(mediaitem.discfolders.keys()):
+            path = mediaitem.discfolders[disc]
+            _, files = xbmcvfs.listdir(path)
+            for filename in files:
+                check_filename = filename.lower()
+                if not check_filename.endswith(ARTWORK_EXTS):
+                    continue
+                arttype = os.path.splitext(check_filename)[0]
+                if not arttype.isalnum() or len(arttype) > 20:
+                    continue
+                if settings.identify_alternatives and arttype in self.alttypes.keys():
+                    arttype = self.alttypes[arttype]
+                parentdir = os.path.basename(os.path.dirname(path)) + get_pathsep(path)
+                if arttype == 'discart':
+                    if 'discart' not in result:
+                        result['discart'] = self.buildimage(path + filename, parentdir + filename)
+                    if not disc:
+                        continue
+                    arttype += str(disc)
+                if arttype in result:
+                    continue
+                result[arttype] = self.buildimage(path + filename, parentdir + filename)
+
         return result
 
 class ArtFilesSongProvider(ArtFilesAbstractProvider):

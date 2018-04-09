@@ -61,6 +61,8 @@ class MediaItem(object):
             self.album = jsondata['label'] if self.mediatype == mediatypes.ALBUM \
                 else jsondata['album'] if self.mediatype == mediatypes.SONG \
                 else None
+            if self.mediatype == mediatypes.ALBUM:
+                self.discfolders = {}
 
         self.seasons = None
         self.availableart = {}
@@ -247,7 +249,9 @@ def add_additional_iteminfo(mediaitem, processed, search):
                     mediaitem.error = L(CANT_FIND_MUSICVIDEO)
                     log("Could not find music video '{0}' on TheAudioDB".format(mediaitem.label), xbmc.LOGNOTICE)
     elif mediaitem.mediatype == mediatypes.ALBUM:
-        mediaitem.file = _identify_album_folder(mediaitem)
+        folders = _identify_album_folders(mediaitem)
+        if folders:
+            mediaitem.file, mediaitem.discfolders = folders
 
 def _get_seasons_artwork(seasons):
     resultseasons = {}
@@ -281,15 +285,29 @@ def _identify_parent_movieset(mediaitem):
                 mediaitem.file = result
                 return
 
-def _identify_album_folder(mediaitem):
+def _identify_album_folders(mediaitem):
     songs = get_cached_songs(mediaitem.albumid)
     folders = set(os.path.dirname(song['file']) for song in songs)
     if len(folders) == 1: # all songs only in one folder
-        thefolder = folders.pop()
-        songs = get_cached_songs_bypath(thefolder + utils.get_pathsep(thefolder))
-        albums = set(song['albumid'] for song in songs)
-        if len(albums) == 1: # and not shared with another album
-            return thefolder + utils.get_pathsep(thefolder)
+        folder = folders.pop()
+        if not _shared_albumfolder(folder):
+            return folder + utils.get_pathsep(folder), {}
+    elif len(folders) > 1: # split to multiple folders
+        discs = {}
+        for folder in folders:
+            if _shared_albumfolder(folder):
+                return
+            discnum = next(s['disc'] for s in songs if os.path.dirname(s['file']) == folder)
+            if discnum:
+                discs[discnum] = folder + utils.get_pathsep(folder)
+        commonpath = os.path.dirname(os.path.commonprefix(folders))
+        if commonpath:
+            return commonpath + utils.get_pathsep(commonpath), discs
+
+def _shared_albumfolder(folder):
+    songs = get_cached_songs_bypath(folder + utils.get_pathsep(folder))
+    albums = set(song['albumid'] for song in songs)
+    return len(albums) > 1
 
 def _get_uniqueids(jsondata, mediatype):
     uniqueids = {}
