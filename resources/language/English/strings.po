@@ -326,7 +326,7 @@ msgid "TV show scraper (if ID source is unknown)"
 msgstr ""
 
 msgctxt "#32919"
-msgid "Show latest artwork log"
+msgid "Show latest artwork report"
 msgstr ""
 
 msgctxt "#32920"

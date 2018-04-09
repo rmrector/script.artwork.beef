@@ -8,7 +8,7 @@ from lib.libs.mediainfo import arttype_matches_base, format_arttype, find_centra
 from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep, iter_possible_cleannames
 
 ARTWORK_EXTS = ('.jpg', '.png', '.gif')
-ARTIST_INFOFOLDER_PRIVDIER = SortedDisplay('file:art', 20223)
+ARTIST_INFOFOLDER_PROVIDER = SortedDisplay('file:art', 20223)
 
 class ArtFilesAbstractProvider(object):
     __metaclass__ = ABCMeta
@@ -16,7 +16,7 @@ class ArtFilesAbstractProvider(object):
     name = SortedDisplay('file:art', 13514)
 
     def buildimage(self, url, title, fromartistfolder=False):
-        provider = ARTIST_INFOFOLDER_PRIVDIER if fromartistfolder else self.name
+        provider = ARTIST_INFOFOLDER_PROVIDER if fromartistfolder else self.name
         result = {'url': url, 'provider': provider, 'preview': url}
         result['title'] = title
         result['rating'] = SortedDisplay(0, '')

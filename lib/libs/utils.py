@@ -1,11 +1,9 @@
 import re
 import xbmc
-import xbmcvfs
 from collections import namedtuple
 from os.path import split, basename, dirname
 
 from lib.libs.pykodi import log
-from lib.libs import mediatypes
 
 SortedDisplay = namedtuple('SortedDisplay', ['sort', 'display'])
 

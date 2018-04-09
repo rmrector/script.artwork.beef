@@ -1,7 +1,7 @@
 # Artwork Beef
 <span style="font-size: 1.2em; font-weight: 600">An add-on for Kodi</span>
 
-Artwork Beef automatically adds extra artwork for media in your video library. It is generally intended to
+Artwork Beef automatically adds extra artwork for media in your video and music libraries. It is generally intended to
 handle extended artwork just as Kodi and scrapers already do for basic artwork. It grabs artwork from the wonderful web
 services [fanart.tv], [TheTVDB.com], [The Movie Database], and [TheAudioDB.com].
 

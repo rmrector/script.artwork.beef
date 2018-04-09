@@ -75,7 +75,7 @@ class MediaItem(object):
         self.missingid = False
 
 def musicvideo_label(jsondata):
-    return jsondata['artist'][0] + ' - ' + jsondata['title'] if len(jsondata['artist']) else jsondata['title']
+    return jsondata['artist'][0] + ' - ' + jsondata['title'] if jsondata['artist'] else jsondata['title']
 
 def is_known_mediatype(jsondata):
     return any(x[0] in jsondata for x in idmap)
