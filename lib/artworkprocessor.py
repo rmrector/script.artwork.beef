@@ -177,7 +177,7 @@ class ArtworkProcessor(object):
                 mediaitem.selectedart = selectedart
                 toset = dict(selectedart)
                 if settings.remove_deselected_files:
-                    self.downloader.handle_removed_files(mediaitem)
+                    self.downloader.remove_deselected_files(mediaitem)
                 if mediatypes.downloadartwork(mediaitem.mediatype):
                     try:
                         self.downloader.downloadfor(mediaitem, False)
@@ -238,6 +238,7 @@ class ArtworkProcessor(object):
             try:
                 services_hit = self._process_item(mediaitem, singleitem)
             except FileError as ex:
+                services_hit = True
                 mediaitem.error = ex.message
                 log(ex.message, xbmc.LOGERROR)
                 self.notify_warning(ex.message, None, True)
@@ -289,8 +290,6 @@ class ArtworkProcessor(object):
             selectedart = get_simpledict_updates(mediaitem.art, selectedart)
             mediaitem.selectedart = selectedart
             toset = dict(selectedart)
-            if settings.remove_deselected_files:
-                self.downloader.handle_removed_files(mediaitem)
             if mediatypes.downloadartwork(mediaitem.mediatype):
                 sh, er = self.downloader.downloadfor(mediaitem)
                 services_hit = services_hit or sh

@@ -91,6 +91,8 @@ class FileManager(object):
             else:
                 sep = '' if basefile == path else '-'
                 filename = basefile + sep + type_for_file + '.' + ext
+            if xbmcvfs.exists(filename) and settings.recycle_removed:
+                recyclefile(filename)
             # For now this just downloads the whole thing in memory, then saves it to file.
             #  Maybe chunking it will be better when GIFs are handled
             file_ = xbmcvfs.File(filename, 'wb')
@@ -111,25 +113,32 @@ class FileManager(object):
         except RequestException as ex:
             return None, L(HTTP_ERROR).format(type(ex).__name__)
 
-    def handle_removed_files(self, mediaitem):
-        for arttype, image in mediaitem.forcedart.iteritems():
-            url = image['url'] if isinstance(image, dict) else image[0]['url']
-            if not url or url.startswith(notlocalimages) or arttype not in mediaitem.selectedart \
-            or url in mediaitem.selectedart.itervalues():
+    def remove_deselected_files(self, mediaitem):
+        for arttype, newimage in mediaitem.selectedart.iteritems():
+            if newimage is not None:
                 continue
-            if not settings.recycle_removed:
-                xbmcvfs.delete(url)
+            oldimage = mediaitem.forcedart.get(arttype)
+            if not oldimage:
                 continue
-            directory = os.path.basename(os.path.dirname(url))
-            directory = TEMP_DIR + os.path.basename(os.path.dirname(os.path.dirname(url))) + '/' + directory \
-                if directory in ('extrafanart', 'extrathumbs') else TEMP_DIR + directory
-            if not xbmcvfs.exists(directory):
-                xbmcvfs.mkdirs(directory)
-            filename = directory + '/' + os.path.basename(url)
-            if xbmcvfs.copy(url, filename):
-                xbmcvfs.delete(url)
-            else:
-                raise FileError(L(CANT_WRITE_TO_FILE).format(filename))
+            old_url = oldimage['url'] if isinstance(oldimage, dict) else oldimage[0]['url']
+            if not old_url or old_url.startswith(notlocalimages) \
+            or old_url in mediaitem.selectedart.itervalues():
+                continue
+            if settings.recycle_removed:
+                recyclefile(old_url)
+            xbmcvfs.delete(old_url)
+
+def recyclefile(filename):
+    firstdir = os.path.basename(os.path.dirname(filename))
+    directory = TEMP_DIR
+    if firstdir in ('extrafanart', 'extrathumbs'):
+        directory += os.path.basename(os.path.dirname(os.path.dirname(filename))) + '/'
+    directory += firstdir
+    if not xbmcvfs.exists(directory):
+        xbmcvfs.mkdirs(directory)
+    recycled_filename = directory + '/' + os.path.basename(filename)
+    if not xbmcvfs.copy(filename, recycled_filename):
+        raise FileError(L(CANT_WRITE_TO_FILE).format(recycled_filename))
 
 def save_extrafanart(mediaitem, allart):
     return _saveextra_thistype(mediaitem.mediatype) \
