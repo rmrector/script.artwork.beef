@@ -122,7 +122,7 @@ class ArtworkProcessor(object):
 
         info.add_additional_iteminfo(mediaitem, self.processed, search)
         if not mediaitem.uniqueids and not settings.only_filesystem:
-            if mediatype == mediatypes.MOVIESET:
+            if mediatype in mediatypes.require_manualid:
                 self.manual_id(mediaitem)
         if mode == MODE_GUI:
             self._manual_item_process(mediaitem, busy)

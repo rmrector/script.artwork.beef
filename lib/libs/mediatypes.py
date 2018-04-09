@@ -12,6 +12,7 @@ ARTIST = 'artist'
 ALBUM = 'album'
 SONG = 'song'
 audiotypes = (ARTIST, ALBUM, SONG)
+require_manualid = (MOVIESET, MUSICVIDEO)
 
 addon = pykodi.get_main_addon()
 
