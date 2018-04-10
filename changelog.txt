@@ -1,3 +1,8 @@
+v0.18.5 (2018-04-09)
+- Fix: opening report in GUI on Android
+- Fix: rearrange file deletion further
+- Fix: find local artwork for albums split by disc
+
 v0.18.4 (2018-03-24)
 - Fix: missing artwork from fanart.tv for the music library
 
