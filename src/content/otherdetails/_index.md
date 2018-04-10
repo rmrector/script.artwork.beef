@@ -48,6 +48,13 @@ weight: 2
 
 [Kodi debug log]: https://kodi.wiki/view/Debug-log
 
+#### The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.
+
+- The skin / web interface is pulling up the movie thumb and expecting the fallback poster,
+  but it should instead pick the poster first and fall back to the thumb only if the poster
+  doesn't exist. They are two different images for two different purposes and should be chosen
+  based on the interface design.
+
 #### Where do I put my API keys for other web services?
 
 - You don't.

@@ -394,7 +394,7 @@ h1 .subtitle {
 <li><a href="#movie-collection-artwork">Movie collection artwork</a></li>
 <li><a href="#music-artwork">Music artwork</a></li>
 <li><a href="#file-system-safe-names">File system safe names</a></li>
-<li><a href="#legacy-names">Legacy names</a></li>
+<li><a href="#legacy-file-names">Legacy file names</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -531,8 +531,8 @@ when there is more than one album with the same name for a single artist (like r
 other recordings), with the album / release MusicBrainz ID (not release group).</p>
 
 <p>For albums with multiple discs, you can add disc artwork as &lsquo;discart1.png&rsquo; for disc 1, &lsquo;discart2.png&rsquo;
-for disc 2, and so on. You may still want to keep a &lsquo;discart.png&rsquo; image, though. Skins still
-need to do a bit of magic to line these up with selected songs and discart is an easy fallback.</p>
+for disc 2, and so on. Multiple disc albums can also have their songs and discart stored in disc specific
+subfolders, but other artwork can stay in the top album folder (or not, works either way).</p>
 
 <p>Artwork Beef will also identify album and song artwork next to the song files if all songs for
 one album are in a single folder, and don&rsquo;t share that folder with songs from any other album.
@@ -548,14 +548,14 @@ with an underscore &lsquo;_&lsquo;, and make sure file names do not end with a s
 Artwork Beef will be more lenient in its matching to catch other styles,
 but those two simple rules should steer true.</p>
 
-<h3 id="legacy-names">Legacy names</h3>
+<h3 id="legacy-file-names">Legacy file names</h3>
 
-<p>It will also pull in artwork files that match Artwork Downloader file names, in cases where
-they are different than the art types used in Kodi; for instance, logo.png is added as clearlogo
-and extrafanart are added as fanart#. Ditto Movie Set Artwork Automator, but only for its
-default file names (logo.png to clearlogo, folder.jpg to thumb). This is controlled with an
-add-on setting, enabled by default. It also supports other file paths that MSAA supported,
-though I do not suggest you use them for a new setup.</p>
+<p>Artwork Beef will also identify several other filenames that are / have been used by other tools,
+in cases when they are different than the art type name skins use to access them.</p>
+
+<p><code>logo.png</code> is added as clearlogo, <code>character.png</code> is added as characterart, <code>folder.jpg</code> to thumb,
+<code>disc.png</code> and <code>cdart.png</code> to discart, files in the extrafanart directory are added as fanart#,
+and files in the extrathumbs directory are added as thumb#.</p>
 
 
 <footer class=" footline" >

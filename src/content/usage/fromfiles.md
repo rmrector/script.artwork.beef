@@ -107,8 +107,8 @@ when there is more than one album with the same name for a single artist (like r
 other recordings), with the album / release MusicBrainz ID (not release group).
 
 For albums with multiple discs, you can add disc artwork as 'discart1.png' for disc 1, 'discart2.png'
-for disc 2, and so on. You may still want to keep a 'discart.png' image, though. Skins still
-need to do a bit of magic to line these up with selected songs and discart is an easy fallback.
+for disc 2, and so on. Multiple disc albums can also have their songs and discart stored in disc specific
+subfolders, but other artwork can stay in the top album folder (or not, works either way).
 
 Artwork Beef will also identify album and song artwork next to the song files if all songs for
 one album are in a single folder, and don't share that folder with songs from any other album.
@@ -123,11 +123,11 @@ with an underscore '_', and make sure file names do not end with a space or peri
 Artwork Beef will be more lenient in its matching to catch other styles,
 but those two simple rules should steer true.
 
-### Legacy names
+### Legacy file names
 
-It will also pull in artwork files that match Artwork Downloader file names, in cases where
-they are different than the art types used in Kodi; for instance, logo.png is added as clearlogo
-and extrafanart are added as fanart#. Ditto Movie Set Artwork Automator, but only for its
-default file names (logo.png to clearlogo, folder.jpg to thumb). This is controlled with an
-add-on setting, enabled by default. It also supports other file paths that MSAA supported,
-though I do not suggest you use them for a new setup.
+Artwork Beef will also identify several other filenames that are / have been used by other tools,
+in cases when they are different than the art type name skins use to access them.
+
+`logo.png` is added as clearlogo, `character.png` is added as characterart, `folder.jpg` to thumb,
+`disc.png` and `cdart.png` to discart, files in the extrafanart directory are added as fanart#,
+and files in the extrathumbs directory are added as thumb#.

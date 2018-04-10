@@ -24,3 +24,25 @@ artwork, as Artwork Beef isn't the only one that can set these. Check for the ex
 
 [Artwork Helper]: {{< ref "skins/artworkhelper.md" >}}
 [Fun without add-ons]: {{< ref "skins/addonfreefun.md" >}}
+
+The music library just got a "Kodi standard way" in Kodi 18. Skins can access all artwork from the
+library just like they do the video library. Prefixes for artwork like 'artist.' and 'album.'
+and 'albumartist.' pull up parent artwork from songs in the same way 'tvshow.' is used video
+library. 'artist.' is also available for albums. `discart` for multiple disc albums are a bit hairier,
+as discs aren't a separate media item in the Kodi library with their own place for artwork.
+Artwork Beef will add separate discart as `discart1`, `discart2`, and so on; use a variable like
+below to pick the right one for a song ListItem.
+
+```xml
+<variable name="ListItemSongDiscart">
+	<value condition="Integer.IsEqual(ListItem.DiscNumber,1) + !String.IsEmpty(ListItem.Art(album.discart1))">$INFO[ListItem.Art(album.discart1)]</value>
+	<value condition="Integer.IsEqual(ListItem.DiscNumber,2) + !String.IsEmpty(ListItem.Art(album.discart2))">$INFO[ListItem.Art(album.discart2)]</value>
+	<value condition="Integer.IsEqual(ListItem.DiscNumber,3) + !String.IsEmpty(ListItem.Art(album.discart3))">$INFO[ListItem.Art(album.discart3)]</value>
+	<value condition="Integer.IsEqual(ListItem.DiscNumber,4) + !String.IsEmpty(ListItem.Art(album.discart4))">$INFO[ListItem.Art(album.discart4)]</value>
+	<value condition="Integer.IsEqual(ListItem.DiscNumber,6) + !String.IsEmpty(ListItem.Art(album.discart6))">$INFO[ListItem.Art(album.discart6)]</value>
+	<value condition="Integer.IsEqual(ListItem.DiscNumber,7) + !String.IsEmpty(ListItem.Art(album.discart7))">$INFO[ListItem.Art(album.discart7)]</value>
+	<value condition="Integer.IsEqual(ListItem.DiscNumber,8) + !String.IsEmpty(ListItem.Art(album.discart8))">$INFO[ListItem.Art(album.discart8)]</value>
+	<value condition="Integer.IsEqual(ListItem.DiscNumber,9) + !String.IsEmpty(ListItem.Art(album.discart9))">$INFO[ListItem.Art(album.discart9)]</value>
+	<value>$INFO[ListItem.Art(album.discart)]</value>
+</variable>
+```

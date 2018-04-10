@@ -387,6 +387,7 @@ h1 .subtitle {
 <li><a href="#how-do-i-quick-start-this-thing">How do I quick-start this thing?</a></li>
 <li><a href="#why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</a></li>
 <li><a href="#manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</a></li>
+<li><a href="#the-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</a></li>
 <li><a href="#where-do-i-put-my-api-keys-for-other-web-services">Where do I put my API keys for other web services?</a></li>
 <li><a href="#where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</a></li>
 </ul></li>
@@ -483,6 +484,15 @@ then refresh the item in Kodi.</li>
 <li>Music must be tagged with MusicBrainz IDs. Use MusicBrainz Picard for tagging files.</li>
 </ul></li>
 </ul></li>
+</ul>
+
+<h4 id="the-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</h4>
+
+<ul>
+<li>The skin / web interface is pulling up the movie thumb and expecting the fallback poster,
+but it should instead pick the poster first and fall back to the thumb only if the poster
+doesn&rsquo;t exist. They are two different images for two different purposes and should be chosen
+based on the interface design.</li>
 </ul>
 
 <h4 id="where-do-i-put-my-api-keys-for-other-web-services">Where do I put my API keys for other web services?</h4>
