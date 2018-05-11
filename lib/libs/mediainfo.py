@@ -302,7 +302,9 @@ def _identify_album_folders(mediaitem):
                 discs[discnum] = folder + utils.get_pathsep(folder)
         commonpath = os.path.dirname(os.path.commonprefix(folders))
         if commonpath:
-            return commonpath + utils.get_pathsep(commonpath), discs
+            commonpath += utils.get_pathsep(commonpath)
+        if commonpath or discs:
+            return commonpath, discs
 
 def _shared_albumfolder(folder):
     songs = get_cached_songs_bypath(folder + utils.get_pathsep(folder))

@@ -297,8 +297,6 @@ class ArtFilesAlbumProvider(ArtFilesArtistProvider):
 
     def get_exact_images(self, mediaitem):
         paths = (mediaitem.file, find_central_infodir(mediaitem))
-        if not paths[0] and not paths[1]:
-            return {}
         if settings.albumartwithmediafiles:
             paths = (paths[1], paths[0])
         result = {}
