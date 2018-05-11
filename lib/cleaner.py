@@ -2,7 +2,7 @@ import sys
 import urllib
 import xbmcvfs
 
-from lib.libs import pykodi
+from lib.libs import pykodi, mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.mediainfo import iter_base_arttypes, fill_multiart
 
@@ -10,7 +10,7 @@ def clean_artwork(mediaitem):
     updated_art = dict(_get_clean_art(*art) for art in mediaitem.art.iteritems())
     for basetype in iter_base_arttypes(updated_art.keys()):
         updated_art.update(fill_multiart(updated_art, basetype))
-    if updated_art.get('cdart'):
+    if updated_art.get('cdart') and mediaitem.mediatype == mediatypes.MUSICVIDEO:
         # DEPRECATED: short - initial music video support used cdart like the old support in AD,
         #  but I really don't want to carry it to the music library
         if not updated_art.get('discart'):
