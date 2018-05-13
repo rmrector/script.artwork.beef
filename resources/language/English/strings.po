@@ -254,11 +254,11 @@ msgid "Download existing remote images"
 msgstr ""
 
 msgctxt "#32424"
-msgid "Cache local video library artwork to texture database"
+msgid "Preload local video library artwork to texture cache"
 msgstr ""
 
 msgctxt "#32425"
-msgid "Cache local music library artwork to texture database"
+msgid "Preload local music library artwork to texture cache"
 msgstr ""
 
 # Settings
@@ -387,37 +387,7 @@ msgctxt "#32931"
 msgid "Recycle deleted and replaced artwork files to temp/cache directory"
 msgstr ""
 
-msgctxt "#32932"
-msgid "Disable all automatic processing for movies"
-msgstr ""
-
-msgctxt "#32933"
-msgid "Disable all automatic processing for TV shows and seasons"
-msgstr ""
-
-msgctxt "#32934"
-msgid "Disable all automatic processing for episodes"
-msgstr ""
-
-msgctxt "#32935"
-msgid "Disable all automatic processing for music videos"
-msgstr ""
-
-msgctxt "#32936"
-msgid "Disable all automatic processing for artists"
-msgstr ""
-
-msgctxt "#32937"
-msgid "Disable all automatic processing for albums"
-msgstr ""
-
-msgctxt "#32938"
-msgid "Disable all automatic processing for songs"
-msgstr ""
-
-msgctxt "#32939"
-msgid "Disable all automatic processing for movie sets"
-msgstr ""
+# 32932, 32933, 32934, 32935, 32936, 32937, 32938, 32939 retired 2018-05-12
 
 msgctxt "#32940"
 msgid "Delete deselected artwork files"
@@ -468,11 +438,47 @@ msgid "Save album and song art with song files if possible"
 msgstr ""
 
 msgctxt "#32952"
-msgid "Automatically add local video library artwork to Kodi texture cache"
+msgid "Automatically preload local video library artwork to Kodi texture cache"
 msgstr ""
 
 msgctxt "#32953"
-msgid "Automatically add local music library artwork to Kodi texture cache"
+msgid "Automatically preload local music library artwork to Kodi texture cache"
+msgstr ""
+
+msgctxt "#32954"
+msgid "Additional art types for TV shows (comma separated)"
+msgstr ""
+
+msgctxt "#32955"
+msgid "Additional art types for TV seasons (comma separated)"
+msgstr ""
+
+msgctxt "#32956"
+msgid "Additional art types for TV episodes (comma separated)"
+msgstr ""
+
+msgctxt "#32957"
+msgid "Additional art types for movies (comma separated)"
+msgstr ""
+
+msgctxt "#32958"
+msgid "Additional art types for movie sets (comma separated)"
+msgstr ""
+
+msgctxt "#32959"
+msgid "Additional art types for music videos (comma separated)"
+msgstr ""
+
+msgctxt "#32960"
+msgid "Additional art types for artists (comma separated)"
+msgstr ""
+
+msgctxt "#32961"
+msgid "Additional art types for albums (comma separated)"
+msgstr ""
+
+msgctxt "#32962"
+msgid "Additional art types for songs (comma separated)"
 msgstr ""
 
 # Used in the artwork report

@@ -161,6 +161,10 @@ def iter_missing_arttypes(mediaitem, fromtypes):
                     if artcount < artinfo['autolimit']:
                         yield arttype
 
+    for arttype in mediatypes.othertypes[mediaitem.mediatype]:
+        if arttype not in mediaitem.skip_artwork and arttype not in fromtypes:
+            yield arttype
+
 def _has_localart(arttype, existingart, fromtypes):
     for art in fromtypes:
         if not arttype_matches_base(art, arttype):

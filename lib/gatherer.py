@@ -41,12 +41,17 @@ class Gatherer(object):
             or not mediatypes.central_directories[mediatypes.ARTIST]:
                 return {}
         resultimages = {}
+        arttypes = list(mediatypes.iter_every_arttype(mediaitem.mediatype))
+        if mediaitem.mediatype == mediatypes.TVSHOW:
+            season_arttypes = list(mediatypes.iter_every_arttype(mediatypes.SEASON))
         for provider in providers.forced.get(mediaitem.mediatype, ()):
             for arttype, image in provider.get_exact_images(mediaitem).iteritems():
                 if arttype.startswith('season.'):
-                    season = arttype.rsplit('.', 2)[1]
-                    if int(season) not in mediaitem.seasons:
+                    season, stype = arttype.rsplit('.', 2)[1:]
+                    if int(season) not in mediaitem.seasons or stype not in season_arttypes:
                         continue
+                elif provider.name.sort != 'video:thumb' and arttype not in arttypes:
+                    continue
                 if allowmutiple:
                     if arttype not in resultimages:
                         resultimages[arttype] = []

@@ -26,56 +26,57 @@
 	<category label="$LOCALIZE[20343]">
 		<setting id="tvshow.downloadartwork" label="32943" type="bool" default="false" />
 		<setting id="episode.downloadartwork" label="32944" type="bool" default="false" />
-		<setting id="tvshow.disabled" label="32933" type="bool" default="false" />
-		<setting id="episode.disabled" label="32934" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
-		<setting id="tvshow.poster" label="poster" type="bool" default="true" visible="eq(-3,false)" />
-		<setting id="tvshow.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" visible="eq(-4,false)" />
-		<setting id="tvshow.banner" label="banner" type="bool" default="true" visible="eq(-5,false)" />
-		<setting id="tvshow.clearlogo" label="clearlogo" type="bool" default="true" visible="eq(-6,false)" />
-		<setting id="tvshow.landscape" label="landscape" type="bool" default="true" visible="eq(-7,false)" />
-		<setting id="tvshow.clearart" label="clearart" type="bool" default="true" visible="eq(-8,false)" />
-		<setting id="tvshow.characterart_limit" label="characterart" type="slider" option="int" default="1" range="0,1,20" visible="eq(-9,false)" />
-		<setting id="season.poster" label="$LOCALIZE[20373] poster" type="bool" default="true" visible="eq(-10,false)" />
-		<setting id="season.banner" label="$LOCALIZE[20373] banner" type="bool" default="true" visible="eq(-11,false)" />
-		<setting id="season.landscape" label="$LOCALIZE[20373] landscape" type="bool" default="true" visible="eq(-12,false)" />
-		<setting id="season.fanart" label="$LOCALIZE[20373] fanart" type="bool" default="true" visible="eq(-13,false)" />
-		<setting id="episode.fanart" label="$LOCALIZE[20359] fanart" type="bool" default="true" visible="eq(-13,false)" />
-		<setting label="32400" type="action" subsetting="true" action="RunScript(script.artwork.beef, command=set_autoaddepisodes)" visible="eq(-1,true) + eq(-14,false)" />
+		<setting id="tvshow.poster" label="poster" type="bool" default="true" />
+		<setting id="tvshow.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
+		<setting id="tvshow.banner" label="banner" type="bool" default="true" />
+		<setting id="tvshow.clearlogo" label="clearlogo" type="bool" default="true" />
+		<setting id="tvshow.landscape" label="landscape" type="bool" default="true" />
+		<setting id="tvshow.clearart" label="clearart" type="bool" default="true" />
+		<setting id="tvshow.characterart_limit" label="characterart" type="slider" option="int" default="1" range="0,1,20" />
+		<setting id="tvshow.othertypes" label="32954" type="text" />
+		<setting id="season.poster" label="$LOCALIZE[20373] poster" type="bool" default="true" />
+		<setting id="season.banner" label="$LOCALIZE[20373] banner" type="bool" default="true" />
+		<setting id="season.landscape" label="$LOCALIZE[20373] landscape" type="bool" default="true" />
+		<setting id="season.fanart" label="$LOCALIZE[20373] fanart" type="bool" default="true" />
+		<setting id="season.othertypes" label="32955" type="text" />
+		<setting id="episode.fanart" label="$LOCALIZE[20359] fanart" type="bool" default="true" />
+		<setting label="32400" type="action" subsetting="true" action="RunScript(script.artwork.beef, command=set_autoaddepisodes)" visible="eq(-1,true)" />
+		<setting id="episode.othertypes" label="32956" type="text" />
 	</category>
 	<category label="$LOCALIZE[20342]">
 		<setting id="movie.downloadartwork" label="32945" type="bool" default="false" />
 		<setting id="set.downloadartwork" label="32946" type="bool" default="false" />
-		<setting id="movie.disabled" label="32932" type="bool" default="false" />
-		<setting id="set.disabled" label="32939" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
-		<setting id="movie.poster" label="poster" type="bool" default="true" visible="eq(-3,false)" />
-		<setting id="movie.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" visible="eq(-4,false)" />
-		<setting id="movie.banner" label="banner" type="bool" default="true" visible="eq(-5,false)" />
-		<setting id="movie.clearlogo" label="clearlogo" type="bool" default="true" visible="eq(-6,false)" />
-		<setting id="movie.landscape" label="landscape" type="bool" default="true" visible="eq(-7,false)" />
-		<setting id="movie.clearart" label="clearart" type="bool" default="true" visible="eq(-8,false)" />
-		<setting id="movie.discart" label="discart" type="bool" default="true" visible="eq(-9,false)" />
-		<setting id="set.poster" label="$LOCALIZE[20457] poster" type="bool" default="true" visible="eq(-9,false)" />
-		<setting id="set.fanart_limit" label="$LOCALIZE[20457] fanart" type="slider" option="int" default="5" range="0,1,20" visible="eq(-10,false)" />
-		<setting id="set.banner" label="$LOCALIZE[20457] banner" type="bool" default="true" visible="eq(-11,false)" />
-		<setting id="set.clearlogo" label="$LOCALIZE[20457] clearlogo" type="bool" default="true" visible="eq(-12,false)" />
-		<setting id="set.landscape" label="$LOCALIZE[20457] landscape" type="bool" default="true" visible="eq(-13,false)" />
-		<setting id="set.clearart" label="$LOCALIZE[20457] clearart" type="bool" default="true" visible="eq(-14,false)" />
-		<setting id="set.discart" label="$LOCALIZE[20457] discart" type="bool" default="true" visible="eq(-15,false)" />
+		<setting id="movie.poster" label="poster" type="bool" default="true" />
+		<setting id="movie.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
+		<setting id="movie.banner" label="banner" type="bool" default="true" />
+		<setting id="movie.clearlogo" label="clearlogo" type="bool" default="true" />
+		<setting id="movie.landscape" label="landscape" type="bool" default="true" />
+		<setting id="movie.clearart" label="clearart" type="bool" default="true" />
+		<setting id="movie.discart" label="discart" type="bool" default="true" />
+		<setting id="movie.othertypes" label="32957" type="text" default="animatedposter, animatedfanart" />
+		<setting id="set.poster" label="$LOCALIZE[20457] poster" type="bool" default="true" />
+		<setting id="set.fanart_limit" label="$LOCALIZE[20457] fanart" type="slider" option="int" default="5" range="0,1,20" />
+		<setting id="set.banner" label="$LOCALIZE[20457] banner" type="bool" default="true" />
+		<setting id="set.clearlogo" label="$LOCALIZE[20457] clearlogo" type="bool" default="true" />
+		<setting id="set.landscape" label="$LOCALIZE[20457] landscape" type="bool" default="true" />
+		<setting id="set.clearart" label="$LOCALIZE[20457] clearart" type="bool" default="true" />
+		<setting id="set.discart" label="$LOCALIZE[20457] discart" type="bool" default="true" />
+		<setting id="set.othertypes" label="32958" type="text" />
 	</category>
 	<category label="$LOCALIZE[20389]">
 		<setting id="musicvideo.downloadartwork" label="32947" type="bool" default="false" />
-		<setting id="musicvideo.disabled" label="32935" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
-		<setting id="musicvideo.poster" label="poster" type="bool" default="true" visible="eq(-2,false)" />
-		<setting id="musicvideo.fanart_limit" label="fanart" type="slider" option="int" default="3" range="0,1,20" visible="eq(-3,false)" />
-		<setting id="musicvideo.banner" label="banner" type="bool" default="true" visible="eq(-4,false)" />
-		<setting id="musicvideo.clearlogo" label="clearlogo" type="bool" default="true" visible="eq(-5,false)" />
-		<setting id="musicvideo.clearart" label="clearart" type="bool" default="true" visible="eq(-6,false)" />
-		<setting id="musicvideo.discart" label="discart" type="bool" default="true" visible="eq(-7,false)" />
-		<setting id="musicvideo.landscape" label="landscape" type="bool" default="true" visible="eq(-8,false)" />
-		<setting id="musicvideo.artistthumb" label="artistthumb" type="bool" default="true" visible="eq(-9,false)" />
+		<setting id="musicvideo.poster" label="poster" type="bool" default="true" />
+		<setting id="musicvideo.fanart_limit" label="fanart" type="slider" option="int" default="3" range="0,1,20" />
+		<setting id="musicvideo.banner" label="banner" type="bool" default="true" />
+		<setting id="musicvideo.clearlogo" label="clearlogo" type="bool" default="true" />
+		<setting id="musicvideo.clearart" label="clearart" type="bool" default="true" />
+		<setting id="musicvideo.discart" label="discart" type="bool" default="true" />
+		<setting id="musicvideo.landscape" label="landscape" type="bool" default="true" />
+		<setting id="musicvideo.artistthumb" label="artistthumb" type="bool" default="true" />
+		<setting id="musicvideo.othertypes" label="32959" type="text" />
 	</category>
 	<category label="$LOCALIZE[2]">
 		<setting label="32060" type="lsep" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
@@ -85,26 +86,24 @@
 			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
 		<setting id="song.downloadartwork" label="32950" type="bool" default="false"
 			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.disabled" label="32936" type="bool" default="false"
+		<setting label="32036" type="lsep"
+			visible="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting label="32053" type="lsep"
 			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="album.disabled" label="32937" type="bool" default="false"
-			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="song.disabled" label="32938" type="bool" default="true"
-			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" disabled="eq(-1,false)" />
-		<setting label="32036" type="lsep" visible="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting label="32053" type="lsep" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.thumb" label="$LOCALIZE[557] thumb" type="bool" default="true" visible="eq(-5,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.fanart_limit" label="$LOCALIZE[557] fanart" type="slider" option="int" default="3" range="0,1,20" visible="eq(-6,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.banner" label="$LOCALIZE[557] banner" type="bool" default="true" visible="eq(-7,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.clearlogo" label="$LOCALIZE[557] clearlogo" type="bool" default="true" visible="eq(-8,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.clearart" label="$LOCALIZE[557] clearart" type="bool" default="true" visible="eq(-9,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.landscape" label="$LOCALIZE[557] landscape" type="bool" default="true"
-			visible="eq(-10,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting id="album.discart" label="$LOCALIZE[558] discart" type="bool" default="true" visible="eq(-10,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting id="album.thumb" label="$LOCALIZE[558] thumb" type="bool" default="true" visible="eq(-11,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting id="album.back" label="$LOCALIZE[558] back" type="bool" default="true" visible="eq(-12,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting id="album.spine" label="$LOCALIZE[558] spine" type="bool" default="true" visible="eq(-13,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting id="song.thumb" label="$LOCALIZE[179] thumb" type="bool" default="false" visible="eq(-13,false)" disabled="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+		<setting id="artist.thumb" label="$LOCALIZE[557] thumb" type="bool" default="true" />
+		<setting id="artist.fanart_limit" label="$LOCALIZE[557] fanart" type="slider" option="int" default="3" range="0,1,20" />
+		<setting id="artist.banner" label="$LOCALIZE[557] banner" type="bool" default="true" />
+		<setting id="artist.clearlogo" label="$LOCALIZE[557] clearlogo" type="bool" default="true" />
+		<setting id="artist.clearart" label="$LOCALIZE[557] clearart" type="bool" default="true" />
+		<setting id="artist.landscape" label="$LOCALIZE[557] landscape" type="bool" default="true" />
+		<setting id="artist.othertypes" label="32960" type="text" />
+		<setting id="album.discart" label="$LOCALIZE[558] discart" type="bool" default="true" />
+		<setting id="album.thumb" label="$LOCALIZE[558] thumb" type="bool" default="true" />
+		<setting id="album.back" label="$LOCALIZE[558] back" type="bool" default="true" />
+		<setting id="album.spine" label="$LOCALIZE[558] spine" type="bool" default="true" />
+		<setting id="album.othertypes" label="32961" type="text" />
+		<setting id="song.thumb" label="$LOCALIZE[179] thumb" type="bool" default="false" />
+		<setting id="song.othertypes" label="32962" type="text" />
 	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />

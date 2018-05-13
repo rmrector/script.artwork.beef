@@ -235,13 +235,25 @@ artinfo = {
 }
 
 central_directories = {MOVIESET: False}
-disabled_mediatypes = dict((mediatype, False) for mediatype in artinfo)
 todownload = dict((mediatype, False) for mediatype in artinfo)
+othertypes = dict((mediatype, []) for mediatype in artinfo)
 arttype_settingskeys = [m[0] + '.' + art[0] + ('_limit' if art[1]['multiselect'] else '')
     for m in artinfo.iteritems() for art in m[1].iteritems()]
 
 def disabled(mediatype):
-    return disabled_mediatypes.get(mediatype)
+    return not any(iter_every_arttype(mediatype))
+
+def iter_every_arttype(mediatype):
+    for arttype, info in artinfo[mediatype].items():
+        if not info['autolimit']:
+            continue
+        yield arttype
+        if info['autolimit'] > 1:
+            for num in xrange(1, info['autolimit']):
+                yield arttype + str(num)
+
+    for arttype in othertypes[mediatype]:
+        yield arttype
 
 def downloadartwork(mediatype):
     return todownload.get(mediatype)
@@ -254,9 +266,8 @@ def update_settings():
         except ValueError:
             addon.set_setting(settingid, artinfo[splitsetting[0]][splitsetting[1]]['autolimit'])
     for mediatype in artinfo:
-        disabled_mediatypes[mediatype] = addon.get_setting(mediatype + '.disabled')
-    for mediatype in artinfo:
         todownload[mediatype] = addon.get_setting(mediatype + '.downloadartwork')
+        othertypes[mediatype] = [t.strip() for t in addon.get_setting(mediatype + '.othertypes').split(',')]
     for mediatype in ('tvshow', 'episode', 'movie', 'set', 'musicvideo'):
         # DEPRECATED: 2018-03-10
         if addon.get_setting(mediatype + '.downloadartwork') == 'False':

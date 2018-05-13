@@ -65,6 +65,9 @@ class FileManager(object):
             nowart.update(mediaitem.selectedart)
         else:
             nowart = dict(mediaitem.selectedart)
+        for arttype in list(nowart):
+            if arttype not in mediatypes.iter_every_arttype(mediaitem.mediatype):
+                del nowart[arttype]
         if not info.has_art_todownload(nowart):
             return False, ''
         path = basefile = mediaitem.file if settings.albumartwithmediafiles \
