@@ -41,7 +41,6 @@ class Settings(object):
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
         self.titlefree_poster = addon.get_setting('titlefree_poster')
         self.setartwork_fromparent = addon.get_setting('setartwork_fromparent')
-        self.save_additional_arttypes = addon.get_setting('save_additional_arttypes')
         self.identify_alternatives = addon.get_setting('identify_alternatives')
         self.report_peritem = addon.get_setting('report_peritem')
         self.fanarttv_clientkey = addon.get_setting('fanarttv_key')

@@ -1,9 +1,7 @@
-import sys
 import urllib
 import xbmcvfs
 
 from lib.libs import pykodi, mediatypes, quickjson
-from lib.libs.addonsettings import settings
 from lib.libs.mediainfo import iter_base_arttypes, fill_multiart
 
 def clean_artwork(mediaitem):
@@ -27,22 +25,15 @@ def clean_artwork(mediaitem):
             quickjson.remove_texture_byurl(url)
     return updated_art
 
-def remove_otherartwork(mediaitem):
-    ''' Remove artwork not enabled in add-on settings. '''
-    keep_types = settings.save_additional_arttypes
-    keep_types = [addon.strip() for addon in keep_types.split(',')]
-    keep_types = dict(arttype.split(':', 2) if ':' in arttype else (arttype, sys.maxsize) for arttype in keep_types)
-    finalart = {}
-
-    finalart.update((arttype, None) for arttype in mediaitem.art if arttype not in finalart)
-    return finalart
-
 def remove_specific_arttype(mediaitem, arttype):
-    '''pass 'all' as arttype to clear all artwork.'''
+    '''pass 'all' as arttype to clear all artwork, nowhitelist to clear images not on whitelist.'''
     if arttype == 'all':
         return dict((atype, None) for atype in mediaitem.art)
-    finalart = dict(art for art in mediaitem.art.iteritems())
-    if arttype in finalart:
+    elif arttype == 'nowhitelist':
+        arttypes = list(mediatypes.iter_every_arttype(mediaitem.mediatype))
+        return dict((atype, None) for atype in mediaitem.art if atype not in arttypes)
+    finalart = {}
+    if arttype in mediaitem.art:
         finalart[arttype] = None
     return finalart
 

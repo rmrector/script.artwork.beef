@@ -26,7 +26,6 @@ class M(object):
     FOR_ALL_AUDIO = 32422
     IDENTIFY_UNMATCHED_SETS = 32408
     IDENTIFY_UNMATCHED_MVIDS = 32415
-    REMOVE_EXTRA_ARTWORK = 32407
     REMOVE_SPECIFIC_TYPES = 32414
     MAKE_LOCAL = 32423
     CACHE_VIDEO_ARTWORK = 32424
@@ -60,9 +59,6 @@ def main():
             set_autoaddepisodes()
         elif command['command'] == 'show_artwork_log':
             show_artwork_log()
-        # elif command['command'] == 'remove_otherartwork':
-        #     fixcount = runon_medialist(cleaner.remove_otherartwork, L(M.REMOVE_EXTRA_ARTWORK))
-        #     notify_count(L(M.REMOVED_ART_COUNT), fixcount)
     else:
         processor = ArtworkProcessor()
         if processor.processor_busy:
@@ -101,36 +97,43 @@ def add_missing_for():
         pykodi.execute_builtin('NotifyAll(script.artwork.beef:control, {0})'.format(options[selected][1]))
 
 def remove_specific_arttypes():
-    options = [(L(M.MOVIES), lambda: quickjson.get_item_list(mediatypes.MOVIE)),
-        (L(M.SERIES), quickjson.get_tvshows),
-        (L(M.SEASONS), quickjson.get_seasons),
-        (L(M.MOVIESETS), lambda: quickjson.get_item_list(mediatypes.MOVIESET)),
-        (L(M.EPISODES), quickjson.get_episodes),
-        (L(M.MUSICVIDEOS), lambda: quickjson.get_item_list(mediatypes.MUSICVIDEO))]
+    options = [(L(M.MOVIES), lambda: quickjson.get_item_list(mediatypes.MOVIE), mediatypes.MOVIE),
+        (L(M.SERIES), quickjson.get_tvshows, mediatypes.TVSHOW),
+        (L(M.SEASONS), quickjson.get_seasons, mediatypes.SEASON),
+        (L(M.MOVIESETS), lambda: quickjson.get_item_list(mediatypes.MOVIESET), mediatypes.MOVIESET),
+        (L(M.EPISODES), quickjson.get_episodes, mediatypes.EPISODE),
+        (L(M.MUSICVIDEOS), lambda: quickjson.get_item_list(mediatypes.MUSICVIDEO), mediatypes.MUSICVIDEO)]
     if get_kodi_version() >= 18:
-        options.extend(((L(M.ARTISTS), lambda: quickjson.get_item_list(mediatypes.ARTIST)),
-            (L(M.ALBUMS), lambda: quickjson.get_item_list(mediatypes.ALBUM)),
-            (L(M.SONGS), lambda: quickjson.get_item_list(mediatypes.SONG))))
+        options.extend(((L(M.ARTISTS), lambda: quickjson.get_item_list(mediatypes.ARTIST), mediatypes.ARTIST),
+            (L(M.ALBUMS), lambda: quickjson.get_item_list(mediatypes.ALBUM), mediatypes.ALBUM),
+            (L(M.SONGS), lambda: quickjson.get_item_list(mediatypes.SONG), mediatypes.SONG)))
 
     selected = xbmcgui.Dialog().select(L(M.REMOVE_SPECIFIC_TYPES), [option[0] + " ..." for option in options])
-    if selected >= 0 and selected < len(options):
-        busy = pykodi.get_busydialog()
-        busy.create()
-        allitems = options[selected][1]()
-        counter = {}
-        for arttype in chain.from_iterable(d.get('art', {}).keys() for d in allitems):
-            if '.' in arttype: continue
-            counter['all'] = counter.get('all', 0) + 1
-            counter[arttype] = counter.get(arttype, 0) + 1
+    if selected < 0 or selected >= len(options):
+        return
+    busy = pykodi.get_busydialog()
+    busy.create()
+    allitems = options[selected][1]()
+    counter = {}
+    keeparttypes = list(mediatypes.iter_every_arttype(options[selected][2]))
+    types_to_remove = set()
+    for arttype in chain.from_iterable(d.get('art', {}).keys() for d in allitems):
+        if '.' in arttype: continue
+        counter['* all'] = counter.get('* all', 0) + 1
+        counter[arttype] = counter.get(arttype, 0) + 1
+        if arttype not in keeparttypes:
+            types_to_remove.add(arttype)
+            counter['* nowhitelist'] = counter.get('* nowhitelist', 0) + 1
 
-        arttypes = sorted(counter.keys())
-        busy.close()
-        selectedarttype = xbmcgui.Dialog().select(options[selected][0],
-            ["{0}: {1}".format(arttype, counter[arttype]) for arttype in arttypes])
-        if selectedarttype >= 0 and selectedarttype < len(arttypes):
-            fixcount = runon_medialist(lambda mi: cleaner.remove_specific_arttype(mi, arttypes[selectedarttype]),
-                L(M.REMOVE_SPECIFIC_TYPES), allitems, options[selected][0])
-            notify_count(L(M.REMOVED_ART_COUNT), fixcount)
+    arttypes = sorted(counter.keys())
+    busy.close()
+    ftype = lambda intype: '* ' + ', '.join(sorted(types_to_remove)) if intype == '* nowhitelist' else intype
+    selectedarttype = xbmcgui.Dialog().select(options[selected][0],
+        ["{0}: {1}".format(ftype(arttype), counter[arttype]) for arttype in arttypes])
+    if selectedarttype >= 0 and selectedarttype < len(arttypes):
+        fixcount = runon_medialist(lambda mi: cleaner.remove_specific_arttype(mi, arttypes[selectedarttype]),
+            L(M.REMOVE_SPECIFIC_TYPES), allitems, options[selected][0])
+        notify_count(L(M.REMOVED_ART_COUNT), fixcount)
 
 def make_local():
     fileman = FileManager()
