@@ -17,10 +17,14 @@ def clean_artwork(mediaitem):
             updated_art['discart'] = updated_art['cdart']
             updated_art['cdart'] = None
 
-    # Remove local artwork if it is no longer available
     for arttype, url in updated_art.iteritems():
+        # Remove local artwork if it is no longer available
         if url and not url.startswith(pykodi.notlocalimages) and not xbmcvfs.exists(url):
             updated_art[arttype] = None
+        elif url and url.startswith('http://www.thetvdb.com/banners/'):
+            # TheTVDB now has forced HTTPS
+            updated_art[arttype] = url.replace('http://www.thetvdb.com/banners/', 'https://www.thetvdb.com/banners/')
+            quickjson.remove_texture_byurl(url)
     return updated_art
 
 def remove_otherartwork(mediaitem):
