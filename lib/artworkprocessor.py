@@ -413,7 +413,7 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
         # Remove local images from cache so Kodi caches the new ones
         if not url or url.startswith(pykodi.notlocalimages):
             continue
-        cleaner.remove_texture(url)
+        quickjson.remove_texture_byurl(url)
 
 def finalmessages(count):
     return (L(ARTWORK_UPDATED_MESSAGE).format(count), L(FINAL_MESSAGE)) if count else \

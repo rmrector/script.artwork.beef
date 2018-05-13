@@ -42,11 +42,6 @@ def remove_specific_arttype(mediaitem, arttype):
         finalart[arttype] = None
     return finalart
 
-def remove_texture(url):
-    textures = quickjson.get_textures(url)
-    if textures:
-        quickjson.remove_texture(textures[0]['textureid'])
-
 def _get_clean_art(arttype, url):
     if not url: # Remove empty URLs
         url = None

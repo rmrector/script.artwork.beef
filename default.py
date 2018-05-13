@@ -137,7 +137,13 @@ def make_local():
     def downloadforitem(mediaitem):
         try:
             fileman.downloadfor(mediaitem)
-            return dict((k, v) for k, v in mediaitem.downloadedart.iteritems() if not v or not v.startswith('http'))
+            newart = dict((k, v) for k, v in mediaitem.downloadedart.iteritems()
+                if not v or not v.startswith('http'))
+            for arttype in newart:
+                # remove old URL from texture cache
+                if mediaitem.art.get(arttype, '').startswith('http'):
+                    quickjson.remove_texture_byurl(mediaitem.art[arttype])
+            return newart
         except FileError as ex:
             mediaitem.error = ex.message
             log(ex.message, xbmc.LOGERROR)

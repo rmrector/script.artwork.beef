@@ -189,6 +189,11 @@ def remove_texture(textureid):
     if not check_json_result(json_result, 'OK', json_request):
         log(json_result)
 
+def remove_texture_byurl(url):
+    textures = get_textures(url)
+    for texture in textures:
+        remove_texture(texture['textureid'])
+
 def get_base_json_request(method):
     return {'jsonrpc': '2.0', 'method': method, 'params': {}, 'id': 1}
 
