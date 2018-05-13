@@ -300,6 +300,11 @@ class ArtworkProcessor(object):
                 mediaitem.updatedart = list(set(mediaitem.updatedart + toset.keys()))
                 add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, toset)
 
+            ismusic = mediatype in mediatypes.audiotypes
+            if settings.cache_local_video_artwork and not ismusic or \
+                    settings.cache_local_music_artwork and ismusic:
+                self.downloader.cachefor(mediaitem, False)
+
         if error:
             if 'message' in error:
                 header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
@@ -408,9 +413,7 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
         # Remove local images from cache so Kodi caches the new ones
         if not url or url.startswith(pykodi.notlocalimages):
             continue
-        textures = quickjson.get_textures(url)
-        if textures:
-            quickjson.remove_texture(textures[0]['textureid'])
+        cleaner.remove_texture(url)
 
 def finalmessages(count):
     return (L(ARTWORK_UPDATED_MESSAGE).format(count), L(FINAL_MESSAGE)) if count else \

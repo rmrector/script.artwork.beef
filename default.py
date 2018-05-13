@@ -29,7 +29,10 @@ class M(object):
     REMOVE_EXTRA_ARTWORK = 32407
     REMOVE_SPECIFIC_TYPES = 32414
     MAKE_LOCAL = 32423
+    CACHE_VIDEO_ARTWORK = 32424
+    CACHE_MUSIC_ARTWORK = 32425
     DOWNLOAD_COUNT = 32816
+    CACHED_COUNT = 32038
     REMOVED_ART_COUNT = 32027
     NO_UNMATCHED_ITEMS = 32029
     UNMATCHED_ITEMS = 32056
@@ -69,7 +72,10 @@ def main():
                 (L(M.IDENTIFY_UNMATCHED_SETS), lambda: identify_unmatched(mediatypes.MOVIESET)),
                 (L(M.IDENTIFY_UNMATCHED_MVIDS), lambda: identify_unmatched(mediatypes.MUSICVIDEO)),
                 (L(M.REMOVE_SPECIFIC_TYPES), remove_specific_arttypes),
-                (L(M.MAKE_LOCAL), make_local)]
+                (L(M.MAKE_LOCAL), make_local),
+                (L(M.CACHE_VIDEO_ARTWORK), cache_artwork)]
+            if get_kodi_version() >= 18:
+                options.append((L(M.CACHE_MUSIC_ARTWORK), lambda: cache_artwork('music')))
         selected = xbmcgui.Dialog().select('Artwork Beef', [option[0] for option in options])
         if selected >= 0 and selected < len(options):
             action = options[selected][1]
@@ -141,6 +147,12 @@ def make_local():
     xbmcgui.Dialog().ok("Artwork Beef", L(M.DOWNLOAD_COUNT).format(downloaded)
         + ' - {0:0.2f}MB'.format(fileman.size / 1000000.00))
 
+def cache_artwork(librarytype='videos'):
+    fileman = FileManager()
+    heading = L(M.CACHE_VIDEO_ARTWORK if librarytype == 'videos' else M.CACHE_MUSIC_ARTWORK)
+    cached = runon_medialist(fileman.cachefor, heading, librarytype, fg=True)
+    xbmcgui.Dialog().ok("Artwork Beef", L(M.CACHED_COUNT).format(cached))
+
 def identify_unmatched(mediatype):
     busy = pykodi.get_busydialog()
     busy.create()
@@ -207,10 +219,14 @@ def runon_medialist(function, heading, medialist='videos', typelabel=None, fg=Fa
             item = info.MediaItem(item)
             if item.mediatype == mediatypes.SEASON:
                 item.file = quickjson.get_item_details(item.tvshowid, mediatypes.TVSHOW)['file']
-            processed = utils.get_simpledict_updates(item.art, function(item))
-            if processed:
-                info.update_art_in_library(item.mediatype, item.dbid, processed)
-                changedcount += len(processed)
+            updates = function(item)
+            if isinstance(updates, int):
+                changedcount += updates
+            else:
+                processed = utils.get_simpledict_updates(item.art, updates)
+                if processed:
+                    info.update_art_in_library(item.mediatype, item.dbid, processed)
+                    changedcount += len(processed)
             if monitor.abortRequested() or fg and progress.iscanceled():
                 break
         return changedcount

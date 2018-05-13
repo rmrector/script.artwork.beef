@@ -2,7 +2,7 @@ import sys
 import urllib
 import xbmcvfs
 
-from lib.libs import pykodi, mediatypes
+from lib.libs import pykodi, mediatypes, quickjson
 from lib.libs.addonsettings import settings
 from lib.libs.mediainfo import iter_base_arttypes, fill_multiart
 
@@ -41,6 +41,11 @@ def remove_specific_arttype(mediaitem, arttype):
     if arttype in finalart:
         finalart[arttype] = None
     return finalart
+
+def remove_texture(url):
+    textures = quickjson.get_textures(url)
+    if textures:
+        quickjson.remove_texture(textures[0]['textureid'])
 
 def _get_clean_art(arttype, url):
     if not url: # Remove empty URLs

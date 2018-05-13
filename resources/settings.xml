@@ -112,6 +112,8 @@
 		<setting id="report_peritem" label="32916" type="bool" default="false" />
 		<setting id="progress_display" label="32924" type="select" default="0" lvalues="32925|32926|32927" />
 		<setting id="final_notification" label="32928" type="bool" default="false" />
+		<setting id="cache_local_video_artwork" label="32952" type="bool" default="false" />
+		<setting id="cache_local_music_artwork" label="32953" type="bool" default="false" />
 		<setting label="$LOCALIZE[744]" type="lsep" />
 		<setting id="episode.thumb_generate" label="32914" type="bool" default="false" />
 		<setting id="movie.thumb_generate" label="32915" type="bool" default="false" />

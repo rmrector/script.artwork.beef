@@ -119,6 +119,10 @@ msgctxt "#32037"
 msgid "Could not save image to file: {0}"
 msgstr ""
 
+msgctxt "#32038"
+msgid "{0:d} artwork cached"
+msgstr ""
+
 # Headings
 
 msgctxt "#32050"
@@ -144,7 +148,7 @@ msgid "Actions"
 msgstr ""
 
 msgctxt "#32053"
-msgid "Automatically add these artwork types from web services"
+msgid "Automatically add these artwork types"
 msgstr ""
 
 msgctxt "#32054"
@@ -247,6 +251,14 @@ msgstr ""
 
 msgctxt "#32423"
 msgid "Download existing remote images"
+msgstr ""
+
+msgctxt "#32424"
+msgid "Cache local video library artwork to texture database"
+msgstr ""
+
+msgctxt "#32425"
+msgid "Cache local music library artwork to texture database"
 msgstr ""
 
 # Settings
@@ -453,6 +465,14 @@ msgstr ""
 
 msgctxt "#32951"
 msgid "Save album and song art with song files if possible"
+msgstr ""
+
+msgctxt "#32952"
+msgid "Automatically add local video library artwork to Kodi texture cache"
+msgstr ""
+
+msgctxt "#32953"
+msgid "Automatically add local music library artwork to Kodi texture cache"
 msgstr ""
 
 # Used in the artwork report

@@ -1,10 +1,12 @@
 import os
 import re
+import threading
+import urllib
 import xbmcvfs
 from contextlib import closing
 from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException
 
-from lib.libs import mediainfo as info, mediatypes, utils
+from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import localize as L, notlocalimages
 from lib.libs.webhelper import Getter
@@ -24,6 +26,38 @@ class FileManager(object):
         self.getter = Getter()
         self.getter.session.headers['User-Agent'] = settings.useragent
         self.size = 0
+        self.alreadycached = None
+        self._build_imagecachebase()
+
+    def _build_imagecachebase(self):
+        result = pykodi.execute_jsonrpc({"jsonrpc": "2.0", "id": 1, "method": "Settings.GetSettings",
+            "params": {"filter": {"category": "control", "section": "services"}}})
+        port = 80
+        username = ''
+        password = ''
+        secure = False
+        server_enabled = True
+        if result.get('result', {}).get('settings'):
+            for setting in result['result']['settings']:
+                if setting['id'] == 'services.webserver' and not setting['value']:
+                    server_enabled = False
+                    break
+                if setting['id'] == 'services.webserverusername':
+                    username = setting['value']
+                elif setting['id'] == 'services.webserverport':
+                    port = setting['value']
+                elif setting['id'] == 'services.webserverpassword':
+                    password = setting['value']
+                elif setting['id'] == 'services.webserverssl' and setting['value']:
+                    secure = True
+            username = '{0}:{1}@'.format(username, password) if username and password else ''
+        else:
+            server_enabled = False
+        if server_enabled:
+            self.imagecachebase = 'https' if secure else 'http'
+            self.imagecachebase += '://{0}localhost:{1}/image/'.format(username, port)
+        else:
+            self.imagecachebase = None
 
     def downloadfor(self, mediaitem, allartwork=True):
         if allartwork:
@@ -128,6 +162,38 @@ class FileManager(object):
                 recyclefile(old_url)
             xbmcvfs.delete(old_url)
 
+    def cachefor(self, mediaitem, multiplethreads=True):
+        if not self.imagecachebase:
+            return 0
+        if self.alreadycached is None:
+            self.alreadycached = [pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures()
+                if not pykodi.unquoteimage(texture['url']).startswith('http')]
+        count = [0]
+        def worker(path):
+            try:
+                res, _ = self.doget(self.imagecachebase + urllib.quote(pykodi.quoteimage(path), ''), stream=True)
+                if res:
+                    res.iter_content(chunk_size=1024)
+                    res.close()
+                    count[0] += 1
+            except HTTPError:
+                pass # caching error, possibly with decoding the original image
+            except ConnectionError:
+                pass # Kodi is closing
+        threads = []
+        for path in mediaitem.art.itervalues():
+            if path.startswith(('http', 'image')) or path in self.alreadycached:
+                continue
+            if multiplethreads:
+                t = threading.Thread(target=worker, args=(path,))
+                threads.append(t)
+                t.start()
+            else:
+                worker(path)
+        for t in threads:
+            t.join()
+        return count[0]
+
 def recyclefile(filename):
     firstdir = os.path.basename(os.path.dirname(filename))
     directory = TEMP_DIR
@@ -149,7 +215,7 @@ def save_thisextrafanart(arttype, mediatype):
 
 def _saveextra_thistype(mediatype):
     return settings.save_extrafanart and mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) \
-    or settings.save_extrafanart_mvids and mediatype == mediatypes.MUSICVIDEO
+        or settings.save_extrafanart_mvids and mediatype == mediatypes.MUSICVIDEO
 
 def remove_basename(mediatype):
     return mediatype == mediatypes.MOVIE and not settings.savewith_basefilename \

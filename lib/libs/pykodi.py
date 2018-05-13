@@ -1,5 +1,6 @@
 import collections
 import os
+import re
 import sys
 import time
 import urllib
@@ -164,6 +165,14 @@ def unquoteimage(imagestring):
     if imagestring.startswith('image://') and not imagestring.startswith(('image://video', 'image://music')):
         return urllib.unquote(imagestring[8:-1])
     return imagestring
+
+def quoteimage(imagestring):
+    if imagestring.startswith('image://'):
+        return imagestring
+    # Kodi goes lowercase and doesn't encode some chars
+    result = 'image://{0}/'.format(urllib.quote(imagestring, '()!'))
+    result = re.sub(r'%[0-9A-F]{2}', lambda mo: mo.group().lower(), result)
+    return result
 
 def unquotearchive(filepath):
     # DEPRECATED: Krypton and below need this, Leia changed archive support to be a standard file path
