@@ -1,3 +1,6 @@
+v0.19.1 (2018-05-15)
+- Fix: whitelist behavior with season artwork and generated thumbs
+
 v0.19.0 (2018-05-14)
 - Feature: whitelist artwork from file system
 - Feature: add option to preload local images to Kodi's texture cache
