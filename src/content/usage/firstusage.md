@@ -16,6 +16,8 @@ weight: 2
   querying the web services during automatic processing, saving time and network resources.
   - You may also want to disable "Update artwork for old items daily" if you don't frequently add
     new artwork for existing items in the library.
+- The options "Preload local ... artwork to texture cache" will preload processed item artwork
+  to Kodi's texture cache to speed up initial browsing. It only works on artwork saved locally.
 - If you have multiple Kodi devices sharing a MySQL database, only enable the
   automatic processing on one of them.
 - For multiple Kodi devices with their own databases and you want Artwork Beef to download

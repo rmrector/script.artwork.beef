@@ -25,6 +25,11 @@ weight: 2
 - It may take a few days for new artwork to be available.
 - Artwork Beef caches the previous image results from web services for 72 hours.
 
+#### Images from web services are not visible.
+
+Most likely the web service is temporarily/intermittently unavailable. Try again later.
+Configuring Artwork Beef to download artwork to your local file system is probably a good idea.
+
 #### Manual selection of artwork doesn't show any artwork from one or any web service.
 
 - Does it happen for all media items of a particular type?
@@ -50,10 +55,10 @@ weight: 2
 
 #### The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.
 
-- The skin / web interface is pulling up the movie thumb and expecting the fallback poster,
-  but it should instead pick the poster first and fall back to the thumb only if the poster
-  doesn't exist. They are two different images for two different purposes and should be chosen
-  based on the interface design.
+The skin / web interface is pulling up the movie thumb and expecting the fallback poster,
+but it should instead pick the poster first and fall back to the thumb only if the poster
+doesn't exist. They are two different images for two different purposes and should be chosen
+based on the interface design.
 
 #### Where do I put my API keys for other web services?
 
@@ -66,7 +71,7 @@ weight: 2
 
 #### Where is the option to replace the fanart slideshow from Artwork Downloader?
 
-- No such option is available, Artwork Beef will not duplicate image files for this purpose.
-  - [Skins have other options] that don't require duplicating files.
+No such option is available, Artwork Beef will not duplicate image files for this purpose.
+[Skins have other options] that don't require duplicating files.
 
 [Skins have other options]: {{< ref "skins/addonfreefun.md#grab-random-fanart-plus-any-other-info-from-items-in-any-library-path" >}}

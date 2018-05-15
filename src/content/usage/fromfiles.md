@@ -71,6 +71,10 @@ A few specific examples
 - `... /TV Show 1/fanart2.jpg`
 - `... /TV Show 1/fanart3.jpg`
 - `... /TV Show 1/clearlogo.png`
+- `... /TV Show 1/season-specials-poster.png`
+- `... /TV Show 1/season-specials-landscape.png`
+- `... /TV Show 1/season01-poster.png`
+- `... /TV Show 1/season01-landscape.png`
 
 ### Movie collection artwork
 

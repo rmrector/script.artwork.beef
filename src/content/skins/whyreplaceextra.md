@@ -11,7 +11,7 @@ date: 2017-11-21T22:46:53-07:00
   movie sets, music videos, TV show seasons, episodes, even music artists, albums, and songs.
 - Placing artwork in the library allows skins to work with multiple fanart without demanding one
   specific location for the files. Users can decide to keep them with their media files, or keep
-  them in a secondary location so non-Kodi client
+  them in a secondary location so they are separated from the media for non-Kodi access.
 - Avoid file system delays or access issues (unavailable network file system, removable media) once
   the images have been cached. Classic extrafanart always hits the file system at least once
   when first listing the path to get a list of the images, even if they are all cached.

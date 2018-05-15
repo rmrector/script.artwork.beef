@@ -26,11 +26,11 @@ artwork, as Artwork Beef isn't the only one that can set these. Check for the ex
 [Fun without add-ons]: {{< ref "skins/addonfreefun.md" >}}
 
 The music library just got a "Kodi standard way" in Kodi 18. Skins can access all artwork from the
-library just like they do the video library. Prefixes for artwork like 'artist.' and 'album.'
-and 'albumartist.' pull up parent artwork from songs in the same way 'tvshow.' is used video
+library just like they do from the video library. Prefixes for artwork like 'artist.' and 'album.'
+and 'albumartist.' pull up parent artwork from songs in the same way 'tvshow.' is used in the video
 library. 'artist.' is also available for albums. `discart` for multiple disc albums are a bit hairier,
 as discs aren't a separate media item in the Kodi library with their own place for artwork.
-Artwork Beef will add separate discart as `discart1`, `discart2`, and so on; use a variable like
+Artwork Beef will add separate discart as `discart1`, `discart2`, and so on to the album; use a variable like
 below to pick the right one for a song ListItem.
 
 ```xml
