@@ -1,3 +1,9 @@
+v0.19.0 (2018-05-14)
+- Feature: whitelist artwork from file system
+- Feature: add option to preload local images to Kodi's texture cache
+- Cleanup: move TheTVDB image URLS from HTTP to HTTPS for recent website changes
+- Cleanup: add "AB: " to the context menu items
+
 v0.18.5 (2018-04-09)
 - Fix: opening report in GUI on Android
 - Fix: rearrange file deletion further
