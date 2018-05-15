@@ -2,7 +2,7 @@ import urllib
 import xbmcvfs
 
 from lib.libs import pykodi, mediatypes, quickjson
-from lib.libs.mediainfo import iter_base_arttypes, fill_multiart
+from lib.libs.mediainfo import iter_base_arttypes, fill_multiart, keep_arttype
 
 def clean_artwork(mediaitem):
     updated_art = dict(_get_clean_art(*art) for art in mediaitem.art.iteritems())
@@ -27,11 +27,11 @@ def clean_artwork(mediaitem):
 
 def remove_specific_arttype(mediaitem, arttype):
     '''pass 'all' as arttype to clear all artwork, nowhitelist to clear images not on whitelist.'''
-    if arttype == 'all':
+    if arttype == '* all':
         return dict((atype, None) for atype in mediaitem.art)
-    elif arttype == 'nowhitelist':
-        arttypes = list(mediatypes.iter_every_arttype(mediaitem.mediatype))
-        return dict((atype, None) for atype in mediaitem.art if atype not in arttypes)
+    elif arttype == '* nowhitelist':
+        return dict((atype, None) for atype, url in mediaitem.art.iteritems()
+            if not keep_arttype(mediaitem.mediatype, atype, url))
     finalart = {}
     if arttype in mediaitem.art:
         finalart[arttype] = None

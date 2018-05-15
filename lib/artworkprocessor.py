@@ -129,12 +129,14 @@ class ArtworkProcessor(object):
         else:
             medialist = [mediaitem]
             if mediatype == mediatypes.TVSHOW and not mediatypes.disabled(mediatypes.EPISODE):
+                gen_epthumb = mediatypes.generatethumb(mediatypes.EPISODE)
+                download_ep = mediatypes.downloadartwork(mediatypes.EPISODE)
                 if mediaitem.uniqueids and any(x in mediaitem.uniqueids.itervalues() for x in settings.autoadd_episodes):
                     medialist.extend(info.MediaItem(ep) for ep in quickjson.get_episodes(dbid))
-                elif settings.generate_episode_thumb or mediatypes.downloadartwork(mediatypes.EPISODE):
+                elif gen_epthumb or download_ep:
                     for episode in quickjson.get_episodes(dbid):
-                        if settings.generate_episode_thumb and not info.has_generated_thumbnail(episode) \
-                        or mediatypes.downloadartwork(mediatypes.EPISODE) and info.has_art_todownload(episode['art']):
+                        if gen_epthumb and not info.has_generated_thumbnail(episode) \
+                        or download_ep and info.has_art_todownload(episode['art']):
                             episode = info.MediaItem(episode)
                             episode.skip_artwork = ['fanart']
                             medialist.append(episode)

@@ -66,7 +66,7 @@ class FileManager(object):
         else:
             nowart = dict(mediaitem.selectedart)
         for arttype in list(nowart):
-            if arttype not in mediatypes.iter_every_arttype(mediaitem.mediatype):
+            if not info.keep_arttype(mediaitem.mediatype, arttype, nowart[arttype]):
                 del nowart[arttype]
         if not info.has_art_todownload(nowart):
             return False, ''

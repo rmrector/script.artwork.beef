@@ -31,27 +31,21 @@ class VideoFileMovieProvider(VideoFileAbstractProvider):
     mediatype = mediatypes.MOVIE
 
     def get_exact_images(self, mediaitem):
-        if not settings.generate_movie_thumb:
+        if not mediatypes.generatethumb(mediaitem.mediatype):
             return {}
-        paths = get_movie_path_list(mediaitem.file)
-        if paths[0].endswith('.iso'):
+        path = get_movie_path_list(mediaitem.file)[0]
+        if path.endswith('.iso'):
             return {}
-        return {'thumb': self.build_video_thumbnail(paths[0])}
+        return {'thumb': self.build_video_thumbnail(path)}
 
 class VideoFileEpisodeProvider(VideoFileAbstractProvider):
     mediatype = mediatypes.EPISODE
 
     def get_exact_images(self, mediaitem):
         path = mediaitem.file
-        if not settings.generate_episode_thumb or path.endswith('.iso'):
+        if not mediatypes.generatethumb(mediaitem.mediatype) or path.endswith('.iso'):
             return {}
         return {'thumb': self.build_video_thumbnail(path)}
 
-class VideoFileMusicVideoProvider(VideoFileAbstractProvider):
+class VideoFileMusicVideoProvider(VideoFileEpisodeProvider):
     mediatype = mediatypes.MUSICVIDEO
-
-    def get_exact_images(self, mediaitem):
-        path = mediaitem.file
-        if not settings.generate_musicvideo_thumb or path.endswith('.iso'):
-            return {}
-        return {'thumb': self.build_video_thumbnail(path)}

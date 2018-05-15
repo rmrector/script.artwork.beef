@@ -115,13 +115,12 @@ def remove_specific_arttypes():
     busy.create()
     allitems = options[selected][1]()
     counter = {}
-    keeparttypes = list(mediatypes.iter_every_arttype(options[selected][2]))
     types_to_remove = set()
-    for arttype in chain.from_iterable(d.get('art', {}).keys() for d in allitems):
+    for arttype, url in chain.from_iterable(d.get('art', {}).iteritems() for d in allitems):
         if '.' in arttype: continue
         counter['* all'] = counter.get('* all', 0) + 1
         counter[arttype] = counter.get(arttype, 0) + 1
-        if arttype not in keeparttypes:
+        if not info.keep_arttype(options[selected][2], arttype, url):
             types_to_remove.add(arttype)
             counter['* nowhitelist'] = counter.get('* nowhitelist', 0) + 1
 

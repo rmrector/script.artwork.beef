@@ -187,11 +187,7 @@ msgctxt "#32403"
 msgid "stop current process"
 msgstr ""
 
-# 32404, 32405, 32406 retired 2017-12-15
-
-msgctxt "#32407"
-msgid "Remove extra artwork not configured in the add-on ..."
-msgstr ""
+# 32404, 32405, 32406, 32407 retired 2017-12-15
 
 msgctxt "#32408"
 msgid "identify unmatched movie sets with TMDb ..."
@@ -218,7 +214,7 @@ msgid "Enable Artwork Beef context items [I](per skin)[/I]"
 msgstr ""
 
 msgctxt "#32414"
-msgid "Remove specific type of artwork for ..."
+msgid "Remove artwork for media type ..."
 msgstr ""
 
 msgctxt "#32415"

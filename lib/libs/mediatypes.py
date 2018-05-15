@@ -236,6 +236,7 @@ artinfo = {
 
 central_directories = {MOVIESET: False}
 todownload = dict((mediatype, False) for mediatype in artinfo)
+togenerate = dict((mediatype, False) for mediatype in artinfo)
 othertypes = dict((mediatype, []) for mediatype in artinfo)
 arttype_settingskeys = [m[0] + '.' + art[0] + ('_limit' if art[1]['multiselect'] else '')
     for m in artinfo.iteritems() for art in m[1].iteritems()]
@@ -256,7 +257,10 @@ def iter_every_arttype(mediatype):
         yield arttype
 
 def downloadartwork(mediatype):
-    return todownload.get(mediatype)
+    return todownload.get(mediatype, False)
+
+def generatethumb(mediatype):
+    return togenerate.get(mediatype, False)
 
 def update_settings():
     for settingid in arttype_settingskeys:
@@ -286,6 +290,8 @@ def update_settings():
         central_directories[mediatype] = addon.get_setting('centraldir.{0}_enabled'.format(mediatype))
         if central_directories[mediatype]:
             central_directories[mediatype] = addon.get_setting('centraldir.{0}_dir'.format(mediatype))
+    for mediatype in (EPISODE, MOVIE, MUSICVIDEO):
+        togenerate[mediatype] = addon.get_setting('{0}.thumb_generate'.format(mediatype))
 
 def _get_autolimit_from_setting(settingid):
     result = addon.get_setting(settingid)

@@ -173,6 +173,13 @@ def _has_localart(arttype, existingart, fromtypes):
             return True
     return False
 
+def keep_arttype(mediatype, arttype, arturl):
+    mediatype, arttype = mediatypes.hack_mediaarttype(mediatype, arttype)
+    if arttype == 'thumb' and mediatypes.generatethumb(mediatype) \
+            and arturl.startswith(pykodi.thumbnailimages):
+        return True
+    return arttype in mediatypes.iter_every_arttype(mediatype)
+
 def get_basetype(arttype):
     return arttype.rstrip('0123456789')
 

@@ -1,6 +1,7 @@
 from lib import providers
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
+from lib.libs.mediainfo import keep_arttype
 from lib.libs.pykodi import localize as L
 from lib.libs.utils import SortedDisplay
 from lib.providers import ProviderError
@@ -41,16 +42,13 @@ class Gatherer(object):
             or not mediatypes.central_directories[mediatypes.ARTIST]:
                 return {}
         resultimages = {}
-        arttypes = list(mediatypes.iter_every_arttype(mediaitem.mediatype))
-        if mediaitem.mediatype == mediatypes.TVSHOW:
-            season_arttypes = list(mediatypes.iter_every_arttype(mediatypes.SEASON))
         for provider in providers.forced.get(mediaitem.mediatype, ()):
             for arttype, image in provider.get_exact_images(mediaitem).iteritems():
                 if arttype.startswith('season.'):
-                    season, stype = arttype.rsplit('.', 2)[1:]
-                    if int(season) not in mediaitem.seasons or stype not in season_arttypes:
+                    season = arttype.rsplit('.', 2)[1]
+                    if int(season) not in mediaitem.seasons:
                         continue
-                elif provider.name.sort != 'video:thumb' and arttype not in arttypes:
+                if not keep_arttype(mediaitem.mediatype, arttype, image['url']):
                     continue
                 if allowmutiple:
                     if arttype not in resultimages:
