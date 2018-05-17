@@ -46,10 +46,11 @@ class MediaItem(object):
             if mediatypes.central_directories[mediatypes.MOVIESET]:
                 self.file = mediatypes.central_directories[mediatypes.MOVIESET] + self.label + '.ext'
         elif self.mediatype == mediatypes.MUSICVIDEO:
-            self.label = musicvideo_label(jsondata)
+            self.label = music_label(jsondata)
         elif self.mediatype in mediatypes.audiotypes:
             if self.mediatype in (mediatypes.ALBUM, mediatypes.SONG):
                 self.albumid = jsondata['albumid']
+                self.label = music_label(jsondata)
             self.artistid = None if self.mediatype == mediatypes.ARTIST \
                 else jsondata['albumartistid'][0] if jsondata.get('albumartistid') \
                 else jsondata['artistid'][0] if jsondata.get('artistid') \
@@ -74,8 +75,8 @@ class MediaItem(object):
         self.error = None
         self.missingid = False
 
-def musicvideo_label(jsondata):
-    return jsondata['artist'][0] + ' - ' + jsondata['title'] if jsondata['artist'] else jsondata['title']
+def music_label(jsondata):
+    return jsondata['artist'][0] + ' - ' + jsondata['title'] if jsondata.get('artist') else jsondata['title']
 
 def is_known_mediatype(jsondata):
     return any(x[0] in jsondata for x in idmap)
