@@ -413,11 +413,11 @@ artwork, as Artwork Beef isn&rsquo;t the only one that can set these. Check for 
 <code>fanart1</code> to tell if the ListItem has these multiple fanart.</p>
 
 <p>The music library just got a &ldquo;Kodi standard way&rdquo; in Kodi 18. Skins can access all artwork from the
-library just like they do the video library. Prefixes for artwork like &lsquo;artist.&rsquo; and &lsquo;album.&rsquo;
-and &lsquo;albumartist.&rsquo; pull up parent artwork from songs in the same way &lsquo;tvshow.&rsquo; is used video
+library just like they do from the video library. Prefixes for artwork like &lsquo;artist.&rsquo; and &lsquo;album.&rsquo;
+and &lsquo;albumartist.&rsquo; pull up parent artwork from songs in the same way &lsquo;tvshow.&rsquo; is used in the video
 library. &lsquo;artist.&rsquo; is also available for albums. <code>discart</code> for multiple disc albums are a bit hairier,
 as discs aren&rsquo;t a separate media item in the Kodi library with their own place for artwork.
-Artwork Beef will add separate discart as <code>discart1</code>, <code>discart2</code>, and so on; use a variable like
+Artwork Beef will add separate discart as <code>discart1</code>, <code>discart2</code>, and so on to the album; use a variable like
 below to pick the right one for a song ListItem.</p>
 
 <pre><code class="language-xml">&lt;variable name=&quot;ListItemSongDiscart&quot;&gt;

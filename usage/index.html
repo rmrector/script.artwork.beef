@@ -428,23 +428,21 @@ See <a href="https://rmrector.github.io/script.artwork.beef/usage/firstusage/">F
 <p>It must process all items in your library, and will do so automatically the first time it runs.
 Over time it will re-process media items still missing artwork, checking for new artwork from
 web services and the file system. After some time (4-12 months) they will be considered
-&ldquo;old&rdquo; items affected by a couple of actions and settings.</p>
+&ldquo;old&rdquo; items affected by a couple of actions and settings. If the option &ldquo;only identify local files&rdquo;
+is enabled it will check for new local artwork files monthly.</p>
 
 <p>You can also run it from Program add-ons to trigger the automatic process for new or all items, or items old
 enough to need an update; a currently running process can also be canceled here. Some other
 actions are available here. To operate on a single
 media item, open the context menu on that item, then under &ldquo;Manage&hellip;&rdquo; there are options
-to automatically &ldquo;Add missing artwork&rdquo; or manually &ldquo;Select artwork&hellip;&rdquo;. &ldquo;Add missing artwork&rdquo;
-will also check the file system for changed files.</p>
+&ldquo;AB: Add missing artwork&rdquo; which processes the single item like the automatic process, checking for
+new local files and searching the web services for any missing art; and &ldquo;AB: Select artwork&hellip;&rdquo; to
+manually select new artwork.</p>
 
 <p><strong>Episode fanart</strong> requires using a scraper that grabs the TheTVDB ID for each episode, like the
 standard TheTVDB scraper and The Movie Database <em>TV show</em> scraper, or an NFO manager that does the same.
 You must enable adding episode fanart manually for each series through the add-on settings, as they add a bundle of new
 API calls to The Movie Database and just aren&rsquo;t available for many series.</p>
-
-<p>Don&rsquo;t use Artwork Beef&rsquo;s automatic processing with Artwork Downloader&rsquo;s
-full library mode. The results won&rsquo;t be terrible, but they&rsquo;ll step all over each
-other and take up extra time and network resources.</p>
 
 <p>It generates a report of changes to
 <a href="http://kodi.wiki/view/Userdata">userdata</a>/addon_data/script.artwork.beef/artwork-report.txt.</p>

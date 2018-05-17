@@ -386,6 +386,7 @@ h1 .subtitle {
 <ul>
 <li><a href="#how-do-i-quick-start-this-thing">How do I quick-start this thing?</a></li>
 <li><a href="#why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</a></li>
+<li><a href="#images-from-web-services-are-not-visible">Images from web services are not visible.</a></li>
 <li><a href="#manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</a></li>
 <li><a href="#the-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</a></li>
 <li><a href="#where-do-i-put-my-api-keys-for-other-web-services">Where do I put my API keys for other web services?</a></li>
@@ -451,6 +452,11 @@ a media manager, avoiding web services for automatic processing?
 <li>Artwork Beef caches the previous image results from web services for 72 hours.</li>
 </ul>
 
+<h4 id="images-from-web-services-are-not-visible">Images from web services are not visible.</h4>
+
+<p>Most likely the web service is temporarily/intermittently unavailable. Try again later.
+Configuring Artwork Beef to download artwork to your local file system is probably a good idea.</p>
+
 <h4 id="manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</h4>
 
 <ul>
@@ -488,12 +494,10 @@ then refresh the item in Kodi.</li>
 
 <h4 id="the-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</h4>
 
-<ul>
-<li>The skin / web interface is pulling up the movie thumb and expecting the fallback poster,
+<p>The skin / web interface is pulling up the movie thumb and expecting the fallback poster,
 but it should instead pick the poster first and fall back to the thumb only if the poster
 doesn&rsquo;t exist. They are two different images for two different purposes and should be chosen
-based on the interface design.</li>
-</ul>
+based on the interface design.</p>
 
 <h4 id="where-do-i-put-my-api-keys-for-other-web-services">Where do I put my API keys for other web services?</h4>
 
@@ -508,13 +512,8 @@ by shitty stream pirate hack add-ons.</li>
 
 <h4 id="where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</h4>
 
-<ul>
-<li>No such option is available, Artwork Beef will not duplicate image files for this purpose.
-
-<ul>
-<li><a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/#grab-random-fanart-plus-any-other-info-from-items-in-any-library-path">Skins have other options</a> that don&rsquo;t require duplicating files.</li>
-</ul></li>
-</ul>
+<p>No such option is available, Artwork Beef will not duplicate image files for this purpose.
+<a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/#grab-random-fanart-plus-any-other-info-from-items-in-any-library-path">Skins have other options</a> that don&rsquo;t require duplicating files.</p>
 
 
 <footer class=" footline" >
