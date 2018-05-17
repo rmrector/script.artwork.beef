@@ -27,7 +27,7 @@
 		<setting id="tvshow.downloadartwork" label="32943" type="bool" default="false" />
 		<setting id="episode.downloadartwork" label="32944" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
-		<setting id="tvshow.poster" label="poster" type="bool" default="true" />
+		<setting id="tvshow.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
 		<setting id="tvshow.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
 		<setting id="tvshow.banner" label="banner" type="bool" default="true" />
 		<setting id="tvshow.clearlogo" label="clearlogo" type="bool" default="true" />
@@ -48,7 +48,7 @@
 		<setting id="movie.downloadartwork" label="32945" type="bool" default="false" />
 		<setting id="set.downloadartwork" label="32946" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
-		<setting id="movie.poster" label="poster" type="bool" default="true" />
+		<setting id="movie.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
 		<setting id="movie.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
 		<setting id="movie.banner" label="banner" type="bool" default="true" />
 		<setting id="movie.clearlogo" label="clearlogo" type="bool" default="true" />
@@ -56,7 +56,7 @@
 		<setting id="movie.clearart" label="clearart" type="bool" default="true" />
 		<setting id="movie.discart" label="discart" type="bool" default="true" />
 		<setting id="movie.othertypes" label="32957" type="text" default="animatedposter, animatedfanart" />
-		<setting id="set.poster" label="$LOCALIZE[20457] poster" type="bool" default="true" />
+		<setting id="set.poster_limit" label="$LOCALIZE[20457] poster" type="slider" option="int" default="1" range="0,1,10" />
 		<setting id="set.fanart_limit" label="$LOCALIZE[20457] fanart" type="slider" option="int" default="5" range="0,1,20" />
 		<setting id="set.banner" label="$LOCALIZE[20457] banner" type="bool" default="true" />
 		<setting id="set.clearlogo" label="$LOCALIZE[20457] clearlogo" type="bool" default="true" />

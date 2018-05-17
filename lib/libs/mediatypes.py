@@ -32,7 +32,7 @@ artinfo = {
     TVSHOW: {
         'poster': {
             'autolimit': 1,
-            'multiselect': False
+            'multiselect': True
         },
         'fanart': {
             'autolimit': 5,
@@ -62,7 +62,7 @@ artinfo = {
     MOVIE: {
         'poster': {
             'autolimit': 1,
-            'multiselect': False
+            'multiselect': True
         },
         'fanart': {
             'autolimit': 5,
@@ -92,7 +92,7 @@ artinfo = {
     MOVIESET: {
         'poster': {
             'autolimit': 1,
-            'multiselect': False
+            'multiselect': True
         },
         'fanart': {
             'autolimit': 5,
@@ -265,10 +265,12 @@ def generatethumb(mediatype):
 def update_settings():
     for settingid in arttype_settingskeys:
         splitsetting = re.split(r'\.|_', settingid)
+        thistype = artinfo[splitsetting[0]][splitsetting[1]]
         try:
-            artinfo[splitsetting[0]][splitsetting[1]]['autolimit'] = _get_autolimit_from_setting(settingid)
+            thistype['autolimit'], thistype['multiselect'] = _get_autolimit_from_setting(settingid)
         except ValueError:
-            addon.set_setting(settingid, artinfo[splitsetting[0]][splitsetting[1]]['autolimit'])
+            addon.set_setting(settingid, thistype['autolimit'])
+            addon.set_setting(settingid, thistype['multiselect'])
     for mediatype in artinfo:
         todownload[mediatype] = addon.get_setting(mediatype + '.downloadartwork')
         othertypes[mediatype] = [t.strip() for t in addon.get_setting(mediatype + '.othertypes').split(',')]
@@ -296,7 +298,8 @@ def update_settings():
 def _get_autolimit_from_setting(settingid):
     result = addon.get_setting(settingid)
     if settingid.endswith('_limit'):
-        return int(result)
-    return 1 if result else 0
+        result = int(result)
+        return result, result > 1
+    return (1 if result else 0), False
 
 update_settings()
