@@ -15,6 +15,8 @@ CANT_CONTACT_PROVIDER = 32034
 HTTP_ERROR = 32035
 CANT_WRITE_TO_FILE = 32037
 
+FILEERROR_LIMIT = 3
+
 TEMP_DIR = 'special://temp/recycledartwork/'
 
 typemap = {'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif'}
@@ -27,6 +29,7 @@ class FileManager(object):
         self.getter.session.headers['User-Agent'] = settings.useragent
         self.size = 0
         self.alreadycached = None
+        self.fileerror_count = 0
         self._build_imagecachebase()
 
     def _build_imagecachebase(self):
@@ -60,6 +63,8 @@ class FileManager(object):
             self.imagecachebase = None
 
     def downloadfor(self, mediaitem, allartwork=True):
+        if self.fileerror_count >= FILEERROR_LIMIT:
+            return False, ''
         if allartwork:
             nowart = dict(mediaitem.art)
             nowart.update(mediaitem.selectedart)
@@ -135,7 +140,9 @@ class FileManager(object):
             file_ = xbmcvfs.File(filename, 'wb')
             with closing(file_):
                 if not file_.write(result.content):
+                    self.fileerror_count += 1
                     raise FileError(L(CANT_WRITE_TO_FILE).format(filename))
+                self.fileerror_count = 0
             mediaitem.downloadedart[arttype] = filename
         return services_hit, error
 
