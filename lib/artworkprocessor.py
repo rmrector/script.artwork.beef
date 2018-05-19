@@ -305,7 +305,9 @@ class ArtworkProcessor(object):
             ismusic = mediatype in mediatypes.audiotypes
             if settings.cache_local_video_artwork and not ismusic or \
                     settings.cache_local_music_artwork and ismusic:
-                self.downloader.cachefor(mediaitem, False)
+                artmap = dict(mediaitem.art)
+                artmap.update(toset)
+                self.downloader.cachefor(artmap, False)
 
         if error:
             if 'message' in error:
