@@ -165,7 +165,7 @@ class FileManager(object):
                 recyclefile(old_url)
             xbmcvfs.delete(old_url)
 
-    def cachefor(self, mediaitem, multiplethreads=True):
+    def cachefor(self, artmap, multiplethreads=True):
         if not self.imagecachebase:
             return 0
         if self.alreadycached is None:
@@ -184,7 +184,7 @@ class FileManager(object):
             except ConnectionError:
                 pass # Kodi is closing
         threads = []
-        for path in mediaitem.art.itervalues():
+        for path in artmap.itervalues():
             if path.startswith(('http', 'image')) or path in self.alreadycached:
                 continue
             if multiplethreads:

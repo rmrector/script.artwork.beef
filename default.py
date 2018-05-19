@@ -158,7 +158,7 @@ def make_local():
 def cache_artwork(librarytype='videos'):
     fileman = FileManager()
     heading = L(M.CACHE_VIDEO_ARTWORK if librarytype == 'videos' else M.CACHE_MUSIC_ARTWORK)
-    cached = runon_medialist(fileman.cachefor, heading, librarytype, fg=True)
+    cached = runon_medialist(lambda mi: fileman.cachefor(mi.art), heading, librarytype, fg=True)
     xbmcgui.Dialog().ok("Artwork Beef", L(M.CACHED_COUNT).format(cached))
 
 def identify_unmatched(mediatype):
