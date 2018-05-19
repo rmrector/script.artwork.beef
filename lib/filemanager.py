@@ -200,12 +200,13 @@ class FileManager(object):
 def recyclefile(filename):
     firstdir = os.path.basename(os.path.dirname(filename))
     directory = TEMP_DIR
+    pathsep = utils.get_pathsep(directory)
     if firstdir in ('extrafanart', 'extrathumbs'):
-        directory += os.path.basename(os.path.dirname(os.path.dirname(filename))) + '/'
+        directory += os.path.basename(os.path.dirname(os.path.dirname(filename))) + pathsep
     directory += firstdir
     if not xbmcvfs.exists(directory):
         xbmcvfs.mkdirs(directory)
-    recycled_filename = directory + '/' + os.path.basename(filename)
+    recycled_filename = directory + pathsep + os.path.basename(filename)
     if not xbmcvfs.copy(filename, recycled_filename):
         raise FileError(L(CANT_WRITE_TO_FILE).format(recycled_filename))
 
