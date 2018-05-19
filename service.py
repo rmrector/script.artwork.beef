@@ -200,7 +200,7 @@ class ArtworkService(xbmc.Monitor):
                 if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label']))
         if not mediatypes.disabled(mediatypes.MUSICVIDEO):
             items.extend(info.MediaItem(mvid) for mvid in quickjson.get_item_list(mediatypes.MUSICVIDEO)
-                if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, info.musicvideo_label(mvid)))
+                if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, info.build_music_label(mvid)))
 
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
