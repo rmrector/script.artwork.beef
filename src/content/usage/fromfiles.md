@@ -24,12 +24,13 @@ without the base file name if you like, and options to save movie and music vide
 
 ## Artwork file naming conventions for the video library
 
-Artwork Beef will pick up any properly named artwork files next to your video files. It has two
+Artwork Beef will pick up artwork files next to your video files if they match the
+configured art types in add-on settings. It has two
 conventions for loading most artwork: `[media base file name]-[art type].[ext]` for movies,
 episodes, and music videos, and `[art type].[ext]` for TV shows and as a less specific alternative for
 movies and music videos within their own directories. This generally matches Kodi's file naming conventions.
 
-`[art type]` must be alphanumeric, lowercase, and no longer than 20 characters, but can
+`[art type]` must be alphanumeric and lowercase, but can
 otherwise be freely named. They should exactly match the name that skins can use to access
 them, and extra fanart are saved as `fanart1`, `fanart2`, and so on; the same goes for any
 other art type you want to save more than one of, though it requires a skin to actually support
@@ -79,16 +80,27 @@ A few specific examples
 ### Movie collection artwork
 
 Movie collection artwork can be pulled from a central directory (configured in the add-on settings)
-containing artwork named in a similar fashion to the second option above.
-Movie collections generally don't have an individual file nor folder they can call their own,
+containing artwork named in a similar fashion to both options above.
+Movie collections may not have a folder they can call their own,
 so instead use the set's name as the directory name.
 
 A few specific examples are
+
+- `... /[central movie set info directory]/Movie Collection Name-poster.jpg`
+- `... /[central movie set info directory]/Movie Collection Name-fanart.jpg`
+- `... /[central movie set info directory]/Movie Collection Name-fanart1.jpg`
+- `... /[central movie set info directory]/Movie Collection Name-clearlogo.png`
+
+or
 
 - `... /[central movie set info directory]/Movie Collection Name/poster.jpg`
 - `... /[central movie set info directory]/Movie Collection Name/fanart.jpg`
 - `... /[central movie set info directory]/Movie Collection Name/fanart1.jpg`
 - `... /[central movie set info directory]/Movie Collection Name/clearlogo.png`
+
+Artwork Beef can also be configured to pull collection artwork from a parent directory of movies,
+if that directory name exactly matches the cleaned collection name, with artwork
+named `[art type].[ext]`.
 
 ### Music artwork
 
@@ -112,7 +124,7 @@ other recordings), with the album / release MusicBrainz ID (not release group).
 
 For albums with multiple discs, you can add disc artwork as 'discart1.png' for disc 1, 'discart2.png'
 for disc 2, and so on. Multiple disc albums can also have their songs and discart stored in disc specific
-subfolders, but other artwork can stay in the top album folder (or not, works either way).
+subfolders, but other artwork can stay in the top album folder.
 
 Artwork Beef will also identify album and song artwork next to the song files if all songs for
 one album are in a single folder, and don't share that folder with songs from any other album.
@@ -123,13 +135,13 @@ to this directory if possible.
 ### File system safe names
 For music and movie set artwork, the file name is made from the title or name of items, which
 may not be safe for the file system with characters like `:?"/\<>*|`. Replace these characters
-with an underscore '_', and make sure file names do not end with a space or period.
-Artwork Beef will be more lenient in its matching to catch other styles,
-but those two simple rules should steer true.
+with an underscore '_', and remove spaces and periods from the end to match Kodi's file name cleaning.
+Artwork Beef will be more lenient in its matching to catch other styles.
 
 ### Legacy file names
 
 Artwork Beef will also identify several other filenames that are / have been used by other tools,
+such as Artwork Downloader and Movie Set Artwork Automator,
 in cases when they are different than the art type name skins use to access them.
 
 `logo.png` is added as clearlogo, `character.png` is added as characterart, `folder.jpg` to thumb,
