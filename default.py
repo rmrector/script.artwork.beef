@@ -50,6 +50,8 @@ class M(object):
     SONGS = 36921
 
 def main():
+    settings.update_settings()
+    mediatypes.update_settings()
     command = get_command()
     if command.get('dbid') and command.get('mediatype'):
         processor = ArtworkProcessor()

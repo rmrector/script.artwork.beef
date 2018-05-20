@@ -45,6 +45,8 @@ class ArtworkProcessor(object):
         self.downloader = None
         self.chunkcount = 1
         self.currentchunk = 1
+        settings.update_settings()
+        mediatypes.update_settings()
 
     def create_progress(self):
         if not self.visible and settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
