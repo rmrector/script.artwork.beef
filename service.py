@@ -339,12 +339,12 @@ def get_date():
 
 def include_any_episode():
     return not mediatypes.disabled(mediatypes.EPISODE) \
-        and (mediatypes.generatethumb(mediatypes.EPISODE) or mediatypes.downloadartwork(mediatypes.EPISODE) \
+        and (mediatypes.generatethumb(mediatypes.EPISODE) or mediatypes.downloadanyartwork(mediatypes.EPISODE) \
             or settings.autoadd_episodes)
 
 def include_episode(episode):
     return mediatypes.generatethumb(mediatypes.EPISODE) and not info.item_has_generated_thumbnail(episode) \
-        or mediatypes.downloadartwork(mediatypes.EPISODE) and info.has_art_todownload(episode.art)
+        or info.has_art_todownload(episode.art, mediatypes.EPISODE)
 
 def _buildsongs(albumgroup):
     result = {}

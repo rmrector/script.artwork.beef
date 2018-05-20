@@ -148,7 +148,7 @@ msgid "Actions"
 msgstr ""
 
 msgctxt "#32053"
-msgid "Automatically add these artwork types"
+msgid "Automatically add these artwork types from web services and file system"
 msgstr ""
 
 msgctxt "#32054"
@@ -167,6 +167,10 @@ msgstr ""
 
 msgctxt "#32060"
 msgid "Artist artwork will [I]only[/I] be processed in the 'Artist information folder'[CR]configured in Kodi settings under Media > Music"
+msgstr ""
+
+msgctxt "#32061"
+msgid "Download these artwork types to the local file system"
 msgstr ""
 
 # Actions
@@ -259,6 +263,10 @@ msgstr ""
 
 msgctxt "#32425"
 msgid "Preload local music library artwork to texture cache"
+msgstr ""
+
+msgctxt "#32426"
+msgid "Set to all configured above [I](save other changes first)[/I]"
 msgstr ""
 
 # Settings

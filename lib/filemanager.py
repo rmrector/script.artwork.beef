@@ -71,46 +71,13 @@ class FileManager(object):
         else:
             nowart = dict(mediaitem.selectedart)
         for arttype in list(nowart):
-            if not info.keep_arttype(mediaitem.mediatype, arttype, nowart[arttype]):
+            if not nowart[arttype] or not nowart[arttype].startswith('http') or \
+                    not mediatypes.downloadartwork(mediaitem.mediatype, arttype):
                 del nowart[arttype]
-        if not info.has_art_todownload(nowart):
+        if not nowart or not info.can_saveartwork(mediaitem):
             return False, ''
-        path = basefile = mediaitem.file if settings.albumartwithmediafiles \
-                and mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG) and mediaitem.file \
-            else info.find_central_infodir(mediaitem, True)
-        if basefile and mediaitem.mediatype in (mediatypes.EPISODE, mediatypes.SONG):
-            path = os.path.dirname(basefile) + utils.get_pathsep(basefile)
-        if not basefile:
-            if not mediaitem.file:
-                return False, ''
-            path = utils.get_movie_path_list(mediaitem.file)[0] \
-                if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
-            if path.startswith(blacklisted_protocols):
-                return False, ''
-            basefile = os.path.splitext(path)[0]
-            if remove_basename(mediaitem.mediatype):
-                path = basefile = os.path.dirname(basefile) + utils.get_pathsep(basefile)
-        services_hit = False
-        error = None
-        def st(num):
-            return '-specials' if num == 0 else '-all' if num == -1 else '{0:02d}'.format(num)
-        seasonpre = None if mediaitem.mediatype != mediatypes.SEASON else 'season{0}-'.format(st(mediaitem.season))
-        if save_extrafanart(mediaitem, nowart):
-            extrafanartdir = os.path.dirname(basefile) + utils.get_pathsep(basefile) \
-                if mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.MUSICVIDEO) else basefile
-            extrafanartdir += 'extrafanart' + utils.get_pathsep(basefile)
-            if not xbmcvfs.exists(extrafanartdir):
-                xbmcvfs.mkdir(extrafanartdir)
+        error = ''
         for arttype, url in nowart.iteritems():
-            if not url or not url.startswith('http'):
-                continue
-            if seasonpre:
-                type_for_file = seasonpre + arttype
-            elif arttype.startswith('season.'):
-                _, num, sarttype = arttype.split('.')
-                type_for_file = 'season{0}-{1}'.format(st(int(num)), sarttype)
-            else:
-                type_for_file = arttype
             result, err = self.doget(url)
             if err:
                 error = err
@@ -128,22 +95,22 @@ class FileManager(object):
                 if not re.search(r'\.\w*$', url):
                     continue
                 ext = url.rsplit('.', 1)[1]
-            if save_thisextrafanart(arttype, mediaitem.mediatype):
-                filename = extrafanartdir + type_for_file + '.' + ext
+            full_basefilepath = info.build_artwork_basepath(mediaitem, arttype) + '.' + ext
+            if xbmcvfs.exists(full_basefilepath) and settings.recycle_removed:
+                recyclefile(full_basefilepath)
             else:
-                sep = '' if basefile == path else '-'
-                filename = basefile + sep + type_for_file + '.' + ext
-            if xbmcvfs.exists(filename) and settings.recycle_removed:
-                recyclefile(filename)
+                folder = os.path.dirname(full_basefilepath)
+                if not xbmcvfs.exists(folder) and not xbmcvfs.mkdirs(folder):
+                    raise FileError(L(CANT_WRITE_TO_FILE).format(full_basefilepath))
             # For now this just downloads the whole thing in memory, then saves it to file.
             #  Maybe chunking it will be better when GIFs are handled
-            file_ = xbmcvfs.File(filename, 'wb')
+            file_ = xbmcvfs.File(full_basefilepath, 'wb')
             with closing(file_):
                 if not file_.write(result.content):
                     self.fileerror_count += 1
-                    raise FileError(L(CANT_WRITE_TO_FILE).format(filename))
+                    raise FileError(L(CANT_WRITE_TO_FILE).format(full_basefilepath))
                 self.fileerror_count = 0
-            mediaitem.downloadedart[arttype] = filename
+            mediaitem.downloadedart[arttype] = full_basefilepath
         return services_hit, error
 
     def doget(self, url, **kwargs):
@@ -216,21 +183,6 @@ def recyclefile(filename):
     recycled_filename = directory + pathsep + os.path.basename(filename)
     if not xbmcvfs.copy(filename, recycled_filename):
         raise FileError(L(CANT_WRITE_TO_FILE).format(recycled_filename))
-
-def save_extrafanart(mediaitem, allart):
-    return _saveextra_thistype(mediaitem.mediatype) \
-        and any(1 for art in allart if info.arttype_matches_base(art, 'fanart') and info.split_arttype(art)[1] > 0)
-
-def save_thisextrafanart(arttype, mediatype):
-    return _saveextra_thistype(mediatype) and info.arttype_matches_base(arttype, 'fanart') and info.split_arttype(arttype)[1] > 0
-
-def _saveextra_thistype(mediatype):
-    return settings.save_extrafanart and mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) \
-        or settings.save_extrafanart_mvids and mediatype == mediatypes.MUSICVIDEO
-
-def remove_basename(mediatype):
-    return mediatype == mediatypes.MOVIE and not settings.savewith_basefilename \
-    or mediatype == mediatypes.MUSICVIDEO and not settings.savewith_basefilename_mvids
 
 class FileError(Exception):
     def __init__(self, message, cause=None):

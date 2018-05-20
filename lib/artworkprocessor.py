@@ -132,13 +132,13 @@ class ArtworkProcessor(object):
             medialist = [mediaitem]
             if mediatype == mediatypes.TVSHOW and not mediatypes.disabled(mediatypes.EPISODE):
                 gen_epthumb = mediatypes.generatethumb(mediatypes.EPISODE)
-                download_ep = mediatypes.downloadartwork(mediatypes.EPISODE)
+                download_ep = mediatypes.downloadanyartwork(mediatypes.EPISODE)
                 if mediaitem.uniqueids and any(x in mediaitem.uniqueids.itervalues() for x in settings.autoadd_episodes):
                     medialist.extend(info.MediaItem(ep) for ep in quickjson.get_episodes(dbid))
                 elif gen_epthumb or download_ep:
                     for episode in quickjson.get_episodes(dbid):
                         if gen_epthumb and not info.has_generated_thumbnail(episode) \
-                        or download_ep and info.has_art_todownload(episode['art']):
+                        or download_ep and info.has_art_todownload(episode['art'], mediatypes.EPISODE):
                             episode = info.MediaItem(episode)
                             episode.skip_artwork = ['fanart']
                             medialist.append(episode)
@@ -182,7 +182,7 @@ class ArtworkProcessor(object):
                 toset = dict(selectedart)
                 if settings.remove_deselected_files:
                     self.downloader.remove_deselected_files(mediaitem)
-                if mediatypes.downloadartwork(mediaitem.mediatype):
+                if mediatypes.downloadanyartwork(mediaitem.mediatype):
                     try:
                         self.downloader.downloadfor(mediaitem, False)
                     except FileError as ex:
@@ -294,7 +294,7 @@ class ArtworkProcessor(object):
             selectedart = get_simpledict_updates(mediaitem.art, selectedart)
             mediaitem.selectedart = selectedart
             toset = dict(selectedart)
-            if mediatypes.downloadartwork(mediaitem.mediatype):
+            if mediatypes.downloadanyartwork(mediaitem.mediatype):
                 sh, er = self.downloader.downloadfor(mediaitem)
                 services_hit = services_hit or sh
                 if er:

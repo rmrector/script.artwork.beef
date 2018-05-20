@@ -61,6 +61,8 @@ def main():
             set_autoaddepisodes()
         elif command['command'] == 'show_artwork_log':
             show_artwork_log()
+        elif command['command'] == 'set_download_artwork' and command.get('mediatype'):
+            set_download_artwork(command['mediatype'])
     else:
         processor = ArtworkProcessor()
         if processor.processor_busy:
@@ -181,6 +183,14 @@ def identify_unmatched(mediatype):
             processor.process_item(mediatype, mediaitem.dbid, 'auto')
     else:
         xbmcgui.Dialog().notification("Artwork Beef", L(M.NO_UNMATCHED_ITEMS), xbmcgui.NOTIFICATION_INFO)
+
+def set_download_artwork(mediatype):
+    if mediatype not in mediatypes.artinfo:
+        return
+    log(mediatypes.artinfo[mediatype])
+    options = list((x for x, y in mediatypes.artinfo[mediatype].items() if y['autolimit']))
+    options.extend(mediatypes.othertypes[mediatype])
+    pykodi.get_main_addon().set_setting(mediatype + '.download_arttypes', ', '.join(options))
 
 def show_artwork_log():
     if pykodi.get_kodi_version() < 16:

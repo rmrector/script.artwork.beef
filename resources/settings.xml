@@ -24,8 +24,6 @@
 		<setting label="32919" type="action" action="RunScript(script.artwork.beef, command=show_artwork_log)" />
 	</category>
 	<category label="$LOCALIZE[20343]">
-		<setting id="tvshow.downloadartwork" label="32943" type="bool" default="false" />
-		<setting id="episode.downloadartwork" label="32944" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
 		<setting id="tvshow.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
 		<setting id="tvshow.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
@@ -43,10 +41,15 @@
 		<setting id="episode.fanart" label="$LOCALIZE[20359] fanart" type="bool" default="true" />
 		<setting label="32400" type="action" subsetting="true" action="RunScript(script.artwork.beef, command=set_autoaddepisodes)" visible="eq(-1,true)" />
 		<setting id="episode.othertypes" label="32956" type="text" />
+		<setting label="32061" type="lsep" />
+		<setting id="tvshow.download_arttypes" label="20343" type="text" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=tvshow)" />
+		<setting label="20373" id="season.download_arttypes" type="text" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=season)" />
+		<setting label="20359" id="episode.download_arttypes" type="text" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=episode)" />
 	</category>
 	<category label="$LOCALIZE[20342]">
-		<setting id="movie.downloadartwork" label="32945" type="bool" default="false" />
-		<setting id="set.downloadartwork" label="32946" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
 		<setting id="movie.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
 		<setting id="movie.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
@@ -64,9 +67,13 @@
 		<setting id="set.clearart" label="$LOCALIZE[20457] clearart" type="bool" default="true" />
 		<setting id="set.discart" label="$LOCALIZE[20457] discart" type="bool" default="true" />
 		<setting id="set.othertypes" label="32958" type="text" />
+		<setting label="32061" type="lsep" />
+		<setting id="movie.download_arttypes" label="20342" type="text" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=movie)" />
+		<setting id="set.download_arttypes" label="20457" type="text" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=set)" />
 	</category>
 	<category label="$LOCALIZE[20389]">
-		<setting id="musicvideo.downloadartwork" label="32947" type="bool" default="false" />
 		<setting label="32053" type="lsep" />
 		<setting id="musicvideo.poster" label="poster" type="bool" default="true" />
 		<setting id="musicvideo.fanart_limit" label="fanart" type="slider" option="int" default="3" range="0,1,20" />
@@ -77,15 +84,13 @@
 		<setting id="musicvideo.landscape" label="landscape" type="bool" default="true" />
 		<setting id="musicvideo.artistthumb" label="artistthumb" type="bool" default="true" />
 		<setting id="musicvideo.othertypes" label="32959" type="text" />
+		<setting label="32061" type="lsep" />
+		<setting id="musicvideo.download_arttypes" label="20389" type="text" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=musicvideo)" />
 	</category>
 	<category label="$LOCALIZE[2]">
-		<setting label="32060" type="lsep" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.downloadartwork" label="32948" type="bool" default="false"
-			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="album.downloadartwork" label="32949" type="bool" default="false"
-			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="song.downloadartwork" label="32950" type="bool" default="false"
-			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+		<setting label="32060" type="lsep" />
+		<setting label=" " type="text" enable="false" />
 		<setting label="32036" type="lsep"
 			visible="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
 		<setting label="32053" type="lsep"
@@ -104,6 +109,13 @@
 		<setting id="album.othertypes" label="32961" type="text" />
 		<setting id="song.thumb" label="$LOCALIZE[179] thumb" type="bool" default="false" />
 		<setting id="song.othertypes" label="32962" type="text" />
+		<setting label="32061" type="lsep" />
+		<setting id="artist.download_arttypes" label="557" type="text" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=artist)" />
+		<setting id="album.download_arttypes" label="558" type="text" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=album)" />
+		<setting id="song.download_arttypes" label="179" type="text" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=song)" />
 	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />
