@@ -36,6 +36,12 @@ artinfo = {
             'limit_setting': True,
             'download': False
         },
+        'keyart': {
+            'autolimit': 0,
+            'multiselect': False,
+            'limit_setting': True,
+            'download': False
+        },
         'fanart': {
             'autolimit': 5,
             'multiselect': True,
@@ -76,6 +82,12 @@ artinfo = {
             'limit_setting': True,
             'download': False
         },
+        'keyart': {
+            'autolimit': 0,
+            'multiselect': False,
+            'limit_setting': True,
+            'download': False
+        },
         'fanart': {
             'autolimit': 5,
             'multiselect': True,
@@ -111,6 +123,12 @@ artinfo = {
     MOVIESET: {
         'poster': {
             'autolimit': 1,
+            'multiselect': False,
+            'limit_setting': True,
+            'download': False
+        },
+        'keyart': {
+            'autolimit': 0,
             'multiselect': False,
             'limit_setting': True,
             'download': False

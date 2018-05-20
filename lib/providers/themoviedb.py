@@ -49,22 +49,21 @@ class TheMovieDBAbstractProvider(AbstractImageProvider):
     def process_data(self, data):
         result = {}
         for arttype, artlist in data.iteritems():
-            generaltype = self.artmap.get(arttype)
-            if not generaltype:
+            if arttype not in self.artmap:
                 continue
-            if artlist and generaltype not in result:
-                result[generaltype] = []
             previewbit = 'w300' if arttype in ('backdrops', 'stills') else 'w342'
             for image in artlist:
                 resultimage = {'url': self.baseurl + 'original' + image['file_path'], 'provider': self.name}
                 resultimage['preview'] = self.baseurl + previewbit + image['file_path']
-                if arttype == 'backdrops':
-                    resultimage['language'] = image['iso_639_1'] if image['iso_639_1'] != 'xx' else None
-                else:
-                    resultimage['language'] = image['iso_639_1']
+                resultimage['language'] = image['iso_639_1'] if image['iso_639_1'] != 'xx' else None
                 resultimage['rating'] = self._get_rating(image)
                 sortsize = image['width' if arttype != 'posters' else 'height']
                 resultimage['size'] = SortedDisplay(sortsize, '{0}x{1}'.format(image['width'], image['height']))
+                generaltype = self.artmap[arttype]
+                if generaltype == 'poster' and not resultimage['language']:
+                    generaltype = 'keyart'
+                if generaltype not in result:
+                    result[generaltype] = []
                 result[generaltype].append(resultimage)
         return result
 
@@ -75,7 +74,7 @@ class TheMovieDBMovieProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.MOVIE
 
     apiurl = 'https://api.themoviedb.org/3/movie/%s/images'
-    artmap = {'backdrops': 'fanart', 'posters': 'poster'}
+    artmap = {'backdrops': 'fanart', 'posters': 'poster', 'posters-alt': 'keyart'}
 
     def get_images(self, uniqueids, types=None):
         if types is not None and not self.provides(types):
@@ -131,7 +130,7 @@ class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.MOVIESET
 
     apiurl = 'https://api.themoviedb.org/3/collection/%s/images'
-    artmap = {'backdrops': 'fanart', 'posters': 'poster'}
+    artmap = {'backdrops': 'fanart', 'posters': 'poster', 'posters-alt': 'keyart'}
 
     def get_images(self, uniqueids, types=None):
         if types is not None and not self.provides(types):

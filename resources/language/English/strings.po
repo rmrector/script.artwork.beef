@@ -284,11 +284,11 @@ msgid "Do not automatically add artwork from web services, only identify local f
 msgstr ""
 
 msgctxt "#32901"
-msgid "Prefer fanart with no title"
+msgid "Prefer 'fanart' with no title"
 msgstr ""
 
 msgctxt "#32917"
-msgid "Prefer posters with no title"
+msgid "Prefer 'poster' with no title"
 msgstr ""
 
 msgctxt "#32902"

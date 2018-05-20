@@ -26,6 +26,7 @@
 	<category label="$LOCALIZE[20343]">
 		<setting label="32053" type="lsep" />
 		<setting id="tvshow.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
+		<setting id="tvshow.keyart_limit" label="keyart" type="slider" option="int" default="0" range="0,1,10" />
 		<setting id="tvshow.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
 		<setting id="tvshow.banner" label="banner" type="bool" default="true" />
 		<setting id="tvshow.clearlogo" label="clearlogo" type="bool" default="true" />
@@ -52,6 +53,7 @@
 	<category label="$LOCALIZE[20342]">
 		<setting label="32053" type="lsep" />
 		<setting id="movie.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
+		<setting id="movie.keyart_limit" label="keyart" type="slider" option="int" default="0" range="0,1,10" />
 		<setting id="movie.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
 		<setting id="movie.banner" label="banner" type="bool" default="true" />
 		<setting id="movie.clearlogo" label="clearlogo" type="bool" default="true" />
@@ -60,6 +62,7 @@
 		<setting id="movie.discart" label="discart" type="bool" default="true" />
 		<setting id="movie.othertypes" label="32957" type="text" default="animatedposter, animatedfanart" />
 		<setting id="set.poster_limit" label="$LOCALIZE[20457] poster" type="slider" option="int" default="1" range="0,1,10" />
+		<setting id="set.keyart_limit" label="keyart" type="slider" option="int" default="0" range="0,1,10" />
 		<setting id="set.fanart_limit" label="$LOCALIZE[20457] fanart" type="slider" option="int" default="5" range="0,1,20" />
 		<setting id="set.banner" label="$LOCALIZE[20457] banner" type="bool" default="true" />
 		<setting id="set.clearlogo" label="$LOCALIZE[20457] clearlogo" type="bool" default="true" />
