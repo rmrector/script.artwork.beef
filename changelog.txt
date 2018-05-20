@@ -1,3 +1,6 @@
+v0.19.2 (2018-05-20)
+- Fix: automatic caching of new local artwork during processing
+
 v0.19.1 (2018-05-15)
 - Fix: whitelist behavior with season artwork and generated thumbs
 
