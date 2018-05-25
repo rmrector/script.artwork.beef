@@ -3,7 +3,7 @@ from abc import ABCMeta
 
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
-from lib.libs.pykodi import json, UTF8JSONDecoder
+from lib.libs.pykodi import json, set_log_scrubstring, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 from lib.providers.base import AbstractProvider, AbstractImageProvider, cache
 from projectkeys import TMDB_PROJECTKEY as apikey
@@ -13,6 +13,10 @@ cfgurl = 'https://api.themoviedb.org/3/configuration'
 class TheMovieDBAbstractProvider(AbstractImageProvider):
     __metaclass__ = ABCMeta
     contenttype = 'application/json'
+
+    def __init__(self):
+        super(TheMovieDBAbstractProvider, self).__init__()
+        set_log_scrubstring('themoviedb-apikey', apikey)
 
     name = SortedDisplay('themoviedb.org', 'The Movie Database')
     _baseurl = None

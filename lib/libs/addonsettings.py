@@ -74,6 +74,8 @@ class Settings(object):
             self.minimum_size = AVAILABLE_IMAGESIZES[DEFAULT_IMAGESIZE][2]
             addon.set_setting('preferredsize', DEFAULT_IMAGESIZE)
 
+        pykodi.set_log_scrubstring('fanarttv-client-apikey', self.fanarttv_clientkey)
+
     @property
     def autoadd_episodes(self):
         return self._autoadd_episodes

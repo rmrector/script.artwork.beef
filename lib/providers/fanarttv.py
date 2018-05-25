@@ -6,7 +6,7 @@ from abc import ABCMeta, abstractmethod
 from lib.providers.base import AbstractImageProvider, cache
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
-from lib.libs.pykodi import json, UTF8JSONDecoder
+from lib.libs.pykodi import json, set_log_scrubstring, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 from projectkeys import FANARTTV_PROJECTKEY as apikey
 
@@ -15,6 +15,10 @@ class FanartTVAbstractProvider(AbstractImageProvider):
     api_section = None
     mediatype = None
     contenttype = 'application/json'
+
+    def __init__(self):
+        super(FanartTVAbstractProvider, self).__init__()
+        set_log_scrubstring('fanarttv-apikey', apikey)
 
     name = SortedDisplay('fanart.tv', 'fanart.tv')
     apiurl = 'https://webservice.fanart.tv/v3/%s/%s'

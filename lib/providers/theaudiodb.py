@@ -1,7 +1,7 @@
 import xbmc
 
 from lib.libs import mediatypes
-from lib.libs.pykodi import json, UTF8JSONDecoder
+from lib.libs.pykodi import json, set_log_scrubstring, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 from lib.providers.base import AbstractProvider, AbstractImageProvider, cache
 from projectkeys import TADB_PROJECTKEY as apikey
@@ -25,6 +25,10 @@ def provides(types):
 class TheAudioDBAbstractProvider(AbstractImageProvider):
     name = SortedDisplay('theaudiodb.com', 'TheAudioDB.com')
     contenttype = 'application/json'
+
+    def __init__(self):
+        super(TheAudioDBAbstractProvider, self).__init__()
+        set_log_scrubstring('theaudiodb-apikey', apikey)
 
     def get_data(self, url, params):
         result = cache.cacheFunction(self._get_data, url, params)
