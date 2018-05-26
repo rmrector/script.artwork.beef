@@ -15,10 +15,10 @@
 			visible="Skin.HasSetting(disablecontext:script.artwork.beef)" />
 		<setting label="32054" type="lsep" />
 		<setting id="titlefree_fanart" label="32901" type="bool" default="true" />
-		<setting id="titlefree_poster" label="32917" type="bool" default="false" />
 		<setting id="preferredsize" label="32902" type="labelenum" default="1920x1080" values="1920x1080|1280x720" />
 		<setting id="minimum_rating" label="32907" type="slider" option="int" default="5" range="0,1,10" />
 		<setting id="language_override" label="32913" type="select" default="None" values="None|en|fr|de|ja|zh|es|it|pt|sv|ru|nl|ar|ko|no|hu|da|hi|is|pl|he|bg|fi|ml" />
+		<setting id="titlefree_poster" label="32917" type="bool" default="false" />
 		<setting label="32052" type="lsep" />
 		<setting label="32919" type="action" action="RunScript(script.artwork.beef, command=show_artwork_log)" />
 	</category>
