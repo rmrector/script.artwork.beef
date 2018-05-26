@@ -45,6 +45,8 @@ class ArtworkProcessor(object):
         self.downloader = None
         self.chunkcount = 1
         self.currentchunk = 1
+        settings.update_settings()
+        mediatypes.update_settings()
 
     def create_progress(self):
         if not self.visible and settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
@@ -130,13 +132,13 @@ class ArtworkProcessor(object):
             medialist = [mediaitem]
             if mediatype == mediatypes.TVSHOW and not mediatypes.disabled(mediatypes.EPISODE):
                 gen_epthumb = mediatypes.generatethumb(mediatypes.EPISODE)
-                download_ep = mediatypes.downloadartwork(mediatypes.EPISODE)
+                download_ep = mediatypes.downloadanyartwork(mediatypes.EPISODE)
                 if mediaitem.uniqueids and any(x in mediaitem.uniqueids.itervalues() for x in settings.autoadd_episodes):
                     medialist.extend(info.MediaItem(ep) for ep in quickjson.get_episodes(dbid))
                 elif gen_epthumb or download_ep:
                     for episode in quickjson.get_episodes(dbid):
                         if gen_epthumb and not info.has_generated_thumbnail(episode) \
-                        or download_ep and info.has_art_todownload(episode['art']):
+                        or download_ep and info.has_art_todownload(episode['art'], mediatypes.EPISODE):
                             episode = info.MediaItem(episode)
                             episode.skip_artwork = ['fanart']
                             medialist.append(episode)
@@ -180,7 +182,7 @@ class ArtworkProcessor(object):
                 toset = dict(selectedart)
                 if settings.remove_deselected_files:
                     self.downloader.remove_deselected_files(mediaitem)
-                if mediatypes.downloadartwork(mediaitem.mediatype):
+                if mediatypes.downloadanyartwork(mediaitem.mediatype):
                     try:
                         self.downloader.downloadfor(mediaitem, False)
                     except FileError as ex:
@@ -292,7 +294,7 @@ class ArtworkProcessor(object):
             selectedart = get_simpledict_updates(mediaitem.art, selectedart)
             mediaitem.selectedart = selectedart
             toset = dict(selectedart)
-            if mediatypes.downloadartwork(mediaitem.mediatype):
+            if mediatypes.downloadanyartwork(mediaitem.mediatype):
                 sh, er = self.downloader.downloadfor(mediaitem)
                 services_hit = services_hit or sh
                 if er:
@@ -376,7 +378,8 @@ class ArtworkProcessor(object):
                         existingurls.append(url)
                         existingartnames.append(art)
 
-                newart = [art for art in availableart[missingart] if self._auto_filter(missingart, art, existingurls)]
+                newart = [art for art in availableart[missingart] if
+                    self._auto_filter(missingart, art, mediatype, availableart[missingart], existingurls)]
                 if not newart:
                     continue
                 newartcount = 0
@@ -390,17 +393,25 @@ class ArtworkProcessor(object):
                         newartwork[exacttype] = newart[newartcount]['url']
                         newartcount += 1
             else:
-                newart = next((art for art in availableart[missingart] if self._auto_filter(missingart, art)), None)
+                newart = next((art for art in availableart[missingart] if
+                    self._auto_filter(missingart, art, mediatype, availableart)), None)
                 if newart:
                     newartwork[missingart] = newart['url']
         return newartwork
 
-    def _auto_filter(self, arttype, art, ignoreurls=()):
+    def _auto_filter(self, basearttype, art, mediatype, availableart, ignoreurls=()):
         if art['rating'].sort < settings.minimum_rating:
             return False
-        if arttype.endswith('fanart') and art['size'].sort < settings.minimum_size:
+        if _skip_by_provider(availableart, mediatype, art['provider'][0]):
+            return False
+        if basearttype.endswith('fanart') and art['size'].sort < settings.minimum_size:
             return False
         return art['language'] in self.autolanguages and art['url'] not in ignoreurls
+
+def _skip_by_provider(availableart, mediatype, provider):
+    if not mediatypes.haspreferred_source(mediatype) or mediatypes.ispreferred_source(mediatype, provider):
+        return False
+    return any(1 for image in availableart if mediatypes.ispreferred_source(mediatype, image['provider'][0]))
 
 def add_art_to_library(mediatype, seasons, dbid, selectedart):
     if not selectedart:

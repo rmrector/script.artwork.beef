@@ -7,7 +7,7 @@ from lib.providers import base
 from lib.providers.base import AbstractImageProvider, cache
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
-from lib.libs.pykodi import json, UTF8JSONDecoder
+from lib.libs.pykodi import json, set_log_scrubstring, UTF8JSONDecoder
 from lib.providers import ProviderError
 from lib.libs.utils import SortedDisplay
 from projectkeys import THETVDB_PROJECTKEY as apikey
@@ -24,6 +24,10 @@ class TheTVDBProvider(AbstractImageProvider):
 
     artmap = {'fanart': 'fanart', 'poster': 'poster', 'season': mediatypes.SEASON + '.%s.poster',
         'seasonwide': mediatypes.SEASON + '.%s.banner', 'series': 'banner'}
+
+    def __init__(self):
+        super(TheTVDBProvider, self).__init__()
+        set_log_scrubstring('thetvdbv2-apikey', apikey)
 
     def get_data(self, mediaid, arttype, language):
         result = cache.cacheFunction(self._get_data, mediaid, arttype, language)

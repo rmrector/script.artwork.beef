@@ -6,7 +6,7 @@ from abc import ABCMeta, abstractmethod
 from lib.providers.base import AbstractImageProvider, cache
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
-from lib.libs.pykodi import json, UTF8JSONDecoder
+from lib.libs.pykodi import json, set_log_scrubstring, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 from projectkeys import FANARTTV_PROJECTKEY as apikey
 
@@ -15,6 +15,10 @@ class FanartTVAbstractProvider(AbstractImageProvider):
     api_section = None
     mediatype = None
     contenttype = 'application/json'
+
+    def __init__(self):
+        super(FanartTVAbstractProvider, self).__init__()
+        set_log_scrubstring('fanarttv-apikey', apikey)
 
     name = SortedDisplay('fanart.tv', 'fanart.tv')
     apiurl = 'https://webservice.fanart.tv/v3/%s/%s'
@@ -79,6 +83,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
         'clearart': 'clearart',
         'hdtvlogo': 'clearlogo',
         'tvposter': 'poster',
+        'tvposter-alt': 'keyart',
         'seasonthumb': mediatypes.SEASON + '.%s.landscape',
         'seasonbanner': mediatypes.SEASON + '.%s.banner',
         'seasonposter': mediatypes.SEASON + '.%s.poster',
@@ -88,17 +93,18 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
     def _get_images(self, data):
         result = {}
         for arttype, artlist in data.iteritems():
-            generaltype = self.artmap.get(arttype)
-            if not generaltype:
+            if arttype not in self.artmap:
                 continue
             for image in artlist:
-                itype = generaltype
+                generaltype = self.artmap[arttype]
                 isseasonimage = arttype in ('seasonthumb', 'seasonbanner', 'seasonposter')
                 seasonnum = self._get_seasonnum(image, data['name'], not isseasonimage)
                 if isseasonimage:
-                    itype = itype % seasonnum
-                if itype not in result:
-                    result[itype] = []
+                    generaltype = generaltype % seasonnum
+                if generaltype == 'poster' and not _get_imagelanguage(arttype, image):
+                    generaltype = 'keyart'
+                if generaltype not in result:
+                    result[generaltype] = []
                 url = urllib.quote(image['url'], safe="%/:=&?~#+!$,;'@()*[]")
                 resultimage = self.build_image(url, arttype, image, 3.0)
                 if arttype == 'showbackground' and seasonnum is not None:
@@ -109,7 +115,7 @@ class FanartTVSeriesProvider(FanartTVAbstractProvider):
                     if seasonfanarttype not in result:
                         result[seasonfanarttype] = []
                     result[seasonfanarttype].append(resultimage)
-                result[itype].append(resultimage)
+                result[generaltype].append(resultimage)
         return result
 
     def _get_seasonnum(self, image, itemname, ignoreall=False):
@@ -142,7 +148,8 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
         'moviebanner': 'banner',
         'moviethumb': 'landscape',
         'moviebackground': 'fanart',
-        'movieposter': 'poster'
+        'movieposter': 'poster',
+        'movieposter-alt': 'keyart'
     }
 
     disctitles = {'dvd': 'DVD', '3d': '3D', 'bluray': 'Blu-ray'}
@@ -150,12 +157,14 @@ class FanartTVMovieProvider(FanartTVAbstractProvider):
     def _get_images(self, data):
         result = {}
         for arttype, artlist in data.iteritems():
-            generaltype = self.artmap.get(arttype)
-            if not generaltype:
+            if arttype not in self.artmap:
                 continue
-            if artlist and generaltype not in result:
-                result[generaltype] = []
             for image in artlist:
+                generaltype = self.artmap[arttype]
+                if generaltype == 'poster' and not _get_imagelanguage(arttype, image):
+                    generaltype = 'keyart'
+                if artlist and generaltype not in result:
+                    result[generaltype] = []
                 url = urllib.quote(image['url'], safe="%/:=&?~#+!$,;'@()*[]")
                 resultimage = self.build_image(url, arttype, image)
                 if arttype == 'moviedisc':

@@ -200,7 +200,7 @@ class ArtworkService(xbmc.Monitor):
                 if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label']))
         if not mediatypes.disabled(mediatypes.MUSICVIDEO):
             items.extend(info.MediaItem(mvid) for mvid in quickjson.get_item_list(mediatypes.MUSICVIDEO)
-                if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, info.musicvideo_label(mvid)))
+                if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, info.build_music_label(mvid)))
 
         serieslist = quickjson.get_tvshows()
         if self.abortRequested():
@@ -339,12 +339,12 @@ def get_date():
 
 def include_any_episode():
     return not mediatypes.disabled(mediatypes.EPISODE) \
-        and (mediatypes.generatethumb(mediatypes.EPISODE) or mediatypes.downloadartwork(mediatypes.EPISODE) \
+        and (mediatypes.generatethumb(mediatypes.EPISODE) or mediatypes.downloadanyartwork(mediatypes.EPISODE) \
             or settings.autoadd_episodes)
 
 def include_episode(episode):
     return mediatypes.generatethumb(mediatypes.EPISODE) and not info.item_has_generated_thumbnail(episode) \
-        or mediatypes.downloadartwork(mediatypes.EPISODE) and info.has_art_todownload(episode.art)
+        or info.has_art_todownload(episode.art, mediatypes.EPISODE)
 
 def _buildsongs(albumgroup):
     result = {}

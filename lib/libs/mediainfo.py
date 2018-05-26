@@ -6,6 +6,7 @@ from functools import wraps
 
 from lib.libs import mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
+from lib.libs.mediatypes import _split_arttype as split_arttype
 from lib.libs.pykodi import log, unquoteimage, unquotearchive, localize as L
 
 CANT_FIND_MOVIESET = 32032
@@ -37,6 +38,7 @@ class MediaItem(object):
             self.tvshowid = jsondata['tvshowid']
             self.showtitle = jsondata['showtitle']
             self.season = jsondata['season']
+            self.label = self.showtitle + ' - ' + self.label
         if self.mediatype == mediatypes.EPISODE:
             self.episode = jsondata['episode']
         elif self.mediatype == mediatypes.TVSHOW:
@@ -46,10 +48,11 @@ class MediaItem(object):
             if mediatypes.central_directories[mediatypes.MOVIESET]:
                 self.file = mediatypes.central_directories[mediatypes.MOVIESET] + self.label + '.ext'
         elif self.mediatype == mediatypes.MUSICVIDEO:
-            self.label = musicvideo_label(jsondata)
+            self.label = build_music_label(jsondata)
         elif self.mediatype in mediatypes.audiotypes:
             if self.mediatype in (mediatypes.ALBUM, mediatypes.SONG):
                 self.albumid = jsondata['albumid']
+                self.label = build_music_label(jsondata)
             self.artistid = None if self.mediatype == mediatypes.ARTIST \
                 else jsondata['albumartistid'][0] if jsondata.get('albumartistid') \
                 else jsondata['artistid'][0] if jsondata.get('artistid') \
@@ -74,8 +77,8 @@ class MediaItem(object):
         self.error = None
         self.missingid = False
 
-def musicvideo_label(jsondata):
-    return jsondata['artist'][0] + ' - ' + jsondata['title'] if jsondata['artist'] else jsondata['title']
+def build_music_label(jsondata):
+    return jsondata['artist'][0] + ' - ' + jsondata['title'] if jsondata.get('artist') else jsondata['title']
 
 def is_known_mediatype(jsondata):
     return any(x[0] in jsondata for x in idmap)
@@ -90,8 +93,9 @@ def get_own_artwork(jsondata):
 def has_generated_thumbnail(jsondata):
     return jsondata['art'].get('thumb', '').startswith(pykodi.thumbnailimages)
 
-def has_art_todownload(artmap):
-    return next((True for url in artmap.values() if url and url.startswith('http')), False)
+def has_art_todownload(artmap, mediatype):
+    return next((True for arttype, url in artmap.items()
+        if url and url.startswith('http') and mediatypes.downloadartwork(mediatype, arttype)), False)
 
 def arttype_matches_base(arttype, basetype):
     return re.match(r'{0}\d*$'.format(basetype), arttype)
@@ -182,10 +186,6 @@ def keep_arttype(mediatype, arttype, arturl):
 
 def get_basetype(arttype):
     return arttype.rstrip('0123456789')
-
-def split_arttype(arttype):
-    indexsearch = re.compile(r'([0-9]+)$').search(arttype)
-    return get_basetype(arttype), int(indexsearch.group(1)) if indexsearch else 0
 
 def format_arttype(basetype, index):
     return "{0}{1}".format(basetype, index if index else '')
@@ -365,6 +365,67 @@ def _get_sourcemedia(mediapath):
     if re.search(r'\bdvd', mediapath) or mediapath.endswith('.ifo'):
         return 'dvd'
     return 'unknown'
+
+# REVIEW: there may be other protocols that just can't be written to
+blacklisted_protocols = ('plugin', 'http')
+
+def can_saveartwork(mediaitem):
+    if settings.albumartwithmediafiles and mediaitem.file \
+            and mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG):
+        return True
+    elif find_central_infodir(mediaitem, False):
+        return True
+    if not mediaitem.file:
+        return False
+    path = utils.get_movie_path_list(mediaitem.file)[0] \
+        if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
+    if path.startswith(blacklisted_protocols):
+        return False
+    return True
+
+def build_artwork_basepath(mediaitem, arttype):
+    if settings.albumartwithmediafiles and mediaitem.file \
+            and mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG):
+        path = os.path.splitext(mediaitem.file)[0]
+    else:
+        path = find_central_infodir(mediaitem, False)
+    if not path:
+        if not mediaitem.file:
+            return ''
+        path = utils.get_movie_path_list(mediaitem.file)[0] \
+            if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
+        if path.startswith(blacklisted_protocols):
+            return ''
+        path = os.path.splitext(path)[0]
+
+    sep = utils.get_pathsep(path)
+    path, basename = os.path.split(path)
+    path += sep
+    use_basefilename = mediaitem.mediatype in (mediatypes.EPISODE, mediatypes.SONG) \
+        or mediaitem.mediatype == mediatypes.MOVIE and settings.savewith_basefilename \
+        or mediaitem.mediatype == mediatypes.MUSICVIDEO and settings.savewith_basefilename_mvids
+    if _saveextrafanart(mediaitem.mediatype, arttype):
+        path += 'extrafanart' + sep
+    elif use_basefilename:
+        path += basename + '-'
+    def snum(num):
+        return '-specials' if num == 0 else '-all' if num == -1 else '{0:02d}'.format(num)
+    if mediaitem.mediatype == mediatypes.SEASON:
+        path += 'season{0}-{1}'.format(snum(mediaitem.season), arttype)
+    elif arttype.startswith('season.'):
+        _, num, sarttype = arttype.split('.')
+        path += 'season{0}-{1}'.format(snum(int(num)), sarttype)
+    else:
+        path += arttype
+    return path
+
+def _saveextrafanart(mediatype, arttype):
+    if not arttype_matches_base(arttype, 'fanart') or not split_arttype(arttype)[1]:
+        return False
+    if not mediatypes.downloadartwork(mediatype, 'fanart1'):
+        return False
+    return settings.save_extrafanart and mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) \
+        or settings.save_extrafanart_mvids and mediatype == mediatypes.MUSICVIDEO
 
 def find_central_infodir(mediaitem, create=False):
     fromtv = mediaitem.mediatype in (mediatypes.SEASON, mediatypes.EPISODE)

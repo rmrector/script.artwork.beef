@@ -2,8 +2,7 @@ import xbmc
 from abc import ABCMeta
 
 from lib.libs import mediatypes
-from lib.libs.addonsettings import settings
-from lib.libs.pykodi import json, UTF8JSONDecoder
+from lib.libs.pykodi import json, set_log_scrubstring, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 from lib.providers.base import AbstractProvider, AbstractImageProvider, cache
 from projectkeys import TMDB_PROJECTKEY as apikey
@@ -13,6 +12,10 @@ cfgurl = 'https://api.themoviedb.org/3/configuration'
 class TheMovieDBAbstractProvider(AbstractImageProvider):
     __metaclass__ = ABCMeta
     contenttype = 'application/json'
+
+    def __init__(self):
+        super(TheMovieDBAbstractProvider, self).__init__()
+        set_log_scrubstring('themoviedb-apikey', apikey)
 
     name = SortedDisplay('themoviedb.org', 'The Movie Database')
     _baseurl = None
@@ -28,14 +31,13 @@ class TheMovieDBAbstractProvider(AbstractImageProvider):
         return self._baseurl
 
     def _get_rating(self, image):
-        adds = 5 if settings.prefer_tmdbartwork else 0
         if image['vote_count']:
             # Reweigh ratings, increase difference from 5
             rating = image['vote_average']
             rating = 5 + (rating - 5) * 2
-            return SortedDisplay(rating + adds, '{0:.1f} stars'.format(image['vote_average']))
+            return SortedDisplay(rating, '{0:.1f} stars'.format(image['vote_average']))
         else:
-            return SortedDisplay(5 + adds, 'Not rated')
+            return SortedDisplay(5, 'Not rated')
 
     def get_data(self, url):
         result = cache.cacheFunction(self._get_data, url)
@@ -49,22 +51,21 @@ class TheMovieDBAbstractProvider(AbstractImageProvider):
     def process_data(self, data):
         result = {}
         for arttype, artlist in data.iteritems():
-            generaltype = self.artmap.get(arttype)
-            if not generaltype:
+            if arttype not in self.artmap:
                 continue
-            if artlist and generaltype not in result:
-                result[generaltype] = []
             previewbit = 'w300' if arttype in ('backdrops', 'stills') else 'w342'
             for image in artlist:
                 resultimage = {'url': self.baseurl + 'original' + image['file_path'], 'provider': self.name}
                 resultimage['preview'] = self.baseurl + previewbit + image['file_path']
-                if arttype == 'backdrops':
-                    resultimage['language'] = image['iso_639_1'] if image['iso_639_1'] != 'xx' else None
-                else:
-                    resultimage['language'] = image['iso_639_1']
+                resultimage['language'] = image['iso_639_1'] if image['iso_639_1'] != 'xx' else None
                 resultimage['rating'] = self._get_rating(image)
                 sortsize = image['width' if arttype != 'posters' else 'height']
                 resultimage['size'] = SortedDisplay(sortsize, '{0}x{1}'.format(image['width'], image['height']))
+                generaltype = self.artmap[arttype]
+                if generaltype == 'poster' and not resultimage['language']:
+                    generaltype = 'keyart'
+                if generaltype not in result:
+                    result[generaltype] = []
                 result[generaltype].append(resultimage)
         return result
 
@@ -75,7 +76,7 @@ class TheMovieDBMovieProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.MOVIE
 
     apiurl = 'https://api.themoviedb.org/3/movie/%s/images'
-    artmap = {'backdrops': 'fanart', 'posters': 'poster'}
+    artmap = {'backdrops': 'fanart', 'posters': 'poster', 'posters-alt': 'keyart'}
 
     def get_images(self, uniqueids, types=None):
         if types is not None and not self.provides(types):
@@ -131,7 +132,7 @@ class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
     mediatype = mediatypes.MOVIESET
 
     apiurl = 'https://api.themoviedb.org/3/collection/%s/images'
-    artmap = {'backdrops': 'fanart', 'posters': 'poster'}
+    artmap = {'backdrops': 'fanart', 'posters': 'poster', 'posters-alt': 'keyart'}
 
     def get_images(self, uniqueids, types=None):
         if types is not None and not self.provides(types):

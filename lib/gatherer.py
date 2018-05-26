@@ -32,8 +32,14 @@ class Gatherer(object):
             mediaitem.availableart, error = self.get_external_artwork(mediaitem.mediatype, mediaitem.seasons,
                 mediaitem.uniqueids)
             services_hit = True
+        # combine keyart to poster if keyart disabled or 'prefer titlefree poster' option enabled
+        if 'keyart' in mediaitem.availableart and (settings.titlefree_poster or
+                not mediatypes.get_artinfo(mediaitem.mediatype, 'keyart')['autolimit']):
+            if 'poster' not in mediaitem.availableart:
+                mediaitem.availableart['poster'] = []
+            mediaitem.availableart['poster'].extend(mediaitem.availableart['keyart'])
         for arttype, imagelist in mediaitem.availableart.iteritems():
-            _sort_images(arttype, imagelist, mediaitem.sourcemedia, self.language)
+            _sort_images(arttype, imagelist, mediaitem.sourcemedia, self.language, mediaitem.mediatype)
         return services_hit, error
 
     def get_forced_artwork(self, mediaitem, allowmutiple=False):
@@ -93,18 +99,23 @@ class Gatherer(object):
                 break
         return images, error
 
-
-def _sort_images(arttype, imagelist, mediasource, language):
+def _sort_images(basearttype, imagelist, mediasource, language, mediatype):
     # 1. Language, preferring fanart with no language/title if configured
     # 2. Match discart to media source
-    # 3. Size (in 200px groups), up to preferredsize
-    # 4. Rating
+    # 3. Preferred source
+    # 4. Size (in 200px groups), up to preferredsize
+    # 5. Rating
     imagelist.sort(key=lambda image: image['rating'].sort, reverse=True)
     imagelist.sort(key=_size_sort, reverse=True)
-    if arttype == 'discart':
+    if basearttype == 'discart':
         if mediasource != 'unknown':
             imagelist.sort(key=lambda image: 0 if image.get('subtype', SortedDisplay(None, '')).sort == mediasource else 1)
-    imagelist.sort(key=lambda image: _imagelanguage_sort(image, arttype, language))
+    imagelist.sort(key=lambda image: _preferredsource_sort(image, mediatype), reverse=True)
+    imagelist.sort(key=lambda image: _imagelanguage_sort(image, basearttype, language))
+
+def _preferredsource_sort(image, mediatype):
+    result = 1 if mediatypes.ispreferred_source(mediatype, image['provider'][0]) else 0
+    return result
 
 def _size_sort(image):
     imagesplit = image['size'].display.split('x')
@@ -122,11 +133,14 @@ def _size_sort(image):
         imagesize = imagesize[0] * shrink, settings.preferredsize[1]
     return max(imagesize) // 200
 
-def _imagelanguage_sort(image, arttype, language):
+def _imagelanguage_sort(image, basearttype, language):
     primarysort = 0 if image['language'] == language else 0.5 if image['language'] == 'en' else 1
 
-    if image['language'] and (arttype.endswith('fanart') and settings.titlefree_fanart or
-            arttype.endswith('poster') and settings.titlefree_poster):
-        primarysort += 1
+    if image['language']:
+        if basearttype.endswith('fanart') and settings.titlefree_fanart or \
+                basearttype.endswith('poster') and settings.titlefree_poster:
+            primarysort += 1
+    elif basearttype.endswith('poster') and not settings.titlefree_poster:
+        primarysort -= 1
 
     return primarysort, image['language']

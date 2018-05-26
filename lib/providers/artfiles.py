@@ -10,6 +10,8 @@ from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get
 ARTWORK_EXTS = ('.jpg', '.png', '.gif')
 ARTIST_INFOFOLDER_PROVIDER = SortedDisplay('file:art', 20223)
 
+ARTTYPE_MAXLENGTH = 30
+
 class ArtFilesAbstractProvider(object):
     __metaclass__ = ABCMeta
     # 13514 = Local art
@@ -80,7 +82,7 @@ class ArtFilesSeriesProvider(ArtFilesAbstractProvider):
                     continue
                 arttype = 'season.{0}.{1}'.format(number, arttype)
             else:
-                if not basefile.isalnum() or len(basefile) > 20:
+                if not basefile.isalnum() or len(basefile) > ARTTYPE_MAXLENGTH:
                     continue
                 arttype = basefile
                 if settings.identify_alternatives and arttype in self.alttypes.keys():
@@ -122,7 +124,7 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
                     if firstbit != check_moviebase:
                         continue
                     specific = True
-                if not imagefile.isalnum() or len(imagefile) > 20:
+                if not imagefile.isalnum() or len(imagefile) > ARTTYPE_MAXLENGTH:
                     continue
                 arttype = imagefile
                 if settings.identify_alternatives and arttype in self.alttypes.keys():
@@ -163,7 +165,7 @@ class ArtFilesMovieSetProvider(ArtFilesAbstractProvider):
                     if not filename.endswith(ARTWORK_EXTS):
                         continue
                     arttype = os.path.splitext(filename)[0]
-                    if not arttype.isalnum() or len(arttype) > 20:
+                    if not arttype.isalnum() or len(arttype) > ARTTYPE_MAXLENGTH:
                         continue
                     if settings.identify_alternatives and arttype in self.alttypes.keys():
                         arttype = self.alttypes[arttype]
@@ -184,7 +186,7 @@ class ArtFilesMovieSetProvider(ArtFilesAbstractProvider):
                     if not arttype.isalnum() or firstbit not in iter_possible_cleannames(check_inputbase):
                         continue
                 else: # parent of movie directory
-                    if not basefile.isalnum() or len(basefile) > 20:
+                    if not basefile.isalnum() or len(basefile) > ARTTYPE_MAXLENGTH:
                         continue
                     arttype = basefile
 
@@ -245,7 +247,7 @@ class ArtFilesMusicVideoProvider(ArtFilesAbstractProvider):
                 if firstbit != check_inputbase:
                     continue
                 specific = True
-            if not basefile.isalnum() or len(basefile) > 20:
+            if not basefile.isalnum() or len(basefile) > ARTTYPE_MAXLENGTH:
                 continue
             arttype = basefile
             if settings.identify_alternatives and arttype in self.alttypes.keys():
@@ -281,7 +283,7 @@ class ArtFilesArtistProvider(ArtFilesAbstractProvider):
             if not check_filename.endswith(ARTWORK_EXTS):
                 continue
             arttype = os.path.splitext(check_filename)[0]
-            if not arttype.isalnum() or len(arttype) > 20:
+            if not arttype.isalnum() or len(arttype) > ARTTYPE_MAXLENGTH:
                 continue
             if settings.identify_alternatives and arttype in self.alttypes.keys():
                 arttype = self.alttypes[arttype]
@@ -309,7 +311,7 @@ class ArtFilesAlbumProvider(ArtFilesArtistProvider):
                 if not check_filename.endswith(ARTWORK_EXTS):
                     continue
                 arttype = os.path.splitext(check_filename)[0]
-                if not arttype.isalnum() or len(arttype) > 20:
+                if not arttype.isalnum() or len(arttype) > ARTTYPE_MAXLENGTH:
                     continue
                 if settings.identify_alternatives and arttype in self.alttypes.keys():
                     arttype = self.alttypes[arttype]
@@ -325,7 +327,7 @@ class ArtFilesAlbumProvider(ArtFilesArtistProvider):
                 if not check_filename.endswith(ARTWORK_EXTS):
                     continue
                 arttype = os.path.splitext(check_filename)[0]
-                if not arttype.isalnum() or len(arttype) > 20:
+                if not arttype.isalnum() or len(arttype) > ARTTYPE_MAXLENGTH:
                     continue
                 if settings.identify_alternatives and arttype in self.alttypes.keys():
                     arttype = self.alttypes[arttype]
