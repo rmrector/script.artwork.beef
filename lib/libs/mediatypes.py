@@ -314,7 +314,7 @@ artinfo = {
 
 central_directories = {MOVIESET: False}
 togenerate = dict((mediatype, False) for mediatype in artinfo)
-preferred = dict((mediatype, False) for mediatype in artinfo)
+preferred = dict((mediatype, None) for mediatype in artinfo)
 othertypes = dict((mediatype, []) for mediatype in artinfo)
 download_arttypes = dict((mediatype, []) for mediatype in artinfo)
 arttype_settingskeys = [m[0] + '.' + art[0] + ('_limit' if art[1].get('limit_setting') else '')
