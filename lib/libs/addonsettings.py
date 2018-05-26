@@ -42,7 +42,6 @@ class Settings(object):
         self.report_peritem = addon.get_setting('report_peritem')
         self.fanarttv_clientkey = addon.get_setting('fanarttv_key')
         self.default_tvidsource = addon.get_setting('default_tvidsource')
-        self.prefer_tmdbartwork = addon.get_setting('prefer_tmdbartwork')
         self.progressdisplay = addon.get_setting('progress_display')
         self.final_notification = addon.get_setting('final_notification')
         self.save_extrafanart = addon.get_setting('save_extrafanart')

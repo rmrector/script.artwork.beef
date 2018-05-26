@@ -378,7 +378,8 @@ class ArtworkProcessor(object):
                         existingurls.append(url)
                         existingartnames.append(art)
 
-                newart = [art for art in availableart[missingart] if self._auto_filter(missingart, art, existingurls)]
+                newart = [art for art in availableart[missingart] if
+                    self._auto_filter(missingart, art, mediatype, availableart[missingart], existingurls)]
                 if not newart:
                     continue
                 newartcount = 0
@@ -392,17 +393,25 @@ class ArtworkProcessor(object):
                         newartwork[exacttype] = newart[newartcount]['url']
                         newartcount += 1
             else:
-                newart = next((art for art in availableart[missingart] if self._auto_filter(missingart, art)), None)
+                newart = next((art for art in availableart[missingart] if
+                    self._auto_filter(missingart, art, mediatype, availableart)), None)
                 if newart:
                     newartwork[missingart] = newart['url']
         return newartwork
 
-    def _auto_filter(self, arttype, art, ignoreurls=()):
+    def _auto_filter(self, basearttype, art, mediatype, availableart, ignoreurls=()):
         if art['rating'].sort < settings.minimum_rating:
             return False
-        if arttype.endswith('fanart') and art['size'].sort < settings.minimum_size:
+        if _skip_by_provider(availableart, mediatype, art['provider'][0]):
+            return False
+        if basearttype.endswith('fanart') and art['size'].sort < settings.minimum_size:
             return False
         return art['language'] in self.autolanguages and art['url'] not in ignoreurls
+
+def _skip_by_provider(availableart, mediatype, provider):
+    if not mediatypes.haspreferred_source(mediatype) or mediatypes.ispreferred_source(mediatype, provider):
+        return False
+    return any(1 for image in availableart if mediatypes.ispreferred_source(mediatype, image['provider'][0]))
 
 def add_art_to_library(mediatype, seasons, dbid, selectedart):
     if not selectedart:

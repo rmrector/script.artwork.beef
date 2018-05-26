@@ -19,11 +19,11 @@
 		<setting id="preferredsize" label="32902" type="labelenum" default="1920x1080" values="1920x1080|1280x720" />
 		<setting id="minimum_rating" label="32907" type="slider" option="int" default="5" range="0,1,10" />
 		<setting id="language_override" label="32913" type="select" default="None" values="None|en|fr|de|ja|zh|es|it|pt|sv|ru|nl|ar|ko|no|hu|da|hi|is|pl|he|bg|fi|ml" />
-		<setting id="prefer_tmdbartwork" label="32921" type="bool" default="false" />
 		<setting label="32052" type="lsep" />
 		<setting label="32919" type="action" action="RunScript(script.artwork.beef, command=show_artwork_log)" />
 	</category>
 	<category label="$LOCALIZE[20343]">
+		<setting id="preferredsource_tvshows" label="32963" type="select" default="0" lvalues="20395|32796|32798" />
 		<setting label="32053" type="lsep" />
 		<setting id="tvshow.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
 		<setting id="tvshow.keyart_limit" label="keyart" type="slider" option="int" default="0" range="0,1,10" />
@@ -51,6 +51,7 @@
 		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=episode)" />
 	</category>
 	<category label="$LOCALIZE[20342]">
+		<setting id="preferredsource_movies" label="32963" type="select" default="0" lvalues="20395|32796|32797" />
 		<setting label="32053" type="lsep" />
 		<setting id="movie.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
 		<setting id="movie.keyart_limit" label="keyart" type="slider" option="int" default="0" range="0,1,10" />
@@ -77,6 +78,7 @@
 		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=set)" />
 	</category>
 	<category label="$LOCALIZE[20389]">
+		<setting id="preferredsource_musicvideos" label="32963" type="select" default="0" lvalues="20395|32796|32799" />
 		<setting label="32053" type="lsep" />
 		<setting id="musicvideo.poster" label="poster" type="bool" default="true" />
 		<setting id="musicvideo.fanart_limit" label="fanart" type="slider" option="int" default="3" range="0,1,20" />
@@ -92,6 +94,7 @@
 		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=musicvideo)" />
 	</category>
 	<category label="$LOCALIZE[2]">
+		<setting id="preferredsource_music" label="32963" type="select" default="0" lvalues="20395|32796|32799" />
 		<setting label="32060" type="lsep" />
 		<setting label=" " type="text" enable="false" />
 		<setting label="32036" type="lsep"

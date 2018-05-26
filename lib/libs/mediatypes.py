@@ -14,6 +14,12 @@ SONG = 'song'
 audiotypes = (ARTIST, ALBUM, SONG)
 require_manualid = (MOVIESET, MUSICVIDEO)
 
+PREFERRED_SOURCE_SHARED = {'0': None, '1': 'fanart.tv'}
+PREFERRED_SOURCE_MEDIA = {'tvshows': ('thetvdb.com', (TVSHOW, SEASON, EPISODE)),
+    'movies': ('themoviedb.org', (MOVIE, MOVIESET)),
+    'music': ('theaudiodb.com', audiotypes),
+    'musicvideos': ('theaudiodb.com', (MUSICVIDEO,))}
+
 addon = pykodi.get_main_addon()
 
 def get_artinfo(mediatype, arttype):
@@ -308,6 +314,7 @@ artinfo = {
 
 central_directories = {MOVIESET: False}
 togenerate = dict((mediatype, False) for mediatype in artinfo)
+preferred = dict((mediatype, False) for mediatype in artinfo)
 othertypes = dict((mediatype, []) for mediatype in artinfo)
 download_arttypes = dict((mediatype, []) for mediatype in artinfo)
 arttype_settingskeys = [m[0] + '.' + art[0] + ('_limit' if art[1].get('limit_setting') else '')
@@ -351,6 +358,12 @@ def _split_arttype(arttype):
 def generatethumb(mediatype):
     return togenerate.get(mediatype, False)
 
+def haspreferred_source(mediatype):
+    return bool(preferred.get(mediatype))
+
+def ispreferred_source(mediatype, provider):
+    return provider == preferred.get(mediatype, '')
+
 def update_settings():
     for settingid in arttype_settingskeys:
         splitsetting = re.split(r'\.|_', settingid)
@@ -388,6 +401,22 @@ def update_settings():
             central_directories[mediatype] = addon.get_setting('centraldir.{0}_dir'.format(mediatype))
     for mediatype in (EPISODE, MOVIE, MUSICVIDEO):
         togenerate[mediatype] = addon.get_setting('{0}.thumb_generate'.format(mediatype))
+
+    old_prefer_tmdb = addon.get_setting('prefer_tmdbartwork')
+    if old_prefer_tmdb != '':
+        # DEPRECATED: 2018-05-25
+        if old_prefer_tmdb:
+            addon.set_setting('preferredsource_movies', '2')
+        addon.set_setting('prefer_tmdbartwork', '')
+    for media, config in PREFERRED_SOURCE_MEDIA.items():
+        result = addon.get_setting('preferredsource_' + media)
+        for mediatype in config[1]:
+            if result in ('0', '1', '2'):
+                preferred[mediatype] = PREFERRED_SOURCE_SHARED[result] if \
+                    result in PREFERRED_SOURCE_SHARED else PREFERRED_SOURCE_MEDIA.get(media, (None,))[0]
+            else:
+                preferred[mediatype] = None
+                addon.set_setting('preferredsource_' + media, '0')
 
 def _get_autolimit_from_setting(settingid):
     result = addon.get_setting(settingid)
