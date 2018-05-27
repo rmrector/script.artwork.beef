@@ -13,8 +13,8 @@ msgctxt "#32001"
 msgid "Something missing?"
 msgstr "Quelque chose manque ?"
 
-msgctxt "#32002"
 # 0 = art type (poster/fanart/banner/etc)
+msgctxt "#32002"
 msgid "Season {0}"
 msgstr "Saison {0}"
 
@@ -39,7 +39,6 @@ msgid "artwork report"
 msgstr "Rapport des artworks"
 
 # Messages
-
 msgctxt "#32019"
 msgid "Contribute or donate to the source: fanart.tv, thetvdb.com, themoviedb.org, theaudiodb.com"
 msgstr "Contribuez ou faites un don aux sites : fanart.tv, thetvdb.com, themoviedb.org, theaudiodb.com"
@@ -68,8 +67,8 @@ msgctxt "#32025"
 msgid "Media type '{0}' not supported"
 msgstr "Le type '{0}' du média n'est pas supporté"
 
-msgctxt "#32026"
 # 0 = version of Kodi - "Kodi 16"
+msgctxt "#32026"
 msgid "{0} or newer required"
 msgstr "{0} ou plus récent requis"
 
@@ -119,15 +118,18 @@ msgctxt "#32037"
 msgid "Could not save image to file: {0}"
 msgstr "Impossible d'enregistrer l'image : {0}"
 
-# Headings
+msgctxt "#32038"
+msgid "{0:d} artwork cached"
+msgstr "{0:d} artworks mis en cache"
 
+# Headings
 # 0: media title
 msgctxt "#32050"
 msgid "Choose art type for {0}"
 msgstr "Choisir un type d'artwork pour {0}"
 
-msgctxt "#32051"
 # 0: art type (poster/fanart/etc), 1: media title
+msgctxt "#32051"
 msgid "Choose {0} for {1}"
 msgstr "{0} pour {1}"
 
@@ -144,15 +146,14 @@ msgid "Actions"
 msgstr "Actions"
 
 msgctxt "#32053"
-msgid "Automatically add these artwork types from web services"
-msgstr "Ajouter automatiquement ces types d'artworks à partir des services Web"
+msgid "Automatically add these artwork types from web services and file system"
+msgstr "Ajouter automatiquement ces types d'artworks à partir des services Web et du système de fichiers"
 
 msgctxt "#32054"
 msgid "Sorting and auto filters"
 msgstr "Tri et filtres automatiques"
 
 # 32055 retired 2017-12-15
-
 msgctxt "#32058"
 msgid "Enter the artist and track name"
 msgstr "Entrer le nom de l'artiste et de la chanson"
@@ -165,8 +166,11 @@ msgctxt "#32060"
 msgid "Artist artwork will [I]only[/I] be processed in the 'Artist information folder'[CR]configured in Kodi settings under Media > Music"
 msgstr "Les artworks des artistes seront [I]seulement[/I] traités dans le 'dossier des informations des artistes' configuré dans les paramètres de Kodi dans Médias > Musiques"
 
-# Actions
+msgctxt "#32061"
+msgid "Download these artwork types to the local file system"
+msgstr "Télécharger ces types d’artworks sur le système de fichiers local"
 
+# Actions
 msgctxt "#32400"
 msgid "Select series for episode 'fanart'..."
 msgstr "Sélectionner les séries TV pour les fanarts des épisodes..."
@@ -184,7 +188,6 @@ msgid "stop current process"
 msgstr "Arrêter le processus en cours"
 
 # 32404, 32405, 32406, 32407 retired 2017-12-15
-
 msgctxt "#32408"
 msgid "identify unmatched movie sets with TMDb ..."
 msgstr "Identifier les sagas de films non trouvées avec TheMovieDB"
@@ -210,8 +213,8 @@ msgid "Enable Artwork Beef context items [I](per skin)[/I]"
 msgstr "Activer les éléments de Artwork Beef sur le menu contextuel (par thème)"
 
 msgctxt "#32414"
-msgid "Remove specific type of artwork for ..."
-msgstr "Supprimer un type spécifique d'artworks pour ..."
+msgid "Remove artwork for media type ..."
+msgstr "Supprimer les artworks pour le type de média ..."
 
 msgctxt "#32415"
 msgid "identify unmatched music videos with TheAudioDB ..."
@@ -219,7 +222,7 @@ msgstr "Identifier les clips vidéos non trouvées avec TheAudioDB"
 
 msgctxt "#32416"
 msgid "add missing artwork for ..."
-msgstr "Ajouter les artworks manquants pour …"
+msgstr "Ajouter les artworks manquants pour ..."
 
 msgctxt "#32417"
 msgid "new videos"
@@ -246,11 +249,22 @@ msgid "all music (new, old, and all in between)"
 msgstr "Toutes les musiques (nouvelles, anciennes et intermédiaires)"
 
 msgctxt "#32423"
-msgid "Download existing remote images"
-msgstr "Télécharger les images distantes existantes"
+msgid "Download existing remote images in the video library"
+msgstr "Télécharger les images distantes existantes dans la bibliothèque vidéo"
+
+msgctxt "#32424"
+msgid "Preload local video library artwork to texture cache"
+msgstr "Précharger les artworks de la bibliothèque vidéo locale dans le cache des textures"
+
+msgctxt "#32425"
+msgid "Preload local music library artwork to texture cache"
+msgstr "Précharger les artworks de la bibliothèque musique locale dans le cache des textures"
+
+msgctxt "#32426"
+msgid "Set to all configured above [I](save other changes first)[/I]"
+msgstr "Appliquer tous les paramètres configurés ci-dessus [I](enregistrez d'abord les autres modifications)[/I]"
 
 # Settings
-
 msgctxt "#32900"
 msgid "Add artwork for new videos after library updates"
 msgstr "Ajouter les artworks pour les nouvelles vidéos après la mise à jour de la bibliothèque"
@@ -261,15 +275,15 @@ msgstr "Mettre à jour quotidiennement les artworks pour les anciens éléments"
 
 msgctxt "#32904"
 msgid "Do not automatically add artwork from web services, only identify local files"
-msgstr "Ne pas ajouter les artworks automatiquement à partir des services web, identifier seulement les fichiers locaux"
+msgstr "Ne pas ajouter les artworks automatiquement à partir des services Web, identifier seulement les fichiers locaux"
 
 msgctxt "#32901"
-msgid "Prefer fanart with no title"
-msgstr "Préférer les fanarts sans titre"
+msgid "Prefer 'fanart' with no title"
+msgstr "Préférer les 'fanart' sans titre"
 
 msgctxt "#32917"
-msgid "Prefer posters with no title"
-msgstr "Préférer les posters sans titre"
+msgid "Prefer 'poster' with no title"
+msgstr "Préférer les 'poster' sans titre"
 
 msgctxt "#32902"
 msgid "Preferred artwork size"
@@ -296,7 +310,6 @@ msgid "Identify alternate Artwork Downloader and MSAA artwork file names"
 msgstr "Identifier les noms de fichiers d'artworks de Artwork Downloader et de Movie Set Artwork Automator"
 
 # 32908 retired 2017-12-15
-
 msgctxt "#32909"
 msgid "process movie set artwork in a central info directory"
 msgstr "Traiter les artworks des sagas de films dans un répertoire centralisé"
@@ -326,8 +339,8 @@ msgid "TV show scraper (if ID source is unknown)"
 msgstr "Fournisseur d'informations des séries TV (si l'ID source est inconnu)"
 
 msgctxt "#32919"
-msgid "Show latest artwork log"
-msgstr "Afficher le dernier journal"
+msgid "Show latest artwork report"
+msgstr "Afficher le dernier rapport des artworks"
 
 msgctxt "#32920"
 msgid "Replace music video 'thumb' with Kodi generated thumb"
@@ -342,7 +355,6 @@ msgid "Add artwork for new music after library updates"
 msgstr "Ajouter les artworks pour les nouvelles musiques après la mise à jour de la bibliothèque"
 
 # 32923 retired 2018-02-23
-
 msgctxt "#32924"
 msgid "Progress display for automatic processing"
 msgstr "Affichage de la progression pour le traitement automatique"
@@ -357,11 +369,11 @@ msgstr "Juste les avertissements et les erreurs"
 
 msgctxt "#32927"
 msgid "only add-on crashes"
-msgstr "Uniquement les crashs de l’extension"
+msgstr "Uniquement les crashs de l'extension"
 
 msgctxt "#32928"
 msgid "Show final artwork update count notification"
-msgstr "Afficher la notification du nombre de téléchargement d’artworks"
+msgstr "Afficher la notification du nombre de téléchargement d'artworks"
 
 msgctxt "#32929"
 msgid "Save additional movie and TV show fanart to 'extrafanart' directory instead"
@@ -374,38 +386,6 @@ msgstr "Enregistrer les fanarts supplémentaires des clips vidéos dans un répe
 msgctxt "#32931"
 msgid "Recycle deleted and replaced artwork files to temp/cache directory"
 msgstr "Recycler les artworks supprimés et remplacés dans le répertoire temp/cache"
-
-msgctxt "#32932"
-msgid "Disable all automatic processing for movies"
-msgstr "Désactiver tous les traitements automatiques pour les films"
-
-msgctxt "#32933"
-msgid "Disable all automatic processing for TV shows and seasons"
-msgstr "Désactiver tous les traitements automatiques pour les séries TV et les saisons"
-
-msgctxt "#32934"
-msgid "Disable all automatic processing for episodes"
-msgstr "Désactiver tous les traitements automatiques pour les épisodes"
-
-msgctxt "#32935"
-msgid "Disable all automatic processing for music videos"
-msgstr "Désactiver tous les traitements automatiques pour les clips vidéos"
-
-msgctxt "#32936"
-msgid "Disable all automatic processing for artists"
-msgstr "Désactiver tous les traitements automatiques pour les artistes"
-
-msgctxt "#32937"
-msgid "Disable all automatic processing for albums"
-msgstr "Désactiver tous les traitements automatiques pour les albums"
-
-msgctxt "#32938"
-msgid "Disable all automatic processing for songs"
-msgstr "Désactiver tous les traitements automatiques pour les chansons"
-
-msgctxt "#32939"
-msgid "Disable all automatic processing for movie sets"
-msgstr "Désactiver tous les traitements automatiques pour les sagas de films"
 
 msgctxt "#32940"
 msgid "Delete deselected artwork files"
@@ -455,19 +435,70 @@ msgctxt "#32951"
 msgid "Save album and song art with song files if possible"
 msgstr "Sauvegarder les artworks des albums et des chansons avec les fichiers des chansons si possible"
 
-# Used in the artwork report
+msgctxt "#32952"
+msgid "Automatically preload local video library artwork to Kodi texture cache"
+msgstr "Précharger automatiquement les artworks de bibliothèque vidéo locale dans le cache de textures de Kodi"
 
+msgctxt "#32953"
+msgid "Automatically preload local music library artwork to Kodi texture cache"
+msgstr "Précharger automatiquement les artworks de bibliothèque musique locale dans le cache de textures de Kodi"
+
+msgctxt "#32954"
+msgid "Additional art types for TV shows (comma separated)"
+msgstr "Types d'artworks supplémentaires pour les séries TV (séparés par des virgules)"
+
+msgctxt "#32955"
+msgid "Additional art types for TV seasons (comma separated)"
+msgstr "Types d'artworks supplémentaires pour les saisons (séparés par des virgules)"
+
+msgctxt "#32956"
+msgid "Additional art types for TV episodes (comma separated)"
+msgstr "Types d'artworks supplémentaires pour les épisodes (séparés par des virgules)"
+
+msgctxt "#32957"
+msgid "Additional art types for movies (comma separated)"
+msgstr "Types d'artworks supplémentaires pour les films (séparés par des virgules)"
+
+msgctxt "#32958"
+msgid "Additional art types for movie sets (comma separated)"
+msgstr "Types d'artworks supplémentaires pour les sagas de films (séparés par des virgules)"
+
+msgctxt "#32959"
+msgid "Additional art types for music videos (comma separated)"
+msgstr "Types d'artworks supplémentaires pour les clips vidéos (séparés par des virgules)"
+
+msgctxt "#32960"
+msgid "Additional art types for artists (comma separated)"
+msgstr "Types d'artworks supplémentaires pour les artistes (séparés par des virgules)"
+
+msgctxt "#32961"
+msgid "Additional art types for albums (comma separated)"
+msgstr "Types d'artworks supplémentaires pour les albums (séparés par des virgules)"
+
+msgctxt "#32962"
+msgid "Additional art types for songs (comma separated)"
+msgstr "Types d'artworks supplémentaires pour les chansons (séparés par des virgules)"
+
+msgctxt "#32963"
+msgid "Prefer artwork from specific web service"
+msgstr "Préférer les artworks provenant d'un service Web spécifique"
+
+msgctxt "#32964"
+msgid "Manually select multiple images for all media types"
+msgstr "Sélectionner manuellement plusieurs images pour tous les types de média"
+
+# Used in the artwork report
 msgctxt "#32800"
 msgid "Processing list automatically"
 msgstr "Traitement de la liste automatiquement"
 
-msgctxt "#32801"
 # 0 = label of media item
+msgctxt "#32801"
 msgid "Manually processing {0}"
 msgstr "Traitement manuel {0}"
 
-msgctxt "#32802"
 # 0 = label of media item
+msgctxt "#32802"
 msgid "Processing {0}"
 msgstr "Traitement {0}"
 
@@ -503,18 +534,18 @@ msgctxt "#32810"
 msgid "Not missing artwork, not looking for any"
 msgstr "Aucun artwork manquant"
 
-msgctxt "#32811"
 # 0 = comma separated list of missing artwork types
+msgctxt "#32811"
 msgid "Missing artwork: {0}"
 msgstr "Artwork(s) manquant(s) : {0}"
 
-msgctxt "#32812"
 # 0 = comma separated list of updated artwork types
+msgctxt "#32812"
 msgid "Updated artwork: {0}"
 msgstr "Artwork(s) mis à jour : {0}"
 
-msgctxt "#32813"
 # 0 = text of error message
+msgctxt "#32813"
 msgid "Encountered an error - {0}"
 msgstr "Erreur rencontrée - {0}"
 
@@ -522,11 +553,28 @@ msgctxt "#32814"
 msgid "Errors were encountered"
 msgstr "Des erreurs ont été rencontrées"
 
-msgctxt "#32815"
 # 0 = versions of Artwork Beef and Kodi
+msgctxt "#32815"
 msgid "Versions: {0}"
 msgstr "Versions : {0}"
 
 msgctxt "#32816"
 msgid "{0:d} artwork downloaded"
 msgstr "{0:d} artwork(s) téléchargé(s)"
+
+# Not translated, just need to reference by `msgctxt` as options to 32963
+msgctxt "#32796"
+msgid "Fanart.TV"
+msgstr "Fanart.TV"
+
+msgctxt "#32797"
+msgid "The Movie Database"
+msgstr "The Movie Database"
+
+msgctxt "#32798"
+msgid "TheTVDB.com"
+msgstr "TheTVDB.com"
+
+msgctxt "#32799"
+msgid "TheAudioDB.com"
+msgstr "TheAudioDB.com"
