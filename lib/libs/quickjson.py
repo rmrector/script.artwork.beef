@@ -12,9 +12,9 @@ typemap = {mediatypes.MOVIE: ('Movie', ['art', 'imdbnumber', 'file', 'premiered'
     mediatypes.MUSICVIDEO: ('MusicVideo', ['art', 'file', 'title', 'artist'], None),
     mediatypes.ARTIST: ('Artist', ['art', 'musicbrainzartistid'], None),
     mediatypes.ALBUM: ('Album', ['art', 'musicbrainzalbumid', 'musicbrainzreleasegroupid',
-        'musicbrainzalbumartistid', 'artist', 'artistid'], None),
+        'musicbrainzalbumartistid', 'artist', 'artistid', 'title'], None),
     mediatypes.SONG: ('Song', ['art', 'musicbrainztrackid', 'musicbrainzalbumartistid', 'album',
-        'albumartist', 'albumartistid', 'albumid', 'file', 'disc', 'artist'], None)}
+        'albumartist', 'albumartistid', 'albumid', 'file', 'disc', 'artist', 'title'], None)}
 
 def _needupgrade(mediatype):
     return mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) and get_kodi_version() < 17
