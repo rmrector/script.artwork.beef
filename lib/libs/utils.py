@@ -75,6 +75,12 @@ def iter_possible_cleannames(originalname, uniqueslug=None):
             cleaned += '_' + uniqueslug
         yield cleaned
         filenames.append(cleaned)
+    if originalname.endswith((' ', '.')) and not uniqueslug:
+        cleaned = originalname[:-1] + '_'
+        if cleaned not in filenames:
+            yield cleaned
+            filenames.append(cleaned)
+
     for char in replace_chars:
         if char in originalname:
             for filename in list(filenames):
