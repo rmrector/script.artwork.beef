@@ -315,6 +315,7 @@ artinfo = {
 central_directories = {MOVIESET: False}
 togenerate = dict((mediatype, False) for mediatype in artinfo)
 preferred = dict((mediatype, None) for mediatype in artinfo)
+onlyfs = dict((mediatype, False) for mediatype in artinfo)
 othertypes = dict((mediatype, []) for mediatype in artinfo)
 download_arttypes = dict((mediatype, []) for mediatype in artinfo)
 arttype_settingskeys = [m[0] + '.' + art[0] + ('_limit' if art[1].get('limit_setting') else '')
@@ -364,6 +365,9 @@ def haspreferred_source(mediatype):
 def ispreferred_source(mediatype, provider):
     return provider == preferred.get(mediatype, '')
 
+def only_filesystem(mediatype):
+    return onlyfs.get(mediatype, False)
+
 def update_settings():
     for settingid in arttype_settingskeys:
         splitsetting = re.split(r'\.|_', settingid)
@@ -408,6 +412,13 @@ def update_settings():
         if old_prefer_tmdb:
             addon.set_setting('preferredsource_movies', '2')
         addon.set_setting('prefer_tmdbartwork', '')
+    old_only_filesystem = addon.get_setting('only_filesystem')
+    if old_only_filesystem != '':
+        # DEPRECATED: 2018-05-26
+        if old_only_filesystem:
+            for media in PREFERRED_SOURCE_MEDIA:
+                addon.set_setting('onlyfilesystem_' + media, True)
+        addon.set_setting('only_filesystem', '')
     for media, config in PREFERRED_SOURCE_MEDIA.items():
         result = addon.get_setting('preferredsource_' + media)
         for mediatype in config[1]:
@@ -417,6 +428,7 @@ def update_settings():
             else:
                 preferred[mediatype] = None
                 addon.set_setting('preferredsource_' + media, '0')
+            onlyfs[mediatype] = addon.get_setting('onlyfs_' + media)
 
 def _get_autolimit_from_setting(settingid):
     result = addon.get_setting(settingid)

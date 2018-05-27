@@ -221,7 +221,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
     elif mediaitem.mediatype == mediatypes.MOVIESET:
         if not mediaitem.uniqueids.get('tmdb'):
             uniqueid = processed.get_data(mediaitem.dbid, mediaitem.mediatype, mediaitem.label)
-            if not uniqueid and not settings.only_filesystem:
+            if not uniqueid and not mediatypes.only_filesystem(mediaitem.mediatype):
                 searchresults = search.search(mediaitem.label, mediaitem.mediatype)
                 if searchresults:
                     for result in searchresults:
@@ -248,7 +248,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
             if newdata:
                 mb_t, mb_al, mb_ar = newdata.split('/')
                 mediaitem.uniqueids = {'mbtrack': mb_t, 'mbgroup': mb_al, 'mbartist': mb_ar}
-            elif not settings.only_filesystem:
+            elif not mediatypes.only_filesystem(mediaitem.mediatype):
                 results = search.search(mediaitem.label, mediatypes.MUSICVIDEO)
                 uq = results and results[0].get('uniqueids')
                 if uq and uq.get('mbtrack') and uq.get('mbgroup') and uq.get('mbartist'):

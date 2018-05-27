@@ -6,7 +6,6 @@
 			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
 		<setting id="enable_olditem_updates" subsetting="true" label="32912" type="bool"
 			default="true" visible="eq(-1,true) | eq(-2,true)" />
-		<setting id="only_filesystem" label="32904" type="bool" default="false" />
 		<setting id="remove_deselected_files" label="32940" type="bool" default="false" />
 		<setting id="recycle_removed" label="32931" type="bool" default="false" />
 		<setting label="32412" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)"
@@ -23,6 +22,7 @@
 		<setting label="32919" type="action" action="RunScript(script.artwork.beef, command=show_artwork_log)" />
 	</category>
 	<category label="$LOCALIZE[20343]">
+		<setting id="onlyfs_tvshows" label="32904" type="bool" default="false" />
 		<setting id="preferredsource_tvshows" label="32963" type="select" default="0" lvalues="20395|32796|32798" />
 		<setting label="32053" type="lsep" />
 		<setting id="tvshow.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
@@ -51,6 +51,7 @@
 		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=episode)" />
 	</category>
 	<category label="$LOCALIZE[20342]">
+		<setting id="onlyfs_movies" label="32904" type="bool" default="false" />
 		<setting id="preferredsource_movies" label="32963" type="select" default="0" lvalues="20395|32796|32797" />
 		<setting label="32053" type="lsep" />
 		<setting id="movie.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
@@ -78,6 +79,7 @@
 		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=set)" />
 	</category>
 	<category label="$LOCALIZE[20389]">
+		<setting id="onlyfs_musicvideos" label="32904" type="bool" default="false" />
 		<setting id="preferredsource_musicvideos" label="32963" type="select" default="0" lvalues="20395|32796|32799" />
 		<setting label="32053" type="lsep" />
 		<setting id="musicvideo.poster" label="poster" type="bool" default="true" />
@@ -94,9 +96,9 @@
 		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=musicvideo)" />
 	</category>
 	<category label="$LOCALIZE[2]">
-		<setting id="preferredsource_music" label="32963" type="select" default="0" lvalues="20395|32796|32799" />
 		<setting label="32060" type="lsep" />
-		<setting label=" " type="text" enable="false" />
+		<setting id="onlyfs_music" label="32904" type="bool" default="false" />
+		<setting id="preferredsource_music" label="32963" type="select" default="0" lvalues="20395|32796|32799" />
 		<setting label="32036" type="lsep"
 			visible="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
 		<setting label="32053" type="lsep"

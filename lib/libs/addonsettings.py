@@ -34,7 +34,6 @@ class Settings(object):
         self.enableservice = addon.get_setting('enableservice')
         self.enableservice_music = addon.get_setting('enableservice_music')
         self.enable_olditem_updates = addon.get_setting('enable_olditem_updates')
-        self.only_filesystem = addon.get_setting('only_filesystem')
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
         self.titlefree_poster = addon.get_setting('titlefree_poster')
         self.setartwork_fromparent = addon.get_setting('setartwork_fromparent')

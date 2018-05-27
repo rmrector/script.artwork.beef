@@ -83,7 +83,7 @@ class ArtworkProcessor(object):
 
     def init_run(self, show_progress=False, chunkcount=1):
         self.setlanguages()
-        self.gatherer = Gatherer(self.monitor, settings.only_filesystem, self.autolanguages)
+        self.gatherer = Gatherer(self.monitor, self.autolanguages)
         self.downloader = FileManager()
         self.freshstart = str(datetime_now() - timedelta(days=365))
         self.chunkcount = chunkcount
@@ -123,7 +123,7 @@ class ArtworkProcessor(object):
                 mediaitem.skip_artwork = ['fanart']
 
         info.add_additional_iteminfo(mediaitem, self.processed, search)
-        if not mediaitem.uniqueids and not settings.only_filesystem:
+        if not mediaitem.uniqueids and not mediatypes.only_filesystem(mediaitem.mediatype):
             if mediatype in mediatypes.require_manualid:
                 self.manual_id(mediaitem)
         if mode == MODE_GUI:
@@ -260,7 +260,7 @@ class ArtworkProcessor(object):
 
     def _process_item(self, mediaitem, singleitem=False, auto=True):
         mediatype = mediaitem.mediatype
-        if not mediaitem.uniqueids and not settings.only_filesystem:
+        if not mediaitem.uniqueids and not mediatypes.only_filesystem(mediaitem.mediatype):
             mediaitem.missingid = True
             if singleitem:
                 header = L(NO_IDS_MESSAGE)
@@ -328,7 +328,7 @@ class ArtworkProcessor(object):
         return services_hit
 
     def get_nextcheckdelay(self, mediaitem):
-        weeks = 4 if settings.only_filesystem \
+        weeks = 4 if mediatypes.only_filesystem(mediaitem.mediatype) \
             else 52 if mediaitem.missingid or not mediaitem.missingart \
             else 18 if mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) and \
                 mediaitem.premiered > self.freshstart \

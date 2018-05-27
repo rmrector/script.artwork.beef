@@ -10,9 +10,8 @@ MAX_ERRORS = 3
 TOO_MANY_ERRORS = 32031
 
 class Gatherer(object):
-    def __init__(self, monitor, only_filesystem, languages):
+    def __init__(self, monitor, languages):
         self.monitor = monitor
-        self.only_filesystem = only_filesystem
         providers.base.languages = [lang for lang in languages if lang]
         self.language = providers.base.languages[0]
         self.providererrors = {}
@@ -24,7 +23,8 @@ class Gatherer(object):
         existingtypes = [key for key, url in mediaitem.art.iteritems() if url]
         existingtypes.extend(mediaitem.forcedart.keys())
         if skipexisting:
-            if not self.only_filesystem and mediaitem.uniqueids and mediaitem.missingart:
+            if not mediatypes.only_filesystem(mediaitem.mediatype) and \
+                    mediaitem.uniqueids and mediaitem.missingart:
                 mediaitem.availableart, error = self.get_external_artwork(mediaitem.mediatype, mediaitem.seasons,
                     mediaitem.uniqueids, mediaitem.missingart)
                 services_hit = True
