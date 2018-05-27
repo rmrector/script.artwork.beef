@@ -1,3 +1,10 @@
+v0.20.0 (2018-05-26)
+- Feature: option for multiple 'poster' images
+- Feature: option for 'keyart' images (textless posters)
+- Feature: artwork to download configured by art type
+- Feature: more detailed options for adding "local only" artwork
+- Feature: more detailed options to prefer artwork from specific web service
+
 v0.19.2 (2018-05-20)
 - Fix: automatic caching of new local artwork during processing
 
