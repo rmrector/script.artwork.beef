@@ -369,6 +369,9 @@ def only_filesystem(mediatype):
     return onlyfs.get(mediatype, False)
 
 def update_settings():
+    always_multiple_selection = addon.get_setting('always_multiple_selection')
+    if not always_multiple_selection:
+        _set_allmulti(False)
     for settingid in arttype_settingskeys:
         splitsetting = re.split(r'\.|_', settingid)
         thistype = artinfo[splitsetting[0]][splitsetting[1]]
@@ -377,6 +380,8 @@ def update_settings():
         except ValueError:
             addon.set_setting(settingid, thistype['autolimit'])
             addon.set_setting(settingid, thistype['multiselect'])
+    if always_multiple_selection:
+        _set_allmulti(True)
     for mediatype in artinfo:
         olddownload = addon.get_setting(mediatype + '.downloadartwork')
         if olddownload != '':
@@ -436,5 +441,10 @@ def _get_autolimit_from_setting(settingid):
         result = int(result)
         return result, result > 1
     return (1 if result else 0), False
+
+def _set_allmulti(always_multi):
+    for typeinfo in artinfo.values():
+        for arttypeinfo in typeinfo.values():
+            arttypeinfo['multiselect'] = always_multi
 
 update_settings()

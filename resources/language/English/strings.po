@@ -493,6 +493,10 @@ msgctxt "#32963"
 msgid "Prefer artwork from specific web service"
 msgstr ""
 
+msgctxt "#32964"
+msgid "Manually select multiple images for all media types"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"
