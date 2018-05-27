@@ -11,13 +11,18 @@ weight: 2
 - If you haven't been managing **movie collection** artwork, Kodi sets posters and fanart to those of one of the movies
   in the collection. You may want to run Artwork Beef from Program Add-ons and remove all existing artwork from
   movie collections before running Artwork Beef's full process.
-- If you manage all of your artwork with **image files** and/or NFO files, the add-on setting
+- If you manage all of your artwork with **image files** and/or NFO files, the add-on settings for each media group
   "Do not automatically add artwork from web services, only identify local files" will prevent the add-on from
   querying the web services during automatic processing, saving time and network resources.
   - You may also want to disable "Update artwork for old items daily" if you don't frequently add
     new artwork for existing items in the library.
 - The options "Preload local ... artwork to texture cache" will preload processed item artwork
   to Kodi's texture cache to speed up initial browsing. It only works on artwork saved locally.
+- For art types with multiple multiple images, the options "Prefer artwork from specific web service"
+  will prevent Beef from adding artwork from other web services if any are found at the specified
+  web service, avoiding some duplicate images.
+- To disable _all_ automatic processing for a specific media type, disable all art type options
+  for that media type in the "Automatically add ..." section.
 - If you have multiple Kodi devices sharing a MySQL database, only enable the
   automatic processing on one of them.
 - For multiple Kodi devices with their own databases and you want Artwork Beef to download

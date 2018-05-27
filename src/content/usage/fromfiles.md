@@ -132,6 +132,9 @@ Song artwork organized this way must match the base name of the song file, rathe
 song name as when in the artist folder. There is also an option to save album and song artwork
 to this directory if possible.
 
+**Note:** Albums nested inside of artist folders in the _central directory_ may not be the best
+idea for the future, but that's what Artwork Beef does for now.
+
 ### File system safe names
 For music and movie set artwork, the file name is made from the title or name of items, which
 may not be safe for the file system with characters like `:?"/\<>*|`. Replace these characters
