@@ -193,6 +193,8 @@ class ArtworkProcessor(object):
                 if toset:
                     mediaitem.updatedart = toset.keys()
                     add_art_to_library(mediaitem.mediatype, mediaitem.seasons, mediaitem.dbid, toset)
+                self.cachelocal(mediaitem, toset)
+
                 reporting.report_item(mediaitem, True, True, self.downloader.size)
                 if not mediaitem.error:
                     notifycount(len(toset))
@@ -303,13 +305,7 @@ class ArtworkProcessor(object):
             if toset:
                 mediaitem.updatedart = list(set(mediaitem.updatedart + toset.keys()))
                 add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, toset)
-
-            ismusic = mediatype in mediatypes.audiotypes
-            if settings.cache_local_video_artwork and not ismusic or \
-                    settings.cache_local_music_artwork and ismusic:
-                artmap = dict(mediaitem.art)
-                artmap.update(toset)
-                self.downloader.cachefor(artmap, False)
+            self.cachelocal(mediaitem, toset)
 
         if error:
             if 'message' in error:
@@ -326,6 +322,14 @@ class ArtworkProcessor(object):
             if mediatype == mediatypes.TVSHOW:
                 self.processed.set_data(mediaitem.dbid, mediatype, mediaitem.label, mediaitem.season)
         return services_hit
+
+    def cachelocal(self, mediaitem, toset):
+        ismusic = mediaitem.mediatype in mediatypes.audiotypes
+        if settings.cache_local_video_artwork and not ismusic or \
+                settings.cache_local_music_artwork and ismusic:
+            artmap = dict(mediaitem.art)
+            artmap.update(toset)
+            self.downloader.cachefor(artmap, False)
 
     def get_nextcheckdelay(self, mediaitem):
         weeks = 4 if mediatypes.only_filesystem(mediaitem.mediatype) \
