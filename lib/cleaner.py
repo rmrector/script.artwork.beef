@@ -4,6 +4,9 @@ import xbmcvfs
 from lib.libs import pykodi, mediatypes, quickjson
 from lib.libs.mediainfo import iter_base_arttypes, fill_multiart, keep_arttype
 
+old_thetvdb_urls = ('http://www.thetvdb.com/banners/', 'http://thetvdb.com/banners/',
+    'https://thetvdb.com/banners/')
+
 def clean_artwork(mediaitem):
     updated_art = dict(_get_clean_art(*art) for art in mediaitem.art.iteritems())
     for basetype in iter_base_arttypes(updated_art.keys()):
@@ -19,9 +22,9 @@ def clean_artwork(mediaitem):
         # Remove local artwork if it is no longer available
         if url and not url.startswith(pykodi.notlocalimages) and not xbmcvfs.exists(url):
             updated_art[arttype] = None
-        elif url and url.startswith('http://www.thetvdb.com/banners/'):
-            # TheTVDB now has forced HTTPS
-            updated_art[arttype] = url.replace('http://www.thetvdb.com/banners/', 'https://www.thetvdb.com/banners/')
+        if url.startswith(old_thetvdb_urls):
+            # TheTVDB now has forced HTTPS, redirects to 'www'
+            updated_art[arttype] = 'https://www.thetvdb.com/banners/' + url[url.index('/banners/') + 20:]
             quickjson.remove_texture_byurl(url)
     return updated_art
 

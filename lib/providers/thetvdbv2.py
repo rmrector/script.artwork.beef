@@ -20,7 +20,7 @@ class TheTVDBProvider(AbstractImageProvider):
 
     apiurl = 'https://api.thetvdb.com/series/%s/images/query'
     loginurl = 'https://api.thetvdb.com/login'
-    imageurl_base = 'https://thetvdb.com/banners/'
+    imageurl_base = 'https://www.thetvdb.com/banners/'
 
     artmap = {'fanart': 'fanart', 'poster': 'poster', 'season': mediatypes.SEASON + '.%s.poster',
         'seasonwide': mediatypes.SEASON + '.%s.banner', 'series': 'banner'}
