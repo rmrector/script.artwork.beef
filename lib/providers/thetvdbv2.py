@@ -81,7 +81,7 @@ class TheTVDBProvider(AbstractImageProvider):
                             result[ntype] = []
                     resultimage = {'provider': self.name}
                     resultimage['url'] = self.imageurl_base + image['fileName']
-                    resultimage['preview'] = self.imageurl_base + image['thumbnail']
+                    resultimage['preview'] = self.imageurl_base + (image['thumbnail'] or '_cache/' + image['fileName'])
                     resultimage['language'] = language if shouldset_imagelanguage(image) else None
                     resultimage['rating'] = self._get_rating(image)
                     if arttype in ('series', 'seasonwide'):
