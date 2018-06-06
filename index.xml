@@ -26,7 +26,7 @@
       <pubDate>Thu, 28 Dec 2017 22:45:58 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</guid>
-      <description>Downloading and managing local artwork files By default, Artwork Beef does not modify existing local artwork files. There are some options to change that, though. With the settings &amp;ldquo;Download artwork for processed [media type]&amp;rdquo; enabled for a media type it will download all remote artwork for processed items, and any new images selected manually. By default most video library images will be saved next to the media files with the most specific file names detailed below, with options to save movie and music video artwork without the base file name if you like, and options to save movie and music video fanart# to an &amp;ldquo;extrafanart&amp;rdquo; directory for skins using the classic style.</description>
+      <description>Downloading and managing local artwork files By default, Artwork Beef does not modify existing local artwork files. There are some options to change that, though. With the settings &amp;ldquo;Download these artwork types to the local file system&amp;rdquo; you can configure exactly which types of artwork to download for each media type. By default most video library images will be saved next to the media files with the most specific file names detailed below, with options to save movie and music video artwork without the base file name if you like, and options to save movie and music video fanart# to an &amp;ldquo;extrafanart&amp;rdquo; directory for skins using the classic style.</description>
     </item>
     
     <item>
