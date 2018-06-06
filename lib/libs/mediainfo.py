@@ -383,12 +383,12 @@ def can_saveartwork(mediaitem):
         return False
     return True
 
-def build_artwork_basepath(mediaitem, arttype):
+def build_artwork_basepath(mediaitem, arttype, create=False):
     if settings.albumartwithmediafiles and mediaitem.file \
             and mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG):
         path = os.path.splitext(mediaitem.file)[0]
     else:
-        path = find_central_infodir(mediaitem, False)
+        path = find_central_infodir(mediaitem, create)
     if not path:
         if not mediaitem.file:
             return ''
@@ -450,8 +450,6 @@ def find_central_infodir(mediaitem, create=False):
     finish = lambda result: result if not create or mkdir(result) else None
     thisdir = _find_existing(basedir, title1, slug1, mediayear)
     if not thisdir:
-        if not create:
-            return None
         if mediaitem.mediatype == mediatypes.MOVIE:
             title1 = '{0} ({1})'.format(mediaitem.label, mediaitem.year)
         thisdir = utils.build_cleanest_name(title1, slug1)
@@ -463,8 +461,6 @@ def find_central_infodir(mediaitem, create=False):
     usefiles = mediaitem.mediatype == mediatypes.EPISODE
     thisdir = _find_existing(result, title2, slug2, files=usefiles)
     if not thisdir:
-        if not create:
-            return None
         thisdir = utils.build_cleanest_name(title2, slug2)
     result += thisdir
     if not usefiles:
@@ -475,8 +471,6 @@ def find_central_infodir(mediaitem, create=False):
         return None
     final = _find_existing(result, title3, files=True)
     if not final:
-        if not create:
-            return None
         final = utils.build_cleanest_name(title3)
     result += final
     return finish(result)

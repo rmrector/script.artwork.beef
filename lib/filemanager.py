@@ -96,7 +96,10 @@ class FileManager(object):
                 if not re.search(r'\.\w*$', url):
                     continue
                 ext = url.rsplit('.', 1)[1]
-            full_basefilepath = info.build_artwork_basepath(mediaitem, arttype) + '.' + ext
+            full_basefilepath = info.build_artwork_basepath(mediaitem, arttype, True)
+            if not full_basefilepath:
+                continue
+            full_basefilepath += '.' + ext
             if xbmcvfs.exists(full_basefilepath) and settings.recycle_removed:
                 recyclefile(full_basefilepath)
             else:
