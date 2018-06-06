@@ -76,6 +76,7 @@ class FileManager(object):
                 del nowart[arttype]
         if not nowart or not info.can_saveartwork(mediaitem):
             return False, ''
+        services_hit = False
         error = ''
         for arttype, url in nowart.iteritems():
             result, err = self.doget(url)
