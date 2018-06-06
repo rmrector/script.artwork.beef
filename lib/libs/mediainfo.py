@@ -404,7 +404,7 @@ def build_artwork_basepath(mediaitem, arttype):
     use_basefilename = mediaitem.mediatype in (mediatypes.EPISODE, mediatypes.SONG) \
         or mediaitem.mediatype == mediatypes.MOVIE and settings.savewith_basefilename \
         or mediaitem.mediatype == mediatypes.MUSICVIDEO and settings.savewith_basefilename_mvids
-    if _saveextrafanart(mediaitem.mediatype, arttype):
+    if settings.identify_alternatives and _saveextrafanart(mediaitem.mediatype, arttype):
         path += 'extrafanart' + sep
     elif use_basefilename:
         path += basename + '-'
