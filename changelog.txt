@@ -1,3 +1,6 @@
+v0.20.2 (2018-06-07)
+- Fix: don't process not-new albums when processing new music
+
 v0.20.1 (2018-06-06)
 - Fix: TheTVDB preview image fallback
 - Fix: downloader crash when all images fail download
