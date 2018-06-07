@@ -21,6 +21,7 @@ TEMP_DIR = 'special://temp/recycledartwork/'
 
 typemap = {'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif'}
 # REVIEW: there may be other protocols that just can't be written to
+#  xbmcvfs.mkdirs only supports local drives, SMB, and NFS
 blacklisted_protocols = ('plugin', 'http')
 
 class FileManager(object):
@@ -105,6 +106,7 @@ class FileManager(object):
             else:
                 folder = os.path.dirname(full_basefilepath)
                 if not xbmcvfs.exists(folder) and not xbmcvfs.mkdirs(folder):
+                    self.fileerror_count += 1
                     raise FileError(L(CANT_WRITE_TO_FILE).format(full_basefilepath))
             # For now this just downloads the whole thing in memory, then saves it to file.
             #  Maybe chunking it will be better when GIFs are handled
