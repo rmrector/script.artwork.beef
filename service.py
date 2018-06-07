@@ -289,7 +289,7 @@ class ArtworkService(xbmc.Monitor):
         albums = []
         if not mediatypes.disabled(mediatypes.ALBUM):
             albums.extend(info.MediaItem(album) for album in quickjson.get_albums()
-                if shouldinclude_fn(album['albumid'], mediatypes.ALBUM, album['label']))
+                if shouldinclude_fn(album['albumid'], mediatypes.ALBUM, info.build_music_label(album)))
         if self.abortRequested():
             return False
         artists = []
