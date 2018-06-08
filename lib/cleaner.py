@@ -24,7 +24,7 @@ def clean_artwork(mediaitem):
             updated_art[arttype] = None
         if url.startswith(old_thetvdb_urls):
             # TheTVDB now has forced HTTPS, redirects to 'www'
-            updated_art[arttype] = 'https://www.thetvdb.com/banners/' + url[url.index('/banners/') + 20:]
+            updated_art[arttype] = 'https://www.thetvdb.com/banners/' + url[url.index('thetvdb.com/banners/') + 20:]
             quickjson.remove_texture_byurl(url)
     return updated_art
 
