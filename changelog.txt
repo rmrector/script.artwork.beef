@@ -1,3 +1,6 @@
+v0.20.3 (2018-06-07)
+- Fix: broken TVDB URL fix
+
 v0.20.2 (2018-06-07)
 - Fix: don't process not-new albums when processing new music
 
