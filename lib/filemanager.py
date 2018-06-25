@@ -165,7 +165,7 @@ class FileManager(object):
                 pass # Kodi is closing
         threads = []
         for path in artmap.itervalues():
-            if path.startswith(('http', 'image')) or path in self.alreadycached:
+            if not path or path.startswith(('http', 'image')) or path in self.alreadycached:
                 continue
             if multiplethreads:
                 t = threading.Thread(target=worker, args=(path,))
