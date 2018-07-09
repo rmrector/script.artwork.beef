@@ -46,8 +46,15 @@ def get_movie_path_list(stackedpath):
                         if match.group(2).lower() == match2.group(2).lower():
                             offset = match.start(3)
                             continue
-                        result = [firstpath, path + get_pathsep(path) + filename[:offset] +
-                            match.group(1).rstrip() + match.group(4)]
+                        # DEPRECATED: Returning the path to part1 doesn't seem to work in Kodi.
+                        #  Not sure where I got that idea, but it shouldn't be used.
+                        # Also, AB created the ones missing `group(3)` for awhile, but it is wrong.
+                        # Adding both here so that file scanning still finds them.
+                        pathbase = path + get_pathsep(path) + filename[:offset] + match.group(1)
+                        result = [
+                            pathbase + match.group(3) + match.group(4),
+                            pathbase + match.group(4),
+                            firstpath]
                     break
         else: # folder stacking
             pass # I can't even get Kodi to add stacked VIDEO_TS rips period
