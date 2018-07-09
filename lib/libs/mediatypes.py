@@ -322,7 +322,8 @@ arttype_settingskeys = [m[0] + '.' + art[0] + ('_limit' if art[1].get('limit_set
     for m in artinfo.iteritems() for art in m[1].iteritems()]
 
 def disabled(mediatype):
-    return not any(iter_every_arttype(mediatype))
+    return not any(iter_every_arttype(mediatype)) and not generatethumb(mediatype) and \
+        not downloadanyartwork(mediatype)
 
 def iter_every_arttype(mediatype):
     for arttype, info in artinfo[mediatype].items():
