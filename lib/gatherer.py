@@ -140,7 +140,5 @@ def _imagelanguage_sort(image, basearttype, language):
         if basearttype.endswith('fanart') and settings.titlefree_fanart or \
                 basearttype.endswith('poster') and settings.titlefree_poster:
             primarysort += 1
-    elif basearttype.endswith('poster') and not settings.titlefree_poster:
-        primarysort -= 1
 
     return primarysort, image['language']
