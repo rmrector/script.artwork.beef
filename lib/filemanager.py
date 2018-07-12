@@ -85,9 +85,15 @@ class FileManager(object):
                 error = err
                 continue
             if not result:
-                # 404 URL dead, wipe it so we can add another one later
-                mediaitem.downloadedart[arttype] = None
-                continue
+                if url.startswith('http://'):
+                    # Try https, the browser "that totally shows this image" probably is, even if no redirect
+                    result, err = self.doget('https://' + url[7:])
+                    if err or not result:
+                        result = None
+                if not result:
+                    # 404 URL dead, wipe it so we can add another one later
+                    mediaitem.downloadedart[arttype] = None
+                    continue
             self.size += int(result.headers.get('content-length', 0))
             services_hit = True
             contenttype = result.headers.get('content-type')
