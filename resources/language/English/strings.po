@@ -161,9 +161,7 @@ msgctxt "#32058"
 msgid "Enter the artist and track name"
 msgstr ""
 
-msgctxt "#32059"
-msgid "Compatibility options"
-msgstr ""
+# 32059 retired 2018-07-11
 
 msgctxt "#32060"
 msgid "Artist artwork will [I]only[/I] be processed in the 'Artist information folder'[CR]configured in Kodi settings under Media > Music"
@@ -495,6 +493,26 @@ msgstr ""
 
 msgctxt "#32964"
 msgid "Manually select multiple images for all media types"
+msgstr ""
+
+msgctxt "#32965"
+msgid "In case of emergency"
+msgstr ""
+
+msgctxt "#32966"
+msgid "fanart.tv project API key"
+msgstr ""
+
+msgctxt "#32967"
+msgid "TheTVDB.com project API key"
+msgstr ""
+
+msgctxt "#32968"
+msgid "The Movie Database project API key"
+msgstr ""
+
+msgctxt "#32969"
+msgid "TheAudioDB.com project API key"
 msgstr ""
 
 # Used in the artwork report

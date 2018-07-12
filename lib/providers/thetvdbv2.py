@@ -1,5 +1,4 @@
 import re
-import sys
 import xbmc
 from math import pi, sin
 
@@ -7,10 +6,9 @@ from lib.providers import base
 from lib.providers.base import AbstractImageProvider, cache
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
-from lib.libs.pykodi import json, set_log_scrubstring, UTF8JSONDecoder
+from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.providers import ProviderError
 from lib.libs.utils import SortedDisplay
-from projectkeys import THETVDB_PROJECTKEY as apikey
 
 # designed for version 2.1.0 of TheTVDB API
 class TheTVDBProvider(AbstractImageProvider):
@@ -25,15 +23,13 @@ class TheTVDBProvider(AbstractImageProvider):
     artmap = {'fanart': 'fanart', 'poster': 'poster', 'season': mediatypes.SEASON + '.%s.poster',
         'seasonwide': mediatypes.SEASON + '.%s.banner', 'series': 'banner'}
 
-    def __init__(self):
-        super(TheTVDBProvider, self).__init__()
-        set_log_scrubstring('thetvdbv2-apikey', apikey)
-
     def get_data(self, mediaid, arttype, language):
         result = cache.cacheFunction(self._get_data, mediaid, arttype, language)
         return result if result != 'Empty' else None
 
     def _get_data(self, mediaid, arttype, language):
+        if not settings.tvdb_apikey:
+            raise ProviderError("Invalid project API key")
         self.log('uncached', xbmc.LOGINFO)
         getparams = {'params': {'keyType': arttype}, 'headers': {'Accept-Language': language}}
         response = self.doget(self.apiurl % mediaid, **getparams)
@@ -99,10 +95,12 @@ class TheTVDBProvider(AbstractImageProvider):
         return result
 
     def login(self):
-        response = self.getter.session.post(self.loginurl, json={'apikey': apikey},
+        response = self.getter.session.post(self.loginurl, json={'apikey': settings.tvdb_apikey},
             headers={'Content-Type': 'application/json', 'User-Agent': settings.useragent}, timeout=15)
+        if response is not None and response.status_code == 401:
+            raise ProviderError("Invalid project API key")
         if not response or not response.headers['Content-Type'].startswith('application/json'):
-            raise ProviderError, "Provider returned unexected content", sys.exc_info()[2]
+            raise ProviderError("Provider returned unexected content")
         self.getter.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
         return True
 

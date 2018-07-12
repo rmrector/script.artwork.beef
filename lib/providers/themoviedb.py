@@ -2,20 +2,16 @@ import xbmc
 from abc import ABCMeta
 
 from lib.libs import mediatypes
-from lib.libs.pykodi import json, set_log_scrubstring, UTF8JSONDecoder
+from lib.libs.addonsettings import settings
+from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
-from lib.providers.base import AbstractProvider, AbstractImageProvider, cache
-from projectkeys import TMDB_PROJECTKEY as apikey
+from lib.providers.base import AbstractProvider, AbstractImageProvider, cache, ProviderError
 
 cfgurl = 'https://api.themoviedb.org/3/configuration'
 
 class TheMovieDBAbstractProvider(AbstractImageProvider):
     __metaclass__ = ABCMeta
     contenttype = 'application/json'
-
-    def __init__(self):
-        super(TheMovieDBAbstractProvider, self).__init__()
-        set_log_scrubstring('themoviedb-apikey', apikey)
 
     name = SortedDisplay('themoviedb.org', 'The Movie Database')
     _baseurl = None
@@ -24,7 +20,7 @@ class TheMovieDBAbstractProvider(AbstractImageProvider):
     @property
     def baseurl(self):
         if not self._baseurl:
-            response = self.doget(cfgurl, params={'api_key': apikey})
+            response = self.doget(cfgurl, params={'api_key': settings.tmdb_apikey})
             if response is None:
                 return
             self._baseurl = response.json()['images']['secure_base_url']
@@ -44,9 +40,14 @@ class TheMovieDBAbstractProvider(AbstractImageProvider):
         return result if result != 'Empty' else None
 
     def _get_data(self, url):
+        if not settings.tmdb_apikey:
+            raise ProviderError("Invalid project API key")
         self.log('uncached', xbmc.LOGINFO)
-        response = self.doget(url, params={'api_key': apikey})
+        response = self.doget(url, params={'api_key': settings.tmdb_apikey})
         return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
+
+    def login(self):
+        raise ProviderError("Invalid project API key")
 
     def process_data(self, data):
         result = {}
@@ -155,20 +156,24 @@ class TheMovieDBSearch(AbstractProvider):
     searchurl = 'https://api.themoviedb.org/3/search/{0}'
     tvexternalidsurl = 'https://api.themoviedb.org/3/tv/{0}/external_ids'
     typemap = {mediatypes.MOVIESET: 'collection'}
-    _baseurl = None
 
     def get_data(self, url, params=None):
         result = cache.cacheFunction(self._get_data, url, params)
         return result if result != 'Empty' else None
 
     def _get_data(self, url, params=None):
+        if not settings.tmdb_apikey:
+            raise ProviderError("Invalid project API key")
         self.log('uncached', xbmc.LOGINFO)
         if params is None:
-            params = {'api_key': apikey}
+            params = {'api_key': settings.tmdb_apikey}
         else:
-            params = dict(params, api_key=apikey)
+            params = dict(params, api_key=settings.tmdb_apikey)
         response = self.doget(url, params=params)
         return 'Empty' if response is None else response.json()
+
+    def login(self):
+        raise ProviderError("Invalid project API key")
 
     def search(self, query, mediatype):
         if mediatype not in self.typemap:

@@ -1,6 +1,10 @@
 import xbmc
 
 from lib.libs import pykodi
+try:
+    import projectkeys
+except ImportError:
+    projectkeys = None
 
 addon = pykodi.get_main_addon()
 
@@ -72,7 +76,25 @@ class Settings(object):
             self.minimum_size = AVAILABLE_IMAGESIZES[DEFAULT_IMAGESIZE][2]
             addon.set_setting('preferredsize', DEFAULT_IMAGESIZE)
 
+        self.fanarttv_apikey = addon.get_setting('apikey.fanarttv')
+        self.tvdb_apikey = addon.get_setting('apikey.tvdb')
+        self.tmdb_apikey = addon.get_setting('apikey.tmdb')
+        self.tadb_apikey = addon.get_setting('apikey.tadb')
+        if projectkeys:
+            if not self.fanarttv_apikey:
+                self.fanarttv_apikey = projectkeys.FANARTTV_PROJECTKEY
+            if not self.tvdb_apikey:
+                self.tvdb_apikey = projectkeys.THETVDB_PROJECTKEY
+            if not self.tmdb_apikey:
+                self.tmdb_apikey = projectkeys.TMDB_PROJECTKEY
+            if not self.tadb_apikey:
+                self.tadb_apikey = projectkeys.TADB_PROJECTKEY
+
         pykodi.set_log_scrubstring('fanarttv-client-apikey', self.fanarttv_clientkey)
+        pykodi.set_log_scrubstring('fanarttv-apikey', self.fanarttv_apikey)
+        pykodi.set_log_scrubstring('theaudiodb-apikey', self.tadb_apikey)
+        pykodi.set_log_scrubstring('themoviedb-apikey', self.tmdb_apikey)
+        pykodi.set_log_scrubstring('thetvdbv-apikey', self.tvdb_apikey)
 
     @property
     def autoadd_episodes(self):

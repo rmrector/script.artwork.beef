@@ -144,10 +144,14 @@
 		<setting id="albumartwithmediafiles" label="32951" type="bool" default="false" />
 		<setting id="savewith_basefilename" label="32941" type="bool" default="true" />
 		<setting id="savewith_basefilename_mvids" label="32942" type="bool" default="true" />
-		<setting label="32059" type="lsep" />
-		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
 		<setting id="save_extrafanart" label="32929" type="bool" default="false" visible="eq(-1,true)" />
 		<setting id="save_extrafanart_mvids" label="32930" type="bool" default="false" visible="eq(-2,true)" />
+		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
+		<setting label="32965" type="lsep" />
+		<setting id="apikey.fanarttv" label="32966" type="text" />
+		<setting id="apikey.tvdb" label="32967" type="text" />
+		<setting id="apikey.tmdb" label="32968" type="text" />
+		<setting id="apikey.tadb" label="32969" type="text" />
 		<!-- For add-on inner workings -->
 		<setting id="last_videoupdate" type="text" default="0" visible="false" />
 		<setting id="last_musicupdate" type="text" default="0" visible="false" />

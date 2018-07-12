@@ -1,21 +1,21 @@
 import xbmc
 
 from lib.libs import mediatypes
-from lib.libs.pykodi import json, set_log_scrubstring, UTF8JSONDecoder
+from lib.libs.addonsettings import settings
+from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
-from lib.providers.base import AbstractProvider, AbstractImageProvider, cache
-from projectkeys import TADB_PROJECTKEY as apikey
+from lib.providers.base import AbstractProvider, AbstractImageProvider, cache, ProviderError
 
 # url param i=MB track/album/artist ID
 artmap = {'mbtrack': {'datakey':'track', 'artmap': {'strTrackThumb': 'thumb'},
-        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/track-mb.php'.format(apikey)},
+        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/track-mb.php'.format(settings.tadb_apikey)},
     'mbgroup': {'datakey':'album', 'artmap': {'strAlbumThumb': 'thumb', 'strAlbumCDart': 'discart',
             'strAlbumThumbBack': 'back', 'strAlbumSpine': 'spine'},
-        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/album-mb.php'.format(apikey)},
+        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/album-mb.php'.format(settings.tadb_apikey)},
     'mbartist': {'datakey':'artists', 'artmap': {'strArtistThumb': 'thumb', 'strArtistLogo': 'clearlogo',
             'strArtistBanner': 'banner', 'strArtistFanart': 'fanart', 'strArtistFanart2': 'fanart',
             'strArtistFanart3': 'fanart', 'strArtistClearart': 'clearart', 'strArtistWideThumb': 'landscape'},
-        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/artist-mb.php'.format(apikey)}
+        'url': 'http://www.theaudiodb.com/api/v1/json/{0}/artist-mb.php'.format(settings.tadb_apikey)}
 }
 provtypes = set(x for data in artmap.values() for x in data['artmap'].values())
 
@@ -26,17 +26,17 @@ class TheAudioDBAbstractProvider(AbstractImageProvider):
     name = SortedDisplay('theaudiodb.com', 'TheAudioDB.com')
     contenttype = 'application/json'
 
-    def __init__(self):
-        super(TheAudioDBAbstractProvider, self).__init__()
-        set_log_scrubstring('theaudiodb-apikey', apikey)
-
     def get_data(self, url, params):
         result = cache.cacheFunction(self._get_data, url, params)
         return result if result != 'Empty' else None
 
     def _get_data(self, url, params):
+        if not settings.tadb_apikey:
+            raise ProviderError("Invalid project API key")
         self.log('uncached', xbmc.LOGINFO)
         response = self.doget(url, params=params)
+        if response is None:
+            raise ProviderError("Invalid project API key")
         return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
 
 
@@ -139,9 +139,12 @@ class TheAudioDBSearch(AbstractProvider):
     contenttype = 'application/json'
 
     # s=[artist], t=[track title]
-    url_trackby_artistandtrack = 'http://www.theaudiodb.com/api/v1/json/{0}/searchtrack.php'.format(apikey)
+    url_trackby_artistandtrack = \
+        'http://www.theaudiodb.com/api/v1/json/{0}/searchtrack.php'.format(settings.tadb_apikey)
 
     def get_data(self, url, params=None):
+        if not settings.tadb_apikey:
+            raise ProviderError("Invalid project API key")
         result = cache.cacheFunction(self._get_data, url, params)
         return result if result != 'Empty' else None
 
@@ -150,6 +153,8 @@ class TheAudioDBSearch(AbstractProvider):
         if params is None:
             params = {}
         response = self.doget(url, params=params)
+        if response is None:
+            raise ProviderError("Invalid project API key")
         return 'Empty' if response is None else response.json()
 
     def search(self, query, mediatype):
