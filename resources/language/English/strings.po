@@ -515,6 +515,21 @@ msgctxt "#32969"
 msgid "TheAudioDB.com project API key"
 msgstr ""
 
+# subsetting of 32902
+msgctxt "#32970"
+msgid "Largest available"
+msgstr ""
+
+# subsetting of 32902
+msgctxt "#32971"
+msgid "1920x1080"
+msgstr ""
+
+# subsetting of 32902
+msgctxt "#32972"
+msgid "1280x720"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"

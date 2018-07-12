@@ -8,8 +8,8 @@ except ImportError:
 
 addon = pykodi.get_main_addon()
 
-DEFAULT_IMAGESIZE = '1920x1080'
-AVAILABLE_IMAGESIZES = {'1920x1080': (1920, 1080, 700), '1280x720': (1280, 720, 520)}
+DEFAULT_IMAGESIZE = '1'
+AVAILABLE_IMAGESIZES = {'0': (10000, 10000, 700), '1': (1920, 1080, 700), '2': (1280, 720, 520)}
 
 PROGRESS_DISPLAY_FULLPROGRESS = '0'
 PROGRESS_DISPLAY_WARNINGSERRORS = '1'
@@ -68,13 +68,11 @@ class Settings(object):
             addon.set_setting('minimum_rating', "5")
 
         sizesetting = addon.get_setting('preferredsize')
-        if sizesetting in AVAILABLE_IMAGESIZES:
-            self.preferredsize = AVAILABLE_IMAGESIZES[sizesetting][0:2]
-            self.minimum_size = AVAILABLE_IMAGESIZES[sizesetting][2]
-        else:
-            self.preferredsize = AVAILABLE_IMAGESIZES[DEFAULT_IMAGESIZE][0:2]
-            self.minimum_size = AVAILABLE_IMAGESIZES[DEFAULT_IMAGESIZE][2]
+        if sizesetting not in AVAILABLE_IMAGESIZES:
+            sizesetting = DEFAULT_IMAGESIZE
             addon.set_setting('preferredsize', DEFAULT_IMAGESIZE)
+        self.preferredsize = AVAILABLE_IMAGESIZES[sizesetting][0:2]
+        self.minimum_size = AVAILABLE_IMAGESIZES[sizesetting][2]
 
         self.fanarttv_apikey = addon.get_setting('apikey.fanarttv')
         self.tvdb_apikey = addon.get_setting('apikey.tvdb')
