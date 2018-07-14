@@ -96,21 +96,28 @@ class ArtworkService(xbmc.Monitor):
                     continue
                 self.status = STATUS_PROCESSING
                 if signal == 'allvideos':
-                    self.process_allvideos()
+                    if self.process_allvideos():
+                        notify_finished('Video')
                 elif signal == 'unprocessedvideos':
-                    self.process_allvideos(self.processed.does_not_exist)
+                    if self.process_allvideos(self.processed.does_not_exist):
+                        notify_finished('Video')
                 elif signal == 'oldvideos':
                     if self.process_allvideos(self.processed.is_stale):
                         self.last_videoupdate = get_date()
+                        notify_finished('Video')
                 elif signal == 'recentvideos_really':
                     self.process_recentvideos()
                 elif signal == 'allmusic':
-                    self.process_allmusic()
+                    if self.process_allmusic():
+                        notify_finished('Music')
                 elif signal == 'unprocessedmusic':
-                    self.process_allmusic(self.processed.does_not_exist)
+                    if self.process_allmusic(self.processed.does_not_exist):
+                        notify_finished('Music')
                 elif signal == 'oldmusic':
                     if self.process_allmusic(self.processed.is_stale):
                         self.last_musicupdate = get_date()
+                        notify_finished('Music')
+
                 self.status = STATUS_IDLE
 
     def abortRequested(self):
@@ -336,6 +343,9 @@ class ArtworkService(xbmc.Monitor):
 
 def get_date():
     return pykodi.get_infolabel('System.Date(yyyy-mm-dd)')
+
+def notify_finished(content):
+    pykodi.execute_builtin('NotifyAll(script.artwork.beef, On{0}ProcessingFinished)'.format(content))
 
 def include_any_episode():
     return not mediatypes.disabled(mediatypes.EPISODE) \
