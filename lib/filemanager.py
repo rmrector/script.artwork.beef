@@ -108,9 +108,8 @@ class FileManager(object):
                 recyclefile(full_basefilepath)
             else:
                 folder = os.path.dirname(full_basefilepath)
-                if not xbmcvfs.exists(folder) and not xbmcvfs.mkdirs(folder):
-                    self.fileerror_count += 1
-                    raise FileError(L(CANT_WRITE_TO_FILE).format(full_basefilepath))
+                if not xbmcvfs.exists(folder):
+                    xbmcvfs.mkdirs(folder)
             # For now this just downloads the whole thing in memory, then saves it to file.
             #  Maybe chunking it will be better when GIFs are handled
             file_ = xbmcvfs.File(full_basefilepath, 'wb')
