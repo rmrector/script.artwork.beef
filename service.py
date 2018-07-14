@@ -98,7 +98,7 @@ class ArtworkService(xbmc.Monitor):
                 if signal == 'allvideos':
                     if self.process_allvideos():
                         notify_finished('Video')
-                elif signal == 'unprocessedvideos':
+                elif signal == 'newvideos':
                     if self.process_allvideos(self.processed.does_not_exist):
                         notify_finished('Video')
                 elif signal == 'oldvideos':
@@ -110,7 +110,7 @@ class ArtworkService(xbmc.Monitor):
                 elif signal == 'allmusic':
                     if self.process_allmusic():
                         notify_finished('Music')
-                elif signal == 'unprocessedmusic':
+                elif signal == 'newmusic':
                     if self.process_allmusic(self.processed.does_not_exist):
                         notify_finished('Music')
                 elif signal == 'oldmusic':
@@ -138,10 +138,10 @@ class ArtworkService(xbmc.Monitor):
             elif self.signal:
                 self.signal = None
                 self.processor.close_progress()
-        elif method == 'Other.ProcessUnprocessedVideos':
+        elif method == 'Other.ProcessNewVideos':
             self.processor.create_progress()
-            self.signal = 'unprocessedvideos'
-        elif method == 'Other.ProcessOldVideos':
+            self.signal = 'newvideos'
+        elif method == 'Other.ProcessNewAndOldVideos':
             self.processor.create_progress()
             self.signal = 'oldvideos'
         elif method == 'Other.ProcessAllVideos':
@@ -160,7 +160,7 @@ class ArtworkService(xbmc.Monitor):
         elif method == 'VideoLibrary.OnScanFinished':
             if settings.enableservice:
                 scan_olditems = settings.enable_olditem_updates and get_date() > self.last_videoupdate
-                self.signal = 'oldvideos' if scan_olditems else 'unprocessedvideos'
+                self.signal = 'oldvideos' if scan_olditems else 'newvideos'
         elif method == 'VideoLibrary.OnUpdate':
             if not settings.enableservice:
                 return
@@ -177,11 +177,11 @@ class ArtworkService(xbmc.Monitor):
             if method == 'AudioLibrary.OnScanFinished':
                 if settings.enableservice_music:
                     scan_olditems = settings.enable_olditem_updates and get_date() > self.last_musicupdate
-                    self.signal = 'oldmusic' if scan_olditems else 'unprocessedmusic'
-            elif method == 'Other.ProcessUnprocessedMusic':
+                    self.signal = 'oldmusic' if scan_olditems else 'newmusic'
+            elif method == 'Other.ProcessNewMusic':
                 self.processor.create_progress()
-                self.signal = 'unprocessedmusic'
-            elif method == 'Other.ProcessOldMusic':
+                self.signal = 'newmusic'
+            elif method == 'Other.ProcessNewAndOldMusic':
                 self.processor.create_progress()
                 self.signal = 'oldmusic'
             elif method == 'Other.ProcessAllMusic':
@@ -339,7 +339,7 @@ class ArtworkService(xbmc.Monitor):
             self.processor.create_progress()
             xbmc.sleep(200)
             self.processaftersettings = False
-            self.signal = 'unprocessedvideos'
+            self.signal = 'newvideos'
 
 def get_date():
     return pykodi.get_infolabel('System.Date(yyyy-mm-dd)')

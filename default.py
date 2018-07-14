@@ -90,10 +90,10 @@ def notify_count(message, count):
     xbmcgui.Dialog().notification('Artwork Beef', countmessage)
 
 def add_missing_for():
-    options = [(L(M.FOR_NEW_VIDEOS), 'ProcessUnprocessedVideos'), (L(M.FOR_OLD_VIDEOS), 'ProcessOldVideos'),
+    options = [(L(M.FOR_NEW_VIDEOS), 'ProcessNewVideos'), (L(M.FOR_OLD_VIDEOS), 'ProcessNewAndOldVideos'),
         (L(M.FOR_ALL_VIDEOS), 'ProcessAllVideos')]
     if get_kodi_version() >= 18:
-        options.extend(((L(M.FOR_NEW_AUDIO), 'ProcessUnprocessedMusic'), (L(M.FOR_OLD_AUDIO), 'ProcessOldMusic'),
+        options.extend(((L(M.FOR_NEW_AUDIO), 'ProcessNewMusic'), (L(M.FOR_OLD_AUDIO), 'ProcessNewAndOldMusic'),
             (L(M.FOR_ALL_AUDIO), 'ProcessAllMusic')))
 
     selected = xbmcgui.Dialog().select(L(M.ADD_MISSING_FOR), [option[0] for option in options])
