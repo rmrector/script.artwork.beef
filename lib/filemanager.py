@@ -20,9 +20,6 @@ FILEERROR_LIMIT = 3
 TEMP_DIR = 'special://temp/recycledartwork/'
 
 typemap = {'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif'}
-# REVIEW: there may be other protocols that just can't be written to
-#  xbmcvfs.mkdirs only supports local drives, SMB, and NFS
-blacklisted_protocols = ('plugin', 'http')
 
 class FileManager(object):
     def __init__(self):

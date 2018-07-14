@@ -24,10 +24,10 @@ moviestacking = [re.compile(r'(.*?)([ _.-]*(?:cd|dvd|p(?:ar)?t|dis[ck])[ _.-]*[0
 ]
 def get_movie_path_list(stackedpath):
     """Returns a list of filenames that can be used to find a movie's supporting files.
-    The list includes both possible filenames for stacks (from the first filename or from the common base of all
-    provided parts), and the parent directory of VIDEO_TS/BDMV. If neither applies, returns a list of one item,
-    the original path.
-    Check for the supporting files from each of these results."""
+    The list includes the common base of all provided parts for stacked movies,
+    and the parent directory of VIDEO_TS/BDMV. If neither applies, returns a list of one item,
+    the original path. Check for the supporting files from each of these results.
+    The first path can be used for creating files."""
     result = []
     if not stackedpath.startswith('stack://'):
         result = [stackedpath]

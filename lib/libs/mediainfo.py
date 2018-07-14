@@ -367,6 +367,7 @@ def _get_sourcemedia(mediapath):
     return 'unknown'
 
 # REVIEW: there may be other protocols that just can't be written to
+#  xbmcvfs.mkdirs only supports local drives, SMB, and NFS
 blacklisted_protocols = ('plugin', 'http')
 
 def can_saveartwork(mediaitem):

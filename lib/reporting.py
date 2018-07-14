@@ -83,6 +83,7 @@ def report_end(medialist, abortedcount, downloaded_size):
             downloaded += len(item.downloadedart)
 
         if downloaded:
+            # TODO: include # of existing items downloaded, or the # of items added and downloaded
             write(reportfile, L(DOWNLOAD_COUNT).format(downloaded)
                 + ' - {0:0.2f}MB'.format(downloaded_size / 1000000.00))
         if not total:
