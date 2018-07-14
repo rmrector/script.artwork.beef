@@ -6,7 +6,6 @@ import time
 import urllib
 import xbmc
 import xbmcaddon
-import xbmcgui
 from datetime import datetime
 
 oldpython = sys.version_info < (2, 7)
@@ -193,10 +192,7 @@ def get_command(*first_arg_keys):
     return command
 
 def get_busydialog():
-    try:
-        return xbmcgui.DialogBusy()
-    except AttributeError: # pre-Krypton beta6-ish
-        return OldDialogBusy()
+    return DialogBusy()
 
 class Addon(xbmcaddon.Addon):
     def __init__(self, *args, **kwargs):
@@ -285,25 +281,24 @@ class UTF8JSONDecoder(json.JSONDecoder):
         else:
             return jsoninput
 
-class OldDialogBusy(object):
-    # DEPRECATED: Just a quick shim to match Krypton's new DialogBusy() API
+class DialogBusy(object):
     def __init__(self):
         self.visible = False
+        window = 'busydialognocancel' if get_kodi_version() >= 18 else 'busydialog'
+        self._activate = 'ActivateWindow({0})'.format(window)
+        self._close = 'Dialog.Close({0})'.format(window)
 
     def create(self):
-        xbmc.executebuiltin('ActivateWindow(busydialog)')
+        xbmc.executebuiltin(self._activate)
         self.visible = True
 
     def close(self):
-        xbmc.executebuiltin('Dialog.Close(busydialog)')
+        xbmc.executebuiltin(self._close)
         self.visible = False
-
-    def update(self, percent): pass
-    def iscanceled(self): return False
 
     def __del__(self):
         if self.visible:
             try:
-                xbmc.executebuiltin('Dialog.Close(busydialog)')
+                xbmc.executebuiltin(self._close)
             except AttributeError:
                 pass
