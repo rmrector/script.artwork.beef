@@ -1,3 +1,12 @@
+v0.21.0 (2018-07-14)
+- Feature: add advanced settings to replace all web service project API keys
+- Feature: add "Largest available" option to "Preferred artwork size"
+- Feature: send JSON-RPC notification when processing finishes
+- Fix: title-free posters always sorting first when 'keyart' disabled
+- Fix: artwork filenames for stacked movie files
+- Fix: generate episode thumbs when other episode processing is disabled
+- Fix: error downloading files in some configurations
+
 v0.20.3 (2018-06-07)
 - Fix: broken TVDB URL fix
 
