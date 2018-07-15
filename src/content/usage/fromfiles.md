@@ -135,7 +135,14 @@ to this directory if possible.
 **Note:** Albums nested inside of artist folders in the _central directory_ may not be the best
 idea for the future, but that's what Artwork Beef does for now.
 
+### Central directory folder naming
+
+When artwork is in the central directory (for music and movie sets), the folder name must exactly
+match the name in the library, including look-alike characters such as hyphen and
+[hyphen-minus](https://en.wikipedia.org/wiki/Hyphen#Hyphen-minus).
+
 ### File system safe names
+
 For music and movie set artwork, the file name is made from the title or name of items, which
 may not be safe for the file system with characters like `:?"/\<>*|`. Replace these characters
 with an underscore '_', and remove spaces and periods from the end to match Kodi's file name cleaning.

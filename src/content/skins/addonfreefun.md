@@ -85,11 +85,14 @@ This can be combined with "Display multiple fanart" above to pick from all fanar
 in the list. Set the `fadelabel` timer to be longer than this list to still display just one image
 from each item, or shorter to flip through more than one fanart for each item.
 
+**NOTE**: This works best with lists of items that mostly all have fanart, which may be a deal-breaker
+depending on your design, so keep it in mind when choosing this add-on free route.
+
 #### Interesting path options
 
 - All movies - `videodb://movies/titles/`
 - All TV shows - `videodb://tvshows/titles/`
-- All music artists - `musicdb://artists/`
+- All album artists - `musicdb://artists/?albumartistsonly=true`
 - Skin playlists - `special://skin/playlists/random_albums.xsp`
 - User playlists - `special://profile/playlists/video/latest_episodes.xsp`
 - Custom video nodes to separate concerts/children's shows/sports games/etc

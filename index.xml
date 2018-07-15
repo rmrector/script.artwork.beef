@@ -30,6 +30,17 @@
     </item>
     
     <item>
+      <title>Advanced control</title>
+      <link>https://rmrector.github.io/script.artwork.beef/usage/commands/</link>
+      <pubDate>Thu, 12 Jul 2018 14:50:55 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/usage/commands/</guid>
+      <description>Scripts, skins, and other add-ons can use commands to control bits and pieces of Artwork Beef.
+Run automatic processing on the library You can disable the automatic processing after library updates and schedule them with something like the Kodi Callbacks add-on or cron, or trigger them in some other way.
+ Process new items  NotifyAll(script.artwork.beef:control, ProcessNewVideos) NotifyAll(script.artwork.beef:control, ProcessNewMusic)  Process new and old items, but not all in between  NotifyAll(script.</description>
+    </item>
+    
+    <item>
       <title>Fun without add-ons</title>
       <link>https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/</link>
       <pubDate>Tue, 21 Nov 2017 22:44:56 -0700</pubDate>
@@ -58,7 +69,8 @@ Add-on setting There is an add-on setting to pull extrafanart and extrathumbs fr
       <pubDate>Tue, 21 Nov 2017 22:46:53 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</guid>
-      <description>Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it!  Skins cobbling together file paths to artwork is practically stone-age at this point, just say no.  It works for items in the library that may not point to a location on a file system that should even care about artwork on this/any level, maybe a movie from UPNP or VOD plugin. Plugins can fill their own ListItems with this artwork, which skins can access in exactly the same way.</description>
+      <description>I think that multiple fanart for individual media items should be integrated into the library like all other artwork. Here is a list of my reasons.
+ Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it!  Skins cobbling together file paths to artwork is practically stone-age at this point, just say no.  It works for items in the library that may not point to a location on a file system that should even care about artwork on this/any level, maybe a movie from UPNP or VOD plugin.</description>
     </item>
     
   </channel>

@@ -62,12 +62,7 @@ based on the interface design.
 
 #### Where do I put my API keys for other web services?
 
-- You don't.
-- The only web service that has an API key for users is Fanart.tv with their
-  personal API key, which you can change in the add-on settings under "Advanced".
-- There is nothing to gain from using your own API keys now; it will only have a noticeable
-  effect _IF_ Artwork Beef's API keys are revoked, which won't happen if they aren't co-opted
-  by shitty stream pirate hack add-ons.
+- At the bottom of the Advanced page of add-on settings.
 
 #### Where is the option to replace the fanart slideshow from Artwork Downloader?
 

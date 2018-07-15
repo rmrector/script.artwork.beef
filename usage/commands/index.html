@@ -10,7 +10,7 @@
     <link rel="shortcut icon" href="https://rmrector.github.io/script.artwork.beef/images/favicon.png" type="image/x-icon" />
 <link rel="icon" href="https://rmrector.github.io/script.artwork.beef/images/favicon.png" type="image/x-icon" />
 
-    <title>Problems and other questions :: Artwork Beef</title>
+    <title>Advanced control :: Artwork Beef</title>
     
     
     <link href="https://rmrector.github.io/script.artwork.beef/css/nucleus.css" rel="stylesheet">
@@ -81,7 +81,7 @@ h1 .subtitle {
 </style>
 
   </head>
-  <body class="" data-url="/otherdetails/">
+  <body class="" data-url="/usage/commands/">
     <nav id="sidebar" class="">
 
 
@@ -125,7 +125,7 @@ h1 .subtitle {
   
     
     <li data-nav-id="/usage/" title="Installation &amp; usage" class="dd-item 
-        
+        parent
         
         
         ">
@@ -187,7 +187,7 @@ h1 .subtitle {
  
   
     
-      <li data-nav-id="/usage/commands/" title="Advanced control" class="dd-item ">
+      <li data-nav-id="/usage/commands/" title="Advanced control" class="dd-item active">
         <a href="https://rmrector.github.io/script.artwork.beef/usage/commands/">
         Advanced control
         
@@ -214,8 +214,8 @@ h1 .subtitle {
   
     
     <li data-nav-id="/otherdetails/" title="Problems and other questions" class="dd-item 
-        parent
-        active
+        
+        
         
         ">
       <a href="https://rmrector.github.io/script.artwork.beef/otherdetails/">
@@ -385,7 +385,13 @@ h1 .subtitle {
             
           
           
-            <a href='https://rmrector.github.io/script.artwork.beef/'>Artwork Beef</a> > Problems and other questions
+            
+            
+          
+          
+            <a href='https://rmrector.github.io/script.artwork.beef/'>Artwork Beef</a> > <a href='https://rmrector.github.io/script.artwork.beef/usage/'>Installation & usage</a> > Advanced control
+          
+         
           
          
           
@@ -401,16 +407,9 @@ h1 .subtitle {
 <ul>
 <li>
 <ul>
-<li>
-<ul>
-<li><a href="#how-do-i-quick-start-this-thing">How do I quick-start this thing?</a></li>
-<li><a href="#why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</a></li>
-<li><a href="#images-from-web-services-are-not-visible">Images from web services are not visible.</a></li>
-<li><a href="#manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</a></li>
-<li><a href="#the-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</a></li>
-<li><a href="#where-do-i-put-my-api-keys-for-other-web-services">Where do I put my API keys for other web services?</a></li>
-<li><a href="#where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</a></li>
-</ul></li>
+<li><a href="#run-automatic-processing-on-the-library">Run automatic processing on the library</a></li>
+<li><a href="#run-artwork-beef-on-individual-media-items">Run Artwork Beef on individual media items</a></li>
+<li><a href="#watch-for-notifications">Watch for notifications</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -426,7 +425,7 @@ h1 .subtitle {
         
         <div id="body-inner">
           
-            <h1>Problems and other questions</h1>
+            <h1>Advanced control</h1>
           
 
         
@@ -434,105 +433,53 @@ h1 .subtitle {
 
 
 
-<h4 id="how-do-i-quick-start-this-thing">How do I quick-start this thing?</h4>
+<p>Scripts, skins, and other add-ons can use commands to control bits and pieces of Artwork Beef.</p>
+
+<h3 id="run-automatic-processing-on-the-library">Run automatic processing on the library</h3>
+
+<p>You can disable the automatic processing after library updates and schedule them
+with something like the Kodi Callbacks add-on or cron, or trigger them in some other way.</p>
 
 <ul>
-<li>The quickest way to get started is to install it and configure it to your liking.</li>
-<li>Do you want Artwork Beef to automatically add artwork for new media?
+<li>Process new items
 
 <ul>
-<li>Enable the setting &ldquo;Add artwork for new videos after library updates&rdquo; and / or
-&ldquo;Add artwork for new music after library updates&rdquo;.</li>
+<li><code>NotifyAll(script.artwork.beef:control, ProcessNewVideos)</code></li>
+<li><code>NotifyAll(script.artwork.beef:control, ProcessNewMusic)</code></li>
 </ul></li>
-<li>Do you want Artwork Beef to download image files to your local file system?
+<li>Process new and old items, but not all in between
 
 <ul>
-<li>Then enable the settings &ldquo;Download image files for processed &hellip;&rdquo; for each media type
-at the top of the &lsquo;TV shows&rsquo;, &lsquo;Movies&rsquo;, &lsquo;Music videos&rsquo;, and &lsquo;Music&rsquo; tabs.</li>
-</ul></li>
-<li>Do you want Artwork Beef to only identify artwork you have already gathered locally with
-a media manager, avoiding web services for automatic processing?
-
-<ul>
-<li>Enable the setting &ldquo;Do not automatically add artwork from web services, only identify local files&rdquo;.</li>
-</ul></li>
-<li>Do you want Artwork Beef to ignore certain media types during automatic processing?
-
-<ul>
-<li>Turn on the settings &ldquo;Disable all automatic processing &hellip;&rdquo; for that media type.</li>
-</ul></li>
-<li>See <a href="https://rmrector.github.io/script.artwork.beef/usage/firstusage/">First usage</a> for more details.</li>
-</ul>
-
-<h4 id="why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</h4>
-
-<ul>
-<li>It may take a few days for new artwork to be available.</li>
-<li>Artwork Beef caches the previous image results from web services for 72 hours.</li>
-</ul>
-
-<h4 id="images-from-web-services-are-not-visible">Images from web services are not visible.</h4>
-
-<p>Most likely the web service is temporarily/intermittently unavailable. Try again later.
-Configuring Artwork Beef to download artwork to your local file system is probably a good idea.</p>
-
-<h4 id="manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</h4>
-
-<ul>
-<li>Does it happen for all media items of a particular type?
-
-<ul>
-<li>Have you futzed with API keys other than the Fanart.tv personal API key?
-
-<ul>
-<li>Reinstall Artwork Beef from the latest <em>stable</em> zip and try again before changing
-the API keys.</li>
-</ul></li>
-<li>Or maybe the web service is temporarily unavailable, or your Kodi device&rsquo;s internet connection
-is broken. The Kodi log and Artwork Beef&rsquo;s artwork report may have more details.</li>
-<li>Otherwise post a reply on the forum thread with a description of the problem, a
-<a href="https://kodi.wiki/view/Debug-log">Kodi debug log</a>, and the latest group of artwork-report.txt.</li>
-</ul></li>
-<li>Or just a handful of media items?
-
-<ul>
-<li>Artwork Beef requires web service IDs (like an IMDB number) in the Kodi library. These
-should be included in NFO files or scrapers.
-
-<ul>
-<li>If you use scrapers for the media item, make sure your scrapers are up to date and
-refresh the item.</li>
-<li>If you have NFO files, make sure there is a &ldquo;uniqueid&rdquo; element in it.
-An &ldquo;imdbnumber&rdquo; element should also work (for movies and TV shows), and an &ldquo;id&rdquo; element might work.
-If your NFOs don&rsquo;t have these elements then upgrade your media manager and recreate the NFOs,
-then refresh the item in Kodi.</li>
-<li>Music must be tagged with MusicBrainz IDs. Use MusicBrainz Picard for tagging files.</li>
-</ul></li>
+<li><code>NotifyAll(script.artwork.beef:control, ProcessNewAndOldVideos)</code></li>
+<li><code>NotifyAll(script.artwork.beef:control, ProcessNewAndOldMusic)</code></li>
 </ul></li>
 </ul>
 
-<h4 id="the-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</h4>
+<h3 id="run-artwork-beef-on-individual-media-items">Run Artwork Beef on individual media items</h3>
 
-<p>The skin / web interface is pulling up the movie thumb and expecting the fallback poster,
-but it should instead pick the poster first and fall back to the thumb only if the poster
-doesn&rsquo;t exist. They are two different images for two different purposes and should be chosen
-based on the interface design.</p>
-
-<h4 id="where-do-i-put-my-api-keys-for-other-web-services">Where do I put my API keys for other web services?</h4>
+<p>Like the context menu items generally under &ldquo;Manage &hellip;&rdquo;, skins can add them somewhere else.</p>
 
 <ul>
-<li>At the bottom of the Advanced page of add-on settings.</li>
+<li><code>RunScript(script.artwork.beef, mode=gui, mediatype=tvshow, dbid=$INFO[ListItem.DBID])</code></li>
 </ul>
 
-<h4 id="where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</h4>
+<p><code>mode</code> can also be &ldquo;auto&rdquo;, and <code>mediatype</code> can be &ldquo;tvshow&rdquo;, &ldquo;movie&rdquo;, &ldquo;episode&rdquo;, &ldquo;set&rdquo;, &ldquo;musicvideo&rdquo;,
+&ldquo;artist&rdquo;, &ldquo;album&rdquo;, and &ldquo;song&rdquo;.</p>
 
-<p>No such option is available, Artwork Beef will not duplicate image files for this purpose.
-<a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/#grab-random-fanart-plus-any-other-info-from-items-in-any-library-path">Skins have other options</a> that don&rsquo;t require duplicating files.</p>
+<h3 id="watch-for-notifications">Watch for notifications</h3>
+
+<p>Artwork Beef will send out a notification when the library processing is finished.</p>
+
+<ul>
+<li>The sender is <code>script.artwork.beef</code> and the message is <code>Other.OnVideoProcessingFinished</code>
+or <code>Other.OnMusicProcessingFinished</code>.</li>
+</ul>
 
 
 <footer class=" footline" >
 	
 </footer>
+
 
         
         </div> 
@@ -563,8 +510,6 @@ based on the interface design.</p>
             
                 
                     
-                        
-                        
                     
                 
                 
@@ -579,89 +524,8 @@ based on the interface design.</p>
             
                 
                     
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-            
-        
-                    
-                        
-            
-            
-                
-                    
                         
                         
-                    
-                
-                
-
-                    
-                    
-                    
-
-                    
-                        
-            
-            
-                
                     
                 
                 
@@ -695,6 +559,90 @@ based on the interface design.</p>
             
                 
                     
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                        
+                        
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
+                    
+                        
+            
+            
+                
+                    
                 
                 
 
@@ -732,10 +680,10 @@ based on the interface design.</p>
 
 
         
-            <a class="nav nav-prev" href="https://rmrector.github.io/script.artwork.beef/usage/commands/" title="Advanced control"> <i class="fa fa-chevron-left"></i></a>
+            <a class="nav nav-prev" href="https://rmrector.github.io/script.artwork.beef/usage/fromfiles/" title="Image files"> <i class="fa fa-chevron-left"></i></a>
         
         
-            <a class="nav nav-next" href="https://rmrector.github.io/script.artwork.beef/skins/" title="Skin support" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
+            <a class="nav nav-next" href="https://rmrector.github.io/script.artwork.beef/otherdetails/" title="Problems and other questions" style="margin-right: 0px;"><i class="fa fa-chevron-right"></i></a>
         
     </div>
 
@@ -765,3 +713,4 @@ based on the interface design.</p>
 
   </body>
 </html>
+
