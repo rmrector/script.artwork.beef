@@ -299,7 +299,7 @@ msgstr "Utiliser des images de prévisualisation de haute qualité"
 
 msgctxt "#32905"
 msgid "fanart.tv personal API key"
-msgstr "Clé API fanart.tv"
+msgstr "Clé API personnelle fanart.tv"
 
 msgctxt "#32906"
 msgid "Identify alternate Artwork Downloader and MSAA artwork file names"
@@ -489,19 +489,19 @@ msgstr "En cas d'urgence"
 
 msgctxt "#32966"
 msgid "fanart.tv project API key"
-msgstr "Clé API fanart.tv"
+msgstr "Clé API projet fanart.tv"
 
 msgctxt "#32967"
 msgid "TheTVDB.com project API key"
-msgstr "Clé API TheTVDB.com"
+msgstr "Clé API projet TheTVDB.com"
 
 msgctxt "#32968"
 msgid "The Movie Database project API key"
-msgstr "Clé API The Movie Database"
+msgstr "Clé API projet The Movie Database"
 
 msgctxt "#32969"
 msgid "TheAudioDB.com project API key"
-msgstr "Clé API TheAudioDB.com"
+msgstr "Clé API projet TheAudioDB.com"
 
 # subsetting of 32902
 msgctxt "#32970"
