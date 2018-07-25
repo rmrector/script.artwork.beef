@@ -170,6 +170,9 @@ def identify_unmatched(mediatype):
     busy.create()
     processed = ProcessedItems()
     ulist = quickjson.get_item_list(mediatype)
+    if mediatype == mediatypes.MUSICVIDEO:
+        for item in ulist:
+            item['label'] = info.build_music_label(item)
     unmatched = [item for item in ulist if not processed.get_data(item[mediatype + 'id'], mediatype, item['label'])]
     busy.close()
     if unmatched:
