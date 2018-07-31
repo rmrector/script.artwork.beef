@@ -333,10 +333,10 @@ class ArtworkProcessor(object):
 
     def get_nextcheckdelay(self, mediaitem):
         weeks = 4 if mediatypes.only_filesystem(mediaitem.mediatype) \
-            else 52 if mediaitem.missingid or not mediaitem.missingart \
-            else 18 if mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) and \
-                mediaitem.premiered > self.freshstart \
-            else 34
+            else 32 if mediaitem.missingid or not mediaitem.missingart \
+                or mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) \
+                    and mediaitem.premiered < self.freshstart \
+            else 16
         return plus_some(weeks * 7, weeks)
 
     def manual_id(self, mediaitem):
