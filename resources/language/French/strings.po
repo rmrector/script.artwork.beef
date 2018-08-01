@@ -158,10 +158,6 @@ msgctxt "#32058"
 msgid "Enter the artist and track name"
 msgstr "Entrer le nom de l'artiste et de la chanson"
 
-msgctxt "#32059"
-msgid "Compatibility options"
-msgstr "Options de compatibilité"
-
 msgctxt "#32060"
 msgid "Artist artwork will [I]only[/I] be processed in the 'Artist information folder'[CR]configured in Kodi settings under Media > Music"
 msgstr "Les artworks des artistes seront [I]seulement[/I] traités dans le 'dossier des informations des artistes' configuré dans les paramètres de Kodi dans Médias > Musiques"
@@ -486,6 +482,41 @@ msgstr "Préférer les artworks provenant d'un service Web spécifique"
 msgctxt "#32964"
 msgid "Manually select multiple images for all media types"
 msgstr "Sélectionner manuellement plusieurs images pour tous les types de média"
+
+msgctxt "#32965"
+msgid "In case of emergency"
+msgstr "En cas d'urgence"
+
+msgctxt "#32966"
+msgid "fanart.tv project API key"
+msgstr "Clé API projet fanart.tv"
+
+msgctxt "#32967"
+msgid "TheTVDB.com project API key"
+msgstr "Clé API projet TheTVDB.com"
+
+msgctxt "#32968"
+msgid "The Movie Database project API key"
+msgstr "Clé API projet The Movie Database"
+
+msgctxt "#32969"
+msgid "TheAudioDB.com project API key"
+msgstr "Clé API projet TheAudioDB.com"
+
+# subsetting of 32902
+msgctxt "#32970"
+msgid "Largest available"
+msgstr "Plus grande taille disponible"
+
+# subsetting of 32902
+msgctxt "#32971"
+msgid "1920x1080"
+msgstr "1920x1080"
+
+# subsetting of 32902
+msgctxt "#32972"
+msgid "1280x720"
+msgstr "1280x720"
 
 # Used in the artwork report
 msgctxt "#32800"
