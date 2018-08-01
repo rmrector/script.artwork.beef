@@ -1,3 +1,9 @@
+v0.21.1 (2018-08-01)
+- Feature: TheAudioDB communication is HTTPS, no more unencrypted web traffic
+- Fix: all / most music videos listed when viewing unmatched music videos
+- Fix: remove animated artwork from default movie additional art type setting
+- Fix: ensure unique name when downloading new "extrafanart"
+
 v0.21.0 (2018-07-14)
 - Feature: add advanced settings to replace all web service project API keys
 - Feature: add "Largest available" option to "Preferred artwork size"

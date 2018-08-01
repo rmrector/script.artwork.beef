@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.21.1~adev" provider-name="rmrector">
+<addon id="script.artwork.beef" name="Artwork Beef" version="0.21.1" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -38,17 +38,17 @@
 		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the file system.</description>
 		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB</disclaimer>
 		<news>
+v0.21.1 (2018-08-01)
+- [B]Upgrade action:[/B] remove "animatedposter, animatedfanart" from movie artwork
+- Feature: TheAudioDB communication is HTTPS, no more unencrypted web traffic
+- Fix: all / most music videos listed when viewing unmatched music videos
+- Fix: remove animated artwork from default movie additional art type setting
+
 v0.21.0 (2018-07-14)
 - Feature: add advanced settings to replace all web service project API keys
 - Feature: add "Largest available" option to "Preferred artwork size"
 - Fix: artwork filenames for stacked movie files
 - Fix: error downloading files in some configurations
-
-v0.20.0-3
-- Feature: option for multiple 'poster' images
-- Feature: option for 'keyart' images (textless posters)
-- Feature: more detailed options
-- Fix: downloading artwork to central artwork directory in many cases
 		</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
 		<forum>https://forum.kodi.tv/showthread.php?tid=258886</forum>
