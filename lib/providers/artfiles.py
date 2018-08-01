@@ -5,7 +5,8 @@ from abc import ABCMeta
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.mediainfo import arttype_matches_base, format_arttype, find_central_infodir
-from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep, iter_possible_cleannames
+from lib.libs.utils import SortedDisplay, natural_sort, get_movie_path_list, get_pathsep, \
+    iter_possible_cleannames, parent_dir
 
 ARTWORK_EXTS = ('.jpg', '.png', '.gif')
 ARTIST_INFOFOLDER_PROVIDER = SortedDisplay('file:art', 20223)
@@ -331,7 +332,7 @@ class ArtFilesAlbumProvider(ArtFilesArtistProvider):
                     continue
                 if settings.identify_alternatives and arttype in self.alttypes.keys():
                     arttype = self.alttypes[arttype]
-                parentdir = os.path.basename(os.path.dirname(path)) + get_pathsep(path)
+                parentdir = parent_dir(path) + get_pathsep(path)
                 if arttype == 'discart':
                     if 'discart' not in result:
                         result['discart'] = self.buildimage(path + filename, parentdir + filename)

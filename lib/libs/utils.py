@@ -14,6 +14,9 @@ def get_pathsep(path):
     # The path separator can go either way on Windows, C:\Videos or smb://SERVER/Videos
     return '\\' if '\\' in path else '/'
 
+def parent_dir(path):
+    return basename(dirname(path))
+
 def get_simpledict_updates(original, newdict):
     return dict(pair for pair in newdict.iteritems() if pair[1] != original.get(pair[0]))
 
@@ -61,7 +64,7 @@ def get_movie_path_list(stackedpath):
         if not result:
             log("Couldn't get an unstacked path from \"{0}\"".format(stackedpath), xbmc.LOGWARNING)
             result = [firstpath]
-    if basename(dirname(result[0])) in ('VIDEO_TS', 'BDMV'):
+    if parent_dir(result[0]) in ('VIDEO_TS', 'BDMV'):
         result.append(dirname(dirname(result[0])) + get_pathsep(result[0]) + basename(result[0]))
     return result
 

@@ -55,57 +55,47 @@ class FileManager(object):
         else:
             server_enabled = False
         if server_enabled:
-            self.imagecachebase = 'https' if secure else 'http'
-            self.imagecachebase += '://{0}localhost:{1}/image/'.format(username, port)
+            protocol = 'https' if secure else 'http'
+            self.imagecachebase = '{0}://{1}localhost:{2}/image/'.format(protocol, username, port)
         else:
             self.imagecachebase = None
 
     def downloadfor(self, mediaitem, allartwork=True):
         if self.fileerror_count >= FILEERROR_LIMIT:
             return False, ''
-        if allartwork:
-            nowart = dict(mediaitem.art)
-            nowart.update(mediaitem.selectedart)
-        else:
-            nowart = dict(mediaitem.selectedart)
-        for arttype in list(nowart):
-            if not nowart[arttype] or not nowart[arttype].startswith('http') or \
-                    not mediatypes.downloadartwork(mediaitem.mediatype, arttype):
-                del nowart[arttype]
-        if not nowart or not info.can_saveartwork(mediaitem):
+        if not info.can_saveartwork(mediaitem):
+            return False, ''
+        to_download = get_downloadable_art(mediaitem, allartwork)
+        if not to_download:
             return False, ''
         services_hit = False
         error = ''
-        for arttype, url in nowart.iteritems():
+        localfiles = get_local_art(mediaitem, allartwork)
+        for arttype, url in to_download.iteritems():
             result, err = self.doget(url)
             if err:
                 error = err
                 continue
             if not result:
-                if url.startswith('http://'):
-                    # Try https, the browser "that totally shows this image" probably is, even if no redirect
-                    result, err = self.doget('https://' + url[7:])
-                    if err or not result:
-                        result = None
-                if not result:
-                    # 404 URL dead, wipe it so we can add another one later
-                    mediaitem.downloadedart[arttype] = None
-                    continue
+                # 404 URL dead, wipe it so we can add another one later
+                mediaitem.downloadedart[arttype] = None
+                continue
             self.size += int(result.headers.get('content-length', 0))
             services_hit = True
-            contenttype = result.headers.get('content-type')
-            if contenttype in typemap:
-                ext = typemap[contenttype]
-            else:
-                if not re.search(r'\.\w*$', url):
-                    continue
-                ext = url.rsplit('.', 1)[1]
+            ext = get_file_extension(result.headers.get('content-type'), url)
+            if not ext:
+                continue
             full_basefilepath = info.build_artwork_basepath(mediaitem, arttype, True)
             if not full_basefilepath:
                 continue
             full_basefilepath += '.' + ext
-            if xbmcvfs.exists(full_basefilepath) and settings.recycle_removed:
-                recyclefile(full_basefilepath)
+            if xbmcvfs.exists(full_basefilepath):
+                if extrafanart_name_used(full_basefilepath, localfiles):
+                    # REVIEW: can this happen in any other circumstance?
+                    full_basefilepath = get_next_filename(full_basefilepath, localfiles)
+                    localfiles.append(full_basefilepath)
+                if xbmcvfs.exists(full_basefilepath) and settings.recycle_removed:
+                    recyclefile(full_basefilepath)
             else:
                 folder = os.path.dirname(full_basefilepath)
                 if not xbmcvfs.exists(folder):
@@ -123,7 +113,13 @@ class FileManager(object):
 
     def doget(self, url, **kwargs):
         try:
-            return self.getter(url, **kwargs), None
+            result = self.getter(url, **kwargs)
+            if not result and url.startswith('http://'):
+                # Try https, the browser "that totally shows this image" probably is, even if no redirect
+                result, err = self.doget('https://' + url[7:])
+                if err or not result:
+                    result = None
+            return result, None
         except (Timeout, ConnectionError) as ex:
             return None, L(CANT_CONTACT_PROVIDER)
         except HTTPError as ex:
@@ -179,12 +175,54 @@ class FileManager(object):
             t.join()
         return count[0]
 
+def extrafanart_name_used(path, localfiles):
+    return utils.parent_dir(path) == 'extrafanart' and path in localfiles
+
+def get_file_extension(contenttype, request_url, re_search=re.compile(r'\.\w*$')):
+    if contenttype in typemap:
+        return typemap[contenttype]
+    if re.search(re_search, request_url):
+        return request_url.rsplit('.', 1)[1]
+
+def get_next_filename(full_basefilepath, localfiles):
+    nextname = full_basefilepath
+    char_int = 97
+    while nextname in localfiles:
+        name, ext = os.path.splitext(full_basefilepath)
+        nextname = name + chr(char_int) + ext
+        char_int += 1
+    return nextname
+
+def get_downloadable_art(mediaitem, allartwork):
+    if allartwork:
+        downloadable = dict(mediaitem.art)
+        downloadable.update(mediaitem.selectedart)
+    else:
+        downloadable = dict(mediaitem.selectedart)
+    for arttype in list(downloadable):
+        if not downloadable[arttype] or not downloadable[arttype].startswith('http') or \
+                not mediatypes.downloadartwork(mediaitem.mediatype, arttype):
+            del downloadable[arttype]
+    return downloadable
+
+def get_local_art(mediaitem, allartwork):
+    local = []
+    if allartwork:
+        for url in mediaitem.art.values():
+            if url and not url.startswith('http'):
+                local.append(url)
+    for url in mediaitem.selectedart.values():
+        if url and not url.startswith('http'):
+            local.append(url)
+
+    return local
+
 def recyclefile(filename):
-    firstdir = os.path.basename(os.path.dirname(filename))
+    firstdir = utils.parent_dir(filename)
     directory = TEMP_DIR
     pathsep = utils.get_pathsep(directory)
     if firstdir in ('extrafanart', 'extrathumbs'):
-        directory += os.path.basename(os.path.dirname(os.path.dirname(filename))) + pathsep
+        directory += utils.parent_dir(os.path.dirname(filename)) + pathsep
     directory += firstdir
     if not xbmcvfs.exists(directory):
         xbmcvfs.mkdirs(directory)
