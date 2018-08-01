@@ -4,8 +4,16 @@ import xbmcvfs
 from lib.libs import pykodi, mediatypes, quickjson
 from lib.libs.mediainfo import iter_base_arttypes, fill_multiart, keep_arttype
 
-old_thetvdb_urls = ('http://www.thetvdb.com/banners/', 'http://thetvdb.com/banners/',
-    'https://thetvdb.com/banners/')
+# 0=original URLs, 1=new URL, 2=URL match
+old_urls_fix = {
+    'tvdb': (
+        ('http://www.thetvdb.com/banners/', 'http://thetvdb.com/banners/', 'https://thetvdb.com/banners/'),
+        'https://www.thetvdb.com/banners/',
+        'thetvdb.com/banners/'),
+    'tadb': (
+        ('http://media.theaudiodb.com/images/', 'http://www.theaudiodb.com/images/'),
+        'https://www.theaudiodb.com/images/',
+        'theaudiodb.com/images/')}
 
 def clean_artwork(mediaitem):
     updated_art = dict(_get_clean_art(*art) for art in mediaitem.art.iteritems())
@@ -22,14 +30,14 @@ def clean_artwork(mediaitem):
         # Remove local artwork if it is no longer available
         if url and not url.startswith(pykodi.notlocalimages) and not xbmcvfs.exists(url):
             updated_art[arttype] = None
-        if url.startswith(old_thetvdb_urls):
-            # TheTVDB now has forced HTTPS, redirects to 'www'
-            updated_art[arttype] = 'https://www.thetvdb.com/banners/' + url[url.index('thetvdb.com/banners/') + 20:]
+        for fixcfg in old_urls_fix.values():
+            if url.startswith(fixcfg[0]):
+                updated_art[arttype] = fixcfg[1] + url[url.index(fixcfg[2]) + len(fixcfg[2]):]
             quickjson.remove_texture_byurl(url)
     return updated_art
 
 def remove_specific_arttype(mediaitem, arttype):
-    '''pass 'all' as arttype to clear all artwork, nowhitelist to clear images not on whitelist.'''
+    '''pass '* all' as arttype to clear all artwork, '* nowhitelist' to clear images not on whitelist.'''
     if arttype == '* all':
         return dict((atype, None) for atype in mediaitem.art)
     elif arttype == '* nowhitelist':
