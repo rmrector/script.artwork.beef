@@ -1,7 +1,7 @@
 ---
 title: "Image files"
 date: 2017-12-28T22:45:58-07:00
-weight: 3
+weight: 20
 ---
 
 ## Downloading and managing local artwork files

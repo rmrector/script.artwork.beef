@@ -187,6 +187,25 @@ h1 .subtitle {
  
   
     
+      <li data-nav-id="/usage/settings/" title="Add-on settings &amp; actions" class="dd-item ">
+        <a href="https://rmrector.github.io/script.artwork.beef/usage/settings/">
+        Add-on settings &amp; actions
+        
+        </a>
+    </li>
+     
+  
+ 
+
+            
+          
+            
+            
+
+
+ 
+  
+    
       <li data-nav-id="/usage/commands/" title="Advanced control" class="dd-item ">
         <a href="https://rmrector.github.io/script.artwork.beef/usage/commands/">
         Advanced control
@@ -407,8 +426,8 @@ h1 .subtitle {
 <li><a href="#why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</a></li>
 <li><a href="#images-from-web-services-are-not-visible">Images from web services are not visible.</a></li>
 <li><a href="#manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</a></li>
-<li><a href="#the-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</a></li>
-<li><a href="#where-do-i-put-my-api-keys-for-other-web-services">Where do I put my API keys for other web services?</a></li>
+<li><a href="#a-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">A Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</a></li>
+<li><a href="#where-do-i-put-my-project-api-keys-for-other-web-services">Where do I put my project API keys for other web services?</a></li>
 <li><a href="#where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</a></li>
 </ul></li>
 </ul></li>
@@ -437,7 +456,8 @@ h1 .subtitle {
 <h4 id="how-do-i-quick-start-this-thing">How do I quick-start this thing?</h4>
 
 <ul>
-<li>The quickest way to get started is to install it and configure it to your liking.</li>
+<li>The quickest way to get started is to install it and <a href="https://rmrector.github.io/script.artwork.beef/usage/settings/">configure</a>
+it to your liking.</li>
 <li>Do you want Artwork Beef to automatically add artwork for new media?
 
 <ul>
@@ -482,11 +502,13 @@ Configuring Artwork Beef to download artwork to your local file system is probab
 <li>Does it happen for all media items of a particular type?
 
 <ul>
-<li>Have you futzed with API keys other than the Fanart.tv personal API key?
+<li>If there is a message about &ldquo;Invalid project API key&rdquo; for a particular web service:
 
 <ul>
-<li>Reinstall Artwork Beef from the latest <em>stable</em> zip and try again before changing
-the API keys.</li>
+<li>Either the built-in API keys have been disabled and you will have to sign up for a project
+key of your own;</li>
+<li>Or you have entered your own project API key improperly and should remove that setting
+and try again.</li>
 </ul></li>
 <li>Or maybe the web service is temporarily unavailable, or your Kodi device&rsquo;s internet connection
 is broken. The Kodi log and Artwork Beef&rsquo;s artwork report may have more details.</li>
@@ -511,17 +533,19 @@ then refresh the item in Kodi.</li>
 </ul></li>
 </ul>
 
-<h4 id="the-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</h4>
+<h4 id="a-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">A Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</h4>
 
 <p>The skin / web interface is pulling up the movie thumb and expecting the fallback poster,
 but it should instead pick the poster first and fall back to the thumb only if the poster
 doesn&rsquo;t exist. They are two different images for two different purposes and should be chosen
 based on the interface design.</p>
 
-<h4 id="where-do-i-put-my-api-keys-for-other-web-services">Where do I put my API keys for other web services?</h4>
+<h4 id="where-do-i-put-my-project-api-keys-for-other-web-services">Where do I put my project API keys for other web services?</h4>
 
 <ul>
 <li>At the bottom of the Advanced page of add-on settings.</li>
+<li>I do not suggest you do this, the option is only available in case the built-in project keys
+stop working.</li>
 </ul>
 
 <h4 id="where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</h4>
@@ -573,6 +597,22 @@ based on the interface design.</p>
                     
                     
 
+                    
+                        
+            
+            
+                
+                    
+                
+                
+
+                    
+                    
+                    
+
+                    
+            
+        
                     
                         
             

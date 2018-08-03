@@ -21,26 +21,6 @@
     </item>
     
     <item>
-      <title>Image files</title>
-      <link>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</link>
-      <pubDate>Thu, 28 Dec 2017 22:45:58 -0700</pubDate>
-      
-      <guid>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</guid>
-      <description>Downloading and managing local artwork files By default, Artwork Beef does not modify existing local artwork files. There are some options to change that, though. With the settings &amp;ldquo;Download these artwork types to the local file system&amp;rdquo; you can configure exactly which types of artwork to download for each media type. By default most video library images will be saved next to the media files with the most specific file names detailed below, with options to save movie and music video artwork without the base file name if you like, and options to save movie and music video fanart# to an &amp;ldquo;extrafanart&amp;rdquo; directory for skins using the classic style.</description>
-    </item>
-    
-    <item>
-      <title>Advanced control</title>
-      <link>https://rmrector.github.io/script.artwork.beef/usage/commands/</link>
-      <pubDate>Thu, 12 Jul 2018 14:50:55 -0700</pubDate>
-      
-      <guid>https://rmrector.github.io/script.artwork.beef/usage/commands/</guid>
-      <description>Scripts, skins, and other add-ons can use commands to control bits and pieces of Artwork Beef.
-Run automatic processing on the library You can disable the automatic processing after library updates and schedule them with something like the Kodi Callbacks add-on or cron, or trigger them in some other way.
- Process new items  NotifyAll(script.artwork.beef:control, ProcessNewVideos) NotifyAll(script.artwork.beef:control, ProcessNewMusic)  Process new and old items, but not all in between  NotifyAll(script.</description>
-    </item>
-    
-    <item>
       <title>Fun without add-ons</title>
       <link>https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/</link>
       <pubDate>Tue, 21 Nov 2017 22:44:56 -0700</pubDate>
@@ -64,13 +44,44 @@ Add-on setting There is an add-on setting to pull extrafanart and extrathumbs fr
     </item>
     
     <item>
+      <title>Image files</title>
+      <link>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</link>
+      <pubDate>Thu, 28 Dec 2017 22:45:58 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</guid>
+      <description>Downloading and managing local artwork files By default, Artwork Beef does not modify existing local artwork files. There are some options to change that, though. With the settings &amp;ldquo;Download these artwork types to the local file system&amp;rdquo; you can configure exactly which types of artwork to download for each media type. By default most video library images will be saved next to the media files with the most specific file names detailed below, with options to save movie and music video artwork without the base file name if you like, and options to save movie and music video fanart# to an &amp;ldquo;extrafanart&amp;rdquo; directory for skins using the classic style.</description>
+    </item>
+    
+    <item>
+      <title>Add-on settings &amp; actions</title>
+      <link>https://rmrector.github.io/script.artwork.beef/usage/settings/</link>
+      <pubDate>Thu, 26 Jul 2018 15:50:04 -0600</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/usage/settings/</guid>
+      <description>General &amp;ldquo;Add artwork for new videos / music after library updates&amp;rdquo; The main process of Artwork Beef. Runs after library updates to add extended artwork for new items, either from the file system or web services. Video and music are configured separately.
+&amp;ldquo;Update artwork for old items daily&amp;rdquo; Check old items for new artwork. &amp;ldquo;Old&amp;rdquo; in this case refers to media items that have been in the library for a while already.</description>
+    </item>
+    
+    <item>
+      <title>Advanced control</title>
+      <link>https://rmrector.github.io/script.artwork.beef/usage/commands/</link>
+      <pubDate>Thu, 12 Jul 2018 14:50:55 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/usage/commands/</guid>
+      <description>Scripts, skins, and other add-ons can use commands to control bits and pieces of Artwork Beef.
+Run automatic processing on the library You can disable the automatic processing after library updates and schedule them with something like the Kodi Callbacks add-on or cron, or trigger them in some other way.
+ Process new items  NotifyAll(script.artwork.beef:control, ProcessNewVideos) NotifyAll(script.artwork.beef:control, ProcessNewMusic)  Process new and old items, but not all in between  NotifyAll(script.</description>
+    </item>
+    
+    <item>
       <title>Why replace extrafanart/extrathumbs</title>
       <link>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</link>
       <pubDate>Tue, 21 Nov 2017 22:46:53 -0700</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</guid>
       <description>I think that multiple fanart for individual media items should be integrated into the library like all other artwork. Here is a list of my reasons.
- Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it!  Skins cobbling together file paths to artwork is practically stone-age at this point, just say no.  It works for items in the library that may not point to a location on a file system that should even care about artwork on this/any level, maybe a movie from UPNP or VOD plugin.</description>
+ Media file organization and skin display should be completely independent. Skins and other interfaces should access all library artwork in the same way.  or a list of particulars:
+ Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it!</description>
     </item>
     
   </channel>

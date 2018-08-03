@@ -1,7 +1,7 @@
 ---
 title: "Advanced control"
 date: 2018-07-12T14:50:55-07:00
-weight: 4
+weight: 40
 ---
 
 Scripts, skins, and other add-ons can use commands to control bits and pieces of Artwork Beef.

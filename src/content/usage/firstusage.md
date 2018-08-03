@@ -1,7 +1,7 @@
 ---
 title: "First usage"
 date: 2017-12-27T22:45:06-07:00
-weight: 2
+weight: 10
 ---
 
 - Artwork Beef must process all items in your library, and will do so automatically. There are some

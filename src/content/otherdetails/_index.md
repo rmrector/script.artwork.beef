@@ -6,7 +6,8 @@ weight: 2
 
 #### How do I quick-start this thing?
 
-- The quickest way to get started is to install it and configure it to your liking.
+- The quickest way to get started is to install it and [configure]({{< ref "usage/settings.md" >}})
+  it to your liking.
 - Do you want Artwork Beef to automatically add artwork for new media?
     - Enable the setting "Add artwork for new videos after library updates" and / or
       "Add artwork for new music after library updates".
@@ -33,9 +34,11 @@ Configuring Artwork Beef to download artwork to your local file system is probab
 #### Manual selection of artwork doesn't show any artwork from one or any web service.
 
 - Does it happen for all media items of a particular type?
-    - Have you futzed with API keys other than the Fanart.tv personal API key?
-        - Reinstall Artwork Beef from the latest _stable_ zip and try again before changing
-          the API keys.
+    - If there is a message about "Invalid project API key" for a particular web service:
+      - Either the built-in API keys have been disabled and you will have to sign up for a project
+        key of your own;
+      - Or you have entered your own project API key improperly and should remove that setting
+        and try again.
   - Or maybe the web service is temporarily unavailable, or your Kodi device's internet connection
     is broken. The Kodi log and Artwork Beef's artwork report may have more details.
   - Otherwise post a reply on the forum thread with a description of the problem, a
@@ -53,16 +56,18 @@ Configuring Artwork Beef to download artwork to your local file system is probab
 
 [Kodi debug log]: https://kodi.wiki/view/Debug-log
 
-#### The Kodi skin or web interface is showing a thumbnail image instead of a movie poster.
+#### A Kodi skin or web interface is showing a thumbnail image instead of a movie poster.
 
 The skin / web interface is pulling up the movie thumb and expecting the fallback poster,
 but it should instead pick the poster first and fall back to the thumb only if the poster
 doesn't exist. They are two different images for two different purposes and should be chosen
 based on the interface design.
 
-#### Where do I put my API keys for other web services?
+#### Where do I put my project API keys for other web services?
 
 - At the bottom of the Advanced page of add-on settings.
+- I do not suggest you do this, the option is only available in case the built-in project keys
+  stop working.
 
 #### Where is the option to replace the fanart slideshow from Artwork Downloader?
 

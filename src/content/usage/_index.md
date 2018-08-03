@@ -29,11 +29,14 @@ There are a few actions and settings you may want to flip before letting Artwork
 See [First usage]({{< ref "usage/firstusage.md" >}}) for details.
 {{% /notice %}}
 
-It must process all items in your library, and will do so automatically the first time it runs.
-Over time it will re-process media items still missing artwork, checking for new artwork from
-web services and the file system. After some time (4-12 months) they will be considered
-"old" items affected by a couple of actions and settings. If the option "only identify local files"
+### Automatic processing
+
+Artwork Beef must process all items in your library, and will do so automatically the first
+time it runs. Over time (4-8 months) it will re-process media items still missing artwork,
+checking for new artwork from web services and the file system. If the option "only identify local files"
 is enabled it will check for new local artwork files monthly.
+
+### Manual processing
 
 You can also run it from Program add-ons to trigger the automatic process for new or all items, or items old
 enough to need an update; a currently running process can also be canceled here. Some other
@@ -43,10 +46,14 @@ media item, open the context menu on that item, then under "Manage..." there are
 new local files and searching the web services for any missing art; and "AB: Select artwork..." to
 manually select new artwork.
 
-**Episode fanart** requires using a scraper that grabs the TheTVDB ID for each episode, like the
+### Episode fanart
+
+Episode fanart requires using a scraper that grabs the TheTVDB ID for each episode, like the
 standard TheTVDB scraper and The Movie Database _TV show_ scraper, or an NFO manager that does the same.
 You must enable adding episode fanart manually for each series through the add-on settings, as they add a bundle of new
 API calls to The Movie Database and just aren't available for many series.
+
+### Change report
 
 It generates a report of changes to
 [userdata](http://kodi.wiki/view/Userdata)/addon_data/script.artwork.beef/artwork-report.txt.

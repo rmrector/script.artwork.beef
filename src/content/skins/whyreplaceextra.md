@@ -6,14 +6,17 @@ date: 2017-11-21T22:46:53-07:00
 I think that multiple fanart for individual media items should be integrated into the
 library like all other artwork. Here is a list of my reasons.
 
+1. Media file organization and skin display should be completely independent.
+2. Skins and other interfaces should access all library artwork in the same way.
+
+or a list of particulars:
+
 - Kodi's support for freely named artwork in the library is pretty great, so let's use it!
-  - Skins cobbling together file paths to artwork is practically stone-age at this point,
-    just say no.
 - It works for items in the library that may not point to a location on a file system that
   should even care about artwork on this/any level, maybe a movie from UPNP or VOD plugin.
 - Plugins can fill their own ListItems with this artwork, which skins can access in exactly the same way.
 - Should generally work for other library items that can have freely named artwork;
-  movie sets, music videos, TV show seasons, episodes, even music artists, albums, and songs.
+  movie sets, music videos, TV show seasons, episodes; even music artists, albums, and songs.
 - Placing artwork in the library allows skins to work with multiple fanart without demanding one
   specific location for the files. Users can decide to keep them with their media files or
   in a secondary location, separated from the media for non-Kodi access. It can
