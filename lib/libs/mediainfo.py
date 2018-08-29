@@ -530,6 +530,14 @@ def get_cached_songs(dbid):
 def get_cached_songs_bypath(path):
     return quickjson.get_songs(songfilter={'field': 'path', 'operator': 'is', 'value': path})
 
+def get_cached_tvshow(dbid):
+    tvshows = get_cached_tvshows()
+    return next(show for show in tvshows if show['tvshowid'] == dbid)
+
+@cacheit
+def get_cached_tvshows():
+    return quickjson.get_item_list(mediatypes.TVSHOW)
+
 quickcache = {}
 def clear_cache():
     quickcache.clear()

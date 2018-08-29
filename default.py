@@ -218,7 +218,7 @@ def runon_medialist(function, heading, medialist='videos', typelabel=None, fg=Fa
 
     if medialist == 'videos':
         steps_to_run = [(lambda: quickjson.get_item_list(mediatypes.MOVIE), L(M.MOVIES)),
-            (quickjson.get_tvshows, L(M.SERIES)),
+            (info.get_cached_tvshows, L(M.SERIES)),
             (quickjson.get_seasons, L(M.SEASONS)),
             (lambda: quickjson.get_item_list(mediatypes.MOVIESET), L(M.MOVIESETS)),
             (quickjson.get_episodes, L(M.EPISODES)),
@@ -240,7 +240,7 @@ def runon_medialist(function, heading, medialist='videos', typelabel=None, fg=Fa
                 progress.update(start + i * stepsize // len(items))
             item = info.MediaItem(item)
             if item.mediatype == mediatypes.SEASON:
-                item.file = quickjson.get_item_details(item.tvshowid, mediatypes.TVSHOW)['file']
+                item.file = info.get_cached_tvshow(item.tvshowid)['file']
             updates = function(item)
             if isinstance(updates, int):
                 changedcount += updates
@@ -263,6 +263,8 @@ def runon_medialist(function, heading, medialist='videos', typelabel=None, fg=Fa
         fixcount += update_art_for_items(list_fn(), start)
         if monitor.abortRequested() or fg and progress.iscanceled():
             break
+
+    info.clear_cache()
     progress.close()
     return fixcount
 
