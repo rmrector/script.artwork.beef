@@ -199,12 +199,12 @@ class ArtworkService(xbmc.Monitor):
             allvideos = True
             shouldinclude_fn = lambda id, type, label: True
         items = []
-        if not mediatypes.disabled(mediatypes.MOVIE):
-            items.extend(info.MediaItem(movie) for movie in quickjson.get_item_list(mediatypes.MOVIE)
-                if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE, movie['label']))
         if not mediatypes.disabled(mediatypes.MOVIESET):
             items.extend(info.MediaItem(mset) for mset in quickjson.get_item_list(mediatypes.MOVIESET)
                 if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label']))
+        if not mediatypes.disabled(mediatypes.MOVIE):
+            items.extend(info.MediaItem(movie) for movie in quickjson.get_item_list(mediatypes.MOVIE)
+                if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE, movie['label']))
         if not mediatypes.disabled(mediatypes.MUSICVIDEO):
             items.extend(info.MediaItem(mvid) for mvid in quickjson.get_item_list(mediatypes.MUSICVIDEO)
                 if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, info.build_music_label(mvid)))
@@ -250,7 +250,10 @@ class ArtworkService(xbmc.Monitor):
             for mediaid in self.recentvideos[mtype]:
                 if mtype == 'tvshow':
                     seriesadded.add(mediaid)
-                newitems.append(info.MediaItem(quickjson.get_item_details(mediaid, mtype)))
+                jsonitem = quickjson.get_item_details(mediaid, mtype)
+                if jsonitem.get('setid'):
+                    newitems.append(info.MediaItem(quickjson.get_item_details(jsonitem['setid'], mediatypes.MOVIESET)))
+                newitems.append(info.MediaItem(jsonitem))
                 if self.abortRequested():
                     return
         for episodeid in self.recentvideos['episode']:

@@ -276,12 +276,11 @@ def _get_seasons_artwork(seasons):
     return resultseasons, resultart
 
 def _remove_set_movieposters(mediaitem):
-    # Remove poster/fanart Kodi automatically sets from a movie
-    if not set(key for key in mediaitem.art).difference(('poster', 'fanart')):
-        if 'poster' in mediaitem.art:
-            del mediaitem.art['poster']
-        if 'fanart' in mediaitem.art:
-            del mediaitem.art['fanart']
+    # Remove artwork Kodi automatically sets from a movie
+    if not mediaitem.movies:
+        mediaitem.movies = quickjson.get_item_details(mediaitem.dbid, mediatypes.MOVIESET)['movies']
+    if any(movie.art == mediaitem.art for movie in mediaitem.movies):
+        mediaitem.art = {}
 
 def _identify_parent_movieset(mediaitem):
     # Identify set folder among movie parent dirs
