@@ -27,10 +27,14 @@ def clean_artwork(mediaitem):
             updated_art['cdart'] = None
 
     for arttype, url in updated_art.iteritems():
-        # Remove local artwork if it is no longer available
-        if url and not url.startswith(pykodi.notlocalimages) and not xbmcvfs.exists(url):
+        if not url:
+            continue
+        if not url.startswith(pykodi.notlocalimages) and not xbmcvfs.exists(url):
+            # Remove local artwork if it is no longer available
             updated_art[arttype] = None
+            continue
         for fixcfg in old_urls_fix.values():
+            # fix other web service URLs
             if url.startswith(fixcfg[0]):
                 updated_art[arttype] = fixcfg[1] + url[url.index(fixcfg[2]) + len(fixcfg[2]):]
             quickjson.remove_texture_byurl(url)
