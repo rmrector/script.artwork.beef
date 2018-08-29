@@ -95,6 +95,7 @@ class ArtworkProcessor(object):
 
     def finish_run(self):
         info.clear_cache()
+        self.downloader = None
         self.close_progress()
 
     @property
@@ -110,6 +111,8 @@ class ArtworkProcessor(object):
             busy.create()
         if mediatype in mediatypes.artinfo and (mediatype not in mediatypes.audiotypes or get_kodi_version() >= 18):
             mediaitem = info.MediaItem(quickjson.get_item_details(dbid, mediatype))
+            log("Processing {0} '{1}' {2}.".format(mediatype, mediaitem.label, 'automatically'
+                if mode == MODE_AUTO else 'manually'))
         else:
             if mode == MODE_GUI:
                 busy.close()
@@ -362,10 +365,13 @@ class ArtworkProcessor(object):
             languages.insert(0, settings.language_override)
         if 'en' not in languages:
             languages.append('en')
+        # TODO: Remove 'None' from fallback, treat textless artwork like 'fanart' and 'keyart' differently
         languages.append(None)
         self.autolanguages = languages
+        log("Working language filter: " + str(languages))
 
     def get_top_missing_art(self, missingarts, mediatype, existingart, availableart):
+        # TODO: refactor to `get_top_artwork` that works on a single art type
         if not availableart:
             return {}
         newartwork = {}

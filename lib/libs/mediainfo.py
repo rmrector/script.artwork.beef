@@ -500,6 +500,8 @@ def _get_uniqueslug(mediaitem, slug_mediatype):
             foundone = True
     return None
 
+# TODO: refactor to quickjson.JSONCache maybe
+
 def cacheit(func):
     @wraps(func)
     def wrapper(*args):

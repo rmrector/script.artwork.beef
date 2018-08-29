@@ -21,6 +21,12 @@ TEMP_DIR = 'special://temp/recycledartwork/'
 
 typemap = {'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif'}
 
+# REVIEW: Deleting replaced artwork. If [movie base name]-fanart.jpg exists and AB is
+#  configured for fanart.jpg, downloading a new artwork will save to the short name but
+#  leave the long name, and the next scan will pick up the long name.
+#  ditto scanning 'logo.png' at first and saving new 'clearlogo.png', but clearlogo will be picked
+#  first by the next scan so that's not such a big deal.
+
 class FileManager(object):
     def __init__(self):
         self.getter = Getter()
@@ -137,7 +143,7 @@ class FileManager(object):
                 continue
             old_url = oldimage['url'] if isinstance(oldimage, dict) else oldimage[0]['url']
             if not old_url or old_url.startswith(notlocalimages) \
-            or old_url in mediaitem.selectedart.itervalues():
+            or old_url in mediaitem.selectedart.values():
                 continue
             if settings.recycle_removed:
                 recyclefile(old_url)
@@ -162,7 +168,7 @@ class FileManager(object):
             except ConnectionError:
                 pass # Kodi is closing
         threads = []
-        for path in artmap.itervalues():
+        for path in artmap.values():
             if not path or path.startswith(('http', 'image')) or path in self.alreadycached:
                 continue
             if multiplethreads:
