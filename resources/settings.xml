@@ -64,7 +64,7 @@
 		<setting id="movie.discart" label="discart" type="bool" default="true" />
 		<setting id="movie.othertypes" label="32957" type="text" />
 		<setting id="set.poster_limit" label="$LOCALIZE[20457] poster" type="slider" option="int" default="1" range="0,1,10" />
-		<setting id="set.keyart_limit" label="keyart" type="slider" option="int" default="0" range="0,1,10" />
+		<setting id="set.keyart_limit" label="$LOCALIZE[20457] keyart" type="slider" option="int" default="0" range="0,1,10" />
 		<setting id="set.fanart_limit" label="$LOCALIZE[20457] fanart" type="slider" option="int" default="5" range="0,1,20" />
 		<setting id="set.banner" label="$LOCALIZE[20457] banner" type="bool" default="true" />
 		<setting id="set.clearlogo" label="$LOCALIZE[20457] clearlogo" type="bool" default="true" />
