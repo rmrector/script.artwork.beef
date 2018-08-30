@@ -27,6 +27,9 @@ Like the context menu items generally under "Manage ...", skins can add them som
 `mode` can also be "auto", and `mediatype` can be "tvshow", "movie", "episode", "set", "musicvideo",
 "artist", "album", and "song".
 
+`mode=gui` isn't a complete replacement for Kodi's built in "Choose art" dialog: users can't unset artwork
+from this dialog, nor can they manually navigate to and select other images in the file system.
+
 ### Watch for notifications
 
 Artwork Beef will send out a notification when the library processing is finished.

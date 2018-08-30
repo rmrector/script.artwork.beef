@@ -434,6 +434,7 @@ h1 .subtitle {
 <li><a href="#central-directory-folder-naming">Central directory folder naming</a></li>
 <li><a href="#file-system-safe-names">File system safe names</a></li>
 <li><a href="#legacy-file-names">Legacy file names</a></li>
+<li><a href="#an-option-to-rename-artwork-files">An option to rename artwork files</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -622,6 +623,23 @@ in cases when they are different than the art type name skins use to access them
 <p><code>logo.png</code> is added as clearlogo, <code>character.png</code> is added as characterart, <code>folder.jpg</code> to thumb,
 <code>disc.png</code> and <code>cdart.png</code> to discart, files in the extrafanart directory are added as fanart#,
 and files in the extrathumbs directory are added as thumb#.</p>
+
+<h3 id="an-option-to-rename-artwork-files">An option to rename artwork files</h3>
+
+<p>If you have a Linux computer with Perl installed, here is a collection of commands to rename
+some artwork files from Artwork Downloader to Kodi file names. Moving extrafanart and extrathumbs
+is a bit more work. Only do this if all of your media management tools support the new names,
+Artwork Beef will support both for some time yet. These commands are just &ldquo;dry runs&rdquo; that will
+print out what the rename <em>would</em> do, remove the <code>-n</code> option from each line to actually rename the files.</p>
+
+<pre><code class="language-sh"># For movies and TV shows
+find /path/to/media/ \( -iname &quot;logo.png&quot; -o -iname &quot;*-logo.png&quot; \) -exec rename -n 's/logo.png$/clearlogo.png/i' '{}' \;
+find /path/to/media/ \( -iname &quot;disc.png&quot; -o -iname &quot;*-disc.png&quot; \) -exec rename -n 's/disc.png$/discart.png/i' '{}' \;
+find /path/to/media/ \( -iname &quot;character.png&quot; -o -iname &quot;*-character.png&quot; \) -exec rename -n 's/character.png$/characterart.png/i' '{}' \;
+
+# Music videos and the music library
+find /path/to/media/ \( -iname &quot;cdart.png&quot; -o -iname &quot;*-cdart.png&quot; \) -exec rename -n 's/cdart.png$/discart.png/i' '{}' \;
+</code></pre>
 
 
 <footer class=" footline" >

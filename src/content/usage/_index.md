@@ -32,7 +32,8 @@ See [First usage]({{< ref "usage/firstusage.md" >}}) for details.
 ### Automatic processing
 
 Artwork Beef must process all items in your library, and will do so automatically the first
-time it runs. Over time (4-8 months) it will re-process media items still missing artwork,
+time it runs. If configured as above, it will scan new media items as they are added to Kodi's library,
+and over time (4-8 months) it will re-process existing media items still missing artwork,
 checking for new artwork from web services and the file system. If the option "only identify local files"
 is enabled it will check for new local artwork files monthly.
 

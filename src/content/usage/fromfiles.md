@@ -157,3 +157,21 @@ in cases when they are different than the art type name skins use to access them
 `logo.png` is added as clearlogo, `character.png` is added as characterart, `folder.jpg` to thumb,
 `disc.png` and `cdart.png` to discart, files in the extrafanart directory are added as fanart#,
 and files in the extrathumbs directory are added as thumb#.
+
+### An option to rename artwork files
+
+If you have a Linux computer with Perl installed, here is a collection of commands to rename
+some artwork files from Artwork Downloader to Kodi file names. Moving extrafanart and extrathumbs
+is a bit more work. Only do this if all of your media management tools support the new names,
+Artwork Beef will support both for some time yet. These commands are just "dry runs" that will
+print out what the rename _would_ do, remove the `-n` option from each line to actually rename the files.
+
+```sh
+# For movies and TV shows
+find /path/to/media/ \( -iname "logo.png" -o -iname "*-logo.png" \) -exec rename -n 's/logo.png$/clearlogo.png/i' '{}' \;
+find /path/to/media/ \( -iname "disc.png" -o -iname "*-disc.png" \) -exec rename -n 's/disc.png$/discart.png/i' '{}' \;
+find /path/to/media/ \( -iname "character.png" -o -iname "*-character.png" \) -exec rename -n 's/character.png$/characterart.png/i' '{}' \;
+
+# Music videos and the music library
+find /path/to/media/ \( -iname "cdart.png" -o -iname "*-cdart.png" \) -exec rename -n 's/cdart.png$/discart.png/i' '{}' \;
+```

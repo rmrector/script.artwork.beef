@@ -509,12 +509,16 @@ h1 .subtitle {
 
 
 
+<p>Artwork Beef configuration and manual actions when run from &ldquo;Program Add-ons&rdquo;.</p>
+
 <h2 id="general">General</h2>
 
 <h4 id="add-artwork-for-new-videos-music-after-library-updates">&ldquo;Add artwork for new videos / music after library updates&rdquo;</h4>
 
-<p>The main process of Artwork Beef. Runs after library updates to add extended artwork for new items,
-either from the file system or web services. Video and music are configured separately.</p>
+<p>The main process of Artwork Beef. Runs after library updates to add extended artwork for media items
+newly added to the Kodi library, either from the file system or web services. Video and music
+are configured separately. A media item is only &ldquo;new&rdquo; once, after it has been scanned it is no longer
+&ldquo;new&rdquo;.</p>
 
 <h5 id="update-artwork-for-old-items-daily">&ldquo;Update artwork for old items daily&rdquo;</h5>
 
@@ -585,6 +589,9 @@ with multiple artwork of the same type, like &ldquo;fanart&rdquo;, which is conf
 If you want other artwork types in the file system added to the Kodi library, include the artwork
 type in the box &ldquo;Additional art types for &hellip; (comma separated)&rdquo;.</p>
 
+<p>Artwork Beef will not automatically apply these changes to existing items in the library, you will need
+to run &ldquo;add missing artwork for &hellip;&rdquo; &ldquo;all videos&rdquo; or music to look for newly configured artwork.</p>
+
 <p>You probably don&rsquo;t want &ldquo;animatedposter&rdquo; and &ldquo;animatedfanart&rdquo; in the &ldquo;Additional art types&rdquo; list,
 that will conflict with Skin Helper Service.</p>
 
@@ -598,7 +605,9 @@ available for many series.</p>
 <p>Artwork types here will be downloaded to the local file system (generally next to the media items),
 rather than linked directly to the original URL. This makes it easy to share with other Kodi installations
 and saves a bundle of bandwidth for you and the web services. It is awkward to configure but I
-suggest you enable it for everything (except maybe episode &lsquo;thumb&rsquo;).</p>
+suggest you enable it for everything (except maybe episode &lsquo;thumb&rsquo;). For artwork types that can
+have multiple images, only the base art name is needed; &ldquo;fanart&rdquo; will also include &ldquo;fanart1&rdquo;, &ldquo;fanart2&rdquo;,
+&ldquo;fanart3&rdquo;, etc if added to Kodi&rsquo;s library.</p>
 
 <h2 id="advanced">Advanced</h2>
 

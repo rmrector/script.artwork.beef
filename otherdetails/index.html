@@ -422,10 +422,19 @@ h1 .subtitle {
 <ul>
 <li>
 <ul>
+<li><a href="#what-exactly-does-this-do-why-is-it-necessary">What exactly does this do, why is it necessary?</a>
+<ul>
+<li><a href="#add-extended-artwork-to-kodi-s-library">Add extended artwork to Kodi&rsquo;s library</a></li>
+<li><a href="#download-artwork-locally">Download artwork locally</a></li>
+</ul></li>
 <li><a href="#how-do-i-quick-start-this-thing">How do I quick-start this thing?</a></li>
+<li><a href="#i-installed-artwork-beef-but-all-my-media-items-are-still-missing-artwork">I installed Artwork Beef but all my media items are still missing artwork!</a></li>
+<li><a href="#i-see-artwork-for-a-movie-set-collection-saga-on-fanart-tv-but-artwork-beef-won-t-show-it">I see artwork for a movie set / collection / saga on fanart.tv but Artwork Beef won&rsquo;t show it.</a></li>
+<li><a href="#i-can-t-see-artwork-while-browsing-the-library-but-i-do-see-it-assigned-in-ab-select-artwork-or-kodi-s-built-in-choose-art-dialog">I can&rsquo;t see artwork while browsing the library, but I do see it assigned in &ldquo;AB: select artwork&hellip;&rdquo; or Kodi&rsquo;s built-in &ldquo;Choose art&rdquo; dialog.</a></li>
 <li><a href="#why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</a></li>
-<li><a href="#images-from-web-services-are-not-visible">Images from web services are not visible.</a></li>
+<li><a href="#images-from-web-services-are-added-to-the-library-but-are-not-visible">Images from web services are added to the library but are not visible.</a></li>
 <li><a href="#manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</a></li>
+<li><a href="#artwork-beef-cannot-find-artwork-for-some-movie-sets-collections-from-fanart-tv">Artwork Beef cannot find artwork for some movie sets / collections from fanart.tv.</a></li>
 <li><a href="#a-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">A Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</a></li>
 <li><a href="#where-do-i-put-my-project-api-keys-for-other-web-services">Where do I put my project API keys for other web services?</a></li>
 <li><a href="#where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</a></li>
@@ -453,36 +462,88 @@ h1 .subtitle {
 
 
 
+<h4 id="what-exactly-does-this-do-why-is-it-necessary">What exactly does this do, why is it necessary?</h4>
+
+<p>Artwork Beef&rsquo;s main contributions to your Kodi setup is to add extended artwork to Kodi&rsquo;s library
+and to download artwork from web services to the local file system. It is generally designed to
+work automatically much like scrapers.</p>
+
+<h5 id="add-extended-artwork-to-kodi-s-library">Add extended artwork to Kodi&rsquo;s library</h5>
+
+<p>Kodi and scrapers have had some support for extended artwork for awhile, but they aren&rsquo;t supported
+to the same extent as basic artwork, like &ldquo;poster&rdquo; and &ldquo;fanart&rdquo;, and need Artwork Beef or something
+like it to add extended artwork to Kodi&rsquo;s library with JSON-RPC.</p>
+
+<p><strong>Kodi 17 Krypton</strong> and below only assigns basic artwork from scrapers, NFO files, and the
+local file system. More help is needed to get any extended artwork into the library, whether you
+already have them saved locally or want to &ldquo;scrape&rdquo; them from web services.</p>
+
+<p><strong>Kodi 18 Leia</strong> has added the ability to assign extended artwork from scrapers and NFO files.
+It is still early days for Kodi 18 however, and not all scrapers currently
+support extended artwork or they may not support the full selection.</p>
+
+<p>Additionally for movie set artwork, Kodi just copies movie artwork, more help is needed
+to add meaningfully different artwork for them.</p>
+
+<h5 id="download-artwork-locally">Download artwork locally</h5>
+
+<p>Artwork Beef can download artwork locally to avoid troubles when web service URLs change, and
+avoid redownloading the same image for multiple Kodi installations or in the future if the image
+is no longer in Kodi&rsquo;s texture cache.</p>
+
 <h4 id="how-do-i-quick-start-this-thing">How do I quick-start this thing?</h4>
 
 <ul>
 <li>The quickest way to get started is to install it and <a href="https://rmrector.github.io/script.artwork.beef/usage/settings/">configure</a>
 it to your liking.</li>
-<li>Do you want Artwork Beef to automatically add artwork for new media?
+<li>If you want Artwork Beef to automatically add artwork for new media &hellip;
 
 <ul>
 <li>Enable the setting &ldquo;Add artwork for new videos after library updates&rdquo; and / or
 &ldquo;Add artwork for new music after library updates&rdquo;.</li>
 </ul></li>
-<li>Do you want Artwork Beef to download image files to your local file system?
+<li>If you want Artwork Beef to download image files to your local file system &hellip;
 
 <ul>
-<li>Then enable the settings &ldquo;Download image files for processed &hellip;&rdquo; for each media type
-at the top of the &lsquo;TV shows&rsquo;, &lsquo;Movies&rsquo;, &lsquo;Music videos&rsquo;, and &lsquo;Music&rsquo; tabs.</li>
+<li>Then add each image type to the settings &ldquo;Download these artwork types to the local file system&rdquo;
+for each media type at the bottom of the &lsquo;TV shows&rsquo;, &lsquo;Movies&rsquo;, &lsquo;Music videos&rsquo;, and &lsquo;Music&rsquo; tabs.</li>
 </ul></li>
-<li>Do you want Artwork Beef to only identify artwork you have already gathered locally with
-a media manager, avoiding web services for automatic processing?
+<li>If you want Artwork Beef to only identify artwork you have already gathered
+<a href="https://rmrector.github.io/script.artwork.beef/usage/fromfiles/">locally</a> with a media manager &hellip;
 
 <ul>
-<li>Enable the setting &ldquo;Do not automatically add artwork from web services, only identify local files&rdquo;.</li>
+<li>Enable the setting &ldquo;Do not automatically add artwork from web services, only identify local files&rdquo;
+at the top of each media tab.</li>
 </ul></li>
-<li>Do you want Artwork Beef to ignore certain media types during automatic processing?
+<li>If you want Artwork Beef to ignore certain media types during automatic processing &hellip;
 
 <ul>
-<li>Turn on the settings &ldquo;Disable all automatic processing &hellip;&rdquo; for that media type.</li>
+<li>Disable all options under &ldquo;Automatically add these artwork types from web services and
+file system&rdquo; and &ldquo;Download these artwork types to the local file system&rdquo; for that media type.</li>
+<li>For movies, episodes, and music videos, also disable the options &ldquo;Replace episode / movie /
+music video &lsquo;thumb&rsquo; with Kodi generated thumb&rdquo; on the Advanced tab.</li>
 </ul></li>
 <li>See <a href="https://rmrector.github.io/script.artwork.beef/usage/firstusage/">First usage</a> for more details.</li>
 </ul>
+
+<h4 id="i-installed-artwork-beef-but-all-my-media-items-are-still-missing-artwork">I installed Artwork Beef but all my media items are still missing artwork!</h4>
+
+<p>Run Artwork Beef from &ldquo;Program add-ons&rdquo; and then &ldquo;add missing artwork for &hellip;&rdquo; &ldquo;new videos&rdquo; or music.
+Artwork Beef must be run on media items before it can do anything. It can be configured to run
+automatically after library updates.</p>
+
+<h4 id="i-see-artwork-for-a-movie-set-collection-saga-on-fanart-tv-but-artwork-beef-won-t-show-it">I see artwork for a movie set / collection / saga on fanart.tv but Artwork Beef won&rsquo;t show it.</h4>
+
+<p>Artwork Beef can only pull artwork from fanart.tv for movie sets that exist on TheMovieDB.
+However, you can manually download that artwork and place it in the correct
+<a href="https://rmrector.github.io/script.artwork.beef/usage/fromfiles/#movie-collection-artwork">location on your file system</a>.
+Then run &ldquo;AB: add missing artwork&rdquo; on the affected movie set.</p>
+
+<h4 id="i-can-t-see-artwork-while-browsing-the-library-but-i-do-see-it-assigned-in-ab-select-artwork-or-kodi-s-built-in-choose-art-dialog">I can&rsquo;t see artwork while browsing the library, but I do see it assigned in &ldquo;AB: select artwork&hellip;&rdquo; or Kodi&rsquo;s built-in &ldquo;Choose art&rdquo; dialog.</h4>
+
+<p>Artwork Beef has done its job. Skins are responsible for displaying artwork assigned in the
+Kodi library. Are you sure you have configured the <em>skin</em> to show the artwork type you expect
+for the media type you are looking at?</p>
 
 <h4 id="why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</h4>
 
@@ -491,14 +552,14 @@ a media manager, avoiding web services for automatic processing?
 <li>Artwork Beef caches the previous image results from web services for 72 hours.</li>
 </ul>
 
-<h4 id="images-from-web-services-are-not-visible">Images from web services are not visible.</h4>
+<h4 id="images-from-web-services-are-added-to-the-library-but-are-not-visible">Images from web services are added to the library but are not visible.</h4>
 
 <p>Most likely the web service is temporarily/intermittently unavailable. Try again later.
 Configuring Artwork Beef to download artwork to your local file system is probably a good idea.</p>
 
 <h4 id="manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</h4>
 
-<ul>
+<ol>
 <li>Does it happen for all media items of a particular type?
 
 <ul>
@@ -518,8 +579,8 @@ is broken. The Kodi log and Artwork Beef&rsquo;s artwork report may have more de
 <li>Or just a handful of media items?
 
 <ul>
-<li>Artwork Beef requires web service IDs (like an IMDB number) in the Kodi library. These
-should be included in NFO files or scrapers.
+<li>Artwork Beef requires web service IDs (like an IMDB number) in the Kodi library - except for
+movie sets and music videos. These should be included in NFO files, scrapers, or embedded tags.
 
 <ul>
 <li>If you use scrapers for the media item, make sure your scrapers are up to date and
@@ -531,7 +592,14 @@ then refresh the item in Kodi.</li>
 <li>Music must be tagged with MusicBrainz IDs. Use MusicBrainz Picard for tagging files.</li>
 </ul></li>
 </ul></li>
-</ul>
+</ol>
+
+<h4 id="artwork-beef-cannot-find-artwork-for-some-movie-sets-collections-from-fanart-tv">Artwork Beef cannot find artwork for some movie sets / collections from fanart.tv.</h4>
+
+<p>Artwork Beef must look up movie set artwork on fanart.tv by a TheMovieDB ID, which has
+<a href="https://www.themoviedb.org/bible/collection">different rules</a>
+for what a movie collection is than you might. You can download the artwork and place it in the
+file system manually, and Artwork Beef will add it to the library when the movie set is next scanned.</p>
 
 <h4 id="a-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">A Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</h4>
 

@@ -58,8 +58,8 @@ Add-on setting There is an add-on setting to pull extrafanart and extrathumbs fr
       <pubDate>Thu, 26 Jul 2018 15:50:04 -0600</pubDate>
       
       <guid>https://rmrector.github.io/script.artwork.beef/usage/settings/</guid>
-      <description>General &amp;ldquo;Add artwork for new videos / music after library updates&amp;rdquo; The main process of Artwork Beef. Runs after library updates to add extended artwork for new items, either from the file system or web services. Video and music are configured separately.
-&amp;ldquo;Update artwork for old items daily&amp;rdquo; Check old items for new artwork. &amp;ldquo;Old&amp;rdquo; in this case refers to media items that have been in the library for a while already.</description>
+      <description>Artwork Beef configuration and manual actions when run from &amp;ldquo;Program Add-ons&amp;rdquo;.
+General &amp;ldquo;Add artwork for new videos / music after library updates&amp;rdquo; The main process of Artwork Beef. Runs after library updates to add extended artwork for media items newly added to the Kodi library, either from the file system or web services. Video and music are configured separately. A media item is only &amp;ldquo;new&amp;rdquo; once, after it has been scanned it is no longer &amp;ldquo;new&amp;rdquo;.</description>
     </item>
     
     <item>

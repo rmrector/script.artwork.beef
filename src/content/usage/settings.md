@@ -4,12 +4,16 @@ date: 2018-07-26T15:50:04-06:00
 weight: 30
 ---
 
+Artwork Beef configuration and manual actions when run from "Program Add-ons".
+
 ## General
 
 #### "Add artwork for new videos / music after library updates"
 
-The main process of Artwork Beef. Runs after library updates to add extended artwork for new items,
-either from the file system or web services. Video and music are configured separately.
+The main process of Artwork Beef. Runs after library updates to add extended artwork for media items
+newly added to the Kodi library, either from the file system or web services. Video and music
+are configured separately. A media item is only "new" once, after it has been scanned it is no longer
+"new".
 
 ##### "Update artwork for old items daily"
 
@@ -80,6 +84,9 @@ with multiple artwork of the same type, like "fanart", which is configured with 
 If you want other artwork types in the file system added to the Kodi library, include the artwork
 type in the box "Additional art types for ... (comma separated)".
 
+Artwork Beef will not automatically apply these changes to existing items in the library, you will need
+to run "add missing artwork for ..." "all videos" or music to look for newly configured artwork.
+
 You probably don't want "animatedposter" and "animatedfanart" in the "Additional art types" list,
 that will conflict with Skin Helper Service.
 
@@ -93,7 +100,9 @@ available for many series.
 Artwork types here will be downloaded to the local file system (generally next to the media items),
 rather than linked directly to the original URL. This makes it easy to share with other Kodi installations
 and saves a bundle of bandwidth for you and the web services. It is awkward to configure but I
-suggest you enable it for everything (except maybe episode 'thumb').
+suggest you enable it for everything (except maybe episode 'thumb'). For artwork types that can
+have multiple images, only the base art name is needed; "fanart" will also include "fanart1", "fanart2",
+"fanart3", etc if added to Kodi's library.
 
 ## Advanced
 
