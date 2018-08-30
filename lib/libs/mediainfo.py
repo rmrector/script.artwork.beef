@@ -279,7 +279,7 @@ def _remove_set_movieposters(mediaitem):
     # Remove artwork Kodi automatically sets from a movie
     if not mediaitem.movies:
         mediaitem.movies = quickjson.get_item_details(mediaitem.dbid, mediatypes.MOVIESET)['movies']
-    if any(movie.art == mediaitem.art for movie in mediaitem.movies):
+    if any(movie['art'] == mediaitem.art for movie in mediaitem.movies):
         mediaitem.art = {}
 
 def _identify_parent_movieset(mediaitem):
