@@ -424,8 +424,8 @@ class ArtworkProcessor(object):
         if art['provider'].sort == 'theaudiodb.com' or not art['language'] and \
             (basearttype.endswith('poster') and settings.titlefree_poster or
                 basearttype.endswith(('fanart', 'keyart', 'characterart'))):
-            return art['url'] not in ignoreurls
-        return art['language'] in self.autolanguages and art['url'] not in ignoreurls
+            return skippreferred or art['url'] not in ignoreurls
+        return art['language'] in self.autolanguages and (skippreferred or art['url'] not in ignoreurls)
 
 def add_art_to_library(mediatype, seasons, dbid, selectedart):
     if not selectedart:
