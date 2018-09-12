@@ -21,6 +21,14 @@
 					<label>AB: $ADDON[script.artwork.beef 32411]</label>
 					<visible>!Skin.HasSetting(disablecontext:script.artwork.beef) + [StringCompare(ListItem.DBTYPE, movie) | StringCompare(ListItem.DBTYPE, set) | StringCompare(ListItem.DBTYPE, tvshow) | StringCompare(ListItem.DBTYPE, episode) | StringCompare(ListItem.DBTYPE, musicvideo) | String.IsEqual(ListItem.DBTYPE, movie) | String.IsEqual(ListItem.DBTYPE, set) | String.IsEqual(ListItem.DBTYPE, tvshow) | String.IsEqual(ListItem.DBTYPE, episode) | String.IsEqual(ListItem.DBTYPE, musicvideo)]</visible>
 				</item>
+				<item library="context_debug_remove.py">
+					<label>AB: $ADDON[script.artwork.beef 32427]</label>
+					<visible>Skin.HasSetting(enablecontext:script.artwork.beef.debug) + [StringCompare(ListItem.DBTYPE, movie) | StringCompare(ListItem.DBTYPE, set) | StringCompare(ListItem.DBTYPE, tvshow) | StringCompare(ListItem.DBTYPE, episode) | StringCompare(ListItem.DBTYPE, musicvideo) | String.IsEqual(ListItem.DBTYPE, movie) | String.IsEqual(ListItem.DBTYPE, set) | String.IsEqual(ListItem.DBTYPE, tvshow) | String.IsEqual(ListItem.DBTYPE, episode) | String.IsEqual(ListItem.DBTYPE, musicvideo)]</visible>
+				</item>
+				<item library="context_debug_logitem.py">
+					<label>AB: $ADDON[script.artwork.beef 32430]</label>
+					<visible>Skin.HasSetting(enablecontext:script.artwork.beef.debug) + [StringCompare(ListItem.DBTYPE, movie) | StringCompare(ListItem.DBTYPE, set) | StringCompare(ListItem.DBTYPE, tvshow) | StringCompare(ListItem.DBTYPE, episode) | StringCompare(ListItem.DBTYPE, musicvideo) | String.IsEqual(ListItem.DBTYPE, movie) | String.IsEqual(ListItem.DBTYPE, set) | String.IsEqual(ListItem.DBTYPE, tvshow) | String.IsEqual(ListItem.DBTYPE, episode) | String.IsEqual(ListItem.DBTYPE, musicvideo)]</visible>
+				</item>
 			</menu>
 			<item library="context.py">
 				<label>AB: $ADDON[script.artwork.beef 32410]</label>
@@ -29,6 +37,14 @@
 			<item library="context_gui.py">
 				<label>AB: $ADDON[script.artwork.beef 32411]</label>
 				<visible>!Skin.HasSetting(disablecontext:script.artwork.beef) + [String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)] + [String.IsEqual(ListItem.DBTYPE, artist) | String.IsEqual(ListItem.DBTYPE, album) | String.IsEqual(ListItem.DBTYPE, song)]</visible>
+			</item>
+			<item library="context_debug_remove.py">
+				<label>AB: $ADDON[script.artwork.beef 32427]</label>
+				<visible>Skin.HasSetting(enablecontext:script.artwork.beef.debug) + [String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)] + [String.IsEqual(ListItem.DBTYPE, artist) | String.IsEqual(ListItem.DBTYPE, album) | String.IsEqual(ListItem.DBTYPE, song)]</visible>
+			</item>
+			<item library="context_debug_logitem.py">
+				<label>AB: $ADDON[script.artwork.beef 32430]</label>
+				<visible>Skin.HasSetting(enablecontext:script.artwork.beef.debug) + [String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)] + [String.IsEqual(ListItem.DBTYPE, artist) | String.IsEqual(ListItem.DBTYPE, album) | String.IsEqual(ListItem.DBTYPE, song)]</visible>
 			</item>
 		</menu>
 	</extension>

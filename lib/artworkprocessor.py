@@ -16,6 +16,7 @@ from lib.providers import search
 
 MODE_AUTO = 'auto'
 MODE_GUI = 'gui'
+MODE_DEBUG = 'debug'
 
 THROTTLE_TIME = 0.15
 
@@ -45,6 +46,7 @@ class ArtworkProcessor(object):
         self.downloader = None
         self.chunkcount = 1
         self.currentchunk = 1
+        self.debug = False
         settings.update_settings()
         mediatypes.update_settings()
 
@@ -84,7 +86,7 @@ class ArtworkProcessor(object):
     def init_run(self, show_progress=False, chunkcount=1):
         self.setlanguages()
         self.gatherer = Gatherer(self.monitor, self.autolanguages)
-        self.downloader = FileManager()
+        self.downloader = FileManager(self.debug)
         self.freshstart = str(datetime_now() - timedelta(days=365))
         self.chunkcount = chunkcount
         self.currentchunk = 1
@@ -93,9 +95,16 @@ class ArtworkProcessor(object):
         if show_progress:
             self.create_progress()
 
+    def set_debug(self, debug):
+        if self.downloader:
+            self.downloader.debug = debug
+        reporting.debug = debug
+        self.debug = debug
+
     def finish_run(self):
         info.clear_cache()
         self.downloader = None
+        self.set_debug(False)
         self.close_progress()
 
     @property
@@ -106,6 +115,9 @@ class ArtworkProcessor(object):
     def process_item(self, mediatype, dbid, mode):
         if self.processor_busy:
             return
+        if mode == MODE_DEBUG:
+            mode = MODE_AUTO
+            self.set_debug(True)
         if mode == MODE_GUI:
             busy = pykodi.get_busydialog()
             busy.create()
@@ -217,8 +229,7 @@ class ArtworkProcessor(object):
             if self.monitor.abortRequested() or medialist is False:
                 aborted = True
                 break
-            if idx or len(medialist) > 1:
-                reporting.report_start(medialist)
+            reporting.report_start(medialist)
             this_aborted, updateditemcount, this_artcount = \
                 self._process_chunk(medialist, idx + 1, alwaysnotify)
             artcount += this_artcount
@@ -276,7 +287,8 @@ class ArtworkProcessor(object):
         if auto:
             cleaned = get_simpledict_updates(mediaitem.art, cleaner.clean_artwork(mediaitem))
             if cleaned:
-                add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, cleaned)
+                if not self.debug:
+                    add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, cleaned)
                 mediaitem.art.update(cleaned)
                 mediaitem.art = dict(item for item in mediaitem.art.iteritems() if item[1])
                 mediaitem.updatedart = cleaned.keys()
@@ -307,7 +319,8 @@ class ArtworkProcessor(object):
                 toset.update(mediaitem.downloadedart)
             if toset:
                 mediaitem.updatedart = list(set(mediaitem.updatedart + toset.keys()))
-                add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, toset)
+                if not self.debug:
+                    add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, toset)
             self.cachelocal(mediaitem, toset)
 
         if error:
@@ -317,13 +330,15 @@ class ArtworkProcessor(object):
                 mediaitem.error = msg
                 log(msg, xbmc.LOGWARNING)
                 self.notify_warning(error['message'], header)
-        elif auto:
+        elif auto and not self.debug:
             if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.skip_artwork) and \
                     mediatype != mediatypes.SONG:
                 self.processed.set_nextdate(mediaitem.dbid, mediatype, mediaitem.label,
                     datetime_now() + timedelta(days=self.get_nextcheckdelay(mediaitem)))
             if mediatype == mediatypes.TVSHOW:
                 self.processed.set_data(mediaitem.dbid, mediatype, mediaitem.label, mediaitem.season)
+        if self.debug:
+            log(mediaitem)
         return services_hit
 
     def cachelocal(self, mediaitem, toset):

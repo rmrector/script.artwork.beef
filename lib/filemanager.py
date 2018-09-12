@@ -8,7 +8,7 @@ from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestExce
 
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
-from lib.libs.pykodi import localize as L, notlocalimages
+from lib.libs.pykodi import localize as L, notlocalimages, log
 from lib.libs.webhelper import Getter
 
 CANT_CONTACT_PROVIDER = 32034
@@ -28,12 +28,13 @@ typemap = {'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif'}
 #  first by the next scan so that's not such a big deal.
 
 class FileManager(object):
-    def __init__(self):
+    def __init__(self, debug=False):
         self.getter = Getter()
         self.getter.session.headers['User-Agent'] = settings.useragent
         self.size = 0
         self.alreadycached = None
         self.fileerror_count = 0
+        self.debug = debug
         self._build_imagecachebase()
 
     def _build_imagecachebase(self):
@@ -78,6 +79,12 @@ class FileManager(object):
         error = ''
         localfiles = get_local_art(mediaitem, allartwork)
         for arttype, url in to_download.iteritems():
+            full_basefilepath = info.build_artwork_basepath(mediaitem, arttype, not self.debug)
+            if not full_basefilepath:
+                continue
+            if self.debug:
+                mediaitem.downloadedart[arttype] = full_basefilepath + '.ext'
+                continue
             result, err = self.doget(url)
             if err:
                 error = err
@@ -90,9 +97,7 @@ class FileManager(object):
             services_hit = True
             ext = get_file_extension(result.headers.get('content-type'), url)
             if not ext:
-                continue
-            full_basefilepath = info.build_artwork_basepath(mediaitem, arttype, True)
-            if not full_basefilepath:
+                log("Can't determine extension for '{0}'\nfor image type '{1}'".format(url, arttype))
                 continue
             full_basefilepath += '.' + ext
             if xbmcvfs.exists(full_basefilepath):
@@ -115,6 +120,7 @@ class FileManager(object):
                     raise FileError(L(CANT_WRITE_TO_FILE).format(full_basefilepath))
                 self.fileerror_count = 0
             mediaitem.downloadedart[arttype] = full_basefilepath
+            log("downloaded '{0}'\nto image file '{1}'".format(url, full_basefilepath))
         return services_hit, error
 
     def doget(self, url, **kwargs):
@@ -134,23 +140,28 @@ class FileManager(object):
         except RequestException as ex:
             return None, L(HTTP_ERROR).format(type(ex).__name__)
 
-    def remove_deselected_files(self, mediaitem):
+    def remove_deselected_files(self, mediaitem, assignedart=False):
+        if self.debug:
+            return
         for arttype, newimage in mediaitem.selectedart.iteritems():
             if newimage is not None:
                 continue
-            oldimage = mediaitem.forcedart.get(arttype)
+            if assignedart:
+                oldimage = mediaitem.art.get(arttype)
+            else:
+                oldimage = mediaitem.forcedart.get(arttype)
             if not oldimage:
                 continue
             old_url = oldimage['url'] if isinstance(oldimage, dict) else oldimage[0]['url']
             if not old_url or old_url.startswith(notlocalimages) \
-            or old_url in mediaitem.selectedart.values():
+            or old_url in mediaitem.selectedart.values() or not xbmcvfs.exists(old_url):
                 continue
             if settings.recycle_removed:
                 recyclefile(old_url)
             xbmcvfs.delete(old_url)
 
     def cachefor(self, artmap, multiplethreads=True):
-        if not self.imagecachebase:
+        if not self.imagecachebase or self.debug:
             return 0
         if self.alreadycached is None:
             self.alreadycached = [pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures()

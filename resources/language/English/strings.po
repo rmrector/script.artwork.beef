@@ -171,6 +171,10 @@ msgctxt "#32061"
 msgid "Downloading artwork to local files"
 msgstr ""
 
+msgctxt "#32062"
+msgid "Should local artwork files also be deleted?"
+msgstr ""
+
 # Actions
 
 msgctxt "#32400"
@@ -265,6 +269,22 @@ msgstr ""
 
 msgctxt "#32426"
 msgid "Fill with all configured above [I](save other changes first)[/I]"
+msgstr ""
+
+msgctxt "#32427"
+msgid "Remove all artwork"
+msgstr ""
+
+msgctxt "#32428"
+msgid "Disable Artwork Beef debug context items [I](per skin)[/I]"
+msgstr ""
+
+msgctxt "#32429"
+msgid "Enable Artwork Beef debug context items [I](per skin)[/I]"
+msgstr ""
+
+msgctxt "#32430"
+msgid "Log debug info"
 msgstr ""
 
 # Settings
