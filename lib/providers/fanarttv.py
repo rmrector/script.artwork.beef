@@ -3,7 +3,7 @@ import urllib
 import xbmc
 from abc import ABCMeta, abstractmethod
 
-from lib.providers.base import AbstractImageProvider, cache, ProviderError
+from lib.providers.base import AbstractImageProvider, cache, build_key_error
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
@@ -41,17 +41,18 @@ class FanartTVAbstractProvider(AbstractImageProvider):
         return result if result != 'Empty' else None
 
     def _get_data(self, mediaid):
-        if not settings.fanarttv_apikey:
-            raise ProviderError("Invalid project API key")
+        apikey = settings.get_apikey('fanarttv')
+        if not apikey:
+            raise build_key_error('fanarttv')
         self.log('uncached', xbmc.LOGINFO)
-        headers = {'api-key': settings.fanarttv_apikey}
+        headers = {'api-key': apikey}
         if settings.fanarttv_clientkey:
             headers['client-key'] = settings.fanarttv_clientkey
         response = self.doget(self.apiurl % (self.api_section, mediaid), headers=headers)
         return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
 
     def login(self):
-        raise ProviderError("Invalid project API key")
+        raise build_key_error('fanarttv')
 
     def build_image(self, url, arttype, image, likediv=5.0):
         result = {'url': url, 'provider': self.name}

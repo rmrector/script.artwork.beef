@@ -4,36 +4,40 @@ from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
-from lib.providers.base import AbstractProvider, AbstractImageProvider, cache, ProviderError
+from lib.providers.base import AbstractProvider, AbstractImageProvider, cache, build_key_error
 
 
 class TheAudioDBAbstractProvider(AbstractImageProvider):
     name = SortedDisplay('theaudiodb.com', 'TheAudioDB.com')
     contenttype = 'application/json'
-    # url param i=MB track/album/artist ID
-    artmap = {'mbtrack': {'datakey':'track', 'artmap': {'strTrackThumb': 'thumb'},
-            'url': 'https://www.theaudiodb.com/api/v1/json/{0}/track-mb.php'.format(settings.tadb_apikey)},
-        'mbgroup': {'datakey':'album', 'artmap': {'strAlbumThumb': 'thumb', 'strAlbumCDart': 'discart',
-                'strAlbumThumbBack': 'back', 'strAlbumSpine': 'spine'},
-            'url': 'https://www.theaudiodb.com/api/v1/json/{0}/album-mb.php'.format(settings.tadb_apikey)},
-        'mbartist': {'datakey':'artists', 'artmap': {'strArtistThumb': 'thumb', 'strArtistLogo': 'clearlogo',
-                'strArtistBanner': 'banner', 'strArtistFanart': 'fanart', 'strArtistFanart2': 'fanart',
-                'strArtistFanart3': 'fanart', 'strArtistClearart': 'clearart', 'strArtistWideThumb': 'landscape'},
-            'url': 'https://www.theaudiodb.com/api/v1/json/{0}/artist-mb.php'.format(settings.tadb_apikey)}
-    }
-    provtypes = set(x for data in artmap.values() for x in data['artmap'].values())
+
+    def __init__(self):
+        super(TheAudioDBAbstractProvider, self).__init__()
+        # url param i=MB track/album/artist ID
+        self.artmap = {'mbtrack': {'datakey':'track', 'artmap': {'strTrackThumb': 'thumb'},
+                'url': 'https://www.theaudiodb.com/api/v1/json/{0}/track-mb.php'},
+            'mbgroup': {'datakey':'album', 'artmap': {'strAlbumThumb': 'thumb', 'strAlbumCDart': 'discart',
+                    'strAlbumThumbBack': 'back', 'strAlbumSpine': 'spine'},
+                'url': 'https://www.theaudiodb.com/api/v1/json/{0}/album-mb.php'},
+            'mbartist': {'datakey':'artists', 'artmap': {'strArtistThumb': 'thumb', 'strArtistLogo': 'clearlogo',
+                    'strArtistBanner': 'banner', 'strArtistFanart': 'fanart', 'strArtistFanart2': 'fanart',
+                    'strArtistFanart3': 'fanart', 'strArtistClearart': 'clearart', 'strArtistWideThumb': 'landscape'},
+                'url': 'https://www.theaudiodb.com/api/v1/json/{0}/artist-mb.php'}
+        }
+        self.provtypes = set(x for data in self.artmap.values() for x in data['artmap'].values())
 
     def get_data(self, url, params):
-        result = cache.cacheFunction(self._get_data, url, params)
+        result = cache.cacheFunction(self._get_data, url.format(settings.get_apikey('tadb')), params)
         return result if result != 'Empty' else None
 
     def _get_data(self, url, params):
-        if not settings.tadb_apikey:
-            raise ProviderError("Invalid project API key")
+        apikey = settings.get_apikey('tadb')
+        if not apikey:
+            raise build_key_error('tadb')
         self.log('uncached', xbmc.LOGINFO)
         response = self.doget(url, params=params)
         if response is None:
-            raise ProviderError("Invalid project API key")
+            raise build_key_error('tadb')
         return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
 
 
@@ -140,14 +144,16 @@ class TheAudioDBSearch(AbstractProvider):
     name = SortedDisplay('theaudiodb.com:search', 'TheAudioDB.com search')
     contenttype = 'application/json'
 
-    # s=[artist], t=[track title]
-    url_trackby_artistandtrack = \
-        'https://www.theaudiodb.com/api/v1/json/{0}/searchtrack.php'.format(settings.tadb_apikey)
+    def __init__(self):
+        super(TheAudioDBSearch, self).__init__()
+        # s=[artist], t=[track title]
+        self.url_trackby_artistandtrack = 'https://www.theaudiodb.com/api/v1/json/{0}/searchtrack.php'
 
     def get_data(self, url, params=None):
-        if not settings.tadb_apikey:
-            raise ProviderError("Invalid project API key")
-        result = cache.cacheFunction(self._get_data, url, params)
+        apikey = settings.get_apikey('tadb')
+        if not apikey:
+            raise build_key_error('tadb')
+        result = cache.cacheFunction(self._get_data, url.format(settings.get_apikey('tadb')), params)
         return result if result != 'Empty' else None
 
     def _get_data(self, url, params=None):
@@ -156,7 +162,7 @@ class TheAudioDBSearch(AbstractProvider):
             params = {}
         response = self.doget(url, params=params)
         if response is None:
-            raise ProviderError("Invalid project API key")
+            raise build_key_error('tadb')
         return 'Empty' if response is None else response.json()
 
     def search(self, query, mediatype):

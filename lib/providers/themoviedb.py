@@ -5,7 +5,7 @@ from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
-from lib.providers.base import AbstractProvider, AbstractImageProvider, cache, ProviderError
+from lib.providers.base import AbstractProvider, AbstractImageProvider, cache, build_key_error
 
 cfgurl = 'https://api.themoviedb.org/3/configuration'
 
@@ -20,7 +20,10 @@ class TheMovieDBAbstractProvider(AbstractImageProvider):
     @property
     def baseurl(self):
         if not self._baseurl:
-            response = self.doget(cfgurl, params={'api_key': settings.tmdb_apikey})
+            apikey = settings.get_apikey('tmdb')
+            if not apikey:
+                raise build_key_error('tmdb')
+            response = self.doget(cfgurl, params={'api_key': apikey})
             if response is None:
                 return
             self._baseurl = response.json()['images']['secure_base_url']
@@ -40,14 +43,15 @@ class TheMovieDBAbstractProvider(AbstractImageProvider):
         return result if result != 'Empty' else None
 
     def _get_data(self, url):
-        if not settings.tmdb_apikey:
-            raise ProviderError("Invalid project API key")
+        apikey = settings.get_apikey('tmdb')
+        if not apikey:
+            raise build_key_error('tmdb')
         self.log('uncached', xbmc.LOGINFO)
-        response = self.doget(url, params={'api_key': settings.tmdb_apikey})
+        response = self.doget(url, params={'api_key': apikey})
         return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
 
     def login(self):
-        raise ProviderError("Invalid project API key")
+        raise build_key_error('tmdb')
 
     def process_data(self, data):
         result = {}
@@ -162,18 +166,19 @@ class TheMovieDBSearch(AbstractProvider):
         return result if result != 'Empty' else None
 
     def _get_data(self, url, params=None):
-        if not settings.tmdb_apikey:
-            raise ProviderError("Invalid project API key")
+        apikey = settings.get_apikey('tmdb')
+        if not apikey:
+            raise build_key_error('tmdb')
         self.log('uncached', xbmc.LOGINFO)
         if params is None:
-            params = {'api_key': settings.tmdb_apikey}
+            params = {'api_key': apikey}
         else:
-            params = dict(params, api_key=settings.tmdb_apikey)
+            params = dict(params, api_key=apikey)
         response = self.doget(url, params=params)
         return 'Empty' if response is None else response.json()
 
     def login(self):
-        raise ProviderError("Invalid project API key")
+        raise build_key_error('tmdb')
 
     def search(self, query, mediatype):
         if mediatype not in self.typemap:

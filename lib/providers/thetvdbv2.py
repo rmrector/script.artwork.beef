@@ -3,11 +3,10 @@ import xbmc
 from math import pi, sin
 
 from lib.providers import base
-from lib.providers.base import AbstractImageProvider, cache
+from lib.providers.base import AbstractImageProvider, build_key_error, cache, ProviderError
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
-from lib.providers import ProviderError
 from lib.libs.utils import SortedDisplay
 
 # designed for version 2.1.0 of TheTVDB API
@@ -28,8 +27,8 @@ class TheTVDBProvider(AbstractImageProvider):
         return result if result != 'Empty' else None
 
     def _get_data(self, mediaid, arttype, language):
-        if not settings.tvdb_apikey:
-            raise ProviderError("Invalid project API key")
+        if not settings.get_apikey('tvdb'):
+            raise build_key_error('tvdb')
         self.log('uncached', xbmc.LOGINFO)
         getparams = {'params': {'keyType': arttype}, 'headers': {'Accept-Language': language}}
         response = self.doget(self.apiurl % mediaid, **getparams)
@@ -95,10 +94,10 @@ class TheTVDBProvider(AbstractImageProvider):
         return result
 
     def login(self):
-        response = self.getter.session.post(self.loginurl, json={'apikey': settings.tvdb_apikey},
+        response = self.getter.session.post(self.loginurl, json={'apikey': settings.get_apikey('tvdb')},
             headers={'Content-Type': 'application/json', 'User-Agent': settings.useragent}, timeout=15)
         if response is not None and response.status_code == 401:
-            raise ProviderError("Invalid project API key")
+            raise build_key_error('tvdb')
         if not response or not response.headers['Content-Type'].startswith('application/json'):
             raise ProviderError("Provider returned unexected content")
         self.getter.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
