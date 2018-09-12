@@ -12,8 +12,7 @@ TOO_MANY_ERRORS = 32031
 class Gatherer(object):
     def __init__(self, monitor, languages):
         self.monitor = monitor
-        providers.base.languages = [lang for lang in languages if lang]
-        self.language = providers.base.languages[0]
+        providers.base.languages = languages
         self.providererrors = {}
 
     def getartwork(self, mediaitem, skipexisting=True):
@@ -39,7 +38,7 @@ class Gatherer(object):
                 mediaitem.availableart['poster'] = []
             mediaitem.availableart['poster'].extend(mediaitem.availableart['keyart'])
         for arttype, imagelist in mediaitem.availableart.iteritems():
-            _sort_images(arttype, imagelist, mediaitem.sourcemedia, self.language, mediaitem.mediatype)
+            _sort_images(arttype, imagelist, mediaitem.sourcemedia, mediaitem.mediatype)
         return services_hit, error
 
     def get_forced_artwork(self, mediaitem, allowmutiple=False):
@@ -99,7 +98,7 @@ class Gatherer(object):
                 break
         return images, error
 
-def _sort_images(basearttype, imagelist, mediasource, language, mediatype):
+def _sort_images(basearttype, imagelist, mediasource, mediatype):
     # 1. Language, preferring fanart with no language/title if configured
     # 2. Match discart to media source
     # 3. Preferred source
@@ -111,7 +110,7 @@ def _sort_images(basearttype, imagelist, mediasource, language, mediatype):
         if mediasource != 'unknown':
             imagelist.sort(key=lambda image: 0 if image.get('subtype', SortedDisplay(None, '')).sort == mediasource else 1)
     imagelist.sort(key=lambda image: _preferredsource_sort(image, mediatype), reverse=True)
-    imagelist.sort(key=lambda image: _imagelanguage_sort(image, basearttype, language))
+    imagelist.sort(key=lambda image: _imagelanguage_sort(image, basearttype))
 
 def _preferredsource_sort(image, mediatype):
     result = 1 if mediatypes.ispreferred_source(mediatype, image['provider'][0]) else 0
@@ -133,8 +132,12 @@ def _size_sort(image):
         imagesize = imagesize[0] * shrink, settings.preferredsize[1]
     return max(imagesize) // 200
 
-def _imagelanguage_sort(image, basearttype, language):
-    primarysort = 0 if image['language'] == language else 0.5 if image['language'] == 'en' else 1
+def _imagelanguage_sort(image, basearttype):
+    if not providers.base.languages:
+        return 1, image['language']
+
+    primarysort = 1 if image['language'] not in providers.base.languages else \
+        1.0 * providers.base.languages.index(image['language']) / len(providers.base.languages)
 
     if image['language']:
         if basearttype.endswith('fanart') and settings.titlefree_fanart or \

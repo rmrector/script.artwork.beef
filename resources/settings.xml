@@ -16,7 +16,6 @@
 		<setting id="titlefree_fanart" label="32901" type="bool" default="true" />
 		<setting id="preferredsize" label="32902" type="select" default="1" lvalues="32970|32971|32972" />
 		<setting id="minimum_rating" label="32907" type="slider" option="int" default="5" range="0,1,10" />
-		<setting id="language_override" label="32913" type="select" default="None" values="None|en|fr|de|ja|zh|es|it|pt|sv|ru|nl|ar|ko|no|hu|da|hi|is|pl|he|bg|fi|ml" />
 		<setting id="titlefree_poster" label="32917" type="bool" default="false" />
 		<setting label="32052" type="lsep" />
 		<setting label="32919" type="action" action="RunScript(script.artwork.beef, command=show_artwork_log)" />
@@ -134,6 +133,10 @@
 		<setting id="cache_local_video_artwork" label="32952" type="bool" default="false" />
 		<setting id="cache_local_music_artwork" label="32953" type="bool" default="false" />
 		<setting id="always_multiple_selection" label="32964" type="bool" default="false" />
+		<setting label="32973" type="lsep" />
+		<setting id="language_override" label="32913" type="select" default="None" values="None|en|fr|de|ja|zh|es|it|pt|sv|ru|nl|ar|ko|no|hu|da|hi|is|pl|he|bg|fi|ml" />
+		<setting id="language_fallback_kodi" label="32974" type="bool" default="true" />
+		<setting id="language_fallback_en" label="32975" type="bool" default="true" />
 		<setting label="$LOCALIZE[744]" type="lsep" />
 		<setting id="episode.thumb_generate" label="32914" type="bool" default="false" />
 		<setting id="movie.thumb_generate" label="32915" type="bool" default="false" />

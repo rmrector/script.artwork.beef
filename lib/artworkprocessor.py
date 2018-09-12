@@ -360,13 +360,15 @@ class ArtworkProcessor(object):
         return bool(toset)
 
     def setlanguages(self):
-        languages = [pykodi.get_language(xbmc.ISO_639_1)]
-        if settings.language_override and settings.language_override not in languages:
-            languages.insert(0, settings.language_override)
-        if 'en' not in languages:
+        languages = []
+        if settings.language_override:
+            languages.append(settings.language_override)
+        if settings.language_fallback_kodi:
+            newlang = pykodi.get_language(xbmc.ISO_639_1)
+            if newlang not in languages:
+                languages.append(newlang)
+        if settings.language_fallback_en and 'en' not in languages:
             languages.append('en')
-        # TODO: Remove 'None' from fallback, treat textless artwork like 'fanart' and 'keyart' differently
-        languages.append(None)
         self.autolanguages = languages
         log("Working language filter: " + str(languages))
 
@@ -419,6 +421,10 @@ class ArtworkProcessor(object):
             return False
         if basearttype.endswith('fanart') and art['size'].sort < settings.minimum_size:
             return False
+        if art['provider'].sort == 'theaudiodb.com' or not art['language'] and \
+            (basearttype.endswith('poster') and settings.titlefree_poster or
+                basearttype.endswith(('fanart', 'keyart', 'characterart'))):
+            return art['url'] not in ignoreurls
         return art['language'] in self.autolanguages and art['url'] not in ignoreurls
 
 def add_art_to_library(mediatype, seasons, dbid, selectedart):

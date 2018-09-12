@@ -60,6 +60,8 @@ class Settings(object):
         self.language_override = addon.get_setting('language_override')
         if self.language_override == 'None':
             self.language_override = None
+        self.language_fallback_kodi = addon.get_setting('language_fallback_kodi')
+        self.language_fallback_en = addon.get_setting('language_fallback_en')
 
         try:
             self.minimum_rating = int(addon.get_setting('minimum_rating'))

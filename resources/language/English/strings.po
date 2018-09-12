@@ -298,7 +298,7 @@ msgid "Minimum image rating"
 msgstr ""
 
 msgctxt "#32913"
-msgid "Override image language (defaults to Kodi interface)"
+msgid "Priority language selection"
 msgstr ""
 
 msgctxt "#32903"
@@ -528,6 +528,19 @@ msgstr ""
 # subsetting of 32902
 msgctxt "#32972"
 msgid "1280x720"
+msgstr ""
+
+msgctxt "#32973"
+msgid "Image languages for automatic filter"
+msgstr ""
+
+# follows 32913
+msgctxt "#32974"
+msgid "then include Kodi 'User interface language'"
+msgstr ""
+
+msgctxt "#32975"
+msgid "then include English language images"
 msgstr ""
 
 # Used in the artwork report
