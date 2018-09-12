@@ -1,5 +1,3 @@
-import re
-
 from lib.libs import pykodi
 
 TVSHOW = 'tvshow'
@@ -354,8 +352,9 @@ def downloadanyartwork(mediatype):
     return any(x for x in info.values() if x['download'])
 
 def _split_arttype(arttype):
-    indexsearch = re.compile(r'([0-9]+)$').search(arttype)
-    return arttype.rstrip('0123456789'), int(indexsearch.group(1)) if indexsearch else 0
+    basetype = arttype.rstrip('0123456789')
+    idx = 0 if basetype == arttype else int(arttype.replace(basetype, ''))
+    return basetype, idx
 
 def generatethumb(mediatype):
     return togenerate.get(mediatype, False)
@@ -374,8 +373,8 @@ def update_settings():
     if not always_multiple_selection:
         _set_allmulti(False)
     for settingid in arttype_settingskeys:
-        splitsetting = re.split(r'\.|_', settingid)
-        thistype = artinfo[splitsetting[0]][splitsetting[1]]
+        splitsetting = settingid.split('.')
+        thistype = artinfo[splitsetting[0]][splitsetting[1].split('_')[0]]
         try:
             thistype['autolimit'], thistype['multiselect'] = _get_autolimit_from_setting(settingid)
         except ValueError:
