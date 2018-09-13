@@ -390,49 +390,19 @@ msgctxt "#32931"
 msgid "Recycle deleted and replaced artwork files to temp/cache directory"
 msgstr "Guardar ilustraciones eliminadas y reemplazadas en directorio temp/cache"
 
-msgctxt "#32932"
-msgid "Disable all automatic processing for movies"
-msgstr "Deshabilitar todo los procesos automáticos para Películas"
-
-msgctxt "#32933"
-msgid "Disable all automatic processing for TV shows and seasons"
-msgstr "Deshabilitar todo los procesos automáticos para Series TV y Temporadas"
-
-msgctxt "#32934"
-msgid "Disable all automatic processing for episodes"
-msgstr "Deshabilitar todo los procesos automáticos para Episodios"
-
-msgctxt "#32935"
-msgid "Disable all automatic processing for music videos"
-msgstr "Deshabilitar todo los procesos automáticos para Videoclips"
-
-msgctxt "#32936"
-msgid "Disable all automatic processing for artists"
-msgstr "Deshabilitar todo los procesos automáticos para Artistas"
-
-msgctxt "#32937"
-msgid "Disable all automatic processing for albums"
-msgstr "Deshabilitar todo los procesos automáticos para Álbumes"
-
-msgctxt "#32938"
-msgid "Disable all automatic processing for songs"
-msgstr "Deshabilitar todo los procesos automáticos para Canciones"
-
-msgctxt "#32939"
-msgid "Disable all automatic processing for movie sets"
-msgstr "Deshabilitar todo los procesos automáticos para Sagas"
+# 32932, 32933, 32934, 32935, 32936, 32937, 32938, 32939 retired 2018-05-12
 
 msgctxt "#32940"
 msgid "Delete deselected artwork files"
-msgstr "Eliminar archivos de ilustraciones NO seleccionados"
+msgstr "Eliminar archivos de ilustraciones NO seleccionadas"
 
 msgctxt "#32941"
 msgid "Save movie artwork with movie base file name"
-msgstr "Guardar ilustración para películas en base al nombre del archivo"
+msgstr "Guardar ilustraciones para Películas con el nombre del archivo de la Película"
 
 msgctxt "#32942"
 msgid "Save music video artwork with music video base file name"
-msgstr "Guardar ilustración para videoclip en base al nombre del archivo"
+msgstr "Guardar ilustraciones para Videoclip con el nombre del archivo del Videoclip"
 
 msgctxt "#32943"
 msgid "Download image files for processed TV shows and seasons"
@@ -448,7 +418,7 @@ msgstr "Descargar archivos de imagen para Películas procesadas"
 
 msgctxt "#32946"
 msgid "Download image files for processed movie sets"
-msgstr "Descargar archivos de imagen para Movie Sets procesados"
+msgstr "Descargar archivos de imagen para Colecciones procesadas"
 
 msgctxt "#32947"
 msgid "Download image files for processed music videos"
@@ -468,7 +438,94 @@ msgstr "Descargar archivos de imagen para Canciones procesadas"
 
 msgctxt "#32951"
 msgid "Save album and song art with song files if possible"
-msgstr "Guardar imágenes para Álbum y Canción junto al archivo siempre que sea posible"
+msgstr "Guardar arte para Álbum y Canción junto al archivo siempre que sea posible"
+
+msgctxt "#32952"
+msgid "Automatically preload local video library artwork to Kodi texture cache"
+msgstr "Precargar automáticamente ilustraciones de la biblioteca de vídeo local en caché de textura Kodi""
+
+msgctxt "#32953"
+msgid "Automatically preload local music library artwork to Kodi texture cache"
+msgstr "Precargar automáticamente ilustraciones de la biblioteca de música local en caché de textura Kodi"
+
+msgctxt "#32954"
+msgid "Additional art types for TV shows (comma separated)"
+msgstr "Tipos de arte adicionales para Series TV ((separado por comas)"
+
+msgctxt "#32955"
+msgid "Additional art types for TV seasons (comma separated)"
+msgstr "Tipos de arte adicionales para Temporadas TV (separado por comas)"
+
+msgctxt "#32956"
+msgid "Additional art types for TV episodes (comma separated)"
+msgstr "Tipos de arte adicionales para Episodios TV ((separado por comas)"
+
+msgctxt "#32957"
+msgid "Additional art types for movies (comma separated)"
+msgstr "Tipos de arte adicionales para Películas ((separado por comas)"
+
+msgctxt "#32958"
+msgid "Additional art types for movie sets (comma separated)"
+msgstr "Tipos de arte adicionales para Colecciones (separado por comas)"
+
+msgctxt "#32959"
+msgid "Additional art types for music videos (comma separated)"
+msgstr "Tipos de arte adicionales para Videoclips (separado por comas)"
+
+msgctxt "#32960"
+msgid "Additional art types for artists (comma separated)"
+msgstr "Tipos de arte adicionales para Artistas (separado por comas)"
+
+msgctxt "#32961"
+msgid "Additional art types for albums (comma separated)"
+msgstr "Tipos de arte adicionales para Albumes (separado por comas)"
+
+msgctxt "#32962"
+msgid "Additional art types for songs (comma separated)"
+msgstr "Tipos de arte adicionales para Canciones (separado por comas)"
+
+msgctxt "#32963"
+msgid "Prefer artwork from specific web service"
+msgstr "Preferir ilustraciones de un servicio web especifico"
+
+msgctxt "#32964"
+msgid "Manually select multiple images for all media types"
+msgstr "Seleccionar manualmente varias imágenes para todos los tipos de medios"
+
+msgctxt "#32965"
+msgid "In case of emergency"
+msgstr "En caso de emergencia"
+
+msgctxt "#32966"
+msgid "fanart.tv project API key"
+msgstr "API Key de proyecto fanart.tv"
+
+msgctxt "#32967"
+msgid "TheTVDB.com project API key"
+msgstr "API Key de proyecto TheTVDB.com"
+
+msgctxt "#32968"
+msgid "The Movie Database project API key"
+msgstr "API Key de proyecto The Movie Database"
+
+msgctxt "#32969"
+msgid "TheAudioDB.com project API key"
+msgstr "API Key de proyecto TheAudioDB.com"
+
+# subsetting of 32902
+msgctxt "#32970"
+msgid "Largest available"
+msgstr "La más grande disponible"
+
+# subsetting of 32902
+msgctxt "#32971"
+msgid "1920x1080"
+msgstr "1920x1080"
+
+# subsetting of 32902
+msgctxt "#32972"
+msgid "1280x720"
+msgstr "1280x720"
 
 # Used in the artwork report
 
@@ -479,69 +536,88 @@ msgstr ""
 msgctxt "#32801"
 # 0 = label of media item
 msgid "Manually processing {0}"
-msgstr ""
+msgstr "Procesamiento manual {0}"
 
 msgctxt "#32802"
 # 0 = label of media item
 msgid "Processing {0}"
-msgstr ""
+msgstr "Procesando {0}"
 
 msgctxt "#32803"
 msgid "Processing finished"
-msgstr ""
+msgstr "Proceso terminado"
 
 msgctxt "#32804"
 msgid "Processing aborted"
-msgstr ""
+msgstr "Proceso abortado"
 
 msgctxt "#32805"
 msgid "No items in list"
-msgstr ""
+msgstr "No hay elementos en la lista"
 
 msgctxt "#32806"
 msgid "{0:d} items in list"
-msgstr ""
+msgstr "{0:d} elementos en la lista"
 
 msgctxt "#32807"
 msgid "{0:d} items processed"
-msgstr ""
+msgstr "{0:d} elementos procesados"
 
 msgctxt "#32808"
 msgid "No artwork updated"
-msgstr ""
+msgstr "No se actualizó la obra de arte"
 
 msgctxt "#32809"
 msgid "{0:d} artwork updated"
-msgstr ""
+msgstr "{0:d} obra de arte actualizada"
 
 msgctxt "#32810"
 msgid "Not missing artwork, not looking for any"
-msgstr ""
+msgstr "No faltan ilustraciones, no buscando ninguna"
 
 msgctxt "#32811"
 # 0 = comma separated list of missing artwork types
 msgid "Missing artwork: {0}"
-msgstr ""
+msgstr "Falta la obra de arte: {0}"
 
 msgctxt "#32812"
 # 0 = comma separated list of updated artwork types
 msgid "Updated artwork: {0}"
-msgstr ""
+msgstr "Obra actualizada: {0}"
 
 msgctxt "#32813"
 # 0 = text of error message
 msgid "Encountered an error - {0}"
-msgstr ""
+msgstr "Encontró un error - {0}"
 
 msgctxt "#32814"
 msgid "Errors were encountered"
-msgstr ""
+msgstr "Se encontraron errores"
 
 msgctxt "#32815"
 # 0 = versions of Artwork Beef and Kodi
 msgid "Versions: {0}"
-msgstr ""
+msgstr "Versiones: {0}"
 
 msgctxt "#32816"
 msgid "{0:d} artwork downloaded"
-msgstr ""
+msgstr "{0:d} artwork descargado"
+
+
+# No traducido, solo necesita hacer referencia por `msgctxt` como opciones al 32963
+
+msgctxt  "# 32796"
+msgstr  "Fanart.TV"
+msgstr  ""
+
+msgctxt  "# 32797"
+msgstr  "La base de datos de la película"
+msgstr  ""
+
+msgctxt  "# 32798"
+msgstr  "TheTVDB.com"
+msgstr  ""
+
+msgctxt  "# 32799"
+msgstr  "TheAudioDB.com"
+msgstr  ""
