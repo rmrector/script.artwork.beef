@@ -168,7 +168,7 @@ msgid "Artist artwork will [I]only[/I] be processed in the 'Artist information f
 msgstr ""
 
 msgctxt "#32061"
-msgid "Download these artwork types to the local file system"
+msgid "Downloading artwork to local files"
 msgstr ""
 
 # Actions
@@ -264,7 +264,7 @@ msgid "Preload local music library artwork to texture cache"
 msgstr ""
 
 msgctxt "#32426"
-msgid "Set to all configured above [I](save other changes first)[/I]"
+msgid "Fill with all configured above [I](save other changes first)[/I]"
 msgstr ""
 
 # Settings
@@ -407,37 +407,7 @@ msgctxt "#32942"
 msgid "Save music video artwork with music video base file name"
 msgstr ""
 
-msgctxt "#32943"
-msgid "Download image files for processed TV shows and seasons"
-msgstr ""
-
-msgctxt "#32944"
-msgid "Download image files for processed episodes"
-msgstr ""
-
-msgctxt "#32945"
-msgid "Download image files for processed movies"
-msgstr ""
-
-msgctxt "#32946"
-msgid "Download image files for processed movie sets"
-msgstr ""
-
-msgctxt "#32947"
-msgid "Download image files for processed music videos"
-msgstr ""
-
-msgctxt "#32948"
-msgid "Download image files for processed artists"
-msgstr ""
-
-msgctxt "#32949"
-msgid "Download image files for processed albums"
-msgstr ""
-
-msgctxt "#32950"
-msgid "Download image files for processed songs"
-msgstr ""
+# 32943, 32944, 32945, 32946, 32947, 32948, 32949, 32950 retired 2018-09-12
 
 msgctxt "#32951"
 msgid "Save album and song art with song files if possible"
@@ -545,6 +515,22 @@ msgstr ""
 
 msgctxt "#32976"
 msgid "save new artwork to subdirectories per movie set"
+msgstr ""
+
+msgctxt "#32977"
+msgid "Artwork download configuration"
+msgstr ""
+
+msgctxt "#32978"
+msgid "Kodi cache only"
+msgstr ""
+
+msgctxt "#32979"
+msgid "all configured above"
+msgstr ""
+
+msgctxt "#32980"
+msgid "specific types below"
 msgstr ""
 
 # Used in the artwork report

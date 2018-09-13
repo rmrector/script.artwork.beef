@@ -42,12 +42,13 @@
 		<setting label="32400" type="action" subsetting="true" action="RunScript(script.artwork.beef, command=set_autoaddepisodes)" visible="eq(-1,true)" />
 		<setting id="episode.othertypes" label="32956" type="text" />
 		<setting label="32061" type="lsep" />
-		<setting id="tvshow.download_arttypes" label="$LOCALIZE[20343]" type="text" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=tvshow)" />
-		<setting id="season.download_arttypes" label="$LOCALIZE[20373]" type="text" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=season)" />
-		<setting id="episode.download_arttypes" label="$LOCALIZE[20359]" type="text" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=episode)" />
+		<setting id="download_config_tvshows" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
+		<setting id="tvshow.download_arttypes" label="$LOCALIZE[20343]" type="text" enable="eq(-1,2)" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=tvshow)" enable="eq(-2,2)" />
+		<setting id="season.download_arttypes" label="$LOCALIZE[20373]" type="text" enable="eq(-3,2)" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=season)" enable="eq(-4,2)" />
+		<setting id="episode.download_arttypes" label="$LOCALIZE[20359]" type="text" enable="eq(-5,2)" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=episode)" enable="eq(-6,2)" />
 	</category>
 	<category label="$LOCALIZE[20342]">
 		<setting id="onlyfs_movies" label="32904" type="bool" default="false" />
@@ -72,10 +73,11 @@
 		<setting id="set.discart" label="$LOCALIZE[20457] discart" type="bool" default="true" />
 		<setting id="set.othertypes" label="32958" type="text" />
 		<setting label="32061" type="lsep" />
-		<setting id="movie.download_arttypes" label="$LOCALIZE[20342]" type="text" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=movie)" />
-		<setting id="set.download_arttypes" label="$LOCALIZE[20457]" type="text" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=set)" />
+		<setting id="download_config_movies" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
+		<setting id="movie.download_arttypes" label="$LOCALIZE[20342]" type="text" enable="eq(-1,2)" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=movie)" enable="eq(-2,2)" />
+		<setting id="set.download_arttypes" label="$LOCALIZE[20457]" type="text" enable="eq(-3,2)" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=set)" enable="eq(-4,2)" />
 	</category>
 	<category label="$LOCALIZE[20389]">
 		<setting id="onlyfs_musicvideos" label="32904" type="bool" default="false" />
@@ -91,8 +93,9 @@
 		<setting id="musicvideo.artistthumb" label="artistthumb" type="bool" default="true" />
 		<setting id="musicvideo.othertypes" label="32959" type="text" />
 		<setting label="32061" type="lsep" />
-		<setting id="musicvideo.download_arttypes" label="$LOCALIZE[20389]" type="text" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=musicvideo)" />
+		<setting id="download_config_musicvideos" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
+		<setting id="musicvideo.download_arttypes" label="$LOCALIZE[20389]" type="text" enable="eq(-1,2)" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=musicvideo)" enable="eq(-2,2)" />
 	</category>
 	<category label="$LOCALIZE[2]">
 		<setting label="32060" type="lsep" />
@@ -117,12 +120,13 @@
 		<setting id="song.thumb" label="$LOCALIZE[179] thumb" type="bool" default="false" />
 		<setting id="song.othertypes" label="32962" type="text" />
 		<setting label="32061" type="lsep" />
-		<setting id="artist.download_arttypes" label="$LOCALIZE[557]" type="text" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=artist)" />
-		<setting id="album.download_arttypes" label="$LOCALIZE[558]" type="text" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=album)" />
-		<setting id="song.download_arttypes" label="$LOCALIZE[179]" type="text" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=song)" />
+		<setting id="download_config_music" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
+		<setting id="artist.download_arttypes" label="$LOCALIZE[557]" type="text" enable="eq(-1,2)" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=artist)" enable="eq(-2,2)" />
+		<setting id="album.download_arttypes" label="$LOCALIZE[558]" type="text" enable="eq(-3,2)" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=album)" enable="eq(-4,2)" />
+		<setting id="song.download_arttypes" label="$LOCALIZE[179]" type="text" enable="eq(-5,2)" />
+		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=song)" enable="eq(-6,2)" />
 	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />
