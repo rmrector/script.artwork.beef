@@ -543,6 +543,10 @@ msgctxt "#32975"
 msgid "then include English language images"
 msgstr ""
 
+msgctxt "#32976"
+msgid "save new artwork to subdirectories per movie set"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"

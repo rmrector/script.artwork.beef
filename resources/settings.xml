@@ -143,7 +143,8 @@
 		<setting id="musicvideo.thumb_generate" label="32920" type="bool" default="false" />
 		<setting id="centraldir.set_enabled" label="32909" type="bool" default="false" />
 		<setting id="centraldir.set_dir" subsetting="true" label="32910" type="folder" visible="eq(-1,true)" />
-		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" visible="eq(-2,false)" />
+		<setting id="setartwork_subdirs" subsetting="true" label="32976" type="bool" default="true" visible="eq(-2,true)" />
+		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" visible="eq(-3,false)" />
 		<setting id="albumartwithmediafiles" label="32951" type="bool" default="false" />
 		<setting id="savewith_basefilename" label="32941" type="bool" default="true" />
 		<setting id="savewith_basefilename_mvids" label="32942" type="bool" default="true" />
