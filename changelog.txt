@@ -1,3 +1,11 @@
+v0.22.0 (2018-09-17)
+- Feature: options to control languages for automatic processing
+- Feature: simpler options for download configuration
+- Feature: option to disable movie set artwork subfolders
+- Fix: use TMDB ID first for movie lookups at fanart.tv
+- Fix: clearer API key error messages
+- Fix: faster caching
+
 v0.21.3 (2018-08-30)
 - Fix: the movie set artwork fix
 
