@@ -32,7 +32,6 @@ class FileManager(object):
         self.getter = Getter()
         self.getter.session.headers['User-Agent'] = settings.useragent
         self.size = 0
-        self.alreadycached = None
         self.fileerror_count = 0
         self.debug = debug
         self._build_imagecachebase()
@@ -160,12 +159,13 @@ class FileManager(object):
                 recyclefile(old_url)
             xbmcvfs.delete(old_url)
 
-    def cachefor(self, artmap, multiplethreads=True):
+    def cachefor(self, artmap, multiplethreads=False):
         if not self.imagecachebase or self.debug:
             return 0
-        if self.alreadycached is None:
-            self.alreadycached = [pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures()
-                if not pykodi.unquoteimage(texture['url']).startswith('http')]
+        urls = [url for url in artmap.values() if url and not url.startswith(('http', 'image'))]
+        if not urls:
+            return 0
+        alreadycached = [pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures(urls)]
         count = [0]
         def worker(path):
             try:
@@ -179,8 +179,8 @@ class FileManager(object):
             except ConnectionError:
                 pass # Kodi is closing
         threads = []
-        for path in artmap.values():
-            if not path or path.startswith(('http', 'image')) or path in self.alreadycached:
+        for path in urls:
+            if path in alreadycached:
                 continue
             if multiplethreads:
                 t = threading.Thread(target=worker, args=(path,))

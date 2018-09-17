@@ -347,7 +347,7 @@ class ArtworkProcessor(object):
                 settings.cache_local_music_artwork and ismusic:
             artmap = dict(mediaitem.art)
             artmap.update(toset)
-            self.downloader.cachefor(artmap, False)
+            self.downloader.cachefor(artmap)
 
     def get_nextcheckdelay(self, mediaitem):
         weeks = 4 if mediatypes.only_filesystem(mediaitem.mediatype) \
