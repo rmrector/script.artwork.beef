@@ -75,22 +75,30 @@ for the media type you are looking at?
 
 #### Why don't I see new artwork I just submitted to a web service when manually selecting artwork?
 
-- It may take a few days for new artwork to be available.
+- It may take a day or two for new artwork to be available due to server caching.
 - Artwork Beef caches the previous image results from web services for 72 hours.
+- For fanart.tv, without a _personal_ API key you results could be even older.
 
-#### Images from web services are added to the library but are not visible.
+#### Artwork from web services are added to the library but are not visible in the GUI.
 
 Most likely the web service is temporarily/intermittently unavailable. Try again later.
 Configuring Artwork Beef to download artwork to your local file system is probably a good idea.
+Certificate errors and HTTP 500 errors are good indications of this.
+
+#### I receive an error message "Invalid project API key" for a particular web service.
+
+Could be one of three things, the error message will specify which exactly:
+
+- Artwork Beef was not [installed correctly]({{< ref "usage/_index.md#installing" >}}).
+- You have entered your own project API key improperly; remove that setting and try again.
+- Or the built-in API keys have been disabled and you will have to sign up for a project
+  key of your own (unlikely).
 
 #### Manual selection of artwork doesn't show any artwork from one or any web service.
 
 1. Does it happen for all media items of a particular type?
-    - If there is a message about "Invalid project API key" for a particular web service:
-        - Either the built-in API keys have been disabled and you will have to sign up for a project
-          key of your own;
-        - Or you have entered your own project API key improperly and should remove that setting
-          and try again.
+    - If there is a message about "Invalid project API key" for a particular web service, see
+      the section just above.
     - Or maybe the web service is temporarily unavailable, or your Kodi device's internet connection
       is broken. The Kodi log and Artwork Beef's artwork report may have more details.
     - Otherwise post a reply on the forum thread with a description of the problem, a
@@ -124,9 +132,9 @@ based on the interface design.
 
 #### Where do I put my project API keys for other web services?
 
-- At the bottom of the Advanced page of add-on settings.
 - I do not suggest you do this, the option is only available in case the built-in project keys
   stop working.
+- At the bottom of the [Advanced tab]({{< ref "usage/settings.md#advanced" >}}) of add-on settings.
 
 #### Where is the option to replace the fanart slideshow from Artwork Downloader?
 

@@ -7,11 +7,13 @@ weight: 1
 ## Installing
 
 Install my [dev repository] to get updates delivered to you automatically. After the repo is
-installed, Artwork Beef can be installed from "Program add-ons". It can also
-be installed with a [single zip file], but you will have to return here for updates.
+installed, Artwork Beef can be installed from "Program add-ons". It can also be installed with this
+[single zip file], but you will have to download each new version yourself. Do not install
+Artwork Beef from GitHub source unless you know you need to and have read the README.
 
 **Artwork Helper** can be installed with this single [installable zip], but it's only necessary if a
 skin depends on it.
+
 Inclusion in the official Kodi repo isn't likely for now, some of this functionality may make
 its way into Leia so it will probably see some feature churn before long.
 

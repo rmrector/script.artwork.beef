@@ -4,12 +4,20 @@ date: 2018-07-12T14:50:55-07:00
 weight: 40
 ---
 
+Extra debug context items that work on individual media items can be enabled in the [add-on settings]({{< ref "usage/settings.md#disable-enable-artwork-beef-debug-context-items-per-skin" >}}).
+"AB: Remove all artwork" will remove all artwork from the single selected item.
+"AB: Log debug info" will run through the automatic process like "AB: Add missing artwork" and
+logs the result to the standard Kodi log, but it doesn't change anything (helpful for troubleshooting).
+
+## Commands
+
 Scripts, skins, and other add-ons can use commands to control bits and pieces of Artwork Beef.
 
 ### Run automatic processing on the library
 
 You can disable the automatic processing after library updates and schedule them
-with something like the Kodi Callbacks add-on or cron, or trigger them in some other way.
+with something like the [Kodi Callbacks](https://kodi.wiki/view/Add-on:Kodi_Callbacks) add-on
+or trigger them in some other way.
 
 - Process new items
   - `NotifyAll(script.artwork.beef:control, ProcessNewVideos)`

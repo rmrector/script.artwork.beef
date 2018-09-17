@@ -48,6 +48,7 @@ a[href$='.zip']::before {
 	font-family: 'Material Icons';
 	content: 'attach_file';
 	-webkit-font-feature-settings: 'liga';
+	font-feature-settings: 'liga';
 }
 
 h1 .subtitle {
@@ -58,23 +59,20 @@ h1 .subtitle {
 	text-transform: initial;
 }
 
+h4 {
+	font-size: 1.7rem;
+}
+
+h5 {
+	font-size: 1.3rem;
+}
+
 .changelogtag {
 	color: #fff;
 	font-weight: bold;
 	padding: 1px 3px;
 }
 
-.changelogtag.featuretag {
-	background-color: #8c8;
-}
-
-.changelogtag.fixtag {
-	background-color: #88f;
-}
-
-.changelogtag.cleanuptag {
-	background-color: #f94;
-}
 .header-wrapper {
 	background-color: #70269a;
 }
@@ -434,14 +432,13 @@ h1 .subtitle {
 </ul></li>
 <li><a href="#delete-deselected-artwork-files">&ldquo;Delete deselected artwork files&rdquo;</a></li>
 <li><a href="#recycle-deleted-and-replaced-artwork-files-to-temp-cache-directory">&ldquo;Recycle deleted and replaced artwork files to temp/cache directory&rdquo;</a></li>
-<li><a href="#disable-enable-artwork-beef-context-items-per-skin">&ldquo;Disable/Enable Artwork Beef context items (per skin)</a></li>
+<li><a href="#disable-enable-artwork-beef-context-items-per-skin">&ldquo;Disable/Enable Artwork Beef context items (per skin)&rdquo;</a></li>
 </ul></li>
 <li><a href="#sorting-and-auto-filters">Sorting and auto filters</a>
 <ul>
 <li><a href="#prefer-fanart-with-no-title">&ldquo;Prefer &lsquo;fanart&rsquo; with no title&rdquo;</a></li>
 <li><a href="#preferred-artwork-size">&ldquo;Preferred artwork size&rdquo;</a></li>
 <li><a href="#minimum-image-rating">&ldquo;Minimum image rating&rdquo;</a></li>
-<li><a href="#override-image-language-defaults-to-kodi-interface">&ldquo;Override image language (defaults to Kodi interface)&rdquo;</a></li>
 <li><a href="#prefer-poster-with-no-title">&ldquo;Prefer &lsquo;poster&rsquo; with no title&rdquo;</a></li>
 <li><a href="#action-show-latest-artwork-report">Action &ldquo;Show latest artwork report&rdquo;</a></li>
 </ul></li>
@@ -456,7 +453,10 @@ h1 .subtitle {
 <ul>
 <li><a href="#select-series-for-episode-fanart">&ldquo;Select series for episode &lsquo;fanart&rsquo;&hellip;&rdquo;</a></li>
 </ul></li>
-<li><a href="#download-these-artwork-types-to-the-local-file-system">&ldquo;Download these artwork types to the local file system&rdquo;</a></li>
+<li><a href="#download-artwork-to-local-files">&ldquo;Download artwork to local files&rdquo;</a>
+<ul>
+<li><a href="#artwork-download-configuration">&ldquo;Artwork download configuration&rdquo;</a></li>
+</ul></li>
 </ul></li>
 </ul></li>
 <li><a href="#advanced">Advanced</a>
@@ -470,13 +470,16 @@ h1 .subtitle {
 <li><a href="#show-final-artwork-update-count-notification">&ldquo;Show final artwork update count notification&rdquo;</a></li>
 <li><a href="#automatically-preload-local-video-music-library-artwork-to-kodi-texture-cache">&ldquo;Automatically preload local video / music library artwork to Kodi texture cache&rdquo;</a></li>
 <li><a href="#manually-select-multiple-images-for-all-media-types">&ldquo;Manually select multiple images for all media types&rdquo;</a></li>
+<li><a href="#disable-enable-artwork-beef-debug-context-items-per-skin">&ldquo;Disable/Enable Artwork Beef debug context items (per skin)&rdquo;</a></li>
 </ul></li>
+<li><a href="#image-languages-for-automatic-filter">Image languages for automatic filter</a></li>
 <li><a href="#files">Files</a>
 <ul>
 <li><a href="#replace-episode-movie-music-video-thumb-with-kodi-generated-thumb">&ldquo;Replace episode / movie / music video &lsquo;thumb&rsquo; with Kodi generated thumb&rdquo;</a></li>
 <li><a href="#process-movie-set-artwork-in-a-central-directory">&ldquo;Process movie set artwork in a central directory&rdquo;</a>
 <ul>
 <li><a href="#central-information-directory">&ldquo;central information directory&rdquo;</a></li>
+<li><a href="#save-new-artwork-to-subdirectories-per-movie-set">&ldquo;save new artwork to subdirectories per movie set&rdquo;</a></li>
 </ul></li>
 <li><a href="#grab-movie-set-artwork-from-movie-parent-directory">&ldquo;Grab movie set artwork from movie parent directory&rdquo;</a></li>
 <li><a href="#save-movie-music-video-artwork-with-movie-base-file-name">&ldquo;Save movie / music video artwork with movie base file name&rdquo;</a></li>
@@ -537,9 +540,10 @@ is scanned.</p>
 
 <p>Recycled artwork goes to Kodi&rsquo;s local temp or cache directory.</p>
 
-<h4 id="disable-enable-artwork-beef-context-items-per-skin">&ldquo;Disable/Enable Artwork Beef context items (per skin)</h4>
+<h4 id="disable-enable-artwork-beef-context-items-per-skin">&ldquo;Disable/Enable Artwork Beef context items (per skin)&rdquo;</h4>
 
-<p>Hide the two context items under the &ldquo;Manage&rdquo; menu of the context menu of most media items.</p>
+<p>Hide the two standard context items &ldquo;AB: Add missing artwork&rdquo; and &ldquo;AB: Select artwork &hellip;&rdquo; under
+the &ldquo;Manage&rdquo; menu of the context menu of most media items.</p>
 
 <h3 id="sorting-and-auto-filters">Sorting and auto filters</h3>
 
@@ -553,8 +557,6 @@ size of artwork automatically added is adjusted.</p>
 <h4 id="minimum-image-rating">&ldquo;Minimum image rating&rdquo;</h4>
 
 <p>Slider to set minimum image rating to be added automatically.</p>
-
-<h4 id="override-image-language-defaults-to-kodi-interface">&ldquo;Override image language (defaults to Kodi interface)&rdquo;</h4>
 
 <h4 id="prefer-poster-with-no-title">&ldquo;Prefer &lsquo;poster&rsquo; with no title&rdquo;</h4>
 
@@ -600,14 +602,20 @@ that will conflict with Skin Helper Service.</p>
 <p>Episode fanart must be enabled per series as they add a bundle of new API calls and just won&rsquo;t be
 available for many series.</p>
 
-<h4 id="download-these-artwork-types-to-the-local-file-system">&ldquo;Download these artwork types to the local file system&rdquo;</h4>
+<h4 id="download-artwork-to-local-files">&ldquo;Download artwork to local files&rdquo;</h4>
 
-<p>Artwork types here will be downloaded to the local file system (generally next to the media items),
+<h5 id="artwork-download-configuration">&ldquo;Artwork download configuration&rdquo;</h5>
+
+<p>By default artwork is only downloaded by Kodi&rsquo;s image (texture) caching. Switch this to
+&ldquo;all configured above&rdquo; to download everything configured in the section &ldquo;Automatically add
+these artwork types from web services and file system&rdquo;, or &ldquo;specific types below&rdquo; for a more
+detailed configuration of types to download.</p>
+
+<p>Artwork types configured below will be downloaded to the local file system (generally next to the media items),
 rather than linked directly to the original URL. This makes it easy to share with other Kodi installations
-and saves a bundle of bandwidth for you and the web services. It is awkward to configure but I
-suggest you enable it for everything (except maybe episode &lsquo;thumb&rsquo;). For artwork types that can
-have multiple images, only the base art name is needed; &ldquo;fanart&rdquo; will also include &ldquo;fanart1&rdquo;, &ldquo;fanart2&rdquo;,
-&ldquo;fanart3&rdquo;, etc if added to Kodi&rsquo;s library.</p>
+and saves a bundle of bandwidth for you and the web services. For artwork types that can have multiple images,
+only the base art name is needed; &ldquo;fanart&rdquo; will also download any &ldquo;fanart1&rdquo;, &ldquo;fanart2&rdquo;,
+&ldquo;fanart3&rdquo;, etc added to Kodi&rsquo;s library.</p>
 
 <h2 id="advanced">Advanced</h2>
 
@@ -619,7 +627,8 @@ setting will be used as a backup. &lsquo;tvdb&rsquo; for TheTVDB or &lsquo;tmdb&
 <h4 id="fanart-tv-personal-api-key">&ldquo;fanart.tv personal API key&rdquo;</h4>
 
 <p>Set the <strong>personal</strong> API for fanart.tv, which reduces the delay for new artwork results from fanart.tv.
-This is the API key that individual users of Artwork Beef (and other apps like it) should register for.</p>
+This is the API key that individual users of Artwork Beef (and other apps like it) should register for.
+Artwork Beef cannot tell you if this is entered incorrectly, so please double check it.</p>
 
 <h4 id="include-detailed-per-item-changes-in-the-report">&ldquo;Include detailed per item changes in the report&rdquo;</h4>
 
@@ -649,6 +658,17 @@ have to download it again later.</p>
 <p>Allows manual selection of multiple images for all artwork. Mostly for skin designers or developers to
 tinker with, it requires a skin or other interface or add-on to support multiple in some way.</p>
 
+<h4 id="disable-enable-artwork-beef-debug-context-items-per-skin">&ldquo;Disable/Enable Artwork Beef debug context items (per skin)&rdquo;</h4>
+
+<p>Show the two <a href="https://rmrector.github.io/script.artwork.beef/usage/commands/">debug context</a> items &ldquo;AB: Remove all artwork&rdquo; and
+&ldquo;AB: Log debug info&rdquo; under the &ldquo;Manage&rdquo; menu of the context menu of most media items. Disabled by default.</p>
+
+<h3 id="image-languages-for-automatic-filter">Image languages for automatic filter</h3>
+
+<p>Controls which image languages will be accepted by Artwork Beef&rsquo;s automatic process. By default
+Artwork Beef uses Kodi&rsquo;s user interface language and if not found it falls back to English, but you
+can disable either of those options and &ldquo;Priority language selection&rdquo; is preferred before either.</p>
+
 <h3 id="files">Files</h3>
 
 <h4 id="replace-episode-movie-music-video-thumb-with-kodi-generated-thumb">&ldquo;Replace episode / movie / music video &lsquo;thumb&rsquo; with Kodi generated thumb&rdquo;</h4>
@@ -663,13 +683,20 @@ but at least there is one. Separate config for each media type.</p>
 
 <h5 id="central-information-directory">&ldquo;central information directory&rdquo;</h5>
 
+<p>Directory the movie set artwork is stored in.</p>
+
+<h5 id="save-new-artwork-to-subdirectories-per-movie-set">&ldquo;save new artwork to subdirectories per movie set&rdquo;</h5>
+
+<p>Enabled by default, separates movie set artwork into subdirectories named for the movie set.
+When disabled Artwork Beef saves all artwork in the central directory.</p>
+
 <h4 id="grab-movie-set-artwork-from-movie-parent-directory">&ldquo;Grab movie set artwork from movie parent directory&rdquo;</h4>
 
 <p>Mutually exclusive with &ldquo;movie set central directory&rdquo;, but probably shouldn&rsquo;t be.</p>
 
 <h4 id="save-movie-music-video-artwork-with-movie-base-file-name">&ldquo;Save movie / music video artwork with movie base file name&rdquo;</h4>
 
-<p>Save movie artwork to &ldquo;[movie name]-fanart.jpg&rdquo; rather than &ldquo;fanart.jpg&rdquo;.
+<p>Save movie artwork to &ldquo;[movie file name]-fanart.jpg&rdquo; rather than &ldquo;fanart.jpg&rdquo;.
 Movies and music videos are configured separately.</p>
 
 <h4 id="save-additional-movie-and-tv-show-fanart-to-extrafanart-directory-instead">&ldquo;Save additional movie and TV show fanart to &lsquo;extrafanart&rsquo; directory instead&rdquo;</h4>
@@ -687,10 +714,9 @@ point.</p>
 
 <h3 id="in-case-of-emergency">&ldquo;In case of emergency&rdquo;</h3>
 
-<p>These are for project API keys for the individual web services. You should generally not change
-these, they are intended for the single built-in key to be used by all users of a single project / application.
-These options are only provided for the future case that the built-in keys are disabled by the
-web services after being ripped off.</p>
+<p>These are project API keys for the individual web services. You do not need them unless the
+built-in keys are disabled by the web services after being ripped off.
+<a href="https://medium.com/fanart-tv/what-are-fanart-tv-personal-api-keys-472f60222856">These are unneeded otherwise</a>.</p>
 
 <h1 id="actions">Actions</h1>
 

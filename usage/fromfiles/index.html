@@ -48,6 +48,7 @@ a[href$='.zip']::before {
 	font-family: 'Material Icons';
 	content: 'attach_file';
 	-webkit-font-feature-settings: 'liga';
+	font-feature-settings: 'liga';
 }
 
 h1 .subtitle {
@@ -58,23 +59,20 @@ h1 .subtitle {
 	text-transform: initial;
 }
 
+h4 {
+	font-size: 1.7rem;
+}
+
+h5 {
+	font-size: 1.3rem;
+}
+
 .changelogtag {
 	color: #fff;
 	font-weight: bold;
 	padding: 1px 3px;
 }
 
-.changelogtag.featuretag {
-	background-color: #8c8;
-}
-
-.changelogtag.fixtag {
-	background-color: #88f;
-}
-
-.changelogtag.cleanuptag {
-	background-color: #f94;
-}
 .header-wrapper {
 	background-color: #70269a;
 }
@@ -460,10 +458,10 @@ h1 .subtitle {
 
 <h2 id="downloading-and-managing-local-artwork-files">Downloading and managing local artwork files</h2>
 
-<p>By default, Artwork Beef does not modify existing local artwork files. There are some options
-to change that, though. With the settings &ldquo;Download these artwork types to the local file system&rdquo;
+<p>By default, Artwork Beef only identifies local artwork files, it does not add or modify them. There
+are some options to change that, though. With the settings &ldquo;Download artwork to local files&rdquo;
 you can configure exactly which types of artwork to download for each media type.
-By default most video library images will be saved next to the media files
+If configured to download artwork, most video library images will be saved next to the media files
 with the most specific file names detailed below, with options to save movie and music video artwork
 without the base file name if you like, and options to save movie and music video fanart# to an
 &ldquo;extrafanart&rdquo; directory for skins using the classic style.</p>
@@ -547,19 +545,19 @@ so instead use the set&rsquo;s name as the directory name.</p>
 <p>A few specific examples are</p>
 
 <ul>
-<li><code>... /[central movie set info directory]/Movie Collection Name-poster.jpg</code></li>
-<li><code>... /[central movie set info directory]/Movie Collection Name-fanart.jpg</code></li>
-<li><code>... /[central movie set info directory]/Movie Collection Name-fanart1.jpg</code></li>
-<li><code>... /[central movie set info directory]/Movie Collection Name-clearlogo.png</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name/poster.jpg</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name/fanart.jpg</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name/fanart1.jpg</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name/clearlogo.png</code></li>
 </ul>
 
 <p>or</p>
 
 <ul>
-<li><code>... /[central movie set info directory]/Movie Collection Name/poster.jpg</code></li>
-<li><code>... /[central movie set info directory]/Movie Collection Name/fanart.jpg</code></li>
-<li><code>... /[central movie set info directory]/Movie Collection Name/fanart1.jpg</code></li>
-<li><code>... /[central movie set info directory]/Movie Collection Name/clearlogo.png</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name-poster.jpg</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name-fanart.jpg</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name-fanart1.jpg</code></li>
+<li><code>... /[central movie set info directory]/Movie Collection Name-clearlogo.png</code></li>
 </ul>
 
 <p>Artwork Beef can also be configured to pull collection artwork from a parent directory of movies,

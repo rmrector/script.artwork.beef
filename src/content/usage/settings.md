@@ -32,9 +32,10 @@ is scanned.
 
 Recycled artwork goes to Kodi's local temp or cache directory.
 
-#### "Disable/Enable Artwork Beef context items (per skin)
+#### "Disable/Enable Artwork Beef context items (per skin)"
 
-Hide the two context items under the "Manage" menu of the context menu of most media items.
+Hide the two standard context items "AB: Add missing artwork" and "AB: Select artwork ..." under
+the "Manage" menu of the context menu of most media items.
 
 ### Sorting and auto filters
 
@@ -48,8 +49,6 @@ size of artwork automatically added is adjusted.
 #### "Minimum image rating"
 
 Slider to set minimum image rating to be added automatically.
-
-#### "Override image language (defaults to Kodi interface)"
 
 #### "Prefer 'poster' with no title"
 
@@ -95,14 +94,20 @@ that will conflict with Skin Helper Service.
 Episode fanart must be enabled per series as they add a bundle of new API calls and just won't be
 available for many series.
 
-#### "Download these artwork types to the local file system"
+#### "Download artwork to local files"
 
-Artwork types here will be downloaded to the local file system (generally next to the media items),
+##### "Artwork download configuration"
+
+By default artwork is only downloaded by Kodi's image (texture) caching. Switch this to
+"all configured above" to download everything configured in the section "Automatically add
+these artwork types from web services and file system", or "specific types below" for a more
+detailed configuration of types to download.
+
+Artwork types configured below will be downloaded to the local file system (generally next to the media items),
 rather than linked directly to the original URL. This makes it easy to share with other Kodi installations
-and saves a bundle of bandwidth for you and the web services. It is awkward to configure but I
-suggest you enable it for everything (except maybe episode 'thumb'). For artwork types that can
-have multiple images, only the base art name is needed; "fanart" will also include "fanart1", "fanart2",
-"fanart3", etc if added to Kodi's library.
+and saves a bundle of bandwidth for you and the web services. For artwork types that can have multiple images,
+only the base art name is needed; "fanart" will also download any "fanart1", "fanart2",
+"fanart3", etc added to Kodi's library.
 
 ## Advanced
 
@@ -115,6 +120,7 @@ setting will be used as a backup. 'tvdb' for TheTVDB or 'tmdb' for TheMovieDB.
 
 Set the **personal** API for fanart.tv, which reduces the delay for new artwork results from fanart.tv.
 This is the API key that individual users of Artwork Beef (and other apps like it) should register for.
+Artwork Beef cannot tell you if this is entered incorrectly, so please double check it.
 
 #### "Include detailed per item changes in the report"
 
@@ -144,6 +150,17 @@ have to download it again later.
 Allows manual selection of multiple images for all artwork. Mostly for skin designers or developers to
 tinker with, it requires a skin or other interface or add-on to support multiple in some way.
 
+#### "Disable/Enable Artwork Beef debug context items (per skin)"
+
+Show the two [debug context]({{< ref "usage/commands.md" >}}) items "AB: Remove all artwork" and
+"AB: Log debug info" under the "Manage" menu of the context menu of most media items. Disabled by default.
+
+### Image languages for automatic filter
+
+Controls which image languages will be accepted by Artwork Beef's automatic process. By default
+Artwork Beef uses Kodi's user interface language and if not found it falls back to English, but you
+can disable either of those options and "Priority language selection" is preferred before either.
+
 ### Files
 
 #### "Replace episode / movie / music video 'thumb' with Kodi generated thumb"
@@ -158,13 +175,20 @@ Save movie collection artwork to a central directory. Details on the
 
 ##### "central information directory"
 
+Directory the movie set artwork is stored in.
+
+##### "save new artwork to subdirectories per movie set"
+
+Enabled by default, separates movie set artwork into subdirectories named for the movie set.
+When disabled Artwork Beef saves all artwork in the central directory.
+
 #### "Grab movie set artwork from movie parent directory"
 
 Mutually exclusive with "movie set central directory", but probably shouldn't be.
 
 #### "Save movie / music video artwork with movie base file name"
 
-Save movie artwork to "[movie name]-fanart.jpg" rather than "fanart.jpg".
+Save movie artwork to "[movie file name]-fanart.jpg" rather than "fanart.jpg".
 Movies and music videos are configured separately.
 
 #### "Save additional movie and TV show fanart to 'extrafanart' directory instead"
@@ -182,10 +206,9 @@ point.
 
 ### "In case of emergency"
 
-These are for project API keys for the individual web services. You should generally not change
-these, they are intended for the single built-in key to be used by all users of a single project / application.
-These options are only provided for the future case that the built-in keys are disabled by the
-web services after being ripped off.
+These are project API keys for the individual web services. You do not need them unless the
+built-in keys are disabled by the web services after being ripped off.
+[These are unneeded otherwise](https://medium.com/fanart-tv/what-are-fanart-tv-personal-api-keys-472f60222856).
 
 # Actions
 

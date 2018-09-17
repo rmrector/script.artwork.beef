@@ -48,6 +48,7 @@ a[href$='.zip']::before {
 	font-family: 'Material Icons';
 	content: 'attach_file';
 	-webkit-font-feature-settings: 'liga';
+	font-feature-settings: 'liga';
 }
 
 h1 .subtitle {
@@ -58,23 +59,20 @@ h1 .subtitle {
 	text-transform: initial;
 }
 
+h4 {
+	font-size: 1.7rem;
+}
+
+h5 {
+	font-size: 1.3rem;
+}
+
 .changelogtag {
 	color: #fff;
 	font-weight: bold;
 	padding: 1px 3px;
 }
 
-.changelogtag.featuretag {
-	background-color: #8c8;
-}
-
-.changelogtag.fixtag {
-	background-color: #88f;
-}
-
-.changelogtag.cleanuptag {
-	background-color: #f94;
-}
 .header-wrapper {
 	background-color: #70269a;
 }
@@ -424,7 +422,7 @@ h1 .subtitle {
 <ul>
 <li>
 <ul>
-<li>
+<li><a href="#commands">Commands</a>
 <ul>
 <li><a href="#run-automatic-processing-on-the-library">Run automatic processing on the library</a></li>
 <li><a href="#run-artwork-beef-on-individual-media-items">Run Artwork Beef on individual media items</a></li>
@@ -452,12 +450,20 @@ h1 .subtitle {
 
 
 
+<p>Extra debug context items that work on individual media items can be enabled in the <a href="https://rmrector.github.io/script.artwork.beef/usage/settings/#disable-enable-artwork-beef-debug-context-items-per-skin">add-on settings</a>.
+&ldquo;AB: Remove all artwork&rdquo; will remove all artwork from the single selected item.
+&ldquo;AB: Log debug info&rdquo; will run through the automatic process like &ldquo;AB: Add missing artwork&rdquo; and
+logs the result to the standard Kodi log, but it doesn&rsquo;t change anything (helpful for troubleshooting).</p>
+
+<h2 id="commands">Commands</h2>
+
 <p>Scripts, skins, and other add-ons can use commands to control bits and pieces of Artwork Beef.</p>
 
 <h3 id="run-automatic-processing-on-the-library">Run automatic processing on the library</h3>
 
 <p>You can disable the automatic processing after library updates and schedule them
-with something like the Kodi Callbacks add-on or cron, or trigger them in some other way.</p>
+with something like the <a href="https://kodi.wiki/view/Add-on:Kodi_Callbacks">Kodi Callbacks</a> add-on
+or trigger them in some other way.</p>
 
 <ul>
 <li>Process new items

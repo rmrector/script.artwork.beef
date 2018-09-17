@@ -48,6 +48,7 @@ a[href$='.zip']::before {
 	font-family: 'Material Icons';
 	content: 'attach_file';
 	-webkit-font-feature-settings: 'liga';
+	font-feature-settings: 'liga';
 }
 
 h1 .subtitle {
@@ -58,23 +59,20 @@ h1 .subtitle {
 	text-transform: initial;
 }
 
+h4 {
+	font-size: 1.7rem;
+}
+
+h5 {
+	font-size: 1.3rem;
+}
+
 .changelogtag {
 	color: #fff;
 	font-weight: bold;
 	padding: 1px 3px;
 }
 
-.changelogtag.featuretag {
-	background-color: #8c8;
-}
-
-.changelogtag.fixtag {
-	background-color: #88f;
-}
-
-.changelogtag.cleanuptag {
-	background-color: #f94;
-}
 .header-wrapper {
 	background-color: #70269a;
 }
@@ -432,7 +430,8 @@ h1 .subtitle {
 <li><a href="#i-see-artwork-for-a-movie-set-collection-saga-on-fanart-tv-but-artwork-beef-won-t-show-it">I see artwork for a movie set / collection / saga on fanart.tv but Artwork Beef won&rsquo;t show it.</a></li>
 <li><a href="#i-can-t-see-artwork-while-browsing-the-library-but-i-do-see-it-assigned-in-ab-select-artwork-or-kodi-s-built-in-choose-art-dialog">I can&rsquo;t see artwork while browsing the library, but I do see it assigned in &ldquo;AB: select artwork&hellip;&rdquo; or Kodi&rsquo;s built-in &ldquo;Choose art&rdquo; dialog.</a></li>
 <li><a href="#why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</a></li>
-<li><a href="#images-from-web-services-are-added-to-the-library-but-are-not-visible">Images from web services are added to the library but are not visible.</a></li>
+<li><a href="#artwork-from-web-services-are-added-to-the-library-but-are-not-visible-in-the-gui">Artwork from web services are added to the library but are not visible in the GUI.</a></li>
+<li><a href="#i-receive-an-error-message-invalid-project-api-key-for-a-particular-web-service">I receive an error message &ldquo;Invalid project API key&rdquo; for a particular web service.</a></li>
 <li><a href="#manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</a></li>
 <li><a href="#artwork-beef-cannot-find-artwork-for-some-movie-sets-collections-from-fanart-tv">Artwork Beef cannot find artwork for some movie sets / collections from fanart.tv.</a></li>
 <li><a href="#a-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">A Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</a></li>
@@ -548,14 +547,27 @@ for the media type you are looking at?</p>
 <h4 id="why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</h4>
 
 <ul>
-<li>It may take a few days for new artwork to be available.</li>
+<li>It may take a day or two for new artwork to be available due to server caching.</li>
 <li>Artwork Beef caches the previous image results from web services for 72 hours.</li>
+<li>For fanart.tv, without a <em>personal</em> API key you results could be even older.</li>
 </ul>
 
-<h4 id="images-from-web-services-are-added-to-the-library-but-are-not-visible">Images from web services are added to the library but are not visible.</h4>
+<h4 id="artwork-from-web-services-are-added-to-the-library-but-are-not-visible-in-the-gui">Artwork from web services are added to the library but are not visible in the GUI.</h4>
 
 <p>Most likely the web service is temporarily/intermittently unavailable. Try again later.
-Configuring Artwork Beef to download artwork to your local file system is probably a good idea.</p>
+Configuring Artwork Beef to download artwork to your local file system is probably a good idea.
+Certificate errors and HTTP 500 errors are good indications of this.</p>
+
+<h4 id="i-receive-an-error-message-invalid-project-api-key-for-a-particular-web-service">I receive an error message &ldquo;Invalid project API key&rdquo; for a particular web service.</h4>
+
+<p>Could be one of three things, the error message will specify which exactly:</p>
+
+<ul>
+<li>Artwork Beef was not <a href="https://rmrector.github.io/script.artwork.beef/usage/#installing">installed correctly</a>.</li>
+<li>You have entered your own project API key improperly; remove that setting and try again.</li>
+<li>Or the built-in API keys have been disabled and you will have to sign up for a project
+key of your own (unlikely).</li>
+</ul>
 
 <h4 id="manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</h4>
 
@@ -563,14 +575,8 @@ Configuring Artwork Beef to download artwork to your local file system is probab
 <li>Does it happen for all media items of a particular type?
 
 <ul>
-<li>If there is a message about &ldquo;Invalid project API key&rdquo; for a particular web service:
-
-<ul>
-<li>Either the built-in API keys have been disabled and you will have to sign up for a project
-key of your own;</li>
-<li>Or you have entered your own project API key improperly and should remove that setting
-and try again.</li>
-</ul></li>
+<li>If there is a message about &ldquo;Invalid project API key&rdquo; for a particular web service, see
+the section just above.</li>
 <li>Or maybe the web service is temporarily unavailable, or your Kodi device&rsquo;s internet connection
 is broken. The Kodi log and Artwork Beef&rsquo;s artwork report may have more details.</li>
 <li>Otherwise post a reply on the forum thread with a description of the problem, a
@@ -611,9 +617,9 @@ based on the interface design.</p>
 <h4 id="where-do-i-put-my-project-api-keys-for-other-web-services">Where do I put my project API keys for other web services?</h4>
 
 <ul>
-<li>At the bottom of the Advanced page of add-on settings.</li>
 <li>I do not suggest you do this, the option is only available in case the built-in project keys
 stop working.</li>
+<li>At the bottom of the <a href="https://rmrector.github.io/script.artwork.beef/usage/settings/#advanced">Advanced tab</a> of add-on settings.</li>
 </ul>
 
 <h4 id="where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</h4>

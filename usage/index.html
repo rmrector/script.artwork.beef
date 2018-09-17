@@ -48,6 +48,7 @@ a[href$='.zip']::before {
 	font-family: 'Material Icons';
 	content: 'attach_file';
 	-webkit-font-feature-settings: 'liga';
+	font-feature-settings: 'liga';
 }
 
 h1 .subtitle {
@@ -58,23 +59,20 @@ h1 .subtitle {
 	text-transform: initial;
 }
 
+h4 {
+	font-size: 1.7rem;
+}
+
+h5 {
+	font-size: 1.3rem;
+}
+
 .changelogtag {
 	color: #fff;
 	font-weight: bold;
 	padding: 1px 3px;
 }
 
-.changelogtag.featuretag {
-	background-color: #8c8;
-}
-
-.changelogtag.fixtag {
-	background-color: #88f;
-}
-
-.changelogtag.cleanuptag {
-	background-color: #f94;
-}
 .header-wrapper {
 	background-color: #70269a;
 }
@@ -451,12 +449,14 @@ h1 .subtitle {
 <h2 id="installing">Installing</h2>
 
 <p>Install my <a href="https://github.com/rmrector/repository.rector.stuff/raw/master/latest/repository.rector.stuff-latest.zip">dev repository</a> to get updates delivered to you automatically. After the repo is
-installed, Artwork Beef can be installed from &ldquo;Program add-ons&rdquo;. It can also
-be installed with a <a href="https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.beef-latest.zip">single zip file</a>, but you will have to return here for updates.</p>
+installed, Artwork Beef can be installed from &ldquo;Program add-ons&rdquo;. It can also be installed with this
+<a href="https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.beef-latest.zip">single zip file</a>, but you will have to download each new version yourself. Do not install
+Artwork Beef from GitHub source unless you know you need to and have read the README.</p>
 
 <p><strong>Artwork Helper</strong> can be installed with this single <a href="https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.helper-latest.zip">installable zip</a>, but it&rsquo;s only necessary if a
-skin depends on it.
-Inclusion in the official Kodi repo isn&rsquo;t likely for now, some of this functionality may make
+skin depends on it.</p>
+
+<p>Inclusion in the official Kodi repo isn&rsquo;t likely for now, some of this functionality may make
 its way into Leia so it will probably see some feature churn before long.</p>
 
 <h2 id="usage">Usage</h2>

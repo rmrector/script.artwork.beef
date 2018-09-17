@@ -6,10 +6,10 @@ weight: 20
 
 ## Downloading and managing local artwork files
 
-By default, Artwork Beef does not modify existing local artwork files. There are some options
-to change that, though. With the settings "Download these artwork types to the local file system"
+By default, Artwork Beef only identifies local artwork files, it does not add or modify them. There
+are some options to change that, though. With the settings "Download artwork to local files"
 you can configure exactly which types of artwork to download for each media type.
-By default most video library images will be saved next to the media files
+If configured to download artwork, most video library images will be saved next to the media files
 with the most specific file names detailed below, with options to save movie and music video artwork
 without the base file name if you like, and options to save movie and music video fanart# to an
 "extrafanart" directory for skins using the classic style.
@@ -86,17 +86,17 @@ so instead use the set's name as the directory name.
 
 A few specific examples are
 
-- `... /[central movie set info directory]/Movie Collection Name-poster.jpg`
-- `... /[central movie set info directory]/Movie Collection Name-fanart.jpg`
-- `... /[central movie set info directory]/Movie Collection Name-fanart1.jpg`
-- `... /[central movie set info directory]/Movie Collection Name-clearlogo.png`
-
-or
-
 - `... /[central movie set info directory]/Movie Collection Name/poster.jpg`
 - `... /[central movie set info directory]/Movie Collection Name/fanart.jpg`
 - `... /[central movie set info directory]/Movie Collection Name/fanart1.jpg`
 - `... /[central movie set info directory]/Movie Collection Name/clearlogo.png`
+
+or
+
+- `... /[central movie set info directory]/Movie Collection Name-poster.jpg`
+- `... /[central movie set info directory]/Movie Collection Name-fanart.jpg`
+- `... /[central movie set info directory]/Movie Collection Name-fanart1.jpg`
+- `... /[central movie set info directory]/Movie Collection Name-clearlogo.png`
 
 Artwork Beef can also be configured to pull collection artwork from a parent directory of movies,
 if that directory name exactly matches the cleaned collection name, with artwork

@@ -28,6 +28,9 @@ weight: 10
 - For multiple Kodi devices with their own databases and you want Artwork Beef to download
   **image files** to be shared across them, enable "Automatically add artwork from file system only" on
   all but the master Kodi device.
+- If you are using the Universal Movie Scraper, configure it to use TheMovieDB for search to add
+  the TMDB ID which improves movie matching on fanart.tv. If you are using a media manager, configure it
+  to add a 'tmdb' unique ID to movie NFOs.
 
 Okay, so these are more interesting just _after_ the first run:
 
