@@ -244,7 +244,7 @@ def get_mediaid(uniqueids, mediatype):
         return uniqueids.get('mbgroup')
     if mediatype == mediatypes.ARTIST:
         return uniqueids.get('mbartist')
-    sources = ('imdb', 'tmdb', 'unknown') if mediatype == mediatypes.MOVIE else \
+    sources = ('tmdb', 'imdb', 'unknown') if mediatype == mediatypes.MOVIE else \
         ('tmdb', 'unknown') if mediatype == mediatypes.MOVIESET else ('tvdb', 'unknown')
     for source in sources:
         if source in uniqueids:
