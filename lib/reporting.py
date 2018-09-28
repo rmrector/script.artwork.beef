@@ -34,6 +34,8 @@ RUNNING_VERSION = 32815
 DOWNLOAD_COUNT = 32816
 NO_IDS_MESSAGE = 32030
 
+debug = False
+
 def report_startup():
     if not xbmcvfs.exists(settings.datapath):
         xbmcvfs.mkdir(settings.datapath)
@@ -47,6 +49,8 @@ def report_startup():
             finish_chunk(reportfile)
 
 def report_start(medialist):
+    if debug:
+        return
     with _get_file() as reportfile:
         write(reportfile, "== {0}: ".format(get_datetime()) + L(PROCESSING_AUTOMATICALLY))
         if not medialist:
@@ -61,6 +65,8 @@ def report_start(medialist):
             ', '.join('{0}: {1}'.format(mt, mediatypecount[mt]) for mt in mediatypecount))
 
 def report_end(medialist, abortedcount, downloaded_size):
+    if debug:
+        return
     if len(medialist) <= 1:
         if _should_rotate():
             _rotate_file()
@@ -98,7 +104,7 @@ def report_end(medialist, abortedcount, downloaded_size):
         _rotate_file()
 
 def report_item(mediaitem, forcedreport=False, manual=False, downloaded_size=0):
-    if not forcedreport and not settings.report_peritem:
+    if debug or not forcedreport and not settings.report_peritem:
         return
     with _get_file() as reportfile:
         itemtitle = "{0} '{1}'".format(mediaitem.mediatype, mediaitem.label) if mediaitem.mediatype != mediatypes.EPISODE \

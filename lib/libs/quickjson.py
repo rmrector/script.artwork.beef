@@ -170,9 +170,8 @@ def set_item_details(dbid, mediatype, **details):
 
 def get_textures(url=None):
     json_request = get_base_json_request('Textures.GetTextures')
-    if url is None:
-        json_request['params']['properties'] = ['url']
-    else:
+    json_request['params']['properties'] = ['url']
+    if url is not None:
         json_request['params']['filter'] = {'field': 'url', 'operator': 'is', 'value': url}
 
     json_result = pykodi.execute_jsonrpc(json_request)

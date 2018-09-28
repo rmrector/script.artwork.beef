@@ -45,6 +45,8 @@ class MediaItem(object):
             self.season = jsondata['season']
         elif self.mediatype == mediatypes.MOVIESET:
             self.movies = jsondata.get('movies', [])
+            if self.movies:
+                add_movieset_movies(self)
             if mediatypes.central_directories[mediatypes.MOVIESET]:
                 self.file = mediatypes.central_directories[mediatypes.MOVIESET] + self.label + '.ext'
         elif self.mediatype == mediatypes.MUSICVIDEO:
@@ -264,6 +266,12 @@ def add_additional_iteminfo(mediaitem, processed, search):
         if folders:
             mediaitem.file, mediaitem.discfolders = folders
 
+def add_movieset_movies(mediaitem):
+    if not mediaitem.movies:
+        mediaitem.movies = quickjson.get_item_details(mediaitem.dbid, mediatypes.MOVIESET)['movies']
+    for movie in mediaitem.movies:
+        movie['art'] = get_own_artwork(movie)
+
 def _get_seasons_artwork(seasons):
     resultseasons = {}
     resultart = {}
@@ -277,15 +285,13 @@ def _get_seasons_artwork(seasons):
 
 def _remove_set_movieposters(mediaitem):
     # Remove artwork Kodi automatically sets from a movie
-    if not mediaitem.movies:
-        mediaitem.movies = quickjson.get_item_details(mediaitem.dbid, mediatypes.MOVIESET)['movies']
+    add_movieset_movies(mediaitem)
     if any(movie['art'] == mediaitem.art for movie in mediaitem.movies):
         mediaitem.art = {}
 
 def _identify_parent_movieset(mediaitem):
     # Identify set folder among movie parent dirs
-    if not mediaitem.movies:
-        mediaitem.movies = quickjson.get_item_details(mediaitem.dbid, mediatypes.MOVIESET)['movies']
+    add_movieset_movies(mediaitem)
     for cleanlabel in utils.iter_possible_cleannames(mediaitem.label):
         for movie in mediaitem.movies:
             pathsep = utils.get_pathsep(movie['file'])
@@ -403,7 +409,8 @@ def build_artwork_basepath(mediaitem, arttype, create=False):
     path += sep
     use_basefilename = mediaitem.mediatype in (mediatypes.EPISODE, mediatypes.SONG) \
         or mediaitem.mediatype == mediatypes.MOVIE and settings.savewith_basefilename \
-        or mediaitem.mediatype == mediatypes.MUSICVIDEO and settings.savewith_basefilename_mvids
+        or mediaitem.mediatype == mediatypes.MUSICVIDEO and settings.savewith_basefilename_mvids \
+        or mediaitem.mediatype == mediatypes.MOVIESET and basename and not settings.setartwork_subdirs
     if settings.identify_alternatives and _saveextrafanart(mediaitem.mediatype, arttype):
         path += 'extrafanart' + sep
     elif use_basefilename:
@@ -448,12 +455,15 @@ def find_central_infodir(mediaitem, create=False):
 
     mkdir = lambda file_: xbmcvfs.mkdir(os.path.dirname(file_))
     finish = lambda result: result if not create or mkdir(result) else None
-    thisdir = _find_existing(basedir, title1, slug1, mediayear)
+    single_dir = mediaitem.mediatype == mediatypes.MOVIESET and not settings.setartwork_subdirs
+    thisdir = _find_existing(basedir, title1, slug1, mediayear, single_dir)
     if not thisdir:
         if mediaitem.mediatype == mediatypes.MOVIE:
             title1 = '{0} ({1})'.format(mediaitem.label, mediaitem.year)
         thisdir = utils.build_cleanest_name(title1, slug1)
-    result = basedir + thisdir + sep
+    result = basedir + thisdir
+    if not single_dir:
+        result += sep
     if not title2:
         return finish(result)
     if create and not mkdir(result):

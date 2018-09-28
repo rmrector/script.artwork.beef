@@ -1,5 +1,3 @@
-import re
-
 from lib.libs import pykodi
 
 TVSHOW = 'tvshow'
@@ -354,8 +352,9 @@ def downloadanyartwork(mediatype):
     return any(x for x in info.values() if x['download'])
 
 def _split_arttype(arttype):
-    indexsearch = re.compile(r'([0-9]+)$').search(arttype)
-    return arttype.rstrip('0123456789'), int(indexsearch.group(1)) if indexsearch else 0
+    basetype = arttype.rstrip('0123456789')
+    idx = 0 if basetype == arttype else int(arttype.replace(basetype, ''))
+    return basetype, idx
 
 def generatethumb(mediatype):
     return togenerate.get(mediatype, False)
@@ -374,8 +373,8 @@ def update_settings():
     if not always_multiple_selection:
         _set_allmulti(False)
     for settingid in arttype_settingskeys:
-        splitsetting = re.split(r'\.|_', settingid)
-        thistype = artinfo[splitsetting[0]][splitsetting[1]]
+        splitsetting = settingid.split('.')
+        thistype = artinfo[splitsetting[0]][splitsetting[1].split('_')[0]]
         try:
             thistype['autolimit'], thistype['multiselect'] = _get_autolimit_from_setting(settingid)
         except ValueError:
@@ -405,6 +404,7 @@ def update_settings():
             artinfo[mediatype][atype]['download'] = dl
             if dl:
                 del download_arttypes[mediatype][download_arttypes[mediatype].index(atype)]
+
     for mediatype in (MOVIESET,):
         central_directories[mediatype] = addon.get_setting('centraldir.{0}_enabled'.format(mediatype))
         if central_directories[mediatype]:
@@ -427,6 +427,11 @@ def update_settings():
         addon.set_setting('only_filesystem', '')
     for media, config in PREFERRED_SOURCE_MEDIA.items():
         result = addon.get_setting('preferredsource_' + media)
+        downloadconfig = addon.get_setting('download_config_' + media)
+        if downloadconfig not in ('0', '1', '2'):
+            # DEPRECATED: default to '2' for now for upgraders, can go back to '0' later
+            downloadconfig = '2'
+            addon.set_setting('download_config_' + mediatype, downloadconfig)
         for mediatype in config[1]:
             if result in ('0', '1', '2'):
                 preferred[mediatype] = PREFERRED_SOURCE_SHARED[result] if \
@@ -435,6 +440,15 @@ def update_settings():
                 preferred[mediatype] = None
                 addon.set_setting('preferredsource_' + media, '0')
             onlyfs[mediatype] = addon.get_setting('onlyfs_' + media)
+
+            if downloadconfig == '0': # None
+                download_arttypes[mediatype] = []
+                for atype in artinfo[mediatype].values():
+                    atype['download'] = False
+            elif downloadconfig == '1': # all configured from web and local
+                download_arttypes[mediatype] = list(othertypes[mediatype])
+                for atype in artinfo[mediatype].values():
+                    atype['download'] = atype['autolimit'] > 0
 
 def _get_autolimit_from_setting(settingid):
     result = addon.get_setting(settingid)

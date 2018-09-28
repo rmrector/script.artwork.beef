@@ -56,6 +56,14 @@ class AbstractProvider(object):
     def login(self):
         return False
 
+def build_key_error(provider):
+    info = settings.get_apikey_config(provider)
+    message = "Invalid project API key: key added in add-on settings is invalid" if not info['builtin'] else \
+        "Invalid project API key: built-in key is invalid" if info['apikey'] else \
+        "Invalid project API key: installed incorrectly and the built-in key is missing"
+
+    return ProviderError(message)
+
 class AbstractImageProvider(AbstractProvider):
     @abstractmethod
     def get_images(self, uniqueids, types=None):

@@ -37,7 +37,7 @@ def clean_artwork(mediaitem):
             # fix other web service URLs
             if url.startswith(fixcfg[0]):
                 updated_art[arttype] = fixcfg[1] + url[url.index(fixcfg[2]) + len(fixcfg[2]):]
-            quickjson.remove_texture_byurl(url)
+                quickjson.remove_texture_byurl(url)
     return updated_art
 
 def remove_specific_arttype(mediaitem, arttype):

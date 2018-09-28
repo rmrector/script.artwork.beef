@@ -41,6 +41,7 @@ class Settings(object):
         self.titlefree_fanart = addon.get_setting('titlefree_fanart')
         self.titlefree_poster = addon.get_setting('titlefree_poster')
         self.setartwork_fromparent = addon.get_setting('setartwork_fromparent')
+        self.setartwork_subdirs = addon.get_setting('setartwork_subdirs')
         self.identify_alternatives = addon.get_setting('identify_alternatives')
         self.report_peritem = addon.get_setting('report_peritem')
         self.fanarttv_clientkey = addon.get_setting('fanarttv_key')
@@ -60,6 +61,8 @@ class Settings(object):
         self.language_override = addon.get_setting('language_override')
         if self.language_override == 'None':
             self.language_override = None
+        self.language_fallback_kodi = addon.get_setting('language_fallback_kodi')
+        self.language_fallback_en = addon.get_setting('language_fallback_en')
 
         try:
             self.minimum_rating = int(addon.get_setting('minimum_rating'))
@@ -74,25 +77,23 @@ class Settings(object):
         self.preferredsize = AVAILABLE_IMAGESIZES[sizesetting][0:2]
         self.minimum_size = AVAILABLE_IMAGESIZES[sizesetting][2]
 
-        self.fanarttv_apikey = addon.get_setting('apikey.fanarttv')
-        self.tvdb_apikey = addon.get_setting('apikey.tvdb')
-        self.tmdb_apikey = addon.get_setting('apikey.tmdb')
-        self.tadb_apikey = addon.get_setting('apikey.tadb')
-        if projectkeys:
-            if not self.fanarttv_apikey:
-                self.fanarttv_apikey = projectkeys.FANARTTV_PROJECTKEY
-            if not self.tvdb_apikey:
-                self.tvdb_apikey = projectkeys.THETVDB_PROJECTKEY
-            if not self.tmdb_apikey:
-                self.tmdb_apikey = projectkeys.TMDB_PROJECTKEY
-            if not self.tadb_apikey:
-                self.tadb_apikey = projectkeys.TADB_PROJECTKEY
+        self.apikeys = {}
+        for provider in ('fanarttv', 'tvdb', 'tmdb', 'tadb'):
+            key = addon.get_setting('apikey.' + provider).strip()
+            self.apikeys[provider] = {'apikey': key, 'builtin': not key}
+            if not key and projectkeys:
+                self.apikeys[provider]['apikey'] = projectkeys.FANARTTV_PROJECTKEY if provider == 'fanarttv' \
+                    else projectkeys.THETVDB_PROJECTKEY if provider == 'tvdb' else \
+                    projectkeys.TMDB_PROJECTKEY if provider == 'tmdb' else projectkeys.TADB_PROJECTKEY
+            pykodi.set_log_scrubstring(provider + '-apikey', key)
 
         pykodi.set_log_scrubstring('fanarttv-client-apikey', self.fanarttv_clientkey)
-        pykodi.set_log_scrubstring('fanarttv-apikey', self.fanarttv_apikey)
-        pykodi.set_log_scrubstring('theaudiodb-apikey', self.tadb_apikey)
-        pykodi.set_log_scrubstring('themoviedb-apikey', self.tmdb_apikey)
-        pykodi.set_log_scrubstring('thetvdbv-apikey', self.tvdb_apikey)
+
+    def get_apikey(self, provider):
+        return self.apikeys[provider]['apikey']
+
+    def get_apikey_config(self, provider):
+        return self.apikeys[provider]
 
     @property
     def autoadd_episodes(self):
