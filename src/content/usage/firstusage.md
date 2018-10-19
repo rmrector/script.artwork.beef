@@ -40,5 +40,5 @@ Okay, so these are more interesting just _after_ the first run:
   to show a list of all still-unmatched movies collections, then select one and enter the name of the collection
   exactly as it is on TheMovieDB. If a collection was matched incorrectly, navigate to the collection in the video
   library and choose "Select artwork..." from the "Manage" menu of the context menu, then choose "Search for item".
-- Ditto **music video** artwork, but when entering the name use `[artist name] - [track name]` to search
+- Ditto **music video** artwork, but when entering the name use `Artist Name - Track Name` to search
   on TheAudioDB.

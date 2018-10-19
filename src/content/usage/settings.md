@@ -143,7 +143,8 @@ Shows the final artwork update count in a notification. Overrides the count at t
 Artwork can be preloaded to the Kodi cache for faster browsing of new media. Video and music
 are configured separately. Only works for artwork saved locally: if you are going to download
 all artwork immediately for caching, then you might as well save it somewhere so you won't
-have to download it again later.
+have to download it again later. This requires the Kodi setting 'Allow remote control via HTTP'
+enabled.
 
 #### "Manually select multiple images for all media types"
 

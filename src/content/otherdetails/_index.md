@@ -12,9 +12,9 @@ work automatically much like scrapers.
 
 ##### Add extended artwork to Kodi's library
 
-Kodi and scrapers have had some support for extended artwork for awhile, but they aren't supported
-to the same extent as basic artwork, like "poster" and "fanart", and need Artwork Beef or something
-like it to add extended artwork to Kodi's library with JSON-RPC.
+Kodi and scrapers have had some support for extended artwork for the video library for awhile, but
+they aren't supported to the same extent as basic artwork, like "poster" and "fanart", and need
+Artwork Beef or something like it to add extended artwork to Kodi's library with JSON-RPC.
 
 **Kodi 17 Krypton** and below only assigns basic artwork from scrapers, NFO files, and the
 local file system. More help is needed to get any extended artwork into the library, whether you
@@ -32,6 +32,18 @@ to add meaningfully different artwork for them.
 Artwork Beef can download artwork locally to avoid troubles when web service URLs change, and
 avoid redownloading the same image for multiple Kodi installations or in the future if the image
 is no longer in Kodi's texture cache.
+
+##### Kodi 18 music library
+
+In Kodi 18 the music library now fully supports adding artwork from all sides. Kodi can be configured
+(with [advancedsettings.xml](https://forum.kodi.tv/showthread.php?tid=331555&pid=2731639#pid2731639))
+to identify and add any type of local artwork, and any type of artwork can be specified in NFO files
+or from scrapers, which Kodi will set automatically if they match the AS.xml configuration.
+
+For the music library, Artwork Beef is still helpful to download full quality artwork locally
+and to add additional artwork from web services until scrapers are updated to add the full selection.
+
+Artwork Beef does not support music library artwork for Kodi 17 and below at all.
 
 #### How do I quick-start this thing?
 
@@ -59,13 +71,6 @@ is no longer in Kodi's texture cache.
 Run Artwork Beef from "Program add-ons" and then "add missing artwork for ..." "new videos" or music.
 Artwork Beef must be run on media items before it can do anything. It can be configured to run
 automatically after library updates.
-
-#### I see artwork for a movie set / collection / saga on fanart.tv but Artwork Beef won't show it.
-
-Artwork Beef can only pull artwork from fanart.tv for movie sets that exist on TheMovieDB.
-However, you can manually download that artwork and place it in the correct
-[location on your file system]({{< ref "usage/fromfiles.md#movie-collection-artwork" >}}).
-Then run "AB: add missing artwork" on the affected movie set.
 
 #### I can't see artwork while browsing the library, but I do see it assigned in "AB: select artwork..." or Kodi's built-in "Choose art" dialog.
 
@@ -96,32 +101,36 @@ Could be one of three things, the error message will specify which exactly:
 
 #### Manual selection of artwork doesn't show any artwork from one or any web service.
 
-1. Does it happen for all media items of a particular type?
-    - If there is a message about "Invalid project API key" for a particular web service, see
-      the section just above.
-    - Or maybe the web service is temporarily unavailable, or your Kodi device's internet connection
-      is broken. The Kodi log and Artwork Beef's artwork report may have more details.
-    - Otherwise post a reply on the forum thread with a description of the problem, a
-      [Kodi debug log], and the latest group of artwork-report.txt.
-2. Or just a handful of media items?
-    - Artwork Beef requires web service IDs (like an IMDB number) in the Kodi library - except for
-      movie sets and music videos. These should be included in NFO files, scrapers, or embedded tags.
-        - If you use scrapers for the media item, make sure your scrapers are up to date and
-          refresh the item.
-        - If you have NFO files, make sure there is a "uniqueid" element in it.
-          An "imdbnumber" element should also work (for movies and TV shows), and an "id" element might work.
-          If your NFOs don't have these elements then upgrade your media manager and recreate the NFOs,
-          then refresh the item in Kodi.
-        - Music must be tagged with MusicBrainz IDs. Use MusicBrainz Picard for tagging files.
+Does it happen for all media items of a particular type?
 
-[Kodi debug log]: https://kodi.wiki/view/Debug-log
+- If there is a message about "Invalid project API key" for a particular web service, see
+  the section just above.
+- Or maybe the web service is temporarily unavailable, or your Kodi device's internet connection
+  is broken. The Kodi debug log and Artwork Beef's artwork report may have more details.
+- Or if there is a message "No web service IDs available", see next section.
+- Otherwise post a reply on the forum thread with a description of the problem, a
+  [Kodi debug log](https://kodi.wiki/view/Debug-log), and the latest group of artwork-report.txt.
+
+#### I received a message "No web service IDs available, can't look up online"
+
+- Artwork Beef requires web service IDs (like an IMDB number) for all items in the Kodi library except
+  movie sets and music videos. These should be included in NFO files, scrapers, or embedded tags.
+    - If you use scrapers for the media item, make sure your scrapers are up to date and
+      refresh the item.
+    - If you have NFO files, make sure there is a "uniqueid" element in it.
+      An "imdbnumber" element should also work (for movies and TV shows), and an "id" element might work.
+      If your NFOs don't have these elements then upgrade your media manager and recreate the NFOs,
+      then refresh the item in Kodi.
+    - Music must be tagged with MusicBrainz IDs. Use MusicBrainz Picard for tagging files.
 
 #### Artwork Beef cannot find artwork for some movie sets / collections from fanart.tv.
 
 Artwork Beef must look up movie set artwork on fanart.tv by a TheMovieDB ID, which has
 [different rules](https://www.themoviedb.org/bible/collection)
-for what a movie collection is than you might. You can download the artwork and place it in the
-file system manually, and Artwork Beef will add it to the library when the movie set is next scanned.
+for what a movie collection is than you might.
+However, you can manually download that artwork and place it in the correct
+[location on your file system]({{< ref "usage/fromfiles.md#movie-collection-artwork" >}}),
+then run "AB: add missing artwork" on the affected movie set.
 
 #### A Kodi skin or web interface is showing a thumbnail image instead of a movie poster.
 
