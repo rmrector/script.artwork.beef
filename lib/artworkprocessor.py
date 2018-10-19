@@ -86,7 +86,7 @@ class ArtworkProcessor(object):
     def init_run(self, show_progress=False, chunkcount=1):
         self.setlanguages()
         self.gatherer = Gatherer(self.monitor, self.autolanguages)
-        self.downloader = FileManager(self.debug)
+        self.downloader = FileManager(self.debug, chunkcount > 1)
         self.freshstart = str(datetime_now() - timedelta(days=365))
         self.chunkcount = chunkcount
         self.currentchunk = 1
@@ -226,6 +226,8 @@ class ArtworkProcessor(object):
         aborted = False
         artcount = 0
         for idx, medialist in enumerate(chunkedlist):
+            if not idx and chunkcount == 1 and len(medialist) > 200:
+                self.downloader.set_bigcache()
             if self.monitor.abortRequested() or medialist is False:
                 aborted = True
                 break

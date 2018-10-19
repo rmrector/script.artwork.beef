@@ -160,7 +160,7 @@ def make_local():
         + ' - {0:0.2f}MB'.format(fileman.size / 1000000.00))
 
 def cache_artwork(librarytype='videos'):
-    fileman = FileManager()
+    fileman = FileManager(False, True)
     heading = L(M.CACHE_VIDEO_ARTWORK if librarytype == 'videos' else M.CACHE_MUSIC_ARTWORK)
     cached = runon_medialist(lambda mi: fileman.cachefor(mi.art), heading, librarytype, fg=True)
     xbmcgui.Dialog().ok("Artwork Beef", L(M.CACHED_COUNT).format(cached))

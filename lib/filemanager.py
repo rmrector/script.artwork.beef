@@ -28,12 +28,13 @@ typemap = {'image/jpeg': 'jpg', 'image/png': 'png', 'image/gif': 'gif'}
 #  first by the next scan so that's not such a big deal.
 
 class FileManager(object):
-    def __init__(self, debug=False):
+    def __init__(self, debug=False, bigcache=False):
         self.getter = Getter()
         self.getter.session.headers['User-Agent'] = settings.useragent
         self.size = 0
         self.fileerror_count = 0
         self.debug = debug
+        self.alreadycached = None if not bigcache else []
         self._build_imagecachebase()
 
     def _build_imagecachebase(self):
@@ -159,13 +160,23 @@ class FileManager(object):
                 recyclefile(old_url)
             xbmcvfs.delete(old_url)
 
+    def set_bigcache(self):
+        if self.alreadycached is None:
+            self.alreadycached = []
+
     def cachefor(self, artmap, multiplethreads=False):
         if not self.imagecachebase or self.debug:
             return 0
         urls = [url for url in artmap.values() if url and not url.startswith(('http', 'image'))]
         if not urls:
             return 0
-        alreadycached = [pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures(urls)]
+        if self.alreadycached is not None:
+            if not self.alreadycached:
+                self.alreadycached = [pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures()
+                    if not pykodi.unquoteimage(texture['url']).startswith(('http', 'image'))]
+            alreadycached = self.alreadycached
+        else:
+            alreadycached = [pykodi.unquoteimage(texture['url']) for texture in quickjson.get_textures(urls)]
         count = [0]
         def worker(path):
             try:
