@@ -68,6 +68,9 @@ def get_movie_path_list(stackedpath):
         result.append(dirname(dirname(result[0])) + get_pathsep(result[0]) + basename(result[0]))
     return result
 
+def path_component(string):
+    return string.replace('/', '|').replace('\\', '|')
+
 replace_chars = ':?"/\\<>*|'
 replace_with = ('', '_', '+', '-')
 replace_colon_with = (' -',)
