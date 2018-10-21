@@ -1,3 +1,8 @@
+v0.22.1 (2018-10-20)
+- Feature: new Spanish translation from 'roliverosc'
+- Fix: speed regression when caching artwork for many items
+- Fix: central movie set directory if set name includes a slash
+
 v0.22.0 (2018-09-17)
 - Feature: options to control languages for automatic processing
 - Feature: simpler options for download configuration
