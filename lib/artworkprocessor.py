@@ -227,7 +227,7 @@ class ArtworkProcessor(object):
         aborted = False
         artcount = 0
         for idx, medialist in enumerate(chunkedlist):
-            if not idx and chunkcount == 1 and len(medialist) > 200:
+            if not idx and chunkcount == 1 and len(medialist) > 100:
                 self.downloader.set_bigcache()
             if self.monitor.abortRequested() or medialist is False:
                 aborted = True
