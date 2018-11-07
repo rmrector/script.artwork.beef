@@ -291,6 +291,10 @@ msgctxt "#32430"
 msgid "Log debug info"
 msgstr ""
 
+msgctxt "#32431"
+msgid "scan for new local files for video library"
+msgstr ""
+
 # Settings
 
 msgctxt "#32900"

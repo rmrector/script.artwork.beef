@@ -15,15 +15,14 @@ class Gatherer(object):
         providers.base.languages = languages
         self.providererrors = {}
 
-    def getartwork(self, mediaitem, skipexisting=True):
+    def getartwork(self, mediaitem, fsonly=False, skipexisting=True):
         services_hit = False
         error = None
         mediaitem.forcedart = self.get_forced_artwork(mediaitem, not skipexisting)
         existingtypes = [key for key, url in mediaitem.art.iteritems() if url]
         existingtypes.extend(mediaitem.forcedart.keys())
         if skipexisting:
-            if not mediatypes.only_filesystem(mediaitem.mediatype) and \
-                    mediaitem.uniqueids and mediaitem.missingart:
+            if not fsonly and mediaitem.uniqueids and mediaitem.missingart:
                 mediaitem.availableart, error = self.get_external_artwork(mediaitem.mediatype, mediaitem.seasons,
                     mediaitem.uniqueids, mediaitem.missingart)
                 services_hit = True

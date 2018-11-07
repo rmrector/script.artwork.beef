@@ -197,16 +197,16 @@ def update_art_in_library(mediatype, dbid, updatedart):
     if updatedart:
         quickjson.set_item_details(dbid, mediatype, art=updatedart)
 
-def add_additional_iteminfo(mediaitem, processed, search):
+def add_additional_iteminfo(mediaitem, processed, search=None):
     '''Get more data from the Kodi library, processed items, and look up web service IDs.'''
-    if mediaitem.mediatype in search:
+    if search and mediaitem.mediatype in search:
         search = search[mediaitem.mediatype]
     if mediaitem.mediatype == mediatypes.TVSHOW:
         # TODO: Split seasons out to separate items
         if not mediaitem.seasons:
             mediaitem.seasons, seasonart = _get_seasons_artwork(quickjson.get_seasons(mediaitem.dbid))
             mediaitem.art.update(seasonart)
-        if settings.default_tvidsource == 'tmdb' and 'tvdb' not in mediaitem.uniqueids:
+        if search and settings.default_tvidsource == 'tmdb' and 'tvdb' not in mediaitem.uniqueids:
             # TODO: Set to the Kodi library if found
             resultids = search.get_more_uniqueids(mediaitem.uniqueids, mediaitem.mediatype)
             if 'tvdb' in resultids:
@@ -224,7 +224,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
     elif mediaitem.mediatype == mediatypes.MOVIESET:
         if not mediaitem.uniqueids.get('tmdb'):
             uniqueid = processed.get_data(mediaitem.dbid, mediaitem.mediatype, mediaitem.label)
-            if not uniqueid and not mediatypes.only_filesystem(mediaitem.mediatype):
+            if search and not uniqueid and not mediatypes.only_filesystem(mediaitem.mediatype):
                 searchresults = search.search(mediaitem.label, mediaitem.mediatype)
                 if searchresults:
                     for result in searchresults:
@@ -251,7 +251,7 @@ def add_additional_iteminfo(mediaitem, processed, search):
             if newdata:
                 mb_t, mb_al, mb_ar = newdata.split('/')
                 mediaitem.uniqueids = {'mbtrack': mb_t, 'mbgroup': mb_al, 'mbartist': mb_ar}
-            elif not mediatypes.only_filesystem(mediaitem.mediatype):
+            elif search and not mediatypes.only_filesystem(mediaitem.mediatype):
                 results = search.search(mediaitem.label, mediatypes.MUSICVIDEO)
                 uq = results and results[0].get('uniqueids')
                 if uq and uq.get('mbtrack') and uq.get('mbgroup') and uq.get('mbartist'):

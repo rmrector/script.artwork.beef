@@ -38,6 +38,7 @@ class M(object):
     REPORT_TITLE = 32007
     VERSION_REQUIRED = 32026
     REMOTE_CONTROL_REQUIRED = 32039
+    NEW_LOCAL_FILES = 32431
 
     LISTING_ALL = 32028
     MOVIES = 36901
@@ -70,6 +71,7 @@ def main():
             options = [(L(M.STOP), 'NotifyAll(script.artwork.beef:control, CancelCurrent)')]
         else:
             options = [(L(M.ADD_MISSING_FOR), add_missing_for),
+                (L(M.NEW_LOCAL_FILES), 'NotifyAll(script.artwork.beef:control, ProcessLocalVideos)'),
                 (L(M.IDENTIFY_UNMATCHED_SETS), lambda: identify_unmatched(mediatypes.MOVIESET)),
                 (L(M.IDENTIFY_UNMATCHED_MVIDS), lambda: identify_unmatched(mediatypes.MUSICVIDEO)),
                 (L(M.REMOVE_SPECIFIC_TYPES), remove_specific_arttypes),

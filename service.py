@@ -105,6 +105,11 @@ class ArtworkService(xbmc.Monitor):
                     if self.process_allvideos(self.processed.is_stale):
                         self.last_videoupdate = get_date()
                         notify_finished('Video')
+                elif signal == 'localvideos':
+                    self.processor.localmode = True
+                    if self.process_allvideos():
+                        notify_finished('Video')
+                    self.processor.localmode = False
                 elif signal == 'recentvideos_really':
                     self.process_recentvideos()
                 elif signal == 'allmusic':
@@ -147,6 +152,9 @@ class ArtworkService(xbmc.Monitor):
         elif method == 'Other.ProcessAllVideos':
             self.processor.create_progress()
             self.signal = 'allvideos'
+        elif method == 'Other.ProcessLocalVideos':
+            self.processor.create_progress()
+            self.signal = 'localvideos'
         elif method == 'Other.ProcessAfterSettings':
             self.processaftersettings = True
         elif method == 'Player.OnStop':

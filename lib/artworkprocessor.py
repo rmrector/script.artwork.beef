@@ -47,6 +47,7 @@ class ArtworkProcessor(object):
         self.chunkcount = 1
         self.currentchunk = 1
         self.debug = False
+        self.localmode = False
         settings.update_settings()
         mediatypes.update_settings()
 
@@ -255,7 +256,7 @@ class ArtworkProcessor(object):
             if mediaitem.mediatype in mediatypes.audiotypes and get_kodi_version() < 18:
                 continue
             self.update_progress(currentitem * 100 // len(medialist), mediaitem.label)
-            info.add_additional_iteminfo(mediaitem, self.processed, search)
+            info.add_additional_iteminfo(mediaitem, self.processed, None if self.localmode else search)
             currentitem += 1
             try:
                 services_hit = self._process_item(mediaitem, singleitem)
@@ -278,7 +279,8 @@ class ArtworkProcessor(object):
 
     def _process_item(self, mediaitem, singleitem=False, auto=True):
         mediatype = mediaitem.mediatype
-        if not mediaitem.uniqueids and not mediatypes.only_filesystem(mediaitem.mediatype):
+        onlyfs = self.localmode or mediatypes.only_filesystem(mediaitem.mediatype)
+        if not mediaitem.uniqueids and not onlyfs:
             mediaitem.missingid = True
             if singleitem:
                 header = L(NO_IDS_MESSAGE)
@@ -298,7 +300,7 @@ class ArtworkProcessor(object):
         existingkeys = [key for key, url in mediaitem.art.iteritems() if url]
         mediaitem.missingart = list(info.iter_missing_arttypes(mediaitem, existingkeys))
 
-        services_hit, error = self.gatherer.getartwork(mediaitem, auto)
+        services_hit, error = self.gatherer.getartwork(mediaitem, onlyfs, auto)
 
         if auto:
             existingart = dict(mediaitem.art)
@@ -313,7 +315,7 @@ class ArtworkProcessor(object):
             selectedart = get_simpledict_updates(mediaitem.art, selectedart)
             mediaitem.selectedart = selectedart
             toset = dict(selectedart)
-            if mediatypes.downloadanyartwork(mediaitem.mediatype):
+            if not self.localmode and mediatypes.downloadanyartwork(mediaitem.mediatype):
                 sh, er = self.downloader.downloadfor(mediaitem)
                 services_hit = services_hit or sh
                 if er:
@@ -332,7 +334,7 @@ class ArtworkProcessor(object):
                 mediaitem.error = msg
                 log(msg, xbmc.LOGWARNING)
                 self.notify_warning(error['message'], header)
-        elif auto and not self.debug:
+        elif auto and not self.debug and not self.localmode:
             if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.skip_artwork) and \
                     mediatype != mediatypes.SONG:
                 self.processed.set_nextdate(mediaitem.dbid, mediatype, mediaitem.label,
