@@ -3,6 +3,7 @@ import xbmcvfs
 
 from lib.libs import pykodi, mediatypes, quickjson
 from lib.libs.mediainfo import iter_base_arttypes, fill_multiart, keep_arttype
+from lib.libs.addonsettings import settings
 
 # 0=original URLs, 1=new URL, 2=URL match
 old_urls_fix = {
@@ -33,6 +34,8 @@ def clean_artwork(mediaitem):
             # Remove local artwork if it is no longer available
             updated_art[arttype] = None
             continue
+        if not settings.clean_imageurls:
+            continue
         for fixcfg in old_urls_fix.values():
             # fix other web service URLs
             if url.startswith(fixcfg[0]):
@@ -55,7 +58,7 @@ def remove_specific_arttype(mediaitem, arttype):
 def _get_clean_art(arttype, url):
     if not url: # Remove empty URLs
         url = None
-    elif url.startswith('http'):
+    elif url.startswith('http') and settings.clean_imageurls:
         # Ensure all HTTP urls are properly escaped
         url = urllib.quote(url, safe="%/:=&?~#+!$,;'@()*[]")
 

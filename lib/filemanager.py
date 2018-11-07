@@ -7,6 +7,7 @@ import xbmcvfs
 from contextlib import closing
 from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException
 
+from lib import cleaner
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import localize as L, notlocalimages, log
@@ -239,7 +240,9 @@ def get_downloadable_art(mediaitem, allartwork):
 def get_local_art(mediaitem, allartwork):
     local = []
     if allartwork:
-        for url in mediaitem.art.values():
+        arts = mediaitem.art if settings.clean_imageurls else \
+            cleaner.clean_artwork(mediaitem) # library URLs not cleaned, but can still help here
+        for url in arts.values():
             if url and not url.startswith('http'):
                 local.append(url)
     for url in mediaitem.selectedart.values():

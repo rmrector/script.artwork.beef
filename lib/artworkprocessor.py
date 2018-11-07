@@ -295,7 +295,6 @@ class ArtworkProcessor(object):
                     add_art_to_library(mediatype, mediaitem.seasons, mediaitem.dbid, cleaned)
                 mediaitem.art.update(cleaned)
                 mediaitem.art = dict(item for item in mediaitem.art.iteritems() if item[1])
-                mediaitem.updatedart = cleaned.keys()
 
         existingkeys = [key for key, url in mediaitem.art.iteritems() if url]
         mediaitem.missingart = list(info.iter_missing_arttypes(mediaitem, existingkeys))

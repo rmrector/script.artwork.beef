@@ -57,6 +57,7 @@ class Settings(object):
         self.albumartwithmediafiles = addon.get_setting('albumartwithmediafiles')
         self.cache_local_video_artwork = addon.get_setting('cache_local_video_artwork')
         self.cache_local_music_artwork = addon.get_setting('cache_local_music_artwork')
+        self.clean_imageurls = addon.get_setting('clean_imageurls')
 
         self.language_override = addon.get_setting('language_override')
         if self.language_override == 'None':

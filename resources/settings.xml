@@ -136,6 +136,7 @@
 		<setting id="final_notification" label="32928" type="bool" default="false" />
 		<setting id="cache_local_video_artwork" label="32952" type="bool" default="false" />
 		<setting id="cache_local_music_artwork" label="32953" type="bool" default="false" />
+		<setting id="clean_imageurls" label="32981" type="bool" default="true" />
 		<setting id="always_multiple_selection" label="32964" type="bool" default="false" />
 		<setting label="32428" type="action" action="Skin.ToggleSetting(enablecontext:script.artwork.beef.debug)"
 			visible="Skin.HasSetting(enablecontext:script.artwork.beef.debug)" />

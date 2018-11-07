@@ -561,6 +561,10 @@ msgctxt "#32980"
 msgid "specific types below"
 msgstr ""
 
+msgctxt "#32981"
+msgid "Clean existing artwork URLs (HTTP to HTTPS, web service URL changes)"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"
