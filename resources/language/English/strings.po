@@ -123,6 +123,10 @@ msgctxt "#32038"
 msgid "{0:d} artwork cached"
 msgstr ""
 
+msgctxt "#32039"
+msgid "Artwork caching requires Kodi setting 'Allow remote control via HTTP' enabled"
+msgstr ""
+
 # Headings
 
 msgctxt "#32050"

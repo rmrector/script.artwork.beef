@@ -37,6 +37,7 @@ class M(object):
     UNMATCHED_ITEMS = 32056
     REPORT_TITLE = 32007
     VERSION_REQUIRED = 32026
+    REMOTE_CONTROL_REQUIRED = 32039
 
     LISTING_ALL = 32028
     MOVIES = 36901
@@ -161,8 +162,12 @@ def make_local():
 
 def cache_artwork(librarytype='videos'):
     fileman = FileManager(False, True)
+    if not fileman.imagecachebase:
+        xbmcgui.Dialog().notification("Artwork Beef", L(M.REMOTE_CONTROL_REQUIRED),
+            xbmcgui.NOTIFICATION_WARNING)
+        return
     heading = L(M.CACHE_VIDEO_ARTWORK if librarytype == 'videos' else M.CACHE_MUSIC_ARTWORK)
-    cached = runon_medialist(lambda mi: fileman.cachefor(mi.art), heading, librarytype, fg=True)
+    cached = runon_medialist(lambda mi: fileman.cachefor(mi.art, True), heading, librarytype, fg=True)
     xbmcgui.Dialog().ok("Artwork Beef", L(M.CACHED_COUNT).format(cached))
 
 def identify_unmatched(mediatype):

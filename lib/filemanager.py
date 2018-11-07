@@ -2,6 +2,7 @@ import os
 import re
 import threading
 import urllib
+import xbmc
 import xbmcvfs
 from contextlib import closing
 from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException
@@ -14,6 +15,7 @@ from lib.libs.webhelper import Getter
 CANT_CONTACT_PROVIDER = 32034
 HTTP_ERROR = 32035
 CANT_WRITE_TO_FILE = 32037
+REMOTE_CONTROL_REQUIRED = 32039
 
 FILEERROR_LIMIT = 3
 
@@ -66,6 +68,7 @@ class FileManager(object):
             self.imagecachebase = '{0}://{1}localhost:{2}/image/'.format(protocol, username, port)
         else:
             self.imagecachebase = None
+            log(REMOTE_CONTROL_REQUIRED, xbmc.LOGWARNING)
 
     def downloadfor(self, mediaitem, allartwork=True):
         if self.fileerror_count >= FILEERROR_LIMIT:
