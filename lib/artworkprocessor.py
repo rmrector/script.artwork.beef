@@ -296,8 +296,7 @@ class ArtworkProcessor(object):
                 mediaitem.art.update(cleaned)
                 mediaitem.art = dict(item for item in mediaitem.art.iteritems() if item[1])
 
-        existingkeys = [key for key, url in mediaitem.art.iteritems() if url]
-        mediaitem.missingart = list(info.iter_missing_arttypes(mediaitem, existingkeys))
+        mediaitem.missingart = list(info.iter_missing_arttypes(mediaitem, mediaitem.art))
 
         services_hit, error = self.gatherer.getartwork(mediaitem, onlyfs, auto)
 
@@ -307,8 +306,7 @@ class ArtworkProcessor(object):
             existingart.update(selectedart)
 
             # Then add the rest of the missing art
-            existingkeys = [key for key, url in existingart.iteritems() if url]
-            selectedart.update(self.get_top_missing_art(info.iter_missing_arttypes(mediaitem, existingkeys),
+            selectedart.update(self.get_top_missing_art(info.iter_missing_arttypes(mediaitem, existingart),
                 mediatype, existingart, mediaitem.availableart))
 
             selectedart = get_simpledict_updates(mediaitem.art, selectedart)

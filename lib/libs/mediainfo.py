@@ -139,7 +139,8 @@ def fill_multiart(original_art, basetype, artchanges=((), ())):
 def item_has_generated_thumbnail(mediaitem):
     return mediaitem.art.get('thumb', '').startswith(pykodi.thumbnailimages)
 
-def iter_missing_arttypes(mediaitem, fromtypes):
+def iter_missing_arttypes(mediaitem, existingart):
+    fromtypes = [key for key, url in existingart.iteritems() if url]
     for arttype, artinfo in mediatypes.artinfo[mediaitem.mediatype].iteritems():
         if arttype in mediaitem.skip_artwork or not artinfo['autolimit']:
             continue
@@ -147,7 +148,7 @@ def iter_missing_arttypes(mediaitem, fromtypes):
             if arttype not in fromtypes:
                 yield arttype
         else:
-            if _has_localart(arttype, mediaitem.art, fromtypes):
+            if _has_localart(arttype, existingart, fromtypes):
                 continue # Can't easily tell if existing art matches new URLs, so don't add new on updates
             artcount = sum(1 for art in fromtypes if arttype_matches_base(art, arttype))
             if artcount < artinfo['autolimit']:
