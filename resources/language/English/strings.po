@@ -565,6 +565,10 @@ msgctxt "#32981"
 msgid "Clean existing artwork URLs (HTTP to HTTPS, web service URL changes)"
 msgstr ""
 
+msgctxt "#32982"
+msgid "Add 'keyart' from TheMovieDB"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"

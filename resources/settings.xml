@@ -138,6 +138,7 @@
 		<setting id="cache_local_music_artwork" label="32953" type="bool" default="false" />
 		<setting id="clean_imageurls" label="32981" type="bool" default="true" />
 		<setting id="always_multiple_selection" label="32964" type="bool" default="false" />
+		<setting id="use_tmdb_keyart" label="32982" type="bool" default="false" />
 		<setting label="32428" type="action" action="Skin.ToggleSetting(enablecontext:script.artwork.beef.debug)"
 			visible="Skin.HasSetting(enablecontext:script.artwork.beef.debug)" />
 		<setting label="32429" type="action" action="Skin.ToggleSetting(enablecontext:script.artwork.beef.debug)"

@@ -67,7 +67,7 @@ class TheMovieDBAbstractProvider(AbstractImageProvider):
                 sortsize = image['width' if arttype != 'posters' else 'height']
                 resultimage['size'] = SortedDisplay(sortsize, '{0}x{1}'.format(image['width'], image['height']))
                 generaltype = self.artmap[arttype]
-                if generaltype == 'poster' and not resultimage['language']:
+                if settings.use_tmdb_keyart and generaltype == 'poster' and not resultimage['language']:
                     generaltype = 'keyart'
                 if generaltype not in result:
                     result[generaltype] = []

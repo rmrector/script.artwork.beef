@@ -181,6 +181,14 @@ class ArtworkProcessor(object):
                             availableart[key].extend(unseasoned_backdrops)
                         else:
                             availableart[key] = list(unseasoned_backdrops)
+            if mediaitem.mediatype in (mediatypes.MOVIE, mediatypes.MOVIESET) and 'poster' in availableart:
+                # add no-language posters from TMDB as manual-only options for 'keyart'
+                nolang_posters = [dict(art) for art in availableart['poster'] if not art['language']]
+                for art in nolang_posters:
+                    if art['provider'].sort == 'themoviedb.org':
+                        if 'keyart' not in availableart:
+                            availableart['keyart'] = []
+                        availableart['keyart'].append(art)
             tag_forcedandexisting_art(availableart, mediaitem.forcedart, mediaitem.art)
             selectedarttype, selectedart = prompt_for_artwork(mediaitem.mediatype, mediaitem.label,
                 availableart, self.monitor)
