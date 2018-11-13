@@ -45,6 +45,8 @@ class Gatherer(object):
             if mediaitem.mediatype not in mediatypes.audiotypes \
             or not mediatypes.central_directories[mediatypes.ARTIST]:
                 return {}
+        if mediaitem.borked_filename:
+            return {}
         resultimages = {}
         for provider in providers.forced.get(mediaitem.mediatype, ()):
             for arttype, image in provider.get_exact_images(mediaitem).iteritems():

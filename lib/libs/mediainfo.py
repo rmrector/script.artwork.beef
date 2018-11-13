@@ -79,6 +79,7 @@ class MediaItem(object):
         self.downloadedart = {}
         self.error = None
         self.missingid = False
+        self.borked_filename = self.file and '\xef\xbf\xbd' in self.file
 
 def build_music_label(jsondata):
     return jsondata['artist'][0] + ' - ' + jsondata['title'] if jsondata.get('artist') else jsondata['title']
@@ -376,18 +377,18 @@ def _get_sourcemedia(mediapath):
 # REVIEW: there may be other protocols that just can't be written to
 #  xbmcvfs.mkdirs only supports local drives, SMB, and NFS
 blacklisted_protocols = ('plugin', 'http')
+# whitelist startswith would be something like ['smb://', 'nfs://', '/', r'[A-Z]:\\']
 
 def can_saveartwork(mediaitem):
-    if settings.albumartwithmediafiles and mediaitem.file \
-            and mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG):
-        return True
-    elif find_central_infodir(mediaitem, False):
-        return True
+    if not (settings.albumartwithmediafiles and mediaitem.file \
+            and mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG)):
+        if find_central_infodir(mediaitem, False):
+            return True
     if not mediaitem.file:
         return False
     path = utils.get_movie_path_list(mediaitem.file)[0] \
         if mediaitem.mediatype == mediatypes.MOVIE else mediaitem.file
-    if path.startswith(blacklisted_protocols):
+    if path.startswith(blacklisted_protocols) or mediaitem.borked_filename:
         return False
     return True
 

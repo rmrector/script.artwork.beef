@@ -97,19 +97,16 @@ def datetime_strptime(date_string, format_string):
 
 def execute_jsonrpc(jsonrpc_command):
     if isinstance(jsonrpc_command, dict):
-        jsonrpc_command = json.dumps(jsonrpc_command)
+        try:
+            jsonrpc_command = json.dumps(jsonrpc_command)
+        except UnicodeDecodeError:
+            jsonrpc_command = json.dumps(jsonrpc_command, ensure_ascii=False)
 
     json_result = xbmc.executeJSONRPC(jsonrpc_command)
     try:
         return json.loads(json_result, cls=UTF8JSONDecoder)
-    except UnicodeDecodeError as e:
-        xbmc.log(json_result, xbmc.LOGERROR)
-        try:
-            json.loads(json_result)
-        except UnicodeDecodeError as e2:
-            xbmc.log("Even with regular json.loads", xbmc.LOGERROR)
-            raise e2
-        raise e
+    except UnicodeDecodeError:
+        return json.loads(json_result.decode('utf-8', 'replace'), cls=UTF8JSONDecoder)
 
 def log(message, level=xbmc.LOGDEBUG, tag=None):
     if is_addon_watched() and level < xbmc.LOGNOTICE:

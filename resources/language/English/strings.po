@@ -127,6 +127,10 @@ msgctxt "#32039"
 msgid "Artwork caching requires Kodi setting 'Allow remote control via HTTP' enabled"
 msgstr ""
 
+msgctxt "#32040"
+msgid "File path charset unsupported: {0}"
+msgstr ""
+
 # Headings
 
 msgctxt "#32050"

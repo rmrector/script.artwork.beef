@@ -30,7 +30,8 @@ def clean_artwork(mediaitem):
     for arttype, url in updated_art.iteritems():
         if not url:
             continue
-        if not url.startswith(pykodi.notlocalimages) and not xbmcvfs.exists(url):
+        if not url.startswith(pykodi.notlocalimages) and not mediaitem.borked_filename \
+                and not xbmcvfs.exists(url):
             # Remove local artwork if it is no longer available
             updated_art[arttype] = None
             continue

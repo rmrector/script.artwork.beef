@@ -32,6 +32,7 @@ CURRENT_ART = 13512
 ENTER_COLLECTION_NAME = 32057
 ENTER_ARTIST_TRACK_NAMES = 32058
 NO_IDS_MESSAGE = 32030
+FILENAME_ENCODING_ERROR = 32040
 
 class ArtworkProcessor(object):
     def __init__(self, monitor=None):
@@ -346,6 +347,11 @@ class ArtworkProcessor(object):
                     datetime_now() + timedelta(days=self.get_nextcheckdelay(mediaitem)))
             if mediatype == mediatypes.TVSHOW:
                 self.processed.set_data(mediaitem.dbid, mediatype, mediaitem.label, mediaitem.season)
+        if mediaitem.borked_filename:
+            msg = L(FILENAME_ENCODING_ERROR).format(mediaitem.file)
+            if not mediaitem.error:
+                mediaitem.error = msg
+            log(msg, xbmc.LOGWARNING)
         if self.debug:
             log(mediaitem)
         return services_hit
