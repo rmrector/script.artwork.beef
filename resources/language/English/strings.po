@@ -299,6 +299,48 @@ msgctxt "#32431"
 msgid "scan for new local files for video library"
 msgstr ""
 
+# for the advancedsettings.xml modifications, may end up moving to a smaller standalone utility
+
+msgctxt "#32650"
+msgid "Save configured arttypes to advancesettings.xml whitelist"
+msgstr ""
+
+msgctxt "#32651"
+msgid "Restore original advancesettings.xml backed up by Artwork Beef"
+msgstr ""
+
+msgctxt "#32652"
+msgid "This advanced setting allows Kodi to add extended artwork itself, without any help from Artwork Beef."
+msgstr ""
+
+msgctxt "#32653"
+msgid "Include multiple artwork, such as 'fanart1' and 'fanart2'? This will not add artwork from the 'extrafanart' directory, they must be saved next to the media item."
+msgstr ""
+
+msgctxt "#32654"
+msgid "advancedsettings.xml is malformed and cannot be parsed"
+msgstr ""
+
+msgctxt "#32655"
+msgid "original advancedsettings.xml backed up to advancedsettings.xml.beef.bak"
+msgstr ""
+
+msgctxt "#32656"
+msgid "original advancedsettings.xml could not be backed up"
+msgstr ""
+
+msgctxt "#32657"
+msgid "advancedsettings.xml.beef.bak restored to advancedsettings.xml"
+msgstr ""
+
+msgctxt "#32658"
+msgid "advancedsettings.xml.beef.bak could not be restored"
+msgstr ""
+
+msgctxt "#32659"
+msgid "restart Kodi for these changes to take effect"
+msgstr ""
+
 # Settings
 
 msgctxt "#32900"

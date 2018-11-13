@@ -3,7 +3,7 @@ import xbmc
 import xbmcgui
 from itertools import chain
 
-from lib import cleaner, reporting
+from lib import advancedsettings, cleaner, reporting
 from lib.artworkprocessor import ArtworkProcessor
 from lib.filemanager import FileManager, FileError
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson, utils
@@ -39,6 +39,11 @@ class M(object):
     VERSION_REQUIRED = 32026
     REMOTE_CONTROL_REQUIRED = 32039
     NEW_LOCAL_FILES = 32431
+
+    SAVE_ARTTYPES_TO_ASXML = 32650
+    RESTORE_ASXML_BACKUP = 32651
+    INTRO_TEXT = 32652
+    INCLUDE_MULTIPLES = 32653
 
     LISTING_ALL = 32028
     MOVIES = 36901
@@ -79,6 +84,9 @@ def main():
                 (L(M.CACHE_VIDEO_ARTWORK), cache_artwork)]
             if get_kodi_version() >= 18:
                 options.append((L(M.CACHE_MUSIC_ARTWORK), lambda: cache_artwork('music')))
+                options.append((L(M.SAVE_ARTTYPES_TO_ASXML), save_arttypes_to_asxml))
+                if advancedsettings.has_backup():
+                    options.append((L(M.RESTORE_ASXML_BACKUP), advancedsettings.restore_backup))
         selected = xbmcgui.Dialog().select('Artwork Beef', [option[0] for option in options])
         if selected >= 0 and selected < len(options):
             action = options[selected][1]
@@ -200,6 +208,21 @@ def set_download_artwork(mediatype):
     options = list((x for x, y in mediatypes.artinfo[mediatype].items() if y['autolimit']))
     options.extend(mediatypes.othertypes[mediatype])
     pykodi.get_main_addon().set_setting(mediatype + '.download_arttypes', ', '.join(options))
+
+def save_arttypes_to_asxml():
+    can_continue = xbmcgui.Dialog().ok("Artwork Beef", L(M.INTRO_TEXT))
+    if not can_continue:
+        return
+    include_multiple = xbmcgui.Dialog().yesno("Artwork Beef", L(M.INCLUDE_MULTIPLES))
+    art_toset = {}
+    for mediatype in mediatypes.artinfo:
+        if include_multiple:
+            art_toset[mediatype] = list(mediatypes.iter_every_arttype(mediatype))
+        else:
+            art_toset[mediatype] = [a for a in mediatypes.iter_every_arttype(mediatype)
+                if not a[-1].isdigit()]
+
+    advancedsettings.save_arttypes(art_toset)
 
 def show_artwork_log():
     if pykodi.get_kodi_version() < 16:
