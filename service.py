@@ -169,6 +169,7 @@ class ArtworkService(xbmc.Monitor):
             if settings.enableservice:
                 scan_olditems = settings.enable_olditem_updates and get_date() > self.last_videoupdate
                 self.signal = 'oldvideos' if scan_olditems else 'newvideos'
+                self.processor.create_progress()
         elif method == 'VideoLibrary.OnUpdate':
             if not settings.enableservice:
                 return
