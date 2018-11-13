@@ -353,7 +353,7 @@ class ArtworkProcessor(object):
                 mediaitem.error = msg
             log(msg, xbmc.LOGWARNING)
         if self.debug:
-            log(mediaitem)
+            log(mediaitem, xbmc.LOGNOTICE)
         return services_hit
 
     def cachelocal(self, mediaitem, toset):
