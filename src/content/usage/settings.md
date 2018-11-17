@@ -146,10 +146,21 @@ all artwork immediately for caching, then you might as well save it somewhere so
 have to download it again later. This requires the Kodi setting 'Allow remote control via HTTP'
 enabled.
 
+### "Clean existing artwork URLs (HTTP to HTTPS, web service URL changes)"
+
+Fixes up remote artwork URLs. Tracks a couple of web service URL changes since Artwork Beef
+was released, converts HTTP to HTTPS for supported web services, and ensures artwork URLs are
+properly URL encoded.
+
 #### "Manually select multiple images for all media types"
 
 Allows manual selection of multiple images for all artwork. Mostly for skin designers or developers to
 tinker with, it requires a skin or other interface or add-on to support multiple in some way.
+
+#### "Add 'keyart' from TheMovieDB"
+
+TheMovieDB defaults to "No Language" for all new images, so there will always be a number of posters
+with text that show up as "keyart". Disabled by default.
 
 #### "Disable/Enable Artwork Beef debug context items (per skin)"
 
@@ -224,6 +235,9 @@ When run from "Program Add-ons", Artwork Beef can perform a number of actions.
        automatically after a Kodi library update but always includes old items.
   - all videos / music
      - All media items in the library. Don't run this very often, but it is here if you need it.
+- **scan for new local files for video library**
+  - Looks for new local artwork only, avoids hitting web services like the standard processing.
+  - Always runs through all media items rather than just new and old.
 - **"identify unmatched movie sets with TMDb ..."**
   - Movie sets have to be matched by name rather than an exact ID like most other media types,
     so sometimes it needs a little help. This will display a list of all movie sets that have
@@ -243,3 +257,10 @@ When run from "Program Add-ons", Artwork Beef can perform a number of actions.
   - Only works for local artwork. If you are going to download all artwork immediately for caching,
     then you might as well save it somewhere so you won't have to download it again later. Run
     "Download existing remote images in the video library" to set that up.
+- **"Save configured art types to advancesettings.xml whitelist"**
+  - Kodi 18 can add extended artwork from local files itself with some settings in advancedsettings.xml.
+    This action copies the Artwork Beef configuration to Kodi's AS.xml.
+  - This whitelist also applies to artwork added from scrapers, NFO files, and single file library exports.
+  - Running this action will back up the current advancedsettings.xml to "advancedsettings.xml.beef.bak",
+    and a new action "Restore original advancesettings.xml backed up by Artwork Beef" will be added
+    to this list to restore the original.

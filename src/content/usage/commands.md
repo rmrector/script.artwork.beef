@@ -25,6 +25,8 @@ or trigger them in some other way.
 - Process new and old items, but not all in between
   - `NotifyAll(script.artwork.beef:control, ProcessNewAndOldVideos)`
   - `NotifyAll(script.artwork.beef:control, ProcessNewAndOldMusic)`
+- Update local artwork only for all items in the video library
+  - `NotifyAll(script.artwork.beef:control, ProcessLocalVideos)`
 
 ### Run Artwork Beef on individual media items
 

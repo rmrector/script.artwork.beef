@@ -469,7 +469,11 @@ h5 {
 <li><a href="#progress-display-for-automatic-processing">&ldquo;Progress display for automatic processing&rdquo;</a></li>
 <li><a href="#show-final-artwork-update-count-notification">&ldquo;Show final artwork update count notification&rdquo;</a></li>
 <li><a href="#automatically-preload-local-video-music-library-artwork-to-kodi-texture-cache">&ldquo;Automatically preload local video / music library artwork to Kodi texture cache&rdquo;</a></li>
+</ul></li>
+<li><a href="#clean-existing-artwork-urls-http-to-https-web-service-url-changes">&ldquo;Clean existing artwork URLs (HTTP to HTTPS, web service URL changes)&rdquo;</a>
+<ul>
 <li><a href="#manually-select-multiple-images-for-all-media-types">&ldquo;Manually select multiple images for all media types&rdquo;</a></li>
+<li><a href="#add-keyart-from-themoviedb">&ldquo;Add &lsquo;keyart&rsquo; from TheMovieDB&rdquo;</a></li>
 <li><a href="#disable-enable-artwork-beef-debug-context-items-per-skin">&ldquo;Disable/Enable Artwork Beef debug context items (per skin)&rdquo;</a></li>
 </ul></li>
 <li><a href="#image-languages-for-automatic-filter">Image languages for automatic filter</a></li>
@@ -654,10 +658,21 @@ all artwork immediately for caching, then you might as well save it somewhere so
 have to download it again later. This requires the Kodi setting &lsquo;Allow remote control via HTTP&rsquo;
 enabled.</p>
 
+<h3 id="clean-existing-artwork-urls-http-to-https-web-service-url-changes">&ldquo;Clean existing artwork URLs (HTTP to HTTPS, web service URL changes)&rdquo;</h3>
+
+<p>Fixes up remote artwork URLs. Tracks a couple of web service URL changes since Artwork Beef
+was released, converts HTTP to HTTPS for supported web services, and ensures artwork URLs are
+properly URL encoded.</p>
+
 <h4 id="manually-select-multiple-images-for-all-media-types">&ldquo;Manually select multiple images for all media types&rdquo;</h4>
 
 <p>Allows manual selection of multiple images for all artwork. Mostly for skin designers or developers to
 tinker with, it requires a skin or other interface or add-on to support multiple in some way.</p>
+
+<h4 id="add-keyart-from-themoviedb">&ldquo;Add &lsquo;keyart&rsquo; from TheMovieDB&rdquo;</h4>
+
+<p>TheMovieDB defaults to &ldquo;No Language&rdquo; for all new images, so there will always be a number of posters
+with text that show up as &ldquo;keyart&rdquo;. Disabled by default.</p>
 
 <h4 id="disable-enable-artwork-beef-debug-context-items-per-skin">&ldquo;Disable/Enable Artwork Beef debug context items (per skin)&rdquo;</h4>
 
@@ -745,6 +760,12 @@ automatically after a Kodi library update but always includes old items.</li>
 <li>All media items in the library. Don&rsquo;t run this very often, but it is here if you need it.</li>
 </ul></li>
 </ul></li>
+<li><strong>scan for new local files for video library</strong>
+
+<ul>
+<li>Looks for new local artwork only, avoids hitting web services like the standard processing.</li>
+<li>Always runs through all media items rather than just new and old.</li>
+</ul></li>
 <li><strong>&ldquo;identify unmatched movie sets with TMDb &hellip;&rdquo;</strong>
 
 <ul>
@@ -778,6 +799,16 @@ faster with artwork cached.</li>
 <li>Only works for local artwork. If you are going to download all artwork immediately for caching,
 then you might as well save it somewhere so you won&rsquo;t have to download it again later. Run
 &ldquo;Download existing remote images in the video library&rdquo; to set that up.</li>
+</ul></li>
+<li><strong>&ldquo;Save configured art types to advancesettings.xml whitelist&rdquo;</strong>
+
+<ul>
+<li>Kodi 18 can add extended artwork from local files itself with some settings in advancedsettings.xml.
+This action copies the Artwork Beef configuration to Kodi&rsquo;s AS.xml.</li>
+<li>This whitelist also applies to artwork added from scrapers, NFO files, and single file library exports.</li>
+<li>Running this action will back up the current advancedsettings.xml to &ldquo;advancedsettings.xml.beef.bak&rdquo;,
+and a new action &ldquo;Restore original advancesettings.xml backed up by Artwork Beef&rdquo; will be added
+to this list to restore the original.</li>
 </ul></li>
 </ul>
 
