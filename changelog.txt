@@ -1,3 +1,11 @@
+v0.23.0 (2018-11-17)
+- Feature: save configured artwork to Kodi's whitelist in advancedsettings.xml
+- Feature: automatically adding keyart from TMDB is optional
+- Feature: cleaning remote URLs to artwork is optional
+- Feature: action to update local artwork only for all media items
+- Fix: better handle non-UTF8 file paths
+- Fix: warn that "remote control" is required to pre-cache artwork
+
 v0.22.1 (2018-10-20)
 - Feature: new Spanish translation from 'roliverosc'
 - Fix: speed regression when caching artwork for many items

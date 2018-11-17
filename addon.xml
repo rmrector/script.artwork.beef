@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.22.2~adev" provider-name="rmrector">
+<addon id="script.artwork.beef" name="Artwork Beef" version="0.23.0" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -57,17 +57,13 @@
 		<description lang="es">Artwork Beef agrega automáticamente ilustraciones adicionales para Series TV y Películas a su biblioteca. Las ilustraciones son agregadas desde Servicios web y el Sistema de archivos local.</description>
 		<disclaimer lang="es">Fuente para ilustraciones: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB</disclaimer>
 		<news>
-v0.22.1 (2018-10-20)
-- Feature: new Spanish translation from 'roliverosc'
-- Fix: speed regression when caching artwork for many items
-- Fix: central movie set directory if set name includes a slash
-
-v0.22.0 (2018-09-17)
-- Feature: simpler options for download configuration
-- Feature: options to control languages for automatic processing
-- Feature: option to disable movie set artwork subfolders
-- Fix: use TMDB ID first for movie lookups at fanart.tv
-- Fix: faster caching
+v0.23.0 (2018-11-17)
+- Feature: save configured artwork to Kodi's whitelist in advancedsettings.xml
+- Feature: cleaning remote URLs to artwork is optional
+- Feature: automatically adding keyart from TMDB is optional
+- Feature: action to update local artwork only for all media items
+- Fix: better handle non-UTF8 file paths
+- Fix: warn that "remote control" is required to pre-cache artwork
 		</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
 		<forum>https://forum.kodi.tv/showthread.php?tid=258886</forum>
