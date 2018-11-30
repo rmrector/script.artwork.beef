@@ -4,7 +4,7 @@ import xbmcgui
 from context import get_dbid, get_mediatype
 from lib import cleaner
 from lib.filemanager import FileManager
-from lib.libs import quickjson, mediainfo as info, pykodi
+from lib.libs import quickjson, mediainfo as info
 from lib.libs.pykodi import localize as L
 
 def remove_art():
