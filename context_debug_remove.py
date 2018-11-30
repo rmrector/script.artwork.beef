@@ -24,10 +24,7 @@ def remove_art():
     if remove_localfiles:
         FileManager().remove_deselected_files(mediaitem, True)
     info.update_art_in_library(mediatype, dbid, mediaitem.selectedart)
-    for url in mediaitem.art.values():
-        if not url or url.startswith(pykodi.notlocalimages):
-            continue
-        quickjson.remove_texture_byurl(url)
+    info.remove_local_from_texturecache(mediaitem.art.values(), True)
     xbmcgui.Dialog().notification("Artwork Beef", L(32027).format(len(mediaitem.selectedart)))
 
 if __name__ == '__main__':

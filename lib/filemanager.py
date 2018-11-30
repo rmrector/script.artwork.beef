@@ -10,7 +10,7 @@ from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestExce
 from lib import cleaner
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
-from lib.libs.pykodi import localize as L, notlocalimages, log
+from lib.libs.pykodi import localize as L, log
 from lib.libs.webhelper import Getter
 
 CANT_CONTACT_PROVIDER = 32034
@@ -157,7 +157,7 @@ class FileManager(object):
             if not oldimage:
                 continue
             old_url = oldimage['url'] if isinstance(oldimage, dict) else oldimage[0]['url']
-            if not old_url or old_url.startswith(notlocalimages) \
+            if not old_url or old_url.startswith(pykodi.notimagefiles) \
             or old_url in mediaitem.selectedart.values() or not xbmcvfs.exists(old_url):
                 continue
             if settings.recycle_removed:

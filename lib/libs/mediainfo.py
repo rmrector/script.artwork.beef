@@ -122,7 +122,7 @@ def fill_multiart(original_art, basetype, artchanges=((), ())):
     if artchanges[1]:
         result.update((atype, None) for atype, url in result.iteritems()
             if url in artchanges[1] and arttype_matches_base(atype, basetype))
-    canmove = lambda atype, url: arttype_matches_base(atype, basetype) and url and url.startswith(pykodi.notlocalimages)
+    canmove = lambda atype, url: arttype_matches_base(atype, basetype) and url and url.startswith(pykodi.remoteimages)
     toadd = [url for atype, url in result.iteritems() if canmove(atype, url)]
     toadd.extend(artchanges[0])
     result.update((atype, None) for atype, url in result.iteritems() if canmove(atype, url))
@@ -178,7 +178,7 @@ def _has_localart(arttype, existingart, fromtypes):
     for art in fromtypes:
         if not arttype_matches_base(art, arttype):
             continue
-        if art in existingart and not existingart[art].startswith(pykodi.notlocalimages):
+        if art in existingart and not existingart[art].startswith(pykodi.notimagefiles):
             return True
     return False
 
@@ -198,6 +198,12 @@ def format_arttype(basetype, index):
 def update_art_in_library(mediatype, dbid, updatedart):
     if updatedart:
         quickjson.set_item_details(dbid, mediatype, art=updatedart)
+
+def remove_local_from_texturecache(urls, include_generated=False):
+    exclude = pykodi.remoteimages if include_generated else pykodi.notimagefiles
+    for url in urls:
+        if url and not url.startswith(exclude):
+            quickjson.remove_texture_byurl(url)
 
 def add_additional_iteminfo(mediaitem, processed, search=None):
     '''Get more data from the Kodi library, processed items, and look up web service IDs.'''

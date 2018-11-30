@@ -27,9 +27,11 @@ _log_level_tag_lookup = {
 _log_scrub_strings = {}
 
 ADDONID = 'script.artwork.beef'
+
 thumbnailimages = ('image://video@',)
-# video_ for Leia embedded images
-notlocalimages = thumbnailimages + ('http', 'image://video_', 'image://music')
+remoteimages = ('http',)
+embeddedimages = ('image://video_', 'image://music')
+notimagefiles = remoteimages + thumbnailimages + embeddedimages
 
 _main_addon = None
 def get_main_addon():

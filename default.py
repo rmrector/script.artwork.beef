@@ -145,8 +145,11 @@ def remove_specific_arttypes():
     selectedarttype = xbmcgui.Dialog().select(options[selected][0],
         ["{0}: {1}".format(ftype(arttype), counter[arttype]) for arttype in arttypes])
     if selectedarttype >= 0 and selectedarttype < len(arttypes):
-        fixcount = runon_medialist(lambda mi: cleaner.remove_specific_arttype(mi, arttypes[selectedarttype]),
-            L(M.REMOVE_SPECIFIC_TYPES), allitems, options[selected][0])
+        def removetypes(mediaitem):
+            changedart = cleaner.remove_specific_arttype(mediaitem, arttypes[selectedarttype])
+            info.remove_local_from_texturecache((mediaitem.art[arttype] for arttype in changedart), True)
+            return changedart
+        fixcount = runon_medialist(removetypes, L(M.REMOVE_SPECIFIC_TYPES), allitems, options[selected][0])
         notify_count(L(M.REMOVED_ART_COUNT), fixcount)
 
 def make_local():
