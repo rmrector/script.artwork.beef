@@ -69,7 +69,7 @@ class FileManager(object):
             self.imagecachebase = '{0}://{1}localhost:{2}/image/'.format(protocol, username, port)
         else:
             self.imagecachebase = None
-            log(REMOTE_CONTROL_REQUIRED, xbmc.LOGWARNING)
+            log(L(REMOTE_CONTROL_REQUIRED), xbmc.LOGWARNING)
 
     def downloadfor(self, mediaitem, allartwork=True):
         if self.fileerror_count >= FILEERROR_LIMIT:
