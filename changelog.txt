@@ -1,3 +1,7 @@
+v0.23.1 (2018-12-02)
+- Fix: Remove generated thumb from Kodi texture cache when removing art
+- Fix: show actual REMOTE_CONTROL_REQUIRED for cache preload message in logs
+
 v0.23.0 (2018-11-17)
 - Feature: save configured artwork to Kodi's whitelist in advancedsettings.xml
 - Feature: automatically adding keyart from TMDB is optional
