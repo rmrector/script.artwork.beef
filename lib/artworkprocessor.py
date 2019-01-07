@@ -324,8 +324,7 @@ class ArtworkProcessor(object):
             if not self.localmode and mediatypes.downloadanyartwork(mediaitem.mediatype):
                 sh, er = self.downloader.downloadfor(mediaitem)
                 services_hit = services_hit or sh
-                if er:
-                    mediaitem.error = er
+                error = error or er
                 toset.update(mediaitem.downloadedart)
             if toset:
                 mediaitem.updatedart = list(set(mediaitem.updatedart + toset.keys()))
@@ -334,12 +333,14 @@ class ArtworkProcessor(object):
             self.cachelocal(mediaitem, toset)
 
         if error:
-            if 'message' in error:
+            if isinstance(error, basestring) or 'message' not in error:
+                header = None
+            else:
                 header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
-                msg = '{0}: {1}'.format(header, error['message'])
-                mediaitem.error = msg
-                log(msg, xbmc.LOGWARNING)
-                self.notify_warning(error['message'], header)
+                error = '{0}: {1}'.format(header, error['message'])
+            mediaitem.error = error
+            log(error, xbmc.LOGWARNING)
+            self.notify_warning(error, header)
         elif auto and not self.debug and not self.localmode:
             if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.skip_artwork) and \
                     mediatype != mediatypes.SONG:

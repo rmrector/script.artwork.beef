@@ -2,6 +2,10 @@ import os
 import re
 import threading
 import urllib
+try:
+    import urllib.parse as urlparse
+except ImportError: # py2
+    import urlparse
 import xbmc
 import xbmcvfs
 from contextlib import closing
@@ -19,6 +23,7 @@ CANT_WRITE_TO_FILE = 32037
 REMOTE_CONTROL_REQUIRED = 32039
 
 FILEERROR_LIMIT = 3
+PROVIDERERROR_LIMIT = 3
 
 TEMP_DIR = 'special://temp/recycledartwork/'
 
@@ -36,6 +41,7 @@ class FileManager(object):
         self.getter.session.headers['User-Agent'] = settings.useragent
         self.size = 0
         self.fileerror_count = 0
+        self.provider_errors = {}
         self.debug = debug
         self.alreadycached = None if not bigcache else []
         self._build_imagecachebase()
@@ -83,6 +89,9 @@ class FileManager(object):
         error = ''
         localfiles = get_local_art(mediaitem, allartwork)
         for arttype, url in to_download.iteritems():
+            hostname = urlparse.urlparse(url).netloc
+            if self.provider_errors.get(hostname, 0) >= PROVIDERERROR_LIMIT:
+                continue
             full_basefilepath = info.build_artwork_basepath(mediaitem, arttype, not self.debug)
             if not full_basefilepath:
                 continue
@@ -92,6 +101,7 @@ class FileManager(object):
             result, err = self.doget(url)
             if err:
                 error = err
+                self.provider_errors[hostname] = self.provider_errors.get(hostname, 0) + 1
                 continue
             if not result:
                 # 404 URL dead, wipe it so we can add another one later
