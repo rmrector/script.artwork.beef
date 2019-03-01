@@ -158,8 +158,8 @@
 		<setting id="albumartwithmediafiles" label="32951" type="bool" default="false" />
 		<setting id="savewith_basefilename" label="32941" type="bool" default="true" />
 		<setting id="savewith_basefilename_mvids" label="32942" type="bool" default="true" />
-		<setting id="save_extrafanart" label="32929" type="bool" default="false" visible="eq(-1,true)" />
-		<setting id="save_extrafanart_mvids" label="32930" type="bool" default="false" visible="eq(-2,true)" />
+		<setting id="save_extrafanart" label="32929" type="bool" default="false" />
+		<setting id="save_extrafanart_mvids" label="32930" type="bool" default="false" />
 		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
 		<setting label="32965" type="lsep" />
 		<setting id="apikey.fanarttv" label="32966" type="text" />
