@@ -92,8 +92,7 @@ class ArtFilesSeriesProvider(ArtFilesAbstractProvider):
                         continue
             result[arttype] = self.buildimage(path + filename, filename)
 
-        if settings.identify_alternatives and dirs:
-            if 'extrafanart' in dirs:
+        if dirs and 'extrafanart' in dirs:
                 result.update(self.getextra(path, result.keys()))
 
         return result
@@ -137,7 +136,7 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
                 if specific:
                     havespecific.append(arttype)
 
-            if settings.identify_alternatives and dirs:
+            if dirs:
                 if 'extrafanart' in dirs:
                     result.update(self.getextra(path, result.keys()))
                 if 'extrathumbs' in dirs:
@@ -260,7 +259,7 @@ class ArtFilesMusicVideoProvider(ArtFilesAbstractProvider):
             if specific:
                 havespecific.append(arttype)
 
-        if settings.identify_alternatives and dirs:
+        if dirs:
             if 'extrafanart' in dirs:
                 result.update(self.getextra(path, result.keys()))
             if 'extrathumbs' in dirs:
