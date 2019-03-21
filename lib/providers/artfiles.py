@@ -54,8 +54,6 @@ class ArtFilesSeriesProvider(ArtFilesAbstractProvider):
 
     def get_exact_images(self, mediaitem):
         path = mediaitem.file
-        if not xbmcvfs.exists(path):
-            return {}
         dirs, files = xbmcvfs.listdir(path)
         files.sort(key=natural_sort)
         result = {}
@@ -95,7 +93,7 @@ class ArtFilesSeriesProvider(ArtFilesAbstractProvider):
             result[arttype] = self.buildimage(path + filename, filename)
 
         if dirs and 'extrafanart' in dirs:
-            result.update(self.getextra(path, result.keys()))
+                result.update(self.getextra(path, result.keys()))
 
         return result
 
@@ -112,8 +110,6 @@ class ArtFilesMovieProvider(ArtFilesAbstractProvider):
         path = os.path.dirname(paths[0]) + sep
         havespecific = []
         for dirname, moviefile in (os.path.split(p) for p in paths):
-            if not xbmcvfs.exists(dirname):
-                continue
             dirname += sep
             check_moviebase = os.path.splitext(moviefile)[0].lower()
             dirs, files = xbmcvfs.listdir(dirname)
@@ -155,8 +151,6 @@ class ArtFilesMovieSetProvider(ArtFilesAbstractProvider):
 
     def get_exact_images(self, mediaitem):
         path, inputfilename = os.path.split(mediaitem.file)
-        if not xbmcvfs.exists(path):
-            return {}
         sep = get_pathsep(path)
         path += sep
         dirs, files = xbmcvfs.listdir(path)
@@ -209,8 +203,6 @@ class ArtFilesEpisodeProvider(ArtFilesAbstractProvider):
 
     def get_exact_images(self, mediaitem):
         path, inputfilename = os.path.split(mediaitem.file)
-        if not xbmcvfs.exists(path):
-            return {}
         path += get_pathsep(path)
         _, files = xbmcvfs.listdir(path)
         check_inputbase = os.path.splitext(inputfilename)[0].lower()
@@ -236,8 +228,6 @@ class ArtFilesMusicVideoProvider(ArtFilesAbstractProvider):
 
     def get_exact_images(self, mediaitem):
         path, inputfilename = os.path.split(mediaitem.file)
-        if not xbmcvfs.exists(path):
-            return {}
         path += get_pathsep(path)
         dirs, files = xbmcvfs.listdir(path)
         check_inputbase = os.path.splitext(inputfilename)[0].lower()
@@ -284,7 +274,7 @@ class ArtFilesArtistProvider(ArtFilesAbstractProvider):
 
     def get_exact_images(self, mediaitem):
         path = find_central_infodir(mediaitem)
-        if not path or not xbmcvfs.exists(path):
+        if not path:
             return {}
         _, files = xbmcvfs.listdir(path)
         result = {}
@@ -313,7 +303,7 @@ class ArtFilesAlbumProvider(ArtFilesArtistProvider):
             paths = (paths[1], paths[0])
         result = {}
         for path in paths:
-            if not path or not xbmcvfs.exists(path):
+            if not path:
                 continue
             _, files = xbmcvfs.listdir(path)
             for filename in files:
@@ -331,8 +321,6 @@ class ArtFilesAlbumProvider(ArtFilesArtistProvider):
 
         for disc in sorted(mediaitem.discfolders.keys()):
             path = mediaitem.discfolders[disc]
-            if not xbmcvfs.exists(path):
-                continue
             _, files = xbmcvfs.listdir(path)
             for filename in files:
                 check_filename = filename.lower()
@@ -369,7 +357,7 @@ class ArtFilesSongProvider(ArtFilesAbstractProvider):
             check_inputbase = os.path.splitext(os.path.basename(mediaitem.file))[0].lower()
         result = {}
         for path in paths:
-            if not path or not xbmcvfs.exists(path):
+            if not path:
                 continue
             centraldir = path != mediaitem.file
             path = os.path.dirname(path) + get_pathsep(path)
