@@ -1,3 +1,6 @@
+v0.23.3 (2019-03-20)
+- Revert fix: check if folders exist before list to avoid Kodi error in log
+
 v0.23.2 (2019-03-11)
 - Fix: add debug context item "remove all art" to seasons
 - Fix: limit image downloads on consistent web service errors
