@@ -48,8 +48,12 @@ class MediaItem(object):
             if self.movies:
                 add_movieset_movies(self)
             if mediatypes.central_directories[mediatypes.MOVIESET]:
-                self.file = mediatypes.central_directories[mediatypes.MOVIESET] + \
-                    utils.path_component(self.label) + '.ext'
+                self.file = mediatypes.central_directories[mediatypes.MOVIESET]
+                if settings.setartwork_subdirs:
+                    pathsep = utils.get_pathsep(self.file)
+                    self.file += utils.path_component(self.label) + pathsep + 'movieset.ext'
+                else:
+                    self.file += utils.path_component(self.label) + '.ext'
         elif self.mediatype == mediatypes.MUSICVIDEO:
             self.label = build_music_label(jsondata)
         elif self.mediatype in mediatypes.audiotypes:
@@ -388,7 +392,7 @@ blacklisted_protocols = ('plugin', 'http')
 def can_saveartwork(mediaitem):
     if not (settings.albumartwithmediafiles and mediaitem.file \
             and mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG)):
-        if find_central_infodir(mediaitem, False):
+        if find_central_infodir(mediaitem):
             return True
     if not mediaitem.file:
         return False
@@ -398,12 +402,12 @@ def can_saveartwork(mediaitem):
         return False
     return True
 
-def build_artwork_basepath(mediaitem, arttype, create=False):
+def build_artwork_basepath(mediaitem, arttype):
     if settings.albumartwithmediafiles and mediaitem.file \
             and mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG):
         path = os.path.splitext(mediaitem.file)[0]
     else:
-        path = find_central_infodir(mediaitem, create)
+        path = find_central_infodir(mediaitem)
     if not path:
         if not mediaitem.file:
             return ''
@@ -443,7 +447,7 @@ def _saveextrafanart(mediatype, arttype):
     return settings.save_extrafanart and mediatype in (mediatypes.MOVIE, mediatypes.TVSHOW) \
         or settings.save_extrafanart_mvids and mediatype == mediatypes.MUSICVIDEO
 
-def find_central_infodir(mediaitem, create=False):
+def find_central_infodir(mediaitem):
     fromtv = mediaitem.mediatype in (mediatypes.SEASON, mediatypes.EPISODE)
     fromartist = mediaitem.mediatype in mediatypes.audiotypes
     fromalbum = mediaitem.mediatype in (mediatypes.ALBUM, mediatypes.SONG)
@@ -462,8 +466,6 @@ def find_central_infodir(mediaitem, create=False):
     sep = utils.get_pathsep(basedir)
     mediayear = mediaitem.year if mediaitem.mediatype == mediatypes.MOVIE else None
 
-    mkdir = lambda file_: xbmcvfs.mkdir(os.path.dirname(file_))
-    finish = lambda result: result if not create or mkdir(result) else None
     single_dir = mediaitem.mediatype == mediatypes.MOVIESET and not settings.setartwork_subdirs
     thisdir = _find_existing(basedir, title1, slug1, mediayear, single_dir)
     if not thisdir:
@@ -474,9 +476,7 @@ def find_central_infodir(mediaitem, create=False):
     if not single_dir:
         result += sep
     if not title2:
-        return finish(result)
-    if create and not mkdir(result):
-        return None
+        return result
     usefiles = mediaitem.mediatype == mediatypes.EPISODE
     thisdir = _find_existing(result, title2, slug2, files=usefiles)
     if not thisdir:
@@ -485,14 +485,12 @@ def find_central_infodir(mediaitem, create=False):
     if not usefiles:
         result += sep
     if not title3:
-        return finish(result)
-    if create and not mkdir(result):
-        return None
+        return result
     final = _find_existing(result, title3, files=True)
     if not final:
         final = utils.build_cleanest_name(title3)
     result += final
-    return finish(result)
+    return result
 
 def _find_existing(basedir, name, uniqueslug=None, mediayear=None, files=False):
     for item in get_cached_listdir(basedir)[1 if files else 0]:
@@ -504,6 +502,7 @@ def _find_existing(basedir, name, uniqueslug=None, mediayear=None, files=False):
         for title in utils.iter_possible_cleannames(name, uniqueslug):
             if title in (cleantitle, item):
                 return item
+    return None
 
 def _get_uniqueslug(mediaitem, slug_mediatype):
     if slug_mediatype == mediatypes.ARTIST and mediaitem.artist is not None:

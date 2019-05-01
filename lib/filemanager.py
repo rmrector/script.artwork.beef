@@ -92,7 +92,7 @@ class FileManager(object):
             hostname = urlparse.urlparse(url).netloc
             if self.provider_errors.get(hostname, 0) >= PROVIDERERROR_LIMIT:
                 continue
-            full_basefilepath = info.build_artwork_basepath(mediaitem, arttype, not self.debug)
+            full_basefilepath = info.build_artwork_basepath(mediaitem, arttype)
             if not full_basefilepath:
                 continue
             if self.debug:
@@ -166,7 +166,8 @@ class FileManager(object):
                 oldimage = mediaitem.forcedart.get(arttype)
             if not oldimage:
                 continue
-            old_url = oldimage['url'] if isinstance(oldimage, dict) else oldimage[0]['url']
+            old_url = oldimage['url'] if isinstance(oldimage, dict) else \
+                oldimage if isinstance(oldimage, basestring) else oldimage[0]['url']
             if not old_url or old_url.startswith(pykodi.notimagefiles) \
             or old_url in mediaitem.selectedart.values() or not xbmcvfs.exists(old_url):
                 continue
