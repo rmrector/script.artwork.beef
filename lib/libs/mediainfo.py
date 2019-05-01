@@ -124,14 +124,14 @@ def iter_base_arttypes(artkeys):
 def fill_multiart(original_art, basetype, artchanges=((), ())):
     result = dict(original_art)
     if artchanges[1]:
-        result.update((atype, None) for atype, url in result.iteritems()
+        result.update((atype, None) for atype, url in result.items()
             if url in artchanges[1] and arttype_matches_base(atype, basetype))
     canmove = lambda atype, url: arttype_matches_base(atype, basetype) and url and url.startswith(pykodi.remoteimages)
-    toadd = [url for atype, url in result.iteritems() if canmove(atype, url)]
+    toadd = [url for atype, url in result.items() if canmove(atype, url)]
     toadd.extend(artchanges[0])
-    result.update((atype, None) for atype, url in result.iteritems() if canmove(atype, url))
+    result.update((atype, None) for atype, url in result.items() if canmove(atype, url))
     if toadd:
-        have = [split_arttype(atype)[1] for atype, url in result.iteritems()
+        have = [split_arttype(atype)[1] for atype, url in result.items()
             if url and arttype_matches_base(atype, basetype)]
         idx = -1
         while toadd:

@@ -19,7 +19,7 @@ Full documentation available at https://rmrector.github.io/script.artwork.beef/.
 
 ### Current gotchas
 
-- Music library support is for Kodi 18 Leia only, and requires a recent nightly from 2018
+- Music library support is for Kodi 18 Leia only
 - It doesn't add animated artwork, yet
 - It cannot set artwork for "all seasons". [related trac ticket](https://trac.kodi.tv/ticket/16139)
 
@@ -28,7 +28,8 @@ Full documentation available at https://rmrector.github.io/script.artwork.beef/.
 - Scrapers and NFO files need to set web service IDs like IMDB number, TVDB ID, or TMDB ID
   for media types that Kodi supports such IDs for: movies, TV shows, and episodes
   - Music files need to be tagged with MusicBrainz IDs; Artist, Release Group, and Track IDs
-- Movie thumbnails aren't added from external sources. There is no way to tell the difference between stills
+- Movie thumbnails / extrathumbs aren't added from external sources. There is no way to tell the
+  difference between stills
   and press/marketing images from the web services, while thumbs should only include stills.
   Skins can try multiple fanart for a similar look. Generating more than one thumb from
   a video file is outside the scope of this add-on, but any provided by a media manager is added to the library.

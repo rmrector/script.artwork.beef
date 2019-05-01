@@ -88,7 +88,7 @@ class FileManager(object):
         services_hit = False
         error = ''
         localfiles = get_local_art(mediaitem, allartwork)
-        for arttype, url in to_download.iteritems():
+        for arttype, url in to_download.items():
             hostname = urlparse.urlparse(url).netloc
             if self.provider_errors.get(hostname, 0) >= PROVIDERERROR_LIMIT:
                 continue

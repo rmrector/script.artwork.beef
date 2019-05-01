@@ -286,7 +286,7 @@ class ArtworkService(xbmc.Monitor):
             else:
                 if not series:
                     series = info.MediaItem(quickjson.get_item_details(episode.tvshowid, mediatypes.TVSHOW))
-                if any(x for x in series.uniqueids.itervalues() if x in settings.autoadd_episodes):
+                if any(x for x in series.uniqueids.values() if x in settings.autoadd_episodes):
                     addepisodesfrom.add(episode.tvshowid)
                     newitems.append(episode)
                 else:
@@ -319,7 +319,7 @@ class ArtworkService(xbmc.Monitor):
             return False
         if not albums and not artists:
             return True
-        chunkedalbums = [albums[x:x+ALBUM_CHUNK_SIZE] for x in xrange(0, len(albums), ALBUM_CHUNK_SIZE)]
+        chunkedalbums = [albums[x:x+ALBUM_CHUNK_SIZE] for x in range(0, len(albums), ALBUM_CHUNK_SIZE)]
         def chunk_filler():
             for albumgroup in chunkedalbums:
                 songs = _buildsongs(albumgroup)

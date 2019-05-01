@@ -45,7 +45,7 @@ def get_movie_path_list(stackedpath):
                 while True:
                     match = regex.match(filename, offset)
                     match2 = regex.match(filename2, offset)
-                    if match != None and match2 != None and match.group(1).lower() == match2.group(1).lower():
+                    if match is not None and match2 is not None and match.group(1).lower() == match2.group(1).lower():
                         if match.group(2).lower() == match2.group(2).lower():
                             offset = match.start(3)
                             continue

@@ -317,7 +317,7 @@ onlyfs = dict((mediatype, False) for mediatype in artinfo)
 othertypes = dict((mediatype, []) for mediatype in artinfo)
 download_arttypes = dict((mediatype, []) for mediatype in artinfo)
 arttype_settingskeys = [m[0] + '.' + art[0] + ('_limit' if art[1].get('limit_setting') else '')
-    for m in artinfo.iteritems() for art in m[1].iteritems()]
+    for m in artinfo.items() for art in m[1].items()]
 
 def disabled(mediatype):
     return not any(iter_every_arttype(mediatype)) and not generatethumb(mediatype) and \
@@ -329,7 +329,7 @@ def iter_every_arttype(mediatype):
             continue
         yield arttype
         if info['autolimit'] > 1:
-            for num in xrange(1, info['autolimit']):
+            for num in range(1, info['autolimit']):
                 yield arttype + str(num)
 
     for arttype in othertypes[mediatype]:
