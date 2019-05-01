@@ -46,7 +46,7 @@ class ArtworkProcessor(object):
         self.gatherer = None
         self.downloader = None
         self.chunkcount = 1
-        self.currentchunk = 1
+        self.currentchunk = 0
         self.debug = False
         self.localmode = False
         settings.update_settings()
@@ -60,7 +60,7 @@ class ArtworkProcessor(object):
     def update_progress(self, percent, message, heading=None):
         if self.chunkcount > 1:
             onechunkp = 100 / (self.chunkcount * 1.0)
-            percent = int(onechunkp * (self.currentchunk - 1) + percent / (self.chunkcount * 1.0))
+            percent = int(onechunkp * self.currentchunk + percent / (self.chunkcount * 1.0))
         if self.visible and settings.progressdisplay == PROGRESS_DISPLAY_FULLPROGRESS:
             self.progress.update(percent, heading, message)
 
@@ -91,7 +91,7 @@ class ArtworkProcessor(object):
         self.downloader = FileManager(self.debug, chunkcount > 1)
         self.freshstart = str(datetime_now() - timedelta(days=365))
         self.chunkcount = chunkcount
-        self.currentchunk = 1
+        self.currentchunk = 0
         if get_kodi_version() >= 18:
             populate_musiccentraldir()
         if show_progress:
@@ -236,6 +236,7 @@ class ArtworkProcessor(object):
         aborted = False
         artcount = 0
         for idx, medialist in enumerate(chunkedlist):
+            self.currentchunk = idx
             if not idx and chunkcount == 1 and len(medialist) > 100:
                 self.downloader.set_bigcache()
             if self.monitor.abortRequested() or medialist is False:
@@ -243,7 +244,7 @@ class ArtworkProcessor(object):
                 break
             reporting.report_start(medialist)
             this_aborted, updateditemcount, this_artcount = \
-                self._process_chunk(medialist, idx + 1, alwaysnotify)
+                self._process_chunk(medialist, len(medialist) == 1 and not idx, alwaysnotify)
             artcount += this_artcount
             reporting.report_end(medialist, updateditemcount if this_aborted else 0, self.downloader.size)
             self.downloader.size = 0
@@ -255,12 +256,10 @@ class ArtworkProcessor(object):
         self.finish_run()
         return not aborted
 
-    def _process_chunk(self, medialist, currentchunk, singleitem):
-        self.currentchunk = currentchunk
+    def _process_chunk(self, medialist, singleitemlist, singleitem):
         artcount = 0
         currentitem = 0
         aborted = False
-        singleitemlist = len(medialist) == 1 and currentchunk == 1
         for mediaitem in medialist:
             if mediaitem.mediatype in mediatypes.audiotypes and get_kodi_version() < 18:
                 continue
