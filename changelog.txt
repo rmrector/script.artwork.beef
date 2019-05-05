@@ -1,3 +1,7 @@
+v0.23.4 (2019-05-05)
+- Fix: better handle file system access issues when working with central folders
+- Fix: reduce service memory usage when running periodic updates
+
 v0.23.3 (2019-03-20)
 - Revert fix: check if folders exist before list to avoid Kodi error in log
 
