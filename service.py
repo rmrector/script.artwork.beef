@@ -96,32 +96,29 @@ class ArtworkService(xbmc.Monitor):
                     continue
                 self.status = STATUS_PROCESSING
                 if signal == 'allvideos':
-                    if self.process_allvideos():
-                        notify_finished('Video')
+                    self.notify_finished('Video', self.process_allvideos())
                 elif signal == 'newvideos':
-                    if self.process_allvideos(self.processed.does_not_exist):
-                        notify_finished('Video')
+                    self.notify_finished('Video', self.process_allvideos(self.processed.does_not_exist))
                 elif signal == 'oldvideos':
-                    if self.process_allvideos(self.processed.is_stale):
+                    successful = self.process_allvideos(self.processed.is_stale)
+                    if successful:
                         self.last_videoupdate = get_date()
-                        notify_finished('Video')
+                    self.notify_finished('Video', successful)
                 elif signal == 'localvideos':
                     self.processor.localmode = True
-                    if self.process_allvideos():
-                        notify_finished('Video')
+                    self.notify_finished('Video', self.process_allvideos())
                     self.processor.localmode = False
                 elif signal == 'recentvideos_really':
                     self.process_recentvideos()
                 elif signal == 'allmusic':
-                    if self.process_allmusic():
-                        notify_finished('Music')
+                    self.notify_finished('Music', self.process_allmusic())
                 elif signal == 'newmusic':
-                    if self.process_allmusic(self.processed.does_not_exist):
-                        notify_finished('Music')
+                    self.notify_finished('Music', self.process_allmusic(self.processed.does_not_exist))
                 elif signal == 'oldmusic':
-                    if self.process_allmusic(self.processed.is_stale):
+                    successful = self.process_allmusic(self.processed.is_stale)
+                    if successful:
                         self.last_musicupdate = get_date()
-                        notify_finished('Music')
+                    self.notify_finished('Music', successful)
 
                 self.status = STATUS_IDLE
 
@@ -353,11 +350,14 @@ class ArtworkService(xbmc.Monitor):
             self.processaftersettings = False
             self.signal = 'newvideos'
 
+    def notify_finished(self, content, success):
+        if success:
+            pykodi.execute_builtin('NotifyAll(script.artwork.beef, On{0}ProcessingFinished)'.format(content))
+        else:
+            self.processor.close_progress()
+
 def get_date():
     return pykodi.get_infolabel('System.Date(yyyy-mm-dd)')
-
-def notify_finished(content):
-    pykodi.execute_builtin('NotifyAll(script.artwork.beef, On{0}ProcessingFinished)'.format(content))
 
 def include_any_episode():
     return not mediatypes.disabled(mediatypes.EPISODE) \
