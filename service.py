@@ -1,4 +1,5 @@
 import xbmc
+from itertools import chain
 
 from lib.artworkprocessor import ArtworkProcessor
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
@@ -206,13 +207,16 @@ class ArtworkService(xbmc.Monitor):
             shouldinclude_fn = lambda id, type, label: True
         items = []
         if not mediatypes.disabled(mediatypes.MOVIESET):
-            items.extend(info.MediaItem(mset) for mset in quickjson.get_item_list(mediatypes.MOVIESET)
+            items.extend(info.MediaItem(mset) for mset in chain.from_iterable(
+                    quickjson.gen_chunked_item_list(mediatypes.MOVIESET))
                 if shouldinclude_fn(mset['setid'], mediatypes.MOVIESET, mset['label']))
         if not mediatypes.disabled(mediatypes.MOVIE):
-            items.extend(info.MediaItem(movie) for movie in quickjson.get_item_list(mediatypes.MOVIE)
+            items.extend(info.MediaItem(movie) for movie in chain.from_iterable(
+                    quickjson.gen_chunked_item_list(mediatypes.MOVIE))
                 if shouldinclude_fn(movie['movieid'], mediatypes.MOVIE, movie['label']))
         if not mediatypes.disabled(mediatypes.MUSICVIDEO):
-            items.extend(info.MediaItem(mvid) for mvid in quickjson.get_item_list(mediatypes.MUSICVIDEO)
+            items.extend(info.MediaItem(mvid) for mvid in chain.from_iterable(
+                    quickjson.gen_chunked_item_list(mediatypes.MUSICVIDEO))
                 if shouldinclude_fn(mvid['musicvideoid'], mediatypes.MUSICVIDEO, info.build_music_label(mvid)))
 
         serieslist = quickjson.get_tvshows()
@@ -229,10 +233,14 @@ class ArtworkService(xbmc.Monitor):
         if include_any_episode():
             seriesmap = dict((s['tvshowid'], s['imdbnumber']) for s in serieslist)
             episodes = []
-            for episode in (quickjson.get_episodes() if allvideos else quickjson.get_episodes(limit=500)):
-                ep = info.MediaItem(episode)
-                if seriesmap.get(ep.tvshowid) in settings.autoadd_episodes or include_episode(ep):
-                    episodes.append(ep)
+            for episodelist in (quickjson.gen_chunked_item_list(mediatypes.EPISODE)
+                    if allvideos else [quickjson.get_episodes(limit=500)]):
+                for episode in episodelist:
+                    ep = info.MediaItem(episode)
+                    if seriesmap.get(ep.tvshowid) in settings.autoadd_episodes or include_episode(ep):
+                        episodes.append(ep)
+                if self.abortRequested():
+                    return False
             self.check_allepisodes = len(episodes) > 400
             for episode in episodes:
                 if seriesmap.get(episode.tvshowid) not in settings.autoadd_episodes:

@@ -58,6 +58,14 @@ def get_item_details(dbid, mediatype):
         return result
 
 def get_item_list(mediatype, extraparams=None, overrideprops=None):
+    json_request, json_result = _inner_get_item_list(mediatype, extraparams, overrideprops)
+
+    result_key = mediatype + 's'
+    if not check_json_result(json_result, result_key, json_request):
+        return []
+    return _inner_get_result(json_result, mediatype)
+
+def _inner_get_item_list(mediatype, extraparams=None, overrideprops=None):
     assert mediatype in typemap
 
     mapped = typemap[mediatype]
@@ -68,16 +76,36 @@ def get_item_list(mediatype, extraparams=None, overrideprops=None):
     if extraparams:
         json_request['params'].update(extraparams)
     json_result = pykodi.execute_jsonrpc(json_request)
+    return json_request, json_result
 
+def _inner_get_result(json_result, mediatype):
+    result = json_result['result'][mediatype + 's']
+    if _needupgrade(mediatype):
+        for movie in result:
+            _upgradeitem(movie, mediatype)
+    return result
+
+def gen_chunked_item_list(mediatype, extraparams=None, overrideprops=None, chunksize=1000):
+    if mediatype == mediatypes.EPISODE:
+        chunksize *= 4
+    if extraparams is None:
+        extraparams = {}
     result_key = mediatype + 's'
-    if check_json_result(json_result, result_key, json_request):
-        result = json_result['result'][result_key]
-        if _needupgrade(mediatype):
-            for movie in result:
-                _upgradeitem(movie, mediatype)
-        return result
-    else:
-        return []
+
+    source_exhausted = False
+    lastend = 0
+    while not source_exhausted:
+        extraparams['limits'] = {'start': lastend, 'end': lastend + chunksize}
+
+        json_request, json_result = _inner_get_item_list(mediatype, extraparams, overrideprops)
+        if not check_json_result(json_result, result_key, json_request):
+            break
+
+        if lastend + chunksize >= json_result['result']['limits']['total']:
+            source_exhausted = True
+        lastend = json_result['result']['limits']['end']
+
+        yield _inner_get_result(json_result, mediatype)
 
 def get_albums(artistname=None, dbid=None):
     if artistname is None or dbid is None:
@@ -117,19 +145,12 @@ def get_tvshows(moreprops=False, includeprops=True):
         return []
 
 def get_episodes(tvshow_id=None, limit=None):
-    json_request = get_base_json_request('VideoLibrary.GetEpisodes')
+    params = {'sort': {'method': 'dateadded', 'order': 'descending'}}
     if tvshow_id:
-        json_request['params']['tvshowid'] = tvshow_id
-    json_request['params']['properties'] = typemap[mediatypes.EPISODE][1]
-    json_request['params']['sort'] = {'method': 'dateadded', 'order': 'descending'}
+        params['tvshowid'] = tvshow_id
     if limit:
-        json_request['params']['limits'] = {'end': limit}
-
-    json_result = pykodi.execute_jsonrpc(json_request)
-    if check_json_result(json_result, 'episodes', json_request):
-        return json_result['result']['episodes']
-    else:
-        return []
+        params['limits'] = {'end': limit}
+    return get_item_list(mediatypes.EPISODE, params, typemap[mediatypes.EPISODE][1])
 
 def get_seasons(tvshow_id=-1):
     if tvshow_id == -1 and pykodi.get_kodi_version() < 17:
