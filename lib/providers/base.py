@@ -43,8 +43,12 @@ class AbstractProvider(object):
         except (Timeout, ConnectionError) as ex:
             raise ProviderError, (L(CANT_CONTACT_PROVIDER), ex), sys.exc_info()[2]
         except RequestException as ex:
-            message = ex.response.reason if hasattr(ex, 'response') else \
-                ex.message if hasattr(ex, 'message') else type(ex).__name__
+            if hasattr(ex, 'response') and ex.respone:
+                message = ex.response.reason
+            elif hasattr(ex, 'message'):
+                message = ex.message
+            else:
+                message = type(ex).__name__
             raise ProviderError, (L(HTTP_ERROR).format(message), ex), sys.exc_info()[2]
 
     def log(self, message, level=xbmc.LOGDEBUG):
