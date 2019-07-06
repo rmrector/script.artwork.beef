@@ -131,6 +131,7 @@
 	<category label="$LOCALIZE[10038]">
 		<setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />
 		<setting id="fanarttv_key" label="32905" type="text" />
+		<setting id="kyradb_userkey" label="32983" type="text" default="" />
 		<setting id="report_peritem" label="32916" type="bool" default="false" />
 		<setting id="progress_display" label="32924" type="select" default="0" lvalues="32925|32926|32927" />
 		<setting id="final_notification" label="32928" type="bool" default="false" />
@@ -166,6 +167,7 @@
 		<setting id="apikey.tvdb" label="32967" type="text" />
 		<setting id="apikey.tmdb" label="32968" type="text" />
 		<setting id="apikey.tadb" label="32969" type="text" />
+		<setting id="apikey.kyradb" label="32984" type="text" />
 		<!-- For add-on inner workings -->
 		<setting id="last_videoupdate" type="text" default="0" visible="false" />
 		<setting id="last_musicupdate" type="text" default="0" visible="false" />

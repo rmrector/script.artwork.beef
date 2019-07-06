@@ -45,6 +45,7 @@ class Settings(object):
         self.identify_alternatives = addon.get_setting('identify_alternatives')
         self.report_peritem = addon.get_setting('report_peritem')
         self.fanarttv_clientkey = addon.get_setting('fanarttv_key')
+        self.kyradb_userkey = addon.get_setting('kyradb_userkey')
         self.default_tvidsource = addon.get_setting('default_tvidsource')
         self.progressdisplay = addon.get_setting('progress_display')
         self.final_notification = addon.get_setting('final_notification')
@@ -80,16 +81,15 @@ class Settings(object):
         self.minimum_size = AVAILABLE_IMAGESIZES[sizesetting][2]
 
         self.apikeys = {}
-        for provider in ('fanarttv', 'tvdb', 'tmdb', 'tadb'):
+        for provider in ('fanarttv', 'tvdb', 'tmdb', 'tadb', 'kyradb'):
             key = addon.get_setting('apikey.' + provider).strip()
             self.apikeys[provider] = {'apikey': key, 'builtin': not key}
             if not key and projectkeys:
-                self.apikeys[provider]['apikey'] = projectkeys.FANARTTV_PROJECTKEY if provider == 'fanarttv' \
-                    else projectkeys.THETVDB_PROJECTKEY if provider == 'tvdb' else \
-                    projectkeys.TMDB_PROJECTKEY if provider == 'tmdb' else projectkeys.TADB_PROJECTKEY
+                self.apikeys[provider]['apikey'] = get_projectkey(provider)
             pykodi.set_log_scrubstring(provider + '-apikey', key)
 
         pykodi.set_log_scrubstring('fanarttv-client-apikey', self.fanarttv_clientkey)
+        pykodi.set_log_scrubstring('kyradb-userkey', self.kyradb_userkey)
 
     def get_apikey(self, provider):
         return self.apikeys[provider]['apikey']
@@ -105,5 +105,12 @@ class Settings(object):
     def autoadd_episodes(self, value):
         self._autoadd_episodes = value
         addon.set_setting('autoaddepisodes_list', value)
+
+def get_projectkey(provider):
+    return projectkeys.FANARTTV_PROJECTKEY if provider == 'fanarttv' else \
+        projectkeys.THETVDB_PROJECTKEY if provider == 'tvdb' else \
+        projectkeys.TMDB_PROJECTKEY if provider == 'tmdb' else \
+        projectkeys.TADB_PROJECTKEY if provider == 'tadb' else \
+        projectkeys.KYRADB_APIKEY
 
 settings = Settings()

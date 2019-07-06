@@ -380,7 +380,7 @@ msgid "Use high quality preview images"
 msgstr ""
 
 msgctxt "#32905"
-msgid "fanart.tv personal API key"
+msgid "fanart.tv personal API key (optional)"
 msgstr ""
 
 msgctxt "#32906"
@@ -613,6 +613,14 @@ msgstr ""
 
 msgctxt "#32982"
 msgid "Add 'keyart' from TheMovieDB"
+msgstr ""
+
+msgctxt "#32983"
+msgid "KyraDB User key (required for art from KyraDB)"
+msgstr ""
+
+msgctxt "#32984"
+msgid "KyraDB API key"
 msgstr ""
 
 # Used in the artwork report
