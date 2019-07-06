@@ -122,6 +122,23 @@ artinfo = {
             'autolimit': 1,
             'multiselect': False,
             'download': False
+        },
+        'characterart': {
+            'autolimit': 1,
+            'multiselect': False,
+            'limit_setting': True,
+            'download': False
+        },
+        'animatedposter': {
+            'autolimit': 0,
+            'multiselect': False,
+            'download': True
+        },
+        'animatedfanart': {
+            'autolimit': 0,
+            'multiselect': True,
+            'limit_setting': True,
+            'download': True
         }
     },
     MOVIESET: {
