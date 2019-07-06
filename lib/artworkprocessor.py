@@ -332,14 +332,12 @@ class ArtworkProcessor(object):
             self.cachelocal(mediaitem, toset)
 
         if error:
-            if isinstance(error, basestring) or 'message' not in error:
-                header = None
-            else:
+            if isinstance(error, dict):
                 header = L(PROVIDER_ERROR_MESSAGE).format(error['providername'])
                 error = '{0}: {1}'.format(header, error['message'])
             mediaitem.error = error
-            log(header + ': ' + error, xbmc.LOGWARNING)
-            self.notify_warning(error, header)
+            log(error, xbmc.LOGWARNING)
+            self.notify_warning(error)
         elif auto and not self.debug and not self.localmode:
             if not (mediatype == mediatypes.EPISODE and 'fanart' in mediaitem.skip_artwork) and \
                     mediatype != mediatypes.SONG:

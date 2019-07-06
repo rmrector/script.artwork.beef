@@ -80,6 +80,8 @@ class Gatherer(object):
             except ProviderError as ex:
                 errcount += 1
                 self.providererrors[provider.name] = errcount
+                if errcount != 1 and errcount != MAX_ERRORS:
+                    continue
                 error = {'providername': provider.name.display}
                 if errcount == 1: # notify on first error
                     error['message'] = ex.message
