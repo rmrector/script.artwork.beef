@@ -466,6 +466,10 @@ def update_settings():
                 download_arttypes[mediatype] = list(othertypes[mediatype])
                 for atype in artinfo[mediatype].values():
                     atype['download'] = atype['autolimit'] > 0
+            # Kodi doesn't cache gifs, so always download animated artwork
+            for arttype, artconfig in artinfo[mediatype].items():
+                if arttype.startswith('animated'):
+                    artconfig['download'] = True
 
 def _get_autolimit_from_setting(settingid):
     result = addon.get_setting(settingid)
