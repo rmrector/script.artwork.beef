@@ -1,3 +1,8 @@
+v0.24.0 (2019-07-07)
+- Feature: add KyraDB as an image provider
+   - 'characterart', 'animatedposter', and 'animatedfanart' for movies
+- Fix: error in error handling
+
 v0.23.4 (2019-05-05)
 - Fix: better handle file system access issues when working with central folders
 - Fix: reduce service memory usage when running periodic updates
