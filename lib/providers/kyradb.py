@@ -46,7 +46,7 @@ class KyraDBMovieProvider(AbstractImageProvider):
         for poster in data['posters']:
             if 'animatedposter' not in result:
                 result['animatedposter'] = []
-            result['animatedposter'].append({'url': baseposter + '/' + poster['name'], 'language': 'xx',
+            result['animatedposter'].append({'url': baseposter + '/' + poster['name'], 'language': 'en',
                 'rating': SortedDisplay(poster['date_added'], poster['date_added']),
                 'size': SortedDisplay(poster['height'], poster['resolution']), 'provider': self.name,
                 'preview': baseposter + '/' + poster['name']})
