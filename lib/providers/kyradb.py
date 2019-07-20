@@ -23,6 +23,10 @@ class KyraDBMovieProvider(AbstractImageProvider):
         if not mediaid:
             return {}
         if types is None:
+            # tricky, using None `types` to identify if running manually
+            # to avoid the 'missing user key' message
+            if not settings.kyradb_userkey:
+                return {}
             types = self.provtypes
 
         result = {}
