@@ -50,16 +50,22 @@ class KyraDBMovieProvider(AbstractImageProvider):
         for poster in data['posters']:
             if 'animatedposter' not in result:
                 result['animatedposter'] = []
-            result['animatedposter'].append({'url': baseposter + '/' + poster['name'], 'language': 'en',
-                'rating': SortedDisplay(poster['date_added'], poster['date_added']),
-                'size': SortedDisplay(poster['height'], poster['resolution']), 'provider': self.name,
+            result['animatedposter'].append({
+                'url': baseposter + '/' + poster['name'],
+                'language': 'en',
+                'rating': SortedDisplay(poster['date_added'],poster['date_added']),
+                'size': SortedDisplay(poster['height'], poster['resolution']),
+                'provider': self.name,
                 'preview': baseposter + '/' + poster['name']})
         for fanart in data['backgrounds']:
             if 'animatedfanart' not in result:
                 result['animatedfanart'] = []
-            result['animatedfanart'].append({'url': basefanart + '/' + fanart['name'], 'language': None,
+            result['animatedfanart'].append({
+                'url': basefanart + '/' + fanart['name'],
+                'language': None,
                 'rating': SortedDisplay(fanart['date_added'], fanart['date_added']),
-                'size': SortedDisplay(fanart['height'], fanart['resolution']), 'provider': self.name,
+                'size': SortedDisplay(fanart['height'], fanart['resolution']),
+                'provider': self.name,
                 'preview': basefanart + '/' + fanart['name']})
 
         return result
@@ -72,9 +78,12 @@ class KyraDBMovieProvider(AbstractImageProvider):
         baseurl = data['base_url_character_art']
         result = []
         for characterart in data['character_art']:
-            result.append({'url': baseurl + '/' + characterart['name'], 'language': None,
+            result.append({
+                'url': baseurl + '/' + characterart['name'],
+                'language': None,
                 'rating': SortedDisplay(characterart['date_added'], characterart['date_added']),
-                'size': SortedDisplay(characterart['height'], characterart['resolution']), 'provider': self.name,
+                'size': SortedDisplay(characterart['height'], characterart['resolution']),
+                'provider': self.name,
                 'preview': baseurl + '/' + characterart['name']})
 
         return result
