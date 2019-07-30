@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.24.1~adev" provider-name="rmrector">
+<addon id="script.artwork.beef" name="Artwork Beef" version="0.25.0" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -56,19 +56,14 @@
 		<summary lang="es">Agrega automáticamente ilustraciones adicionales para sus medios.</summary>
 		<description lang="es">Artwork Beef agrega automáticamente ilustraciones adicionales para Series TV y Películas a su biblioteca. Las ilustraciones son agregadas desde Servicios web y el Sistema de archivos local.</description>
 		<disclaimer lang="es">Fuente para ilustraciones: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB</disclaimer>
-		<news>v0.24.0 (2019-07-07)
+		<news>v0.25.0 (2019-07-29)
+- Feature: add 'animatedkeyart' from KyraDB
+- Fix: match 'animatedposter' language for automated scanning
+
+v0.24.0 (2019-07-07)
 - Feature: add KyraDB as an image provider
 	- 'characterart', 'animatedposter', and 'animatedfanart' for movies
 - Fix: error in error handling
-
-v0.23.0-3 (2018-11-17 -- 2019-03-20)
-- Feature: save configured artwork to Kodi's whitelist in advancedsettings.xml
-- Feature: cleaning remote URLs to artwork is optional
-- Fix: better handle non-UTF8 file paths
-- Fix: limit image downloads on consistent web service errors
-- Fix: don't hide "extrafanart" folder settings
-- Fix: better handle file system access issues when working with central folders
-- Fix: reduce service memory usage when running periodic updates
 		</news>
 		<source>https://github.com/rmrector/script.artwork.beef</source>
 		<forum>https://forum.kodi.tv/showthread.php?tid=258886</forum>
