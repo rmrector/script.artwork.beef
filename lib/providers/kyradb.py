@@ -1,6 +1,6 @@
 import xbmc
 
-from lib.libs import mediatypes
+from lib.libs import iso639, mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
@@ -12,7 +12,7 @@ class KyraDBMovieProvider(AbstractImageProvider):
     mediatype = mediatypes.MOVIE
 
     apiurl = 'https://www.kyradb.com/api10/movie/{0}/images/{1}'
-    animatedtypes = ('animatedposter', 'animatedfanart')
+    animatedtypes = ('animatedposter', 'animatedkeyart', 'animatedfanart')
     provtypes = animatedtypes + ('characterart',)
 
     def provides(self, types):
@@ -48,15 +48,18 @@ class KyraDBMovieProvider(AbstractImageProvider):
         basefanart = data['base_url_backgrounds']
         result = {}
         for poster in data['posters']:
-            if 'animatedposter' not in result:
-                result['animatedposter'] = []
-            result['animatedposter'].append({
+            newposter = {
                 'url': baseposter + '/' + poster['name'],
-                'language': 'en',
-                'rating': SortedDisplay(poster['date_added'],poster['date_added']),
+                'language': get_language(poster.get('language', None)),
+                'rating': SortedDisplay(poster['date_added'], poster['date_added']),
                 'size': SortedDisplay(poster['height'], poster['resolution']),
                 'provider': self.name,
-                'preview': baseposter + '/' + poster['name']})
+                'preview': baseposter + '/' + poster['name']}
+
+            arttype = 'animatedposter' if newposter['language'] else 'animatedkeyart'
+            if arttype not in result:
+                result[arttype] = []
+            result[arttype].append(newposter)
         for fanart in data['backgrounds']:
             if 'animatedfanart' not in result:
                 result['animatedfanart'] = []
@@ -110,3 +113,11 @@ def get_mediaid(uniqueids):
     if 'imdb' in uniqueids:
         return 'imdbid/' + uniqueids['imdb']
     return None
+
+def get_language(kdb_language):
+    if not kdb_language or kdb_language == 'unknown':
+        return None
+    try:
+        return iso639.to_iso639_1(kdb_language)
+    except iso639.NonExistentLanguageError:
+        return 'xx'
