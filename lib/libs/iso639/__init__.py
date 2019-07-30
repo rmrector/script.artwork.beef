@@ -1,6 +1,8 @@
 import os
 import codecs
 
+# https://github.com/janpipek/iso639-python
+
 # Python 3.4+ compatibility
 if 'unicode' not in dir():
     unicode = str
