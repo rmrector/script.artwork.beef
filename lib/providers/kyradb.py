@@ -42,7 +42,9 @@ class KyraDBMovieProvider(AbstractImageProvider):
     def _get_animated_images(self, mediaid):
         data = self.get_data(mediaid, 'animated')
         if not data or data.get('error'):
-            self.log(data)
+            if data and not data.get('error') == 4:
+                # 4: "No results"
+                self.log(data)
             return {}
         baseposter = data['base_url_posters']
         basefanart = data['base_url_backgrounds']
