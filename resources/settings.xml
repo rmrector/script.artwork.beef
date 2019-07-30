@@ -64,6 +64,7 @@
 		<setting id="movie.discart" label="discart" type="bool" default="true" />
 		<setting id="movie.characterart_limit" label="characterart" type="slider" option="int" default="1" range="0,1,20" />
 		<setting id="movie.animatedposter" label="animatedposter" type="bool" default="false" />
+		<setting id="movie.animatedkeyart" label="animatedkeyart" type="bool" default="false" />
 		<setting id="movie.animatedfanart_limit" label="animatedfanart" type="slider" option="int" default="0" range="0,1,20" />
 		<setting id="movie.othertypes" label="32957" type="text" />
 		<setting id="set.poster_limit" label="$LOCALIZE[20457] poster" type="slider" option="int" default="1" range="0,1,10" />

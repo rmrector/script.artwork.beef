@@ -134,6 +134,11 @@ artinfo = {
             'multiselect': False,
             'download': True
         },
+        'animatedkeyart': {
+            'autolimit': 0,
+            'multiselect': False,
+            'download': True
+        },
         'animatedfanart': {
             'autolimit': 0,
             'multiselect': True,
