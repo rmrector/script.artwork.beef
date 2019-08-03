@@ -9,13 +9,12 @@ except ImportError: # py2
 import xbmc
 import xbmcvfs
 from contextlib import closing
-from requests.exceptions import HTTPError, Timeout, ConnectionError, RequestException
 
 from lib import cleaner
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson, utils
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import localize as L, log
-from lib.libs.webhelper import Getter
+from lib.libs.webhelper import Getter, GetterError
 
 CANT_CONTACT_PROVIDER = 32034
 HTTP_ERROR = 32035
@@ -146,13 +145,9 @@ class FileManager(object):
                 if err or not result:
                     result = None
             return result, None
-        except (Timeout, ConnectionError) as ex:
-            return None, L(CANT_CONTACT_PROVIDER)
-        except HTTPError as ex:
-            message = ex.response.reason if ex.response else type(ex).__name__
-            return None, L(HTTP_ERROR).format(message)
-        except RequestException as ex:
-            return None, L(HTTP_ERROR).format(type(ex).__name__)
+        except GetterError as ex:
+            message = L(CANT_CONTACT_PROVIDER) if ex.connection_error else L(HTTP_ERROR).format(ex.message)
+            return None, message
 
     def remove_deselected_files(self, mediaitem, assignedart=False):
         if self.debug:
@@ -200,10 +195,8 @@ class FileManager(object):
                     res.iter_content(chunk_size=1024)
                     res.close()
                     count[0] += 1
-            except HTTPError:
-                pass # caching error, possibly with decoding the original image
-            except ConnectionError:
-                pass # Kodi is closing
+            except GetterError:
+                pass
         threads = []
         for path in urls:
             if path in alreadycached:

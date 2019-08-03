@@ -1,6 +1,7 @@
 import requests
 from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from requests.exceptions import ConnectionError, Timeout, RequestException
+from urllib3.util.retry import Retry
 
 def retryable_session(retries=3, backoff_factor=0.5, status_forcelist=(500, 502, 504, 520), session=None):
     # from https://www.peterbe.com/plog/best-practice-with-retries-with-requests
@@ -21,7 +22,13 @@ class Getter(object):
             self.session.headers['Accept'] = contenttype
 
     def __call__(self, url, **kwargs):
-        # callers still need to handle most `RequestException`s
+        try:
+            self._inner_call(url, **kwargs)
+        except (Timeout, ConnectionError, RequestException) as ex:
+            message = ex.response.reason if hasattr(ex, 'response') else type(ex).__name__
+            raise GetterError(message, ex, not isinstance(ex, RequestException))
+
+    def _inner_call(self, url, **kwargs):
         if 'timeout' not in kwargs:
             kwargs['timeout'] = 20
         result = self.session.get(url, **kwargs)
@@ -37,3 +44,12 @@ class Getter(object):
             return
         result.raise_for_status()
         return result
+
+class GetterError(Exception):
+    def __init__(self, message, cause, connection_error):
+        super(GetterError, self).__init__()
+        self.message = message
+        self.cause = cause
+        self.connection_error = connection_error
+        self.request = getattr(cause, 'request', None)
+        self.response = getattr(cause, 'response', None)

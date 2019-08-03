@@ -1,14 +1,12 @@
 import StorageServer
-import sys
 import xbmc
 from abc import ABCMeta, abstractmethod
-from requests.exceptions import Timeout, ConnectionError, RequestException
 from requests.packages import urllib3
 
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import log, localize as L
 from lib.libs.utils import SortedDisplay
-from lib.libs.webhelper import Getter
+from lib.libs.webhelper import Getter, GetterError
 
 CANT_CONTACT_PROVIDER = 32034
 HTTP_ERROR = 32035
@@ -40,16 +38,9 @@ class AbstractProvider(object):
     def doget(self, url, **kwargs):
         try:
             return self.getter(url, **kwargs)
-        except (Timeout, ConnectionError) as ex:
-            raise ProviderError, (L(CANT_CONTACT_PROVIDER), ex), sys.exc_info()[2]
-        except RequestException as ex:
-            if hasattr(ex, 'response') and ex.respone:
-                message = ex.response.reason
-            elif hasattr(ex, 'message'):
-                message = ex.message
-            else:
-                message = type(ex).__name__
-            raise ProviderError, (L(HTTP_ERROR).format(message), ex), sys.exc_info()[2]
+        except GetterError as ex:
+            message = L(CANT_CONTACT_PROVIDER) if ex.connection_error else L(HTTP_ERROR).format(ex.message)
+            raise ProviderError(message, ex.cause)
 
     def log(self, message, level=xbmc.LOGDEBUG):
         if self.mediatype:
