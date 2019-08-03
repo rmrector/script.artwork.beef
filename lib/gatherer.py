@@ -1,8 +1,11 @@
+import traceback
+import xbmc
+
 from lib import providers
 from lib.libs import mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.mediainfo import keep_arttype
-from lib.libs.pykodi import localize as L
+from lib.libs.pykodi import localize as L, log
 from lib.libs.utils import SortedDisplay
 from lib.providers import ProviderError
 
@@ -77,16 +80,21 @@ class Gatherer(object):
             try:
                 providerimages = provider.get_images(uniqueids, missing)
                 self.providererrors[provider.name] = 0
-            except ProviderError as ex:
+            except Exception as ex:
+                # gross. need to split "getting" and "parsing" then catch and wrap exceptions
+                # on the latter, then leave most of this code back for "ProviderError" only
                 errcount += 1
                 self.providererrors[provider.name] = errcount
                 if errcount != 1 and errcount != MAX_ERRORS:
                     continue
                 error = {'providername': provider.name.display}
                 if errcount == 1: # notify on first error
-                    error['message'] = ex.message
+                    error['message'] = getattr(ex, 'message', repr(ex))
                 elif errcount == MAX_ERRORS: # and on last error when we're no longer going to try this provider
                     error['message'] = L(TOO_MANY_ERRORS)
+                if not isinstance(ex, ProviderError):
+                    log("Error parsing provider response", xbmc.LOGWARN)
+                    log(traceback.format_exc(), xbmc.LOGWARN)
                 continue
             for arttype, artlist in providerimages.iteritems():
                 if arttype.startswith('season.'):
