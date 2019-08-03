@@ -69,6 +69,8 @@ class TheTVDBProvider(AbstractImageProvider):
                     if generaltype not in result:
                         result[generaltype] = []
                 for image in data['data']:
+                    if not image.get('fileName') or isseason and not image.get('subKey'):
+                        continue
                     ntype = generaltype
                     if isseason:
                         ntype = ntype % image['subKey']
@@ -84,12 +86,7 @@ class TheTVDBProvider(AbstractImageProvider):
                     elif arttype == 'season':
                         resultimage['size'] = SortedDisplay(1000, '680x1000')
                     else:
-                        try:
-                            sortsize = int(image['resolution'].split('x')[0 if arttype != 'poster' else 1])
-                        except ValueError:
-                            self.log('whoops, ValueError on "%s"' % image['resolution'])
-                            sortsize = 0
-                        resultimage['size'] = SortedDisplay(sortsize, image['resolution'])
+                        resultimage['size'] = parse_sortsize(image, arttype)
                     result[ntype].append(resultimage)
         return result
 
@@ -105,7 +102,14 @@ class TheTVDBProvider(AbstractImageProvider):
 
     def provides(self, types):
         types = set(x if not x.startswith('season.') else re.sub(r'[\d]', '%s', x) for x in types)
-        return any(x in types for x in self.artmap.itervalues())
+        return any(x in types for x in self.artmap.values())
+
+def parse_sortsize(image, arttype):
+    try:
+        sortsize = int(image['resolution'].split('x')[0 if arttype != 'poster' else 1])
+    except (ValueError, IndexError):
+        sortsize = 0
+    return SortedDisplay(sortsize, image['resolution'])
 
 def shouldset_imagelanguage(image):
     if image['keyType'] == 'series':
