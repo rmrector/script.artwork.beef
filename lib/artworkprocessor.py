@@ -461,7 +461,7 @@ def add_art_to_library(mediatype, seasons, dbid, selectedart):
     for arttype, url in selectedart.items():
         # Kodi doesn't cache gifs, so force download in `downloader` and
         #   don't leave any HTTP URLs if they can't be saved
-        if arttype.startswith('animated') and url.startswith('http'):
+        if arttype.startswith('animated') and url and url.startswith('http'):
             selectedart[arttype] = None
     if mediatype == mediatypes.TVSHOW:
         for season, season_id in seasons.iteritems():
