@@ -91,9 +91,13 @@ class Gatherer(object):
             for arttype, artlist in providerimages.iteritems():
                 if arttype.startswith('season.'):
                     season = arttype.rsplit('.', 2)[1]
-                    if int(season) not in seasons:
-                        # Don't add artwork for seasons we don't have
+                    try:
+                        if int(season) not in seasons:
+                            # Don't add artwork for seasons we don't have
+                            continue
+                    except ValueError:
                         continue
+
                 if arttype not in images:
                     images[arttype] = []
                 images[arttype].extend(artlist)

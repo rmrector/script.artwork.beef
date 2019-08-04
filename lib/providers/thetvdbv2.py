@@ -86,7 +86,7 @@ class TheTVDBProvider(AbstractImageProvider):
                     else:
                         try:
                             sortsize = int(image['resolution'].split('x')[0 if arttype != 'poster' else 1])
-                        except ValueError:
+                        except (ValueError,IndexError):
                             self.log('whoops, ValueError on "%s"' % image['resolution'])
                             sortsize = 0
                         resultimage['size'] = SortedDisplay(sortsize, image['resolution'])
