@@ -23,9 +23,9 @@ class Getter(object):
 
     def __call__(self, url, **kwargs):
         try:
-            self._inner_call(url, **kwargs)
+            return self._inner_call(url, **kwargs)
         except (Timeout, ConnectionError, RequestException) as ex:
-            message = ex.response.reason if hasattr(ex, 'response') else type(ex).__name__
+            message = ex.response.reason if getattr(ex, 'response', None) else type(ex).__name__
             raise GetterError(message, ex, not isinstance(ex, RequestException))
 
     def _inner_call(self, url, **kwargs):
