@@ -41,10 +41,7 @@ class KyraDBMovieProvider(AbstractImageProvider):
 
     def _get_animated_images(self, mediaid):
         data = self.get_data(mediaid, 'animated')
-        if not data or data.get('error'):
-            if data and not data.get('error') == 4:
-                # 4: "No results"
-                self.log(data)
+        if not data:
             return {}
         baseposter = data['base_url_posters']
         basefanart = data['base_url_backgrounds']
@@ -77,8 +74,7 @@ class KyraDBMovieProvider(AbstractImageProvider):
 
     def _get_characterart(self, mediaid):
         data = self.get_data(mediaid, 'characterart')
-        if not data or data.get('error'):
-            self.log(data)
+        if not data:
             return {}
         baseurl = data['base_url_character_art']
         result = []
@@ -95,6 +91,11 @@ class KyraDBMovieProvider(AbstractImageProvider):
 
     def get_data(self, mediaid, urltype):
         result = cache.cacheFunction(self._get_data, mediaid, urltype)
+        if result and result.get('error'):
+            if result['error'] != 4:
+                # 4: "No results"
+                self.log(result)
+            return None
         return result if result != 'Empty' else None
 
     def _get_data(self, mediaid, urltype):
