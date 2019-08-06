@@ -1,3 +1,6 @@
+v0.25.2 (2019-08-05)
+- Fix: dumb mistake
+
 v0.25.1 (2019-08-04)
 - Fix: identify and skip bad image results from TheTVDB
 - Fix: add some general protection against a bit of web service parsing errors
