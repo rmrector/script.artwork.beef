@@ -93,8 +93,8 @@ class Gatherer(object):
                 elif errcount == MAX_ERRORS: # and on last error when we're no longer going to try this provider
                     error['message'] = L(TOO_MANY_ERRORS)
                 if not isinstance(ex, ProviderError):
-                    log("Error parsing provider response", xbmc.LOGWARN)
-                    log(traceback.format_exc(), xbmc.LOGWARN)
+                    log("Error parsing provider response", xbmc.LOGWARNING)
+                    log(traceback.format_exc(), xbmc.LOGWARNING)
                 continue
             for arttype, artlist in providerimages.iteritems():
                 if arttype.startswith('season.'):
