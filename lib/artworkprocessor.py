@@ -286,6 +286,7 @@ class ArtworkProcessor(object):
         return aborted, currentitem, artcount
 
     def _process_item(self, mediaitem, singleitem=False, auto=True):
+        log("Processing {0} '{1}' automatically.".format(mediaitem.mediatype, mediaitem.label))
         mediatype = mediaitem.mediatype
         onlyfs = self.localmode or mediatypes.only_filesystem(mediaitem.mediatype)
         if not mediaitem.uniqueids and not onlyfs:
