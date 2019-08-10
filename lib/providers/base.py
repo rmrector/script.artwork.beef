@@ -52,9 +52,9 @@ class AbstractProvider(object):
         return False
 
 def build_key_error(provider):
-    info = settings.get_apikey_config(provider)
+    info = settings.get_api_config(provider)
     message = "Invalid project API key: "
-    message += "key added in add-on settings is invalid" if not info['builtin'] else \
+    message += "key added in add-on settings is invalid" if not info['apikey-builtin'] else \
         "built-in key is no longer valid" if info['apikey'] else \
         "installed incorrectly and the built-in key is missing"
 

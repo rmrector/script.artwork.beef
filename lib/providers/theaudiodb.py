@@ -57,6 +57,8 @@ class TheAudioDBMusicVideoProvider(TheAudioDBAbstractProvider):
         return bool(set(types) & self.provtypes)
 
     def get_images(self, uniqueids, types=None):
+        if not settings.get_apienabled('tadb'):
+            return {}
         if types is not None and not self.provides(types) or not (uniqueids.get('mbtrack') or
                 uniqueids.get('mbgroup') or uniqueids.get('mbartist')):
             return {}
@@ -85,6 +87,8 @@ class TheAudioDBMusicVideoProvider(TheAudioDBAbstractProvider):
 
 class TheAudioDBAbstractMusicProvider(TheAudioDBAbstractProvider):
     def _inner_get_images(self, uniqueids, idsource, types):
+        if not settings.get_apienabled('tadb'):
+            return {}
         if not uniqueids.get(idsource):
             return {}
         artdata = self.artmap[idsource]

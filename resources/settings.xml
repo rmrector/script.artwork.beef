@@ -134,8 +134,6 @@
 	</category>
 	<category label="$LOCALIZE[10038]">
 		<setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />
-		<setting id="fanarttv_key" label="32905" type="text" />
-		<setting id="kyradb_userkey" label="32983" type="text" default="" />
 		<setting id="report_peritem" label="32916" type="bool" default="false" />
 		<setting id="progress_display" label="32924" type="select" default="0" lvalues="32925|32926|32927" />
 		<setting id="final_notification" label="32928" type="bool" default="false" />
@@ -143,11 +141,21 @@
 		<setting id="cache_local_music_artwork" label="32953" type="bool" default="false" />
 		<setting id="clean_imageurls" label="32981" type="bool" default="true" />
 		<setting id="always_multiple_selection" label="32964" type="bool" default="false" />
-		<setting id="use_tmdb_keyart" label="32982" type="bool" default="false" />
 		<setting label="32428" type="action" action="Skin.ToggleSetting(enablecontext:script.artwork.beef.debug)"
 			visible="Skin.HasSetting(enablecontext:script.artwork.beef.debug)" />
 		<setting label="32429" type="action" action="Skin.ToggleSetting(enablecontext:script.artwork.beef.debug)"
 			visible="!Skin.HasSetting(enablecontext:script.artwork.beef.debug)" />
+
+		<setting label="32991" type="lsep" />
+		<setting id="apienabled.fanarttv" label="32987" type="bool" default="true" />
+		<setting id="fanarttv_key" label="32905" type="text" visible="eq(-1,true)" />
+		<setting id="apienabled.tmdb" label="32988" type="bool" default="true" />
+		<setting id="use_tmdb_keyart" label="32982" type="bool" default="false" />
+		<setting id="apienabled.tvdb" label="32989" type="bool" default="true" />
+		<setting id="apienabled.tadb" label="32990" type="bool" default="true" />
+		<setting id="apienabled.kyradb" label="32985" type="bool" default="false" />
+		<setting id="kyradb_userkey" label="32983" type="text" visible="eq(-1,true)" />
+
 		<setting label="32973" type="lsep" />
 		<setting id="language_override" label="32913" type="select" default="None" values="None|en|fr|de|ja|zh|es|it|pt|sv|ru|nl|ar|ko|no|hu|da|hi|is|pl|he|bg|fi|ml" />
 		<setting id="language_fallback_kodi" label="32974" type="bool" default="true" />

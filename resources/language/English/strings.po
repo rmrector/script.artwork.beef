@@ -623,6 +623,30 @@ msgctxt "#32984"
 msgid "KyraDB API key"
 msgstr ""
 
+msgctxt "#32985"
+msgid "Enable KyraDB"
+msgstr ""
+
+msgctxt "#32987"
+msgid "Enable Fanart.tv"
+msgstr ""
+
+msgctxt "#32988"
+msgid "Enable The Movie DB"
+msgstr ""
+
+msgctxt "#32989"
+msgid "Enable TheTVDB"
+msgstr ""
+
+msgctxt "#32990"
+msgid "Enable The Audio DB"
+msgstr ""
+
+msgctxt "#32991"
+msgid "Web services"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"

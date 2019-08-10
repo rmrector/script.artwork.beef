@@ -80,22 +80,29 @@ class Settings(object):
         self.preferredsize = AVAILABLE_IMAGESIZES[sizesetting][0:2]
         self.minimum_size = AVAILABLE_IMAGESIZES[sizesetting][2]
 
-        self.apikeys = {}
+        self.apiconfig = {}
         for provider in ('fanarttv', 'tvdb', 'tmdb', 'tadb', 'kyradb'):
             key = addon.get_setting('apikey.' + provider).strip()
-            self.apikeys[provider] = {'apikey': key, 'builtin': not key}
+            self.apiconfig[provider] = {
+                'apikey': key,
+                'apikey-builtin': not key,
+                'enabled': addon.get_setting('apienabled.' + provider)
+            }
             if not key and projectkeys:
-                self.apikeys[provider]['apikey'] = get_projectkey(provider)
+                self.apiconfig[provider]['apikey'] = get_projectkey(provider)
             pykodi.set_log_scrubstring(provider + '-apikey', key)
 
         pykodi.set_log_scrubstring('fanarttv-client-apikey', self.fanarttv_clientkey)
         pykodi.set_log_scrubstring('kyradb-userkey', self.kyradb_userkey)
 
     def get_apikey(self, provider):
-        return self.apikeys[provider]['apikey']
+        return self.apiconfig[provider]['apikey']
 
-    def get_apikey_config(self, provider):
-        return self.apikeys[provider]
+    def get_apienabled(self, provider):
+        return self.apiconfig[provider]['enabled']
+
+    def get_api_config(self, provider):
+        return self.apiconfig[provider]
 
     @property
     def autoadd_episodes(self):

@@ -19,6 +19,8 @@ class FanartTVAbstractProvider(AbstractImageProvider):
     apiurl = 'https://webservice.fanart.tv/v3/%s/%s'
 
     def get_images(self, uniqueids, types=None):
+        if not settings.get_apienabled('fanarttv'):
+            return {}
         if types is not None and not self.provides(types):
             return {}
         mediaid = get_mediaid(uniqueids, self.mediatype)

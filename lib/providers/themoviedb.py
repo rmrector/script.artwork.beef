@@ -84,6 +84,8 @@ class TheMovieDBMovieProvider(TheMovieDBAbstractProvider):
     artmap = {'backdrops': 'fanart', 'posters': 'poster', 'posters-alt': 'keyart'}
 
     def get_images(self, uniqueids, types=None):
+        if not settings.get_apienabled('tmdb'):
+            return {}
         if types is not None and not self.provides(types):
             return {}
         mediaid = get_mediaid(uniqueids)
@@ -105,6 +107,8 @@ class TheMovieDBEpisodeProvider(TheMovieDBAbstractProvider):
     artmap = {'stills': 'fanart'}
 
     def get_images(self, uniqueids, types=None):
+        if not settings.get_apienabled('tmdb'):
+            return {}
         if types is not None and not self.provides(types):
             return {}
         if not self.baseurl:
@@ -140,6 +144,8 @@ class TheMovieDBMovieSetProvider(TheMovieDBAbstractProvider):
     artmap = {'backdrops': 'fanart', 'posters': 'poster', 'posters-alt': 'keyart'}
 
     def get_images(self, uniqueids, types=None):
+        if not settings.get_apienabled('tmdb'):
+            return {}
         if types is not None and not self.provides(types):
             return {}
         mediaid = get_mediaid(uniqueids, ('tmdb', 'unknown'))

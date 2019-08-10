@@ -46,6 +46,8 @@ class TheTVDBProvider(AbstractImageProvider):
             return SortedDisplay(5, 'Not rated')
 
     def get_images(self, uniqueids, types=None):
+        if not settings.get_apienabled('tvdb'):
+            return {}
         if types is not None and not self.provides(types):
             return {}
         mediaid = get_mediaid(uniqueids)

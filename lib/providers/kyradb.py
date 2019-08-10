@@ -19,6 +19,8 @@ class KyraDBMovieProvider(AbstractImageProvider):
         return any(x in self.provtypes for x in types)
 
     def get_images(self, uniqueids, types=None):
+        if not settings.get_apienabled('kyradb'):
+            return {}
         mediaid = get_mediaid(uniqueids)
         if not mediaid:
             return {}
