@@ -1,7 +1,8 @@
 import requests
 from requests.adapters import HTTPAdapter
 from requests.exceptions import ConnectionError, Timeout, RequestException
-from urllib3.util.retry import Retry
+# import from `requests` because Jarvis / some platforms still have old urllib3
+from requests.packages.urllib3.util.retry import Retry
 
 def retryable_session(retries=3, backoff_factor=0.5, status_forcelist=(500, 502, 504, 520), session=None):
     # from https://www.peterbe.com/plog/best-practice-with-retries-with-requests
