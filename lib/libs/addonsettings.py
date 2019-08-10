@@ -45,6 +45,7 @@ class Settings(object):
         self.identify_alternatives = addon.get_setting('identify_alternatives')
         self.report_peritem = addon.get_setting('report_peritem')
         self.fanarttv_clientkey = addon.get_setting('fanarttv_key')
+        self.kyradb_user_apikey = addon.get_setting('kyradb_user_apikey')
         self.kyradb_userkey = addon.get_setting('kyradb_userkey')
         self.default_tvidsource = addon.get_setting('default_tvidsource')
         self.progressdisplay = addon.get_setting('progress_display')
@@ -93,6 +94,7 @@ class Settings(object):
             pykodi.set_log_scrubstring(provider + '-apikey', key)
 
         pykodi.set_log_scrubstring('fanarttv-client-apikey', self.fanarttv_clientkey)
+        pykodi.set_log_scrubstring('kyradb-user-apikey', self.kyradb_user_apikey)
         pykodi.set_log_scrubstring('kyradb-userkey', self.kyradb_userkey)
 
     def get_apikey(self, provider):
@@ -118,6 +120,6 @@ def get_projectkey(provider):
         projectkeys.THETVDB_PROJECTKEY if provider == 'tvdb' else \
         projectkeys.TMDB_PROJECTKEY if provider == 'tmdb' else \
         projectkeys.TADB_PROJECTKEY if provider == 'tadb' else \
-        projectkeys.KYRADB_APIKEY
+        ''
 
 settings = Settings()

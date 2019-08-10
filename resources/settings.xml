@@ -62,10 +62,10 @@
 		<setting id="movie.landscape" label="landscape" type="bool" default="true" />
 		<setting id="movie.clearart" label="clearart" type="bool" default="true" />
 		<setting id="movie.discart" label="discart" type="bool" default="true" />
-		<setting id="movie.characterart_limit" label="characterart" type="slider" option="int" default="1" range="0,1,20" />
-		<setting id="movie.animatedposter" label="animatedposter" type="bool" default="false" />
-		<setting id="movie.animatedkeyart" label="animatedkeyart" type="bool" default="false" />
-		<setting id="movie.animatedfanart_limit" label="animatedfanart" type="slider" option="int" default="0" range="0,1,20" />
+		<setting id="movie.characterart_limit - $ADDON[script.artwork.beef 32986]" label="characterart" type="slider" option="int" default="1" range="0,1,20" />
+		<setting id="movie.animatedposter - $ADDON[script.artwork.beef 32986]" label="animatedposter" type="bool" default="false" />
+		<setting id="movie.animatedkeyart - $ADDON[script.artwork.beef 32986]" label="animatedkeyart" type="bool" default="false" />
+		<setting id="movie.animatedfanart_limit - $ADDON[script.artwork.beef 32986]" label="animatedfanart" type="slider" option="int" default="0" range="0,1,20" />
 		<setting id="movie.othertypes" label="32957" type="text" />
 		<setting id="set.poster_limit" label="$LOCALIZE[20457] poster" type="slider" option="int" default="1" range="0,1,10" />
 		<setting id="set.keyart_limit" label="$LOCALIZE[20457] keyart" type="slider" option="int" default="0" range="0,1,10" />
@@ -154,7 +154,8 @@
 		<setting id="apienabled.tvdb" label="32989" type="bool" default="true" />
 		<setting id="apienabled.tadb" label="32990" type="bool" default="true" />
 		<setting id="apienabled.kyradb" label="32985" type="bool" default="false" />
-		<setting id="kyradb_userkey" label="32983" type="text" visible="eq(-1,true)" />
+		<setting id="kyradb_user_apikey" label="32984" type="text" visible="eq(-1,true)" />
+		<setting id="kyradb_userkey" label="32983" type="text" visible="eq(-2,true)" />
 
 		<setting label="32973" type="lsep" />
 		<setting id="language_override" label="32913" type="select" default="None" values="None|en|fr|de|ja|zh|es|it|pt|sv|ru|nl|ar|ko|no|hu|da|hi|is|pl|he|bg|fi|ml" />
@@ -179,7 +180,6 @@
 		<setting id="apikey.tvdb" label="32967" type="text" />
 		<setting id="apikey.tmdb" label="32968" type="text" />
 		<setting id="apikey.tadb" label="32969" type="text" />
-		<setting id="apikey.kyradb" label="32984" type="text" />
 		<!-- For add-on inner workings -->
 		<setting id="last_videoupdate" type="text" default="0" visible="false" />
 		<setting id="last_musicupdate" type="text" default="0" visible="false" />

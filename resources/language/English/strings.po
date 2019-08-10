@@ -616,15 +616,19 @@ msgid "Add 'keyart' from TheMovieDB"
 msgstr ""
 
 msgctxt "#32983"
-msgid "KyraDB User key (required for art from KyraDB)"
+msgid "KyraDB User key (required)"
 msgstr ""
 
 msgctxt "#32984"
-msgid "KyraDB API key"
+msgid "KyraDB API key (required)"
 msgstr ""
 
 msgctxt "#32985"
 msgid "Enable KyraDB"
+msgstr ""
+
+msgctxt "#32986"
+msgid "requires KyraDB"
 msgstr ""
 
 msgctxt "#32987"

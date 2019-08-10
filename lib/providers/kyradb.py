@@ -4,7 +4,7 @@ from lib.libs import iso639, mediatypes
 from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
-from lib.providers.base import AbstractImageProvider, ProviderError, cache, build_key_error
+from lib.providers.base import AbstractImageProvider, ProviderError, cache
 
 class KyraDBMovieProvider(AbstractImageProvider):
     name = SortedDisplay('kyradb.com', 'KyraDB.com')
@@ -25,10 +25,6 @@ class KyraDBMovieProvider(AbstractImageProvider):
         if not mediaid:
             return {}
         if types is None:
-            # tricky, using None `types` to identify if running manually
-            # to avoid the 'missing user key' message
-            if not settings.kyradb_userkey:
-                return {}
             types = self.provtypes
 
         result = {}
@@ -93,24 +89,22 @@ class KyraDBMovieProvider(AbstractImageProvider):
 
     def get_data(self, mediaid, urltype):
         result = cache.cacheFunction(self._get_data, mediaid, urltype)
-        if result and result.get('error'):
-            if result['error'] != 4:
-                # 4: "No results"
-                self.log(result)
-            return None
         return result if result != 'Empty' else None
 
     def _get_data(self, mediaid, urltype):
-        apikey = settings.get_apikey('kyradb')
-        if not apikey:
-            raise build_key_error('kyradb')
-        if not settings.kyradb_userkey:
-            raise ProviderError("KyraDB User key is required for artwork from KyraDB: "
+        if not settings.kyradb_user_apikey or not settings.kyradb_userkey:
+            raise ProviderError("KyraDB API key and User key is required for artwork from KyraDB: "
                 + str(self.provtypes))
-        headers = {'Apikey': apikey, 'Userkey': settings.kyradb_userkey}
+        headers = {'Apikey': settings.kyradb_user_apikey, 'Userkey': settings.kyradb_userkey}
         self.log('uncached', xbmc.LOGINFO)
         response = self.doget(self.apiurl.format(mediaid, urltype), headers=headers)
-        return 'Empty' if response is None else json.loads(response.text, cls=UTF8JSONDecoder)
+        result = json.loads(response.text, cls=UTF8JSONDecoder) if response is not None else None
+        if result and result.get('error'):
+            if result['error'] != 4:
+                # 4: "No results"
+                raise ProviderError(result['message'])
+            result = None
+        return 'Empty' if result is None else result
 
 def get_mediaid(uniqueids):
     if 'tmdb' in uniqueids:
