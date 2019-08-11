@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.25.3~adev" provider-name="rmrector">
+<addon id="script.artwork.beef" name="Artwork Beef" version="0.26.0" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -52,20 +52,20 @@
 	<extension point="xbmc.addon.metadata">
 		<summary lang="en">Automatically adds extra artwork for your media.</summary>
 		<description lang="en">Artwork Beef automatically adds extra artwork for TV shows and movies into your library. It grabs them from wonderful web services and the file system.</description>
-		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB</disclaimer>
+		<disclaimer lang="en">Artwork sources: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB, KyraDB</disclaimer>
 		<summary lang="es">Agrega automáticamente ilustraciones adicionales para sus medios.</summary>
 		<description lang="es">Artwork Beef agrega automáticamente ilustraciones adicionales para Series TV y Películas a su biblioteca. Las ilustraciones son agregadas desde Servicios web y el Sistema de archivos local.</description>
-		<disclaimer lang="es">Fuente para ilustraciones: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB</disclaimer>
-		<news>v0.25.2 (2019-08-05)
-- Fix: dumb mistake
+		<disclaimer lang="es">Fuente para ilustraciones: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB, KyraDB</disclaimer>
+		<news>v0.26.0 (2019-08-11)
+- Feature: add settings to enable / disable each web service individually
+- Fix: require both keys from users for KyraDB
+- Fix: error with Jarvis / old urllib3
 
-v0.25.1 (2019-08-04)
-- Fix: identify and skip bad image results from TheTVDB
-- Fix: add some general protection against a bit of web service parsing errors
-
-v0.25.0 (2019-07-29)
+v0.25.0 - 0.25.2
 - Feature: add 'animatedkeyart' from KyraDB
 - Fix: match 'animatedposter' language for automated scanning
+- Fix: identify and skip bad image results from TheTVDB
+- Fix: add some general protection against a bit of web service parsing errors
 
 v0.24.0 (2019-07-07)
 - Feature: add KyraDB as an image provider
@@ -80,7 +80,5 @@ v0.24.0 (2019-07-07)
 		<assets>
 			<icon>icon.png</icon>
 		</assets>
-		<language />
-		<email />
 	</extension>
 </addon>

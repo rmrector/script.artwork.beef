@@ -1,3 +1,9 @@
+v0.26.0 (2019-08-11)
+- Feature: add settings to enable / disable each web service individually
+- Fix: require both keys from users for KyraDB
+- Fix: web service error handling
+- Fix: error with Jarvis / old urllib3
+
 v0.25.2 (2019-08-05)
 - Fix: dumb mistake
 
