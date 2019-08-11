@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Skin support on Artwork Beef</title>
+    <link>https://rmrector.github.io/script.artwork.beef/skins/</link>
+    <description>Recent content in Skin support on Artwork Beef</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 21 Nov 2017 22:46:49 -0700</lastBuildDate>
+    
+	<atom:link href="https://rmrector.github.io/script.artwork.beef/skins/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Fun without add-ons</title>
+      <link>https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/</link>
+      <pubDate>Tue, 21 Nov 2017 22:44:56 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/</guid>
+      <description>Because who wants another dependency?
+Display multiple fanart Artwork Helper isn&amp;rsquo;t strictly needed, how about that? It is a bit more work though.
+The trick is to use a fadelabel control to gather multiple InfoLabels and randomize them, then use that control&amp;rsquo;s label as the final image to be displayed.
+&amp;lt;control type=&amp;quot;fadelabel&amp;quot; id=&amp;quot;398045&amp;quot;&amp;gt; &amp;lt;description&amp;gt;Randomizer for plugin-free multiple fanart&amp;lt;/description&amp;gt; &amp;lt;top&amp;gt;-1000&amp;lt;/top&amp;gt; &amp;lt;!-- Don&#39;t need to see it, but can&#39;t change its visibility.</description>
+    </item>
+    
+    <item>
+      <title>Artwork helper</title>
+      <link>https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/</link>
+      <pubDate>Tue, 21 Nov 2017 22:45:47 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/</guid>
+      <description>Artwork Helper provides skins with a few options for building a list of images for a multiimage or list control from images available via InfoLabels. This is a small add-on that skins can use as a dependency, only doing what a skin asks it to do.
+Current version only works for Kodi 17 and 18, use version 0.7.1 for 15 and 16.
+Add-on setting There is an add-on setting to pull extrafanart and extrathumbs from the filesystem, if there is only a single image in the library.</description>
+    </item>
+    
+    <item>
+      <title>Why replace extrafanart/extrathumbs</title>
+      <link>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</link>
+      <pubDate>Tue, 21 Nov 2017 22:46:53 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/skins/whyreplaceextra/</guid>
+      <description>I think that multiple fanart for individual media items should be integrated into the library like all other artwork. Here is a list of my reasons.
+ Media file organization and skin display should be completely independent. Skins and other interfaces should access all library artwork in the same way.  or a list of particulars:
+ Kodi&amp;rsquo;s support for freely named artwork in the library is pretty great, so let&amp;rsquo;s use it!</description>
+    </item>
+    
+  </channel>
+</rss>

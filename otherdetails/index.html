@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="generator" content="Hugo 0.30.2" />
+    <meta name="generator" content="Hugo 0.40.1" />
     <meta name="description" content="">
 
 
@@ -438,6 +438,8 @@ h5 {
 <li><a href="#a-kodi-skin-or-web-interface-is-showing-a-thumbnail-image-instead-of-a-movie-poster">A Kodi skin or web interface is showing a thumbnail image instead of a movie poster.</a></li>
 <li><a href="#where-do-i-put-my-project-api-keys-for-other-web-services">Where do I put my project API keys for other web services?</a></li>
 <li><a href="#where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</a></li>
+<li><a href="#trouble-with-animated-artwork">Trouble with animated artwork</a></li>
+<li><a href="#error-messages-about-kyradb-api-keys">Error messages about KyraDB API keys</a></li>
 </ul></li>
 </ul></li>
 </ul></li>
@@ -562,11 +564,11 @@ for the media type you are looking at?</p>
 
 <p>Most likely the web service is temporarily/intermittently unavailable. Try again later.
 Configuring Artwork Beef to download artwork to your local file system is probably a good idea.
-Certificate errors and HTTP 500 errors are good indications of this.</p>
+Connection timeouts, HTTP 500 errors, and certificate errors are good indications of this.</p>
 
 <h4 id="i-receive-an-error-message-invalid-project-api-key-for-a-particular-web-service">I receive an error message &ldquo;Invalid project API key&rdquo; for a particular web service.</h4>
 
-<p>Could be one of three things, the error message will specify which exactly:</p>
+<p>Could be one of three things, the error message will specify precisely which:</p>
 
 <ul>
 <li>Artwork Beef was not <a href="https://rmrector.github.io/script.artwork.beef/usage/#installing">installed correctly</a>.</li>
@@ -634,6 +636,16 @@ stop working.</li>
 
 <p>No such option is available, Artwork Beef will not duplicate image files for this purpose.
 <a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/#grab-random-fanart-plus-any-other-info-from-items-in-any-library-path">Skins have other options</a> that don&rsquo;t require duplicating files.</p>
+
+<h4 id="trouble-with-animated-artwork">Trouble with animated artwork</h4>
+
+<p>See the <a href="https://kodi.wiki/view/Artwork_types#Limitations_of_animated_artwork">Kodi wiki</a>
+for current limitations of animated artwork.</p>
+
+<h4 id="error-messages-about-kyradb-api-keys">Error messages about KyraDB API keys</h4>
+
+<p>Artwork from KyraDB requires an API key and User key, which you can get by signing up for a
+free account.</p>
 
 
 <footer class=" footline" >

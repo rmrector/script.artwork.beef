@@ -86,9 +86,6 @@ type in the box "Additional art types for ... (comma separated)".
 Artwork Beef will not automatically apply these changes to existing items in the library, you will need
 to run "add missing artwork for ..." "all videos" or music to look for newly configured artwork.
 
-You probably don't want "animatedposter" and "animatedfanart" in the "Additional art types" list,
-that will conflict with Skin Helper Service.
-
 ##### "Select series for episode 'fanart'..."
 
 Episode fanart must be enabled per series as they add a bundle of new API calls and just won't be
@@ -115,12 +112,6 @@ only the base art name is needed; "fanart" will also download any "fanart1", "fa
 
 Kodi Jarvis (and early Krypton scrapers) didn't identify `uniqueid` sources for TV shows, this
 setting will be used as a backup. 'tvdb' for TheTVDB or 'tmdb' for TheMovieDB.
-
-#### "fanart.tv personal API key"
-
-Set the **personal** API for fanart.tv, which reduces the delay for new artwork results from fanart.tv.
-This is the API key that individual users of Artwork Beef (and other apps like it) should register for.
-Artwork Beef cannot tell you if this is entered incorrectly, so please double check it.
 
 #### "Include detailed per item changes in the report"
 
@@ -157,21 +148,38 @@ properly URL encoded.
 Allows manual selection of multiple images for all artwork. Mostly for skin designers or developers to
 tinker with, it requires a skin or other interface or add-on to support multiple in some way.
 
-#### "Add 'keyart' from TheMovieDB"
-
-TheMovieDB defaults to "No Language" for all new images, so there will always be a number of posters
-with text that show up as "keyart". Disabled by default.
-
 #### "Disable/Enable Artwork Beef debug context items (per skin)"
 
 Show the two [debug context]({{< ref "usage/commands.md" >}}) items "AB: Remove all artwork" and
 "AB: Log debug info" under the "Manage" menu of the context menu of most media items. Disabled by default.
 
+### Web services
+
+#### Enable Fanart.tv / The Movie DB / TheTVDB / The Audio DB / KyraDB
+
+Enable web services individually. These switches also hide service-specific configuration when disabled.
+
+#### "fanart.tv personal API key"
+
+Set the _optional_ **personal** API for fanart.tv, which reduces the delay for new artwork results from fanart.tv.
+This is the API key that individual users of Artwork Beef (and other apps like it) should register for.
+Artwork Beef cannot tell you if this is entered incorrectly, so please double check it.
+
+#### "Add 'keyart' from TheMovieDB"
+
+TheMovieDB defaults to "No Language" for all new images, so there will always be a number of posters
+with text that show up as "keyart". Disabled by default.
+
+#### KyraDB API key / User key
+
+These keys are required if you want to use artwork from KyraDB. You can get these by signing up
+for a free account on the website.
+
 ### Image languages for automatic filter
 
 Controls which image languages will be accepted by Artwork Beef's automatic process. By default
 Artwork Beef uses Kodi's user interface language and if not found it falls back to English, but you
-can disable either of those options and "Priority language selection" is preferred before either.
+can disable either of those options and set a "Priority language selection" that is preferred before either.
 
 ### Files
 

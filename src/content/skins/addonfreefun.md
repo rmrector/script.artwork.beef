@@ -69,7 +69,7 @@ Stick this little invisible list on your window somewhere:
 </control>
 ```
 
-The path in the `<content>` element can be any path that Kodi supports, including any  `videodb` paths
+The path in the `<content>` element can be any path that Kodi supports, including any `videodb` paths
 in the library, playlists, and plugins, as long as it directly contains items with fanart.
 
 Then `$INFO[Container(12341).ListItem.Art(fanart)]` will contain the URL/path to a single image

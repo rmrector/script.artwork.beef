@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="generator" content="Hugo 0.30.2" />
+    <meta name="generator" content="Hugo 0.40.1" />
     <meta name="description" content="">
 
 
@@ -464,7 +464,6 @@ h5 {
 <li>
 <ul>
 <li><a href="#tv-show-scraper-if-source-unknown">&ldquo;TV show scraper (if source unknown)&rdquo;</a></li>
-<li><a href="#fanart-tv-personal-api-key">&ldquo;fanart.tv personal API key&rdquo;</a></li>
 <li><a href="#include-detailed-per-item-changes-in-the-report">&ldquo;Include detailed per item changes in the report&rdquo;</a></li>
 <li><a href="#progress-display-for-automatic-processing">&ldquo;Progress display for automatic processing&rdquo;</a></li>
 <li><a href="#show-final-artwork-update-count-notification">&ldquo;Show final artwork update count notification&rdquo;</a></li>
@@ -473,8 +472,14 @@ h5 {
 <li><a href="#clean-existing-artwork-urls-http-to-https-web-service-url-changes">&ldquo;Clean existing artwork URLs (HTTP to HTTPS, web service URL changes)&rdquo;</a>
 <ul>
 <li><a href="#manually-select-multiple-images-for-all-media-types">&ldquo;Manually select multiple images for all media types&rdquo;</a></li>
-<li><a href="#add-keyart-from-themoviedb">&ldquo;Add &lsquo;keyart&rsquo; from TheMovieDB&rdquo;</a></li>
 <li><a href="#disable-enable-artwork-beef-debug-context-items-per-skin">&ldquo;Disable/Enable Artwork Beef debug context items (per skin)&rdquo;</a></li>
+</ul></li>
+<li><a href="#web-services">Web services</a>
+<ul>
+<li><a href="#enable-fanart-tv-the-movie-db-thetvdb-the-audio-db-kyradb">Enable Fanart.tv / The Movie DB / TheTVDB / The Audio DB / KyraDB</a></li>
+<li><a href="#fanart-tv-personal-api-key">&ldquo;fanart.tv personal API key&rdquo;</a></li>
+<li><a href="#add-keyart-from-themoviedb">&ldquo;Add &lsquo;keyart&rsquo; from TheMovieDB&rdquo;</a></li>
+<li><a href="#kyradb-api-key-user-key">KyraDB API key / User key</a></li>
 </ul></li>
 <li><a href="#image-languages-for-automatic-filter">Image languages for automatic filter</a></li>
 <li><a href="#files">Files</a>
@@ -598,9 +603,6 @@ type in the box &ldquo;Additional art types for &hellip; (comma separated)&rdquo
 <p>Artwork Beef will not automatically apply these changes to existing items in the library, you will need
 to run &ldquo;add missing artwork for &hellip;&rdquo; &ldquo;all videos&rdquo; or music to look for newly configured artwork.</p>
 
-<p>You probably don&rsquo;t want &ldquo;animatedposter&rdquo; and &ldquo;animatedfanart&rdquo; in the &ldquo;Additional art types&rdquo; list,
-that will conflict with Skin Helper Service.</p>
-
 <h5 id="select-series-for-episode-fanart">&ldquo;Select series for episode &lsquo;fanart&rsquo;&hellip;&rdquo;</h5>
 
 <p>Episode fanart must be enabled per series as they add a bundle of new API calls and just won&rsquo;t be
@@ -627,12 +629,6 @@ only the base art name is needed; &ldquo;fanart&rdquo; will also download any &l
 
 <p>Kodi Jarvis (and early Krypton scrapers) didn&rsquo;t identify <code>uniqueid</code> sources for TV shows, this
 setting will be used as a backup. &lsquo;tvdb&rsquo; for TheTVDB or &lsquo;tmdb&rsquo; for TheMovieDB.</p>
-
-<h4 id="fanart-tv-personal-api-key">&ldquo;fanart.tv personal API key&rdquo;</h4>
-
-<p>Set the <strong>personal</strong> API for fanart.tv, which reduces the delay for new artwork results from fanart.tv.
-This is the API key that individual users of Artwork Beef (and other apps like it) should register for.
-Artwork Beef cannot tell you if this is entered incorrectly, so please double check it.</p>
 
 <h4 id="include-detailed-per-item-changes-in-the-report">&ldquo;Include detailed per item changes in the report&rdquo;</h4>
 
@@ -669,21 +665,38 @@ properly URL encoded.</p>
 <p>Allows manual selection of multiple images for all artwork. Mostly for skin designers or developers to
 tinker with, it requires a skin or other interface or add-on to support multiple in some way.</p>
 
-<h4 id="add-keyart-from-themoviedb">&ldquo;Add &lsquo;keyart&rsquo; from TheMovieDB&rdquo;</h4>
-
-<p>TheMovieDB defaults to &ldquo;No Language&rdquo; for all new images, so there will always be a number of posters
-with text that show up as &ldquo;keyart&rdquo;. Disabled by default.</p>
-
 <h4 id="disable-enable-artwork-beef-debug-context-items-per-skin">&ldquo;Disable/Enable Artwork Beef debug context items (per skin)&rdquo;</h4>
 
 <p>Show the two <a href="https://rmrector.github.io/script.artwork.beef/usage/commands/">debug context</a> items &ldquo;AB: Remove all artwork&rdquo; and
 &ldquo;AB: Log debug info&rdquo; under the &ldquo;Manage&rdquo; menu of the context menu of most media items. Disabled by default.</p>
 
+<h3 id="web-services">Web services</h3>
+
+<h4 id="enable-fanart-tv-the-movie-db-thetvdb-the-audio-db-kyradb">Enable Fanart.tv / The Movie DB / TheTVDB / The Audio DB / KyraDB</h4>
+
+<p>Enable web services individually. These switches also hide service-specific configuration when disabled.</p>
+
+<h4 id="fanart-tv-personal-api-key">&ldquo;fanart.tv personal API key&rdquo;</h4>
+
+<p>Set the <em>optional</em> <strong>personal</strong> API for fanart.tv, which reduces the delay for new artwork results from fanart.tv.
+This is the API key that individual users of Artwork Beef (and other apps like it) should register for.
+Artwork Beef cannot tell you if this is entered incorrectly, so please double check it.</p>
+
+<h4 id="add-keyart-from-themoviedb">&ldquo;Add &lsquo;keyart&rsquo; from TheMovieDB&rdquo;</h4>
+
+<p>TheMovieDB defaults to &ldquo;No Language&rdquo; for all new images, so there will always be a number of posters
+with text that show up as &ldquo;keyart&rdquo;. Disabled by default.</p>
+
+<h4 id="kyradb-api-key-user-key">KyraDB API key / User key</h4>
+
+<p>These keys are required if you want to use artwork from KyraDB. You can get these by signing up
+for a free account on the website.</p>
+
 <h3 id="image-languages-for-automatic-filter">Image languages for automatic filter</h3>
 
 <p>Controls which image languages will be accepted by Artwork Beef&rsquo;s automatic process. By default
 Artwork Beef uses Kodi&rsquo;s user interface language and if not found it falls back to English, but you
-can disable either of those options and &ldquo;Priority language selection&rdquo; is preferred before either.</p>
+can disable either of those options and set a &ldquo;Priority language selection&rdquo; that is preferred before either.</p>
 
 <h3 id="files">Files</h3>
 

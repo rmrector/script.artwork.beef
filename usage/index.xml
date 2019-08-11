@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Installation &amp; usage on Artwork Beef</title>
+    <link>https://rmrector.github.io/script.artwork.beef/usage/</link>
+    <description>Recent content in Installation &amp; usage on Artwork Beef</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 21 Nov 2017 22:46:04 -0700</lastBuildDate>
+    
+	<atom:link href="https://rmrector.github.io/script.artwork.beef/usage/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>First usage</title>
+      <link>https://rmrector.github.io/script.artwork.beef/usage/firstusage/</link>
+      <pubDate>Wed, 27 Dec 2017 22:45:06 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/usage/firstusage/</guid>
+      <description>Artwork Beef must process all items in your library, and will do so automatically. There are some artwork in the file system that isn&amp;rsquo;t added to Kodi&amp;rsquo;s database with any/many other tools. It will also check web services for new artwork to fill out any media items still missing some, unless &amp;ldquo;Do not automatically add artwork from web services, only identify local files&amp;rdquo; is enabled. If you haven&amp;rsquo;t been managing movie collection artwork, Kodi sets posters and fanart to those of one of the movies in the collection.</description>
+    </item>
+    
+    <item>
+      <title>Image files</title>
+      <link>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</link>
+      <pubDate>Thu, 28 Dec 2017 22:45:58 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/usage/fromfiles/</guid>
+      <description>Downloading and managing local artwork files By default, Artwork Beef only identifies local artwork files, it does not add or modify them. There are some options to change that, though. With the settings &amp;ldquo;Download artwork to local files&amp;rdquo; you can configure exactly which types of artwork to download for each media type. If configured to download artwork, most video library images will be saved next to the media files with the most specific file names detailed below, with options to save movie and music video artwork without the base file name if you like, and options to save movie and music video fanart# to an &amp;ldquo;extrafanart&amp;rdquo; directory for skins using the classic style.</description>
+    </item>
+    
+    <item>
+      <title>Add-on settings &amp; actions</title>
+      <link>https://rmrector.github.io/script.artwork.beef/usage/settings/</link>
+      <pubDate>Thu, 26 Jul 2018 15:50:04 -0600</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/usage/settings/</guid>
+      <description>Artwork Beef configuration and manual actions when run from &amp;ldquo;Program Add-ons&amp;rdquo;.
+General &amp;ldquo;Add artwork for new videos / music after library updates&amp;rdquo; The main process of Artwork Beef. Runs after library updates to add extended artwork for media items newly added to the Kodi library, either from the file system or web services. Video and music are configured separately. A media item is only &amp;ldquo;new&amp;rdquo; once, after it has been scanned it is no longer &amp;ldquo;new&amp;rdquo;.</description>
+    </item>
+    
+    <item>
+      <title>Advanced control</title>
+      <link>https://rmrector.github.io/script.artwork.beef/usage/commands/</link>
+      <pubDate>Thu, 12 Jul 2018 14:50:55 -0700</pubDate>
+      
+      <guid>https://rmrector.github.io/script.artwork.beef/usage/commands/</guid>
+      <description>Extra debug context items that work on individual media items can be enabled in the add-on settings. &amp;ldquo;AB: Remove all artwork&amp;rdquo; will remove all artwork from the single selected item. &amp;ldquo;AB: Log debug info&amp;rdquo; will run through the automatic process like &amp;ldquo;AB: Add missing artwork&amp;rdquo; and logs the result to the standard Kodi log, but it doesn&amp;rsquo;t change anything (helpful for troubleshooting).
+Commands Scripts, skins, and other add-ons can use commands to control bits and pieces of Artwork Beef.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -88,11 +88,11 @@ for the media type you are looking at?
 
 Most likely the web service is temporarily/intermittently unavailable. Try again later.
 Configuring Artwork Beef to download artwork to your local file system is probably a good idea.
-Certificate errors and HTTP 500 errors are good indications of this.
+Connection timeouts, HTTP 500 errors, and certificate errors are good indications of this.
 
 #### I receive an error message "Invalid project API key" for a particular web service.
 
-Could be one of three things, the error message will specify which exactly:
+Could be one of three things, the error message will specify precisely which:
 
 - Artwork Beef was not [installed correctly]({{< ref "usage/_index.md#installing" >}}).
 - You have entered your own project API key improperly; remove that setting and try again.
@@ -151,3 +151,13 @@ No such option is available, Artwork Beef will not duplicate image files for thi
 [Skins have other options] that don't require duplicating files.
 
 [Skins have other options]: {{< ref "skins/addonfreefun.md#grab-random-fanart-plus-any-other-info-from-items-in-any-library-path" >}}
+
+#### Trouble with animated artwork
+
+See the [Kodi wiki](https://kodi.wiki/view/Artwork_types#Limitations_of_animated_artwork)
+for current limitations of animated artwork.
+
+#### Error messages about KyraDB API keys
+
+Artwork from KyraDB requires an API key and User key, which you can get by signing up for a
+free account.
