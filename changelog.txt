@@ -1,3 +1,6 @@
+v0.26.1 (2019-09-07)
+- Fix: automated settings for movie animated art and characterart
+
 v0.26.0 (2019-08-11)
 - Feature: add settings to enable / disable each web service individually
 - Fix: require both keys from users for KyraDB
