@@ -62,10 +62,10 @@
 		<setting id="movie.landscape" label="landscape" type="bool" default="true" />
 		<setting id="movie.clearart" label="clearart" type="bool" default="true" />
 		<setting id="movie.discart" label="discart" type="bool" default="true" />
-		<setting id="movie.characterart_limit - $ADDON[script.artwork.beef 32986]" label="characterart" type="slider" option="int" default="1" range="0,1,20" />
-		<setting id="movie.animatedposter - $ADDON[script.artwork.beef 32986]" label="animatedposter" type="bool" default="false" />
-		<setting id="movie.animatedkeyart - $ADDON[script.artwork.beef 32986]" label="animatedkeyart" type="bool" default="false" />
-		<setting id="movie.animatedfanart_limit - $ADDON[script.artwork.beef 32986]" label="animatedfanart" type="slider" option="int" default="0" range="0,1,20" />
+		<setting id="movie.characterart_limit" label="characterart - $ADDON[script.artwork.beef 32986]" type="slider" option="int" default="1" range="0,1,20" />
+		<setting id="movie.animatedposter" label="animatedposter - $ADDON[script.artwork.beef 32986]" type="bool" default="false" />
+		<setting id="movie.animatedkeyart" label="animatedkeyart - $ADDON[script.artwork.beef 32986]" type="bool" default="false" />
+		<setting id="movie.animatedfanart_limit" label="animatedfanart - $ADDON[script.artwork.beef 32986]" type="slider" option="int" default="0" range="0,1,20" />
 		<setting id="movie.othertypes" label="32957" type="text" />
 		<setting id="set.poster_limit" label="$LOCALIZE[20457] poster" type="slider" option="int" default="1" range="0,1,10" />
 		<setting id="set.keyart_limit" label="$LOCALIZE[20457] keyart" type="slider" option="int" default="0" range="0,1,10" />
