@@ -42,7 +42,7 @@ msgstr "Informe ilustraciones"
 
 msgctxt "#32019"
 msgid "Contribute or donate to the source: fanart.tv, thetvdb.com, themoviedb.org, theaudiodb.com"
-msgstr "Contribuya o haga un donación a fanart.tv, thetvdb.com, themoviedb.org o theaudiodb.com"
+msgstr "Contribuya o haga una donación a fanart.tv, thetvdb.com, themoviedb.org o theaudiodb.com"
 
 msgctxt "#32020"
 msgid "Adding extended artwork"
@@ -187,7 +187,7 @@ msgstr "¿Deben eliminarse también los archivos de ilustraciones locales?"
 
 msgctxt "#32400"
 msgid "Select series for episode 'fanart'..."
-msgstr "Seleccionar serie para el 'fanart' de Episodio..."
+msgstr "Seleccionar serie para el 'fanart' de episodio..."
 
 msgctxt "#32401"
 msgid "Add missing artwork now?"
