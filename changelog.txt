@@ -1,3 +1,6 @@
+v0.27.0 (2019-10-13)
+- Feature: sort KyraDB results by 'likes'
+
 v0.26.2 (2019-09-14)
 - Fix: identifying local movie set artwork
 
