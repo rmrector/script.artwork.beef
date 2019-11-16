@@ -9,11 +9,10 @@ from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 
-# designed for version 2.1.0 of TheTVDB API
 class TheTVDBProvider(AbstractImageProvider):
     name = SortedDisplay('thetvdb.com', 'TheTVDB.com')
     mediatype = mediatypes.TVSHOW
-    contenttype = 'application/json'
+    contenttype = 'application/vnd.thetvdb.v2.1.0'
 
     apiurl = 'https://api.thetvdb.com/series/%s/images/query'
     loginurl = 'https://api.thetvdb.com/login'
