@@ -96,8 +96,9 @@ class TheTVDBProvider(AbstractImageProvider):
             headers={'Content-Type': 'application/json', 'User-Agent': settings.useragent}, timeout=15)
         if response is not None and response.status_code == 401:
             raise build_key_error('tvdb')
+        response.raise_for_status()
         if not response or not response.headers['Content-Type'].startswith('application/json'):
-            raise ProviderError("Provider returned unexected content")
+            raise ProviderError("Provider returned unexpected content")
         self.getter.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
         return True
 
