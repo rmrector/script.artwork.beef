@@ -60,6 +60,7 @@ class TheTVDBProvider(AbstractImageProvider):
         for arttype in self.artmap:
             if types and not typematches(self.artmap[arttype], types):
                 continue
+            arttype_error = False
             for language in languages if arttype != 'fanart' else flanguages:
                 generaltype = self.artmap[arttype]
                 data = self.get_data(mediaid, arttype, language)
@@ -74,6 +75,17 @@ class TheTVDBProvider(AbstractImageProvider):
                         continue
                     ntype = generaltype
                     if isseason:
+                        try:
+                            int(image['subKey'])
+                        except ValueError:
+                            if arttype_error:
+                                continue
+                            arttype_error = True
+                            self.log("Provider returned unexpected content and '{0}' ".format(arttype) +
+                                    "artwork could not be processed:\n" +
+                                    "expected a season number but got '{0}'".format(image['subKey']),
+                                xbmc.LOGWARNING)
+                            continue
                         ntype = ntype % image['subKey']
                         if ntype not in result:
                             result[ntype] = []
