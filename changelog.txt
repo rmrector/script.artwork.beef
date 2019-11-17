@@ -1,3 +1,8 @@
+v0.27.1 (2019-11-16)
+- Fix: add-on crash when unexpected results received from TheTVDB
+- Fix: request specific version of TheTVDB API - 2.1.0
+- Fix: get more descriptive error messages from some web service errors
+
 v0.27.0 (2019-10-13)
 - Feature: sort KyraDB results by 'likes'
 
