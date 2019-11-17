@@ -107,7 +107,7 @@ msgid "Could not contact provider"
 msgstr ""
 
 msgctxt "#32035"
-msgid "HTTP error: {0}"
+msgid "web service error: {0}"
 msgstr ""
 
 msgctxt "#32036"
