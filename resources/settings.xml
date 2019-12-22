@@ -1,189 +1,244 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <settings>
-	<category label="$LOCALIZE[128]">
-		<setting id="enableservice" label="32900" type="bool" default="false" />
-		<setting id="enableservice_music" label="32922" type="bool" default="false"
-			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="enable_olditem_updates" subsetting="true" label="32912" type="bool"
-			default="true" visible="eq(-1,true) | eq(-2,true)" />
-		<setting id="remove_deselected_files" label="32940" type="bool" default="false" />
-		<setting id="recycle_removed" label="32931" type="bool" default="false" />
-		<setting label="32412" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)"
-			visible="!Skin.HasSetting(disablecontext:script.artwork.beef)" />
-		<setting label="32413" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)"
-			visible="Skin.HasSetting(disablecontext:script.artwork.beef)" />
-		<setting label="32054" type="lsep" />
-		<setting id="titlefree_fanart" label="32901" type="bool" default="true" />
-		<setting id="preferredsize" label="32902" type="select" default="1" lvalues="32970|32971|32972" />
-		<setting id="minimum_rating" label="32907" type="slider" option="int" default="5" range="0,1,10" />
-		<setting id="titlefree_poster" label="32917" type="bool" default="false" />
-		<setting label="32052" type="lsep" />
-		<setting label="32919" type="action" action="RunScript(script.artwork.beef, command=show_artwork_log)" />
-	</category>
-	<category label="$LOCALIZE[20343]">
-		<setting id="onlyfs_tvshows" label="32904" type="bool" default="false" />
-		<setting id="preferredsource_tvshows" label="32963" type="select" default="0" lvalues="20395|32796|32798" />
-		<setting label="32053" type="lsep" />
-		<setting id="tvshow.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
-		<setting id="tvshow.keyart_limit" label="keyart" type="slider" option="int" default="0" range="0,1,10" />
-		<setting id="tvshow.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
-		<setting id="tvshow.banner" label="banner" type="bool" default="true" />
-		<setting id="tvshow.clearlogo" label="clearlogo" type="bool" default="true" />
-		<setting id="tvshow.landscape" label="landscape" type="bool" default="true" />
-		<setting id="tvshow.clearart" label="clearart" type="bool" default="true" />
-		<setting id="tvshow.characterart_limit" label="characterart" type="slider" option="int" default="1" range="0,1,20" />
-		<setting id="tvshow.othertypes" label="32954" type="text" />
-		<setting id="season.poster" label="$LOCALIZE[20373] poster" type="bool" default="true" />
-		<setting id="season.banner" label="$LOCALIZE[20373] banner" type="bool" default="true" />
-		<setting id="season.landscape" label="$LOCALIZE[20373] landscape" type="bool" default="true" />
-		<setting id="season.fanart" label="$LOCALIZE[20373] fanart" type="bool" default="true" />
-		<setting id="season.othertypes" label="32955" type="text" />
-		<setting id="episode.fanart" label="$LOCALIZE[20359] fanart" type="bool" default="true" />
-		<setting label="32400" type="action" subsetting="true" action="RunScript(script.artwork.beef, command=set_autoaddepisodes)" visible="eq(-1,true)" />
-		<setting id="episode.othertypes" label="32956" type="text" />
-		<setting label="32061" type="lsep" />
-		<setting id="download_config_tvshows" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
-		<setting id="tvshow.download_arttypes" label="$LOCALIZE[20343]" type="text" enable="eq(-1,2)" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=tvshow)" enable="eq(-2,2)" />
-		<setting id="season.download_arttypes" label="$LOCALIZE[20373]" type="text" enable="eq(-3,2)" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=season)" enable="eq(-4,2)" />
-		<setting id="episode.download_arttypes" label="$LOCALIZE[20359]" type="text" enable="eq(-5,2)" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=episode)" enable="eq(-6,2)" />
-	</category>
-	<category label="$LOCALIZE[20342]">
-		<setting id="onlyfs_movies" label="32904" type="bool" default="false" />
-		<setting id="preferredsource_movies" label="32963" type="select" default="0" lvalues="20395|32796|32797" />
-		<setting label="32053" type="lsep" />
-		<setting id="movie.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
-		<setting id="movie.keyart_limit" label="keyart" type="slider" option="int" default="0" range="0,1,10" />
-		<setting id="movie.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
-		<setting id="movie.banner" label="banner" type="bool" default="true" />
-		<setting id="movie.clearlogo" label="clearlogo" type="bool" default="true" />
-		<setting id="movie.landscape" label="landscape" type="bool" default="true" />
-		<setting id="movie.clearart" label="clearart" type="bool" default="true" />
-		<setting id="movie.discart" label="discart" type="bool" default="true" />
-		<setting id="movie.characterart_limit" label="characterart - $ADDON[script.artwork.beef 32986]" type="slider" option="int" default="1" range="0,1,20" />
-		<setting id="movie.animatedposter" label="animatedposter - $ADDON[script.artwork.beef 32986]" type="bool" default="false" />
-		<setting id="movie.animatedkeyart" label="animatedkeyart - $ADDON[script.artwork.beef 32986]" type="bool" default="false" />
-		<setting id="movie.animatedfanart_limit" label="animatedfanart - $ADDON[script.artwork.beef 32986]" type="slider" option="int" default="0" range="0,1,20" />
-		<setting id="movie.othertypes" label="32957" type="text" />
-		<setting id="set.poster_limit" label="$LOCALIZE[20457] poster" type="slider" option="int" default="1" range="0,1,10" />
-		<setting id="set.keyart_limit" label="$LOCALIZE[20457] keyart" type="slider" option="int" default="0" range="0,1,10" />
-		<setting id="set.fanart_limit" label="$LOCALIZE[20457] fanart" type="slider" option="int" default="5" range="0,1,20" />
-		<setting id="set.banner" label="$LOCALIZE[20457] banner" type="bool" default="true" />
-		<setting id="set.clearlogo" label="$LOCALIZE[20457] clearlogo" type="bool" default="true" />
-		<setting id="set.landscape" label="$LOCALIZE[20457] landscape" type="bool" default="true" />
-		<setting id="set.clearart" label="$LOCALIZE[20457] clearart" type="bool" default="true" />
-		<setting id="set.discart" label="$LOCALIZE[20457] discart" type="bool" default="true" />
-		<setting id="set.othertypes" label="32958" type="text" />
-		<setting label="32061" type="lsep" />
-		<setting id="download_config_movies" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
-		<setting id="movie.download_arttypes" label="$LOCALIZE[20342]" type="text" enable="eq(-1,2)" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=movie)" enable="eq(-2,2)" />
-		<setting id="set.download_arttypes" label="$LOCALIZE[20457]" type="text" enable="eq(-3,2)" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=set)" enable="eq(-4,2)" />
-	</category>
-	<category label="$LOCALIZE[20389]">
-		<setting id="onlyfs_musicvideos" label="32904" type="bool" default="false" />
-		<setting id="preferredsource_musicvideos" label="32963" type="select" default="0" lvalues="20395|32796|32799" />
-		<setting label="32053" type="lsep" />
-		<setting id="musicvideo.poster" label="poster" type="bool" default="true" />
-		<setting id="musicvideo.fanart_limit" label="fanart" type="slider" option="int" default="3" range="0,1,20" />
-		<setting id="musicvideo.banner" label="banner" type="bool" default="true" />
-		<setting id="musicvideo.clearlogo" label="clearlogo" type="bool" default="true" />
-		<setting id="musicvideo.clearart" label="clearart" type="bool" default="true" />
-		<setting id="musicvideo.discart" label="discart" type="bool" default="true" />
-		<setting id="musicvideo.landscape" label="landscape" type="bool" default="true" />
-		<setting id="musicvideo.artistthumb" label="artistthumb" type="bool" default="true" />
-		<setting id="musicvideo.othertypes" label="32959" type="text" />
-		<setting label="32061" type="lsep" />
-		<setting id="download_config_musicvideos" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
-		<setting id="musicvideo.download_arttypes" label="$LOCALIZE[20389]" type="text" enable="eq(-1,2)" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=musicvideo)" enable="eq(-2,2)" />
-	</category>
-	<category label="$LOCALIZE[2]">
-		<setting label="32060" type="lsep" />
-		<setting id="onlyfs_music" label="32904" type="bool" default="false" />
-		<setting id="preferredsource_music" label="32963" type="select" default="0" lvalues="20395|32796|32799" />
-		<setting label="32036" type="lsep"
-			visible="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
-		<setting label="32053" type="lsep"
-			visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
-		<setting id="artist.thumb" label="$LOCALIZE[557] thumb" type="bool" default="true" />
-		<setting id="artist.fanart_limit" label="$LOCALIZE[557] fanart" type="slider" option="int" default="3" range="0,1,20" />
-		<setting id="artist.banner" label="$LOCALIZE[557] banner" type="bool" default="true" />
-		<setting id="artist.clearlogo" label="$LOCALIZE[557] clearlogo" type="bool" default="true" />
-		<setting id="artist.clearart" label="$LOCALIZE[557] clearart" type="bool" default="true" />
-		<setting id="artist.landscape" label="$LOCALIZE[557] landscape" type="bool" default="true" />
-		<setting id="artist.othertypes" label="32960" type="text" />
-		<setting id="album.discart" label="$LOCALIZE[558] discart" type="bool" default="true" />
-		<setting id="album.thumb" label="$LOCALIZE[558] thumb" type="bool" default="true" />
-		<setting id="album.back" label="$LOCALIZE[558] back" type="bool" default="true" />
-		<setting id="album.spine" label="$LOCALIZE[558] spine" type="bool" default="true" />
-		<setting id="album.othertypes" label="32961" type="text" />
-		<setting id="song.thumb" label="$LOCALIZE[179] thumb" type="bool" default="false" />
-		<setting id="song.othertypes" label="32962" type="text" />
-		<setting label="32061" type="lsep" />
-		<setting id="download_config_music" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
-		<setting id="artist.download_arttypes" label="$LOCALIZE[557]" type="text" enable="eq(-1,2)" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=artist)" enable="eq(-2,2)" />
-		<setting id="album.download_arttypes" label="$LOCALIZE[558]" type="text" enable="eq(-3,2)" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=album)" enable="eq(-4,2)" />
-		<setting id="song.download_arttypes" label="$LOCALIZE[179]" type="text" enable="eq(-5,2)" />
-		<setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=song)" enable="eq(-6,2)" />
-	</category>
-	<category label="$LOCALIZE[10038]">
-		<setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />
-		<setting id="report_peritem" label="32916" type="bool" default="false" />
-		<setting id="progress_display" label="32924" type="select" default="0" lvalues="32925|32926|32927" />
-		<setting id="final_notification" label="32928" type="bool" default="false" />
-		<setting id="cache_local_video_artwork" label="32952" type="bool" default="false" />
-		<setting id="cache_local_music_artwork" label="32953" type="bool" default="false" />
-		<setting id="clean_imageurls" label="32981" type="bool" default="true" />
-		<setting id="always_multiple_selection" label="32964" type="bool" default="false" />
-		<setting label="32428" type="action" action="Skin.ToggleSetting(enablecontext:script.artwork.beef.debug)"
-			visible="Skin.HasSetting(enablecontext:script.artwork.beef.debug)" />
-		<setting label="32429" type="action" action="Skin.ToggleSetting(enablecontext:script.artwork.beef.debug)"
-			visible="!Skin.HasSetting(enablecontext:script.artwork.beef.debug)" />
+    <category label="$LOCALIZE[128]">
+        <setting id="enableservice" label="32900" type="bool" default="false" />
+        <setting id="enableservice_music" label="32922" type="bool" default="false" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+        <setting id="enable_olditem_updates" subsetting="true" label="32912" type="bool" default="true" visible="eq(-1,true) | eq(-2,true)" />
+        <setting id="remove_deselected_files" label="32940" type="bool" default="false" />
+        <setting id="recycle_removed" label="32931" type="bool" default="false" />
+        <setting label="32412" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)" visible="!Skin.HasSetting(disablecontext:script.artwork.beef)" />
+        <setting label="32413" type="action" action="Skin.ToggleSetting(disablecontext:script.artwork.beef)" visible="Skin.HasSetting(disablecontext:script.artwork.beef)" />
+        <setting label="32054" type="lsep" />
+        <setting id="titlefree_fanart" label="32901" type="bool" default="true" />
+        <setting id="preferredsize" label="32902" type="select" default="1" lvalues="32970|32971|32972" />
+        <setting id="minimum_rating" label="32907" type="slider" option="int" default="5" range="0,1,10" />
+        <setting id="titlefree_poster" label="32917" type="bool" default="false" />
+        <setting label="32052" type="lsep" />
+        <setting label="32919" type="action" action="RunScript(script.artwork.beef, command=show_artwork_log)" />
+    </category>
+    <category label="$LOCALIZE[20343]">
+        <setting id="onlyfs_tvshows" label="32904" type="bool" default="false" />
+        <setting id="preferredsource_tvshows" label="32963" type="select" default="0" lvalues="20395|32796|32798" />
+        <setting label="32053" type="lsep" />
+        <setting id="tvshow.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
+        <setting id="tvshow.keyart_limit" label="keyart" type="slider" option="int" default="0" range="0,1,10" />
+        <setting id="tvshow.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
+        <setting id="tvshow.banner" label="banner" type="bool" default="true" />
+        <setting id="tvshow.clearlogo" label="clearlogo" type="bool" default="true" />
+        <setting id="tvshow.landscape" label="landscape" type="bool" default="true" />
+        <setting id="tvshow.clearart" label="clearart" type="bool" default="true" />
+        <setting id="tvshow.characterart_limit" label="characterart" type="slider" option="int" default="1" range="0,1,20" />
+        <setting id="tvshow.othertypes" label="32954" type="text" />
+        <setting id="season.poster" label="$LOCALIZE[20373] poster" type="bool" default="true" />
+        <setting id="season.banner" label="$LOCALIZE[20373] banner" type="bool" default="true" />
+        <setting id="season.landscape" label="$LOCALIZE[20373] landscape" type="bool" default="true" />
+        <setting id="season.fanart" label="$LOCALIZE[20373] fanart" type="bool" default="true" />
+        <setting id="season.othertypes" label="32955" type="text" />
+        <setting id="episode.fanart" label="$LOCALIZE[20359] fanart" type="bool" default="true" />
+        <setting label="32400" type="action" subsetting="true" action="RunScript(script.artwork.beef, command=set_autoaddepisodes)" visible="eq(-1,true)" />
+        <setting id="episode.othertypes" label="32956" type="text" />
+        <setting label="32061" type="lsep" />
+        <setting id="download_config_tvshows" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
+        <setting id="tvshow.download_arttypes" label="$LOCALIZE[20343]" type="text" enable="eq(-1,2)" />
+        <setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=tvshow)" enable="eq(-2,2)" />
+        <setting id="season.download_arttypes" label="$LOCALIZE[20373]" type="text" enable="eq(-3,2)" />
+        <setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=season)" enable="eq(-4,2)" />
+        <setting id="episode.download_arttypes" label="$LOCALIZE[20359]" type="text" enable="eq(-5,2)" />
+        <setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=episode)" enable="eq(-6,2)" />
+    </category>
+    <category label="$LOCALIZE[20342]">
+        <setting id="onlyfs_movies" label="32904" type="bool" default="false" />
+        <setting id="preferredsource_movies" label="32963" type="select" default="0" lvalues="20395|32796|32797" />
+        <setting label="32053" type="lsep" />
+        <setting id="movie.poster_limit" label="poster" type="slider" option="int" default="1" range="0,1,10" />
+        <setting id="movie.keyart_limit" label="keyart" type="slider" option="int" default="0" range="0,1,10" />
+        <setting id="movie.fanart_limit" label="fanart" type="slider" option="int" default="5" range="0,1,20" />
+        <setting id="movie.banner" label="banner" type="bool" default="true" />
+        <setting id="movie.clearlogo" label="clearlogo" type="bool" default="true" />
+        <setting id="movie.landscape" label="landscape" type="bool" default="true" />
+        <setting id="movie.clearart" label="clearart" type="bool" default="true" />
+        <setting id="movie.discart" label="discart" type="bool" default="true" />
+        <setting id="movie.characterart_limit" label="characterart - $ADDON[script.artwork.beef 32986]" type="slider" option="int" default="1" range="0,1,20" />
+        <setting id="movie.animatedposter" label="animatedposter - $ADDON[script.artwork.beef 32986]" type="bool" default="false" />
+        <setting id="movie.animatedkeyart" label="animatedkeyart - $ADDON[script.artwork.beef 32986]" type="bool" default="false" />
+        <setting id="movie.animatedfanart_limit" label="animatedfanart - $ADDON[script.artwork.beef 32986]" type="slider" option="int" default="0" range="0,1,20" />
+        <setting id="movie.othertypes" label="32957" type="text" />
+        <setting id="set.poster_limit" label="$LOCALIZE[20457] poster" type="slider" option="int" default="1" range="0,1,10" />
+        <setting id="set.keyart_limit" label="$LOCALIZE[20457] keyart" type="slider" option="int" default="0" range="0,1,10" />
+        <setting id="set.fanart_limit" label="$LOCALIZE[20457] fanart" type="slider" option="int" default="5" range="0,1,20" />
+        <setting id="set.banner" label="$LOCALIZE[20457] banner" type="bool" default="true" />
+        <setting id="set.clearlogo" label="$LOCALIZE[20457] clearlogo" type="bool" default="true" />
+        <setting id="set.landscape" label="$LOCALIZE[20457] landscape" type="bool" default="true" />
+        <setting id="set.clearart" label="$LOCALIZE[20457] clearart" type="bool" default="true" />
+        <setting id="set.discart" label="$LOCALIZE[20457] discart" type="bool" default="true" />
+        <setting id="set.othertypes" label="32958" type="text" />
+        <setting label="32061" type="lsep" />
+        <setting id="download_config_movies" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
+        <setting id="movie.download_arttypes" label="$LOCALIZE[20342]" type="text" enable="eq(-1,2)" />
+        <setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=movie)" enable="eq(-2,2)" />
+        <setting id="set.download_arttypes" label="$LOCALIZE[20457]" type="text" enable="eq(-3,2)" />
+        <setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=set)" enable="eq(-4,2)" />
+    </category>
+    <category label="$LOCALIZE[20389]">
+        <setting id="onlyfs_musicvideos" label="32904" type="bool" default="false" />
+        <setting id="preferredsource_musicvideos" label="32963" type="select" default="0" lvalues="20395|32796|32799" />
+        <setting label="32053" type="lsep" />
+        <setting id="musicvideo.poster" label="poster" type="bool" default="true" />
+        <setting id="musicvideo.fanart_limit" label="fanart" type="slider" option="int" default="3" range="0,1,20" />
+        <setting id="musicvideo.banner" label="banner" type="bool" default="true" />
+        <setting id="musicvideo.clearlogo" label="clearlogo" type="bool" default="true" />
+        <setting id="musicvideo.clearart" label="clearart" type="bool" default="true" />
+        <setting id="musicvideo.discart" label="discart" type="bool" default="true" />
+        <setting id="musicvideo.landscape" label="landscape" type="bool" default="true" />
+        <setting id="musicvideo.artistthumb" label="artistthumb" type="bool" default="true" />
+        <setting id="musicvideo.othertypes" label="32959" type="text" />
+        <setting label="32061" type="lsep" />
+        <setting id="download_config_musicvideos" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
+        <setting id="musicvideo.download_arttypes" label="$LOCALIZE[20389]" type="text" enable="eq(-1,2)" />
+        <setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=musicvideo)" enable="eq(-2,2)" />
+    </category>
+    <category label="$LOCALIZE[2]">
+        <setting label="32060" type="lsep" />
+        <setting id="onlyfs_music" label="32904" type="bool" default="false" />
+        <setting id="preferredsource_music" label="32963" type="select" default="0" lvalues="20395|32796|32799" />
+        <setting label="32036" type="lsep" visible="!String.StartsWith(System.BuildVersion,18) + !String.StartsWith(System.BuildVersion,19)" />
+        <setting label="32053" type="lsep" visible="String.StartsWith(System.BuildVersion,18) | String.StartsWith(System.BuildVersion,19)" />
+        <setting id="artist.thumb" label="$LOCALIZE[557] thumb" type="bool" default="true" />
+        <setting id="artist.fanart_limit" label="$LOCALIZE[557] fanart" type="slider" option="int" default="3" range="0,1,20" />
+        <setting id="artist.banner" label="$LOCALIZE[557] banner" type="bool" default="true" />
+        <setting id="artist.clearlogo" label="$LOCALIZE[557] clearlogo" type="bool" default="true" />
+        <setting id="artist.clearart" label="$LOCALIZE[557] clearart" type="bool" default="true" />
+        <setting id="artist.landscape" label="$LOCALIZE[557] landscape" type="bool" default="true" />
+        <setting id="artist.othertypes" label="32960" type="text" />
+        <setting id="album.discart" label="$LOCALIZE[558] discart" type="bool" default="true" />
+        <setting id="album.thumb" label="$LOCALIZE[558] thumb" type="bool" default="true" />
+        <setting id="album.back" label="$LOCALIZE[558] back" type="bool" default="true" />
+        <setting id="album.spine" label="$LOCALIZE[558] spine" type="bool" default="true" />
+        <setting id="album.othertypes" label="32961" type="text" />
+        <setting id="song.thumb" label="$LOCALIZE[179] thumb" type="bool" default="false" />
+        <setting id="song.othertypes" label="32962" type="text" />
+        <setting label="32061" type="lsep" />
+        <setting id="download_config_music" label="32977" type="enum" default="2" lvalues="32978|32979|32980" />
+        <setting id="artist.download_arttypes" label="$LOCALIZE[557]" type="text" enable="eq(-1,2)" />
+        <setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=artist)" enable="eq(-2,2)" />
+        <setting id="album.download_arttypes" label="$LOCALIZE[558]" type="text" enable="eq(-3,2)" />
+        <setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=album)" enable="eq(-4,2)" />
+        <setting id="song.download_arttypes" label="$LOCALIZE[179]" type="text" enable="eq(-5,2)" />
+        <setting label="- $ADDON[script.artwork.beef 32426]" type="action" action="RunScript(script.artwork.beef, command=set_download_artwork, mediatype=song)" enable="eq(-6,2)" />
+    </category>
+    <category label="$LOCALIZE[10038]">
+        <setting id="default_tvidsource" label="32918" type="labelenum" default="tvdb" values="tvdb|tmdb" />
+        <setting id="report_peritem" label="32916" type="bool" default="false" />
+        <setting id="progress_display" label="32924" type="select" default="0" lvalues="32925|32926|32927" />
+        <setting id="final_notification" label="32928" type="bool" default="false" />
+        <setting id="cache_local_video_artwork" label="32952" type="bool" default="false" />
+        <setting id="cache_local_music_artwork" label="32953" type="bool" default="false" />
+        <setting id="clean_imageurls" label="32981" type="bool" default="true" />
+        <setting id="always_multiple_selection" label="32964" type="bool" default="false" />
+        <setting label="32428" type="action" action="Skin.ToggleSetting(enablecontext:script.artwork.beef.debug)" visible="Skin.HasSetting(enablecontext:script.artwork.beef.debug)" />
+        <setting label="32429" type="action" action="Skin.ToggleSetting(enablecontext:script.artwork.beef.debug)" visible="!Skin.HasSetting(enablecontext:script.artwork.beef.debug)" />
 
-		<setting label="32991" type="lsep" />
-		<setting id="apienabled.fanarttv" label="32987" type="bool" default="true" />
-		<setting id="fanarttv_key" label="32905" type="text" visible="eq(-1,true)" />
-		<setting id="apienabled.tmdb" label="32988" type="bool" default="true" />
-		<setting id="use_tmdb_keyart" label="32982" type="bool" default="false" />
-		<setting id="apienabled.tvdb" label="32989" type="bool" default="true" />
-		<setting id="apienabled.tadb" label="32990" type="bool" default="true" />
-		<setting id="apienabled.kyradb" label="32985" type="bool" default="false" />
-		<setting id="kyradb_user_apikey" label="32984" type="text" visible="eq(-1,true)" />
-		<setting id="kyradb_userkey" label="32983" type="text" visible="eq(-2,true)" />
+        <setting label="32991" type="lsep" />
+        <setting id="apienabled.fanarttv" label="32987" type="bool" default="true" />
+        <setting id="fanarttv_key" label="32905" type="text" visible="eq(-1,true)" />
+        <setting id="apienabled.tmdb" label="32988" type="bool" default="true" />
+        <setting id="use_tmdb_keyart" label="32982" type="bool" default="false" />
+        <setting id="apienabled.tvdb" label="32989" type="bool" default="true" />
+        <setting id="apienabled.tadb" label="32990" type="bool" default="true" />
+        <setting id="apienabled.kyradb" label="32985" type="bool" default="false" />
+        <setting id="kyradb_user_apikey" label="32984" type="text" visible="eq(-1,true)" />
+        <setting id="kyradb_userkey" label="32983" type="text" visible="eq(-2,true)" />
 
-		<setting label="32973" type="lsep" />
-		<setting id="language_override" label="32913" type="select" default="None" values="None|en|fr|de|ja|zh|es|it|pt|sv|ru|nl|ar|ko|no|hu|da|hi|is|pl|he|bg|fi|ml" />
-		<setting id="language_fallback_kodi" label="32974" type="bool" default="true" />
-		<setting id="language_fallback_en" label="32975" type="bool" default="true" />
-		<setting label="$LOCALIZE[744]" type="lsep" />
-		<setting id="episode.thumb_generate" label="32914" type="bool" default="false" />
-		<setting id="movie.thumb_generate" label="32915" type="bool" default="false" />
-		<setting id="musicvideo.thumb_generate" label="32920" type="bool" default="false" />
-		<setting id="centraldir.set_enabled" label="32909" type="bool" default="false" />
-		<setting id="centraldir.set_dir" subsetting="true" label="32910" type="folder" visible="eq(-1,true)" />
-		<setting id="setartwork_subdirs" subsetting="true" label="32976" type="bool" default="true" visible="eq(-2,true)" />
-		<setting id="setartwork_fromparent" label="32911" type="bool" default="false" visible="eq(-3,false)" />
-		<setting id="albumartwithmediafiles" label="32951" type="bool" default="false" />
-		<setting id="savewith_basefilename" label="32941" type="bool" default="true" />
-		<setting id="savewith_basefilename_mvids" label="32942" type="bool" default="true" />
-		<setting id="save_extrafanart" label="32929" type="bool" default="false" />
-		<setting id="save_extrafanart_mvids" label="32930" type="bool" default="false" />
-		<setting id="identify_alternatives" label="32906" type="bool" default="true" />
-		<setting label="32965" type="lsep" />
-		<setting id="apikey.fanarttv" label="32966" type="text" />
-		<setting id="apikey.tvdb" label="32967" type="text" />
-		<setting id="apikey.tmdb" label="32968" type="text" />
-		<setting id="apikey.tadb" label="32969" type="text" />
-		<!-- For add-on inner workings -->
-		<setting id="last_videoupdate" type="text" default="0" visible="false" />
-		<setting id="last_musicupdate" type="text" default="0" visible="false" />
-		<setting id="check_allepisodes" type="bool" default="true" visible="false" />
-		<setting id="autoaddepisodes_list" type="text" default="" visible="false" />
-	</category>
+        <setting label="32973" type="lsep" />
+        <setting id="language_override" label="32913" type="select" default="None" values="None|en|fr|de|ja|zh|es|it|pt|sv|ru|nl|ar|ko|no|hu|da|hi|is|pl|he|bg|fi|ml" />
+        <setting id="language_fallback_kodi" label="32974" type="bool" default="true" />
+        <setting id="language_fallback_en" label="32975" type="bool" default="true" />
+        <setting label="$LOCALIZE[744]" type="lsep" />
+        <setting id="episode.thumb_generate" label="32914" type="bool" default="false" />
+        <setting id="movie.thumb_generate" label="32915" type="bool" default="false" />
+        <setting id="musicvideo.thumb_generate" label="32920" type="bool" default="false" />
+        <setting id="centraldir.set_enabled" label="32909" type="bool" default="false" />
+        <setting id="centraldir.set_dir" subsetting="true" label="32910" type="folder" visible="eq(-1,true)" />
+        <setting id="setartwork_subdirs" subsetting="true" label="32976" type="bool" default="true" visible="eq(-2,true)" />
+        <setting id="setartwork_fromparent" label="32911" type="bool" default="false" visible="eq(-3,false)" />
+        <setting id="albumartwithmediafiles" label="32951" type="bool" default="false" />
+        <setting id="savewith_basefilename" label="32941" type="bool" default="true" />
+        <setting id="savewith_basefilename_mvids" label="32942" type="bool" default="true" />
+        <setting id="save_extrafanart" label="32929" type="bool" default="false" />
+        <setting id="save_extrafanart_mvids" label="32930" type="bool" default="false" />
+        <setting id="identify_alternatives" label="32906" type="bool" default="true" />
+        <setting label="32965" type="lsep" />
+        <setting id="apikey.fanarttv" label="32966" type="text" />
+        <setting id="apikey.tvdb" label="32967" type="text" />
+        <setting id="apikey.tmdb" label="32968" type="text" />
+        <setting id="apikey.tadb" label="32969" type="text" />
+
+        <!-- file path exclusion options -->
+        <setting label="32820" type="lsep" />
+        <setting id="exclude.path.option_1" type="bool" label="32821" default="false" />
+        <setting id="exclude.path.type_1" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
+        <setting id="exclude.path.folder_1" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
+        <setting id="exclude.path.text_1" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.regex_1" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
+
+        <setting id="exclude.path.option_2" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
+        <setting id="exclude.path.type_2" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
+        <setting id="exclude.path.folder_2" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
+        <setting id="exclude.path.text_2" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.regex_2" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
+
+        <setting id="exclude.path.option_3" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
+        <setting id="exclude.path.type_3" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
+        <setting id="exclude.path.folder_3" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
+        <setting id="exclude.path.text_3" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.regex_3" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
+
+        <setting id="exclude.path.option_4" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
+        <setting id="exclude.path.type_4" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
+        <setting id="exclude.path.folder_4" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
+        <setting id="exclude.path.text_4" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.regex_4" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
+
+        <setting id="exclude.path.option_5" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
+        <setting id="exclude.path.type_5" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
+        <setting id="exclude.path.folder_5" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
+        <setting id="exclude.path.text_5" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.regex_5" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
+
+        <setting id="exclude.path.option_6" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
+        <setting id="exclude.path.type_6" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
+        <setting id="exclude.path.folder_6" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
+        <setting id="exclude.path.text_6" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.regex_6" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
+
+        <setting id="exclude.path.option_7" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
+        <setting id="exclude.path.type_7" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
+        <setting id="exclude.path.folder_7" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
+        <setting id="exclude.path.text_7" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.regex_7" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
+
+        <setting id="exclude.path.option_8" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
+        <setting id="exclude.path.type_8" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
+        <setting id="exclude.path.folder_8" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
+        <setting id="exclude.path.text_8" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.regex_8" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
+
+        <setting id="exclude.path.option_9" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
+        <setting id="exclude.path.type_9" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
+        <setting id="exclude.path.folder_9" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
+        <setting id="exclude.path.text_9" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.regex_9" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
+
+        <setting id="exclude.path.option_10" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
+        <setting id="exclude.path.type_10" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
+        <setting id="exclude.path.folder_10" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
+        <setting id="exclude.path.text_10" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.regex_10" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
+
+        <!-- For add-on inner workings -->
+        <setting id="last_videoupdate" type="text" default="0" visible="false" />
+        <setting id="last_musicupdate" type="text" default="0" visible="false" />
+        <setting id="check_allepisodes" type="bool" default="true" visible="false" />
+        <setting id="autoaddepisodes_list" type="text" default="" visible="false" />
+    </category>
 </settings>

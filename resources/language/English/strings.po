@@ -651,6 +651,48 @@ msgctxt "#32991"
 msgid "Web services"
 msgstr ""
 
+# Used in path exclusion
+
+msgctxt "#32820"
+msgid "Path exclusion"
+msgstr ""
+
+msgctxt "#32821"
+msgid "Use path exclusion"
+msgstr ""
+
+msgctxt "#32822"
+msgid "Exclude the following type"
+msgstr ""
+
+msgctxt "#32823"
+msgid "Folder"
+msgstr ""
+
+msgctxt "#32824"
+msgid "Path"
+msgstr ""
+
+msgctxt "#32825"
+msgid "Regex"
+msgstr ""
+
+msgctxt "#32826"
+msgid "Exclude paths within folder"
+msgstr ""
+
+msgctxt "#32827"
+msgid "Exclude paths starting with"
+msgstr ""
+
+msgctxt "#32828"
+msgid "Exclude paths matching regex"
+msgstr ""
+
+msgctxt "#32829"
+msgid "Exclude another"
+msgstr ""
+
 # Used in the artwork report
 
 msgctxt "#32800"
