@@ -670,7 +670,7 @@ msgid "Folder"
 msgstr ""
 
 msgctxt "#32824"
-msgid "Path"
+msgid "Path prefix"
 msgstr ""
 
 msgctxt "#32825"

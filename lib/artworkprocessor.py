@@ -10,7 +10,7 @@ from lib.artworkselection import prompt_for_artwork
 from lib.filemanager import FileManager, FileError
 from lib.gatherer import Gatherer
 from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
-from lib.libs.addonsettings import settings, PROGRESS_DISPLAY_FULLPROGRESS, PROGRESS_DISPLAY_NONE, EXCLUSION_PATH_TYPE_FOLDER, EXCLUSION_PATH_TYPE_TEXT, EXCLUSION_PATH_TYPE_REGEX
+from lib.libs.addonsettings import settings, PROGRESS_DISPLAY_FULLPROGRESS, PROGRESS_DISPLAY_NONE, EXCLUSION_PATH_TYPE_FOLDER, EXCLUSION_PATH_TYPE_PREFIX, EXCLUSION_PATH_TYPE_REGEX
 from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import datetime_now, get_kodi_version, localize as L, log
 from lib.libs.utils import SortedDisplay, natural_sort, get_simpledict_updates
@@ -494,16 +494,16 @@ def populate_musiccentraldir():
     mediatypes.central_directories[mediatypes.ARTIST] = artistpath
 
 def is_excluded(mediaitem):
+    if mediaitem.file is None:
+        return False
     for exclusion in settings.pathexclusion:
-        if mediaitem.file is None:
-            return True
         if exclusion["type"] == EXCLUSION_PATH_TYPE_FOLDER:
             path_file = os.path.realpath(os.path.join(mediaitem.file, ''))
             path_excl = os.path.realpath(os.path.join(exclusion["folder"], ''))
             if os.path.commonprefix([path_file, path_excl]) == path_excl:
                 return True
-        if exclusion["type"] == EXCLUSION_PATH_TYPE_TEXT:
-            if mediaitem.file.startswith(exclusion["text"]):
+        if exclusion["type"] == EXCLUSION_PATH_TYPE_PREFIX:
+            if mediaitem.file.startswith(exclusion["prefix"]):
                 return True
         if exclusion["type"] == EXCLUSION_PATH_TYPE_REGEX:
             if re.match(exclusion["regex"], mediaitem.file):

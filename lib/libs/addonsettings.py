@@ -16,7 +16,7 @@ PROGRESS_DISPLAY_WARNINGSERRORS = '1'
 PROGRESS_DISPLAY_NONE = '2' # Only add-on crashes
 
 EXCLUSION_PATH_TYPE_FOLDER = '0'
-EXCLUSION_PATH_TYPE_TEXT = '1'
+EXCLUSION_PATH_TYPE_PREFIX = '1'
 EXCLUSION_PATH_TYPE_REGEX = '2'
 
 class Settings(object):
@@ -98,15 +98,15 @@ class Settings(object):
             pykodi.set_log_scrubstring(provider + '-apikey', key)
         
         self.pathexclusion = []
-        for index in range(2):
+        for index in range(10):
             index_append = str(index+1)
             option = addon.get_setting('exclude.path.option_' + index_append)
             if option:
                 exclusiontype = addon.get_setting('exclude.path.type_' + index_append)
                 folder = addon.get_setting('exclude.path.folder_' + index_append)
-                text = addon.get_setting('exclude.path.text_' + index_append)
+                prefix = addon.get_setting('exclude.path.prefix_' + index_append)
                 regex = addon.get_setting('exclude.path.regex_' + index_append)
-                self.pathexclusion.append({"type": exclusiontype, "folder": folder, "text": text, "regex": regex})
+                self.pathexclusion.append({"type": exclusiontype, "folder": folder, "prefix": prefix, "regex": regex})
 
         pykodi.set_log_scrubstring('fanarttv-client-apikey', self.fanarttv_clientkey)
         pykodi.set_log_scrubstring('kyradb-user-apikey', self.kyradb_user_apikey)

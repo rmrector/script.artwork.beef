@@ -178,61 +178,61 @@
         <setting id="exclude.path.option_1" type="bool" label="32821" default="false" />
         <setting id="exclude.path.type_1" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
         <setting id="exclude.path.folder_1" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
-        <setting id="exclude.path.text_1" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.prefix_1" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_1" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <setting id="exclude.path.option_2" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
         <setting id="exclude.path.type_2" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
         <setting id="exclude.path.folder_2" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
-        <setting id="exclude.path.text_2" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.prefix_2" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_2" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <setting id="exclude.path.option_3" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
         <setting id="exclude.path.type_3" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
         <setting id="exclude.path.folder_3" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
-        <setting id="exclude.path.text_3" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.prefix_3" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_3" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <setting id="exclude.path.option_4" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
         <setting id="exclude.path.type_4" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
         <setting id="exclude.path.folder_4" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
-        <setting id="exclude.path.text_4" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.prefix_4" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_4" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <setting id="exclude.path.option_5" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
         <setting id="exclude.path.type_5" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
         <setting id="exclude.path.folder_5" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
-        <setting id="exclude.path.text_5" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.prefix_5" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_5" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <setting id="exclude.path.option_6" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
         <setting id="exclude.path.type_6" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
         <setting id="exclude.path.folder_6" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
-        <setting id="exclude.path.text_6" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.prefix_6" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_6" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <setting id="exclude.path.option_7" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
         <setting id="exclude.path.type_7" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
         <setting id="exclude.path.folder_7" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
-        <setting id="exclude.path.text_7" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.prefix_7" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_7" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <setting id="exclude.path.option_8" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
         <setting id="exclude.path.type_8" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
         <setting id="exclude.path.folder_8" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
-        <setting id="exclude.path.text_8" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.prefix_8" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_8" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <setting id="exclude.path.option_9" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
         <setting id="exclude.path.type_9" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
         <setting id="exclude.path.folder_9" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
-        <setting id="exclude.path.text_9" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.prefix_9" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_9" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <setting id="exclude.path.option_10" type="bool" label="32829" default="false" visible="eq(-5,true)|eq(0,true)" />
         <setting id="exclude.path.type_10" type="select" label="32822" lvalues="32823|32824|32825" visible="eq(-1,true)" />
         <setting id="exclude.path.folder_10" type="folder" label="32826" default="" visible="eq(-2,true)+eq(-1,0)" source="" />
-        <setting id="exclude.path.text_10" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
+        <setting id="exclude.path.prefix_10" type="text" label="32827" default="" visible="eq(-3,true)+eq(-2,1)" />
         <setting id="exclude.path.regex_10" type="text" label="32828" default="" visible="eq(-4,true)+eq(-3,2)" />
 
         <!-- For add-on inner workings -->
