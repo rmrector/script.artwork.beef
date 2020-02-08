@@ -11,7 +11,7 @@ services [fanart.tv], [TheTVDB.com], [The Movie Database], and [TheAudioDB.com].
 [TheAudioDB.com]: https://www.theaudiodb.com/
 
 It is developed for Kodi 17 **Krypton**, and should also work for 16 **Jarvis** and 18 **Leia**.
-15 Isengard should mostly still work, but it's really time to update.  
+15 Isengard should mostly still work, but it's really time to update. 19 Matrix is not supported.  
 [Support and feedback thread](https://forum.kodi.tv/showthread.php?tid=258886) on the Kodi forums.  
 [Source](https://github.com/rmrector/script.artwork.beef) hosted on GitHub.
 
@@ -20,7 +20,6 @@ Full documentation available at https://rmrector.github.io/script.artwork.beef/.
 ### Current gotchas
 
 - Music library support is for Kodi 18 Leia only
-- It doesn't add animated artwork, yet
 - It cannot set artwork for "all seasons". [related trac ticket](https://trac.kodi.tv/ticket/16139)
 
 ### Thoughts

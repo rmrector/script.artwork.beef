@@ -1,3 +1,6 @@
+v0.28.0 (2020-02-08)
+- Feature: Add "Path exclusion" settings to skip processing media items by path
+
 v0.27.1 (2019-11-16)
 - Fix: add-on crash when unexpected results received from TheTVDB
 - Fix: request specific version of TheTVDB API - 2.1.0
