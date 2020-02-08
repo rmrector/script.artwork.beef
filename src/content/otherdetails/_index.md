@@ -132,10 +132,10 @@ However, you can manually download that artwork and place it in the correct
 [location on your file system]({{< ref "usage/fromfiles.md#movie-collection-artwork" >}}),
 then run "AB: add missing artwork" on the affected movie set.
 
-#### A Kodi skin or web interface is showing a thumbnail image instead of a movie poster.
+#### A Kodi skin / web interface / remote is showing a thumbnail image instead of a movie poster.
 
-The skin / web interface is pulling up the movie thumb and expecting the fallback poster,
-but it should instead pick the poster first and fall back to the thumb only if the poster
+The skin / web interface / remote is pulling up the movie "thumb" and expecting the fallback poster,
+but it should instead pick the "poster" first and fall back to the thumb only if the poster
 doesn't exist. They are two different images for two different purposes and should be chosen
 based on the interface design.
 

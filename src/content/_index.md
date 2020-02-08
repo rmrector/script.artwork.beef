@@ -17,7 +17,7 @@ the file system and wonderful web services [fanart.tv], [TheTVDB.com], [The Movi
 [KyraDB]: https://www.kyradb.com/
 
 It is developed for Kodi **17 Krypton**, and should also work for **16 Jarvis** and **18 Leia**.
-15 Isengard should mostly still work, but it's really time to update. 19 Matrix is not supported.  
+15 Isengard may still work, but it's really time to update. 19 Matrix is not supported.  
 [Support and feedback thread](https://forum.kodi.tv/showthread.php?tid=258886) on the Kodi forums.  
 [Source](https://github.com/rmrector/script.artwork.beef) hosted on GitHub.
 
@@ -33,17 +33,17 @@ from TheAudioDB and fanart.tv.
 
 The full list of artwork types grabbed from external web services:
 
-media type | art types
---- | ---
-**movies** |  _poster_, _keyart_, _fanart_, _banner_, _clearlogo_, _landscape_, _clearart_, _discart_, _characterart_, _animatedposter_, _animatedfanart_, _animatedkeyart_
-**movie sets** | _poster_, _keyart_, _fanart_, _banner_, _clearlogo_, _landscape_, _clearart_, _discart_
+media type       | art types
+---------------- | ---
+**movies**       |  _poster_, _keyart_, _fanart_, _banner_, _clearlogo_, _landscape_, _clearart_, _discart_, _characterart_, _animatedposter_, _animatedfanart_, _animatedkeyart_
+**movie sets**   | _poster_, _keyart_, _fanart_, _banner_, _clearlogo_, _landscape_, _clearart_, _discart_
 **music videos** | _poster_ (album/single cover), _discart_, _fanart_, _artistthumb_, _banner_, _clearlogo_, _clearart_, _landscape_
-**series** | _poster_, _keyart_, _fanart_, _banner_, _clearlogo_, _landscape_, _clearart_, _characterart_
-**seasons** | _poster_, _fanart_, _banner_, _landscape_
-**episodes** | _fanart_
-**artists** | _thumb_, _fanart_, _banner_, _clearlogo_, _clearart_, _landscape_
-**albums** | _thumb_ (album cover), _discart_, _back_, _spine_
-**songs** | _thumb_ (single cover)
+**series**       | _poster_, _keyart_, _fanart_, _banner_, _clearlogo_, _landscape_, _clearart_, _characterart_
+**seasons**      | _poster_, _fanart_, _banner_, _landscape_
+**episodes**     | _fanart_
+**artists**      | _thumb_, _fanart_, _banner_, _clearlogo_, _clearart_, _landscape_
+**albums**       | _thumb_ (album cover), _discart_, _back_, _spine_
+**songs**        | _thumb_ (single cover)
 
 Local artwork stored in the file system is preferred if it exists, and Artwork Beef can be configured
 to download other artwork that is added.

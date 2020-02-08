@@ -230,6 +230,16 @@ These are project API keys for the individual web services. You do not need them
 built-in keys are disabled by the web services after being ripped off.
 [These are unneeded otherwise](https://medium.com/fanart-tv/what-are-fanart-tv-personal-api-keys-472f60222856).
 
+### "Path exclusion"
+
+Prevent processing media items by path rules. Up to 10 rules can be defined.
+
+#### "Exclude the following type"
+
+- Folder: Exclude all media items in the specified folder.
+- Path prefix: Exclude all media items with paths starting with the input text.
+- Regex: Exclude all media items with paths matching the input regex.
+
 # Actions
 
 When run from "Program Add-ons", Artwork Beef can perform a number of actions.
