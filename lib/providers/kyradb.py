@@ -48,7 +48,7 @@ class KyraDBMovieProvider(AbstractImageProvider):
             newposter = {
                 'url': baseposter + '/' + poster['name'],
                 'language': get_language(poster.get('language', None)),
-                'rating': SortedDisplay(poster['date_added'], poster['date_added']),
+                'rating': SortedDisplay(poster['likes'], '{0} likes'.format(poster['likes'])),
                 'size': SortedDisplay(poster['height'], poster['resolution']),
                 'provider': self.name,
                 'preview': baseposter + '/' + poster['name']}
@@ -63,7 +63,7 @@ class KyraDBMovieProvider(AbstractImageProvider):
             result['animatedfanart'].append({
                 'url': basefanart + '/' + fanart['name'],
                 'language': None,
-                'rating': SortedDisplay(fanart['date_added'], fanart['date_added']),
+                'rating': SortedDisplay(fanart['likes'], '{0} likes'.format(fanart['likes'])),
                 'size': SortedDisplay(fanart['height'], fanart['resolution']),
                 'provider': self.name,
                 'preview': basefanart + '/' + fanart['name']})
@@ -80,7 +80,7 @@ class KyraDBMovieProvider(AbstractImageProvider):
             result.append({
                 'url': baseurl + '/' + characterart['name'],
                 'language': None,
-                'rating': SortedDisplay(characterart['date_added'], characterart['date_added']),
+                'rating': SortedDisplay(characterart['likes'], '{0} likes'.format(characterart['likes'])),
                 'size': SortedDisplay(characterart['height'], characterart['resolution']),
                 'provider': self.name,
                 'preview': baseurl + '/' + characterart['name']})

@@ -1,3 +1,20 @@
+v0.28.0 (2020-02-08)
+- Feature: Add "Path exclusion" settings to skip processing media items by path
+
+v0.27.1 (2019-11-16)
+- Fix: add-on crash when unexpected results received from TheTVDB
+- Fix: request specific version of TheTVDB API - 2.1.0
+- Fix: get more descriptive error messages from some web service errors
+
+v0.27.0 (2019-10-13)
+- Feature: sort KyraDB results by 'likes'
+
+v0.26.2 (2019-09-14)
+- Fix: identifying local movie set artwork
+
+v0.26.1 (2019-09-07)
+- Fix: automated settings for movie animated art and characterart
+
 v0.26.0 (2019-08-11)
 - Feature: add settings to enable / disable each web service individually
 - Fix: require both keys from users for KyraDB

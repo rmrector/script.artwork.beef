@@ -48,12 +48,8 @@ class MediaItem(object):
             if self.movies:
                 add_movieset_movies(self)
             if mediatypes.central_directories[mediatypes.MOVIESET]:
-                self.file = mediatypes.central_directories[mediatypes.MOVIESET]
-                if settings.setartwork_subdirs:
-                    pathsep = utils.get_pathsep(self.file)
-                    self.file += utils.path_component(self.label) + pathsep + 'movieset.ext'
-                else:
-                    self.file += utils.path_component(self.label) + '.ext'
+                self.file = mediatypes.central_directories[mediatypes.MOVIESET] \
+                    + utils.path_component(self.label) + '.ext'
         elif self.mediatype == mediatypes.MUSICVIDEO:
             self.label = build_music_label(jsondata)
         elif self.mediatype in mediatypes.audiotypes:

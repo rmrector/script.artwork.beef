@@ -9,11 +9,10 @@ from lib.libs.addonsettings import settings
 from lib.libs.pykodi import json, UTF8JSONDecoder
 from lib.libs.utils import SortedDisplay
 
-# designed for version 2.1.0 of TheTVDB API
 class TheTVDBProvider(AbstractImageProvider):
     name = SortedDisplay('thetvdb.com', 'TheTVDB.com')
     mediatype = mediatypes.TVSHOW
-    contenttype = 'application/json'
+    contenttype = 'application/vnd.thetvdb.v2.1.0'
 
     apiurl = 'https://api.thetvdb.com/series/%s/images/query'
     loginurl = 'https://api.thetvdb.com/login'
@@ -61,6 +60,7 @@ class TheTVDBProvider(AbstractImageProvider):
         for arttype in self.artmap:
             if types and not typematches(self.artmap[arttype], types):
                 continue
+            arttype_error = False
             for language in languages if arttype != 'fanart' else flanguages:
                 generaltype = self.artmap[arttype]
                 data = self.get_data(mediaid, arttype, language)
@@ -75,6 +75,17 @@ class TheTVDBProvider(AbstractImageProvider):
                         continue
                     ntype = generaltype
                     if isseason:
+                        try:
+                            int(image['subKey'])
+                        except ValueError:
+                            if arttype_error:
+                                continue
+                            arttype_error = True
+                            self.log("Provider returned unexpected content and '{0}' ".format(arttype) +
+                                    "artwork could not be processed:\n" +
+                                    "expected a season number but got '{0}'".format(image['subKey']),
+                                xbmc.LOGWARNING)
+                            continue
                         ntype = ntype % image['subKey']
                         if ntype not in result:
                             result[ntype] = []
@@ -97,8 +108,9 @@ class TheTVDBProvider(AbstractImageProvider):
             headers={'Content-Type': 'application/json', 'User-Agent': settings.useragent}, timeout=15)
         if response is not None and response.status_code == 401:
             raise build_key_error('tvdb')
+        response.raise_for_status()
         if not response or not response.headers['Content-Type'].startswith('application/json'):
-            raise ProviderError("Provider returned unexected content")
+            raise ProviderError("Provider returned unexpected content")
         self.getter.session.headers['authorization'] = 'Bearer %s' % response.json()['token']
         return True
 
