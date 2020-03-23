@@ -181,7 +181,7 @@ msgstr "Descarga de imágenes al sistema de archivos"
 
 msgctxt "#32062"
 msgid "Should local artwork files also be deleted?"
-msgstr "¿Deberia borrar las imágenes locales?"
+msgstr "¿Debería borrar las imágenes locales?"
 
 # Actions
 
