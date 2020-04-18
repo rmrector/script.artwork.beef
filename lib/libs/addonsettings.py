@@ -49,8 +49,6 @@ class Settings(object):
         self.identify_alternatives = addon.get_setting('identify_alternatives')
         self.report_peritem = addon.get_setting('report_peritem')
         self.fanarttv_clientkey = addon.get_setting('fanarttv_key')
-        self.kyradb_user_apikey = addon.get_setting('kyradb_user_apikey')
-        self.kyradb_userkey = addon.get_setting('kyradb_userkey')
         self.default_tvidsource = addon.get_setting('default_tvidsource')
         self.progressdisplay = addon.get_setting('progress_display')
         self.final_notification = addon.get_setting('final_notification')
@@ -86,7 +84,7 @@ class Settings(object):
         self.minimum_size = AVAILABLE_IMAGESIZES[sizesetting][2]
 
         self.apiconfig = {}
-        for provider in ('fanarttv', 'tvdb', 'tmdb', 'tadb', 'kyradb'):
+        for provider in ('fanarttv', 'tvdb', 'tmdb', 'tadb'):
             key = addon.get_setting('apikey.' + provider).strip()
             self.apiconfig[provider] = {
                 'apikey': key,
@@ -96,7 +94,7 @@ class Settings(object):
             if not key and projectkeys:
                 self.apiconfig[provider]['apikey'] = get_projectkey(provider)
             pykodi.set_log_scrubstring(provider + '-apikey', key)
-        
+
         self.pathexclusion = []
         for index in range(10):
             index_append = str(index+1)
@@ -109,8 +107,6 @@ class Settings(object):
                 self.pathexclusion.append({"type": exclusiontype, "folder": folder, "prefix": prefix, "regex": regex})
 
         pykodi.set_log_scrubstring('fanarttv-client-apikey', self.fanarttv_clientkey)
-        pykodi.set_log_scrubstring('kyradb-user-apikey', self.kyradb_user_apikey)
-        pykodi.set_log_scrubstring('kyradb-userkey', self.kyradb_userkey)
 
     def get_apikey(self, provider):
         return self.apiconfig[provider]['apikey']

@@ -145,9 +145,6 @@
         <setting id="use_tmdb_keyart" label="32982" type="bool" default="false" />
         <setting id="apienabled.tvdb" label="32989" type="bool" default="true" />
         <setting id="apienabled.tadb" label="32990" type="bool" default="true" />
-        <setting id="apienabled.kyradb" label="32985" type="bool" default="false" />
-        <setting id="kyradb_user_apikey" label="32984" type="text" visible="eq(-1,true)" />
-        <setting id="kyradb_userkey" label="32983" type="text" visible="eq(-2,true)" />
 
         <setting label="32973" type="lsep" />
         <setting id="language_override" label="32913" type="select" default="None" values="None|en|fr|de|ja|zh|es|it|pt|sv|ru|nl|ar|ko|no|hu|da|hi|is|pl|he|bg|fi|ml" />

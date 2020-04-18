@@ -615,22 +615,6 @@ msgctxt "#32982"
 msgid "Add 'keyart' from TheMovieDB"
 msgstr "Agregar 'keyart' desde TheMovieDB"
 
-msgctxt "#32983"
-msgid "KyraDB User key (required)"
-msgstr "Clave de usuario KyraDB (requerido)"
-
-msgctxt "#32984"
-msgid "KyraDB API key (required)"
-msgstr "Clave API KyraDB (requerido)"
-
-msgctxt "#32985"
-msgid "Enable KyraDB"
-msgstr "Habilitar KyraDB"
-
-msgctxt "#32986"
-msgid "requires KyraDB"
-msgstr "Requiere KyraDB"
-
 msgctxt "#32987"
 msgid "Enable Fanart.tv"
 msgstr "Habilitar Fanart.tv"
