@@ -100,7 +100,7 @@ msgstr "No se pudo encontrar la colección en TMDb"
 
 msgctxt "#32033"
 msgid "Could not find music video on TheAudioDB"
-msgstr "No se pudo encontrar el vídeoclips en TheAudioDB"
+msgstr "No se pudo encontrar el videoclips en TheAudioDB"
 
 msgctxt "#32034"
 msgid "Could not contact provider"
@@ -233,7 +233,7 @@ msgstr "Eliminar ilustraciones para un tipo de medio ..."
 
 msgctxt "#32415"
 msgid "identify unmatched music videos with TheAudioDB ..."
-msgstr "Identificar vídeoclips sin concordancia con TheAudioDB ..."
+msgstr "Identificar videoclips sin concordancia con TheAudioDB ..."
 
 msgctxt "#32416"
 msgid "add missing artwork for ..."
@@ -423,7 +423,7 @@ msgstr "Mostrar último reporte"
 
 msgctxt "#32920"
 msgid "Replace music video 'thumb' with Kodi generated thumb"
-msgstr "Reemplazar 'miniatura' de vídeoclips por miniatura generada por Kodi"
+msgstr "Reemplazar 'miniatura' de videoclips por miniatura generada por Kodi"
 
 msgctxt "#32921"
 msgid "Prefer artwork from The Movie Database when available"
@@ -461,7 +461,7 @@ msgstr "Guardar fanart adicionales para películas y series TV en directorio 'ex
 
 msgctxt "#32930"
 msgid "Save additional music videos fanart to 'extrafanart' directory instead"
-msgstr "Guardar fanart adicionales para vídeoclips en directorio 'extrafanart'"
+msgstr "Guardar fanart adicionales para videoclips en directorio 'extrafanart'"
 
 msgctxt "#32931"
 msgid "Recycle deleted and replaced artwork files to temp/cache directory"
@@ -517,7 +517,7 @@ msgstr "Tipo de arte adicional para colecciones (separado por comas)"
 
 msgctxt "#32959"
 msgid "Additional art types for music videos (comma separated)"
-msgstr "Tipo de arte adicional para vídeoclips (separado por comas)"
+msgstr "Tipo de arte adicional para videoclips (separado por comas)"
 
 msgctxt "#32960"
 msgid "Additional art types for artists (comma separated)"
