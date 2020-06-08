@@ -381,11 +381,11 @@ msgstr "Utilizar alta calidad para vista previa"
 
 msgctxt "#32905"
 msgid "fanart.tv personal API key (optional)"
-msgstr "Clave API personal fanart.tv (opcional)"
+msgstr "Clave API personal (opcional)"
 
 msgctxt "#32906"
 msgid "Identify alternate Artwork Downloader and MSAA artwork file names"
-msgstr ""
+msgstr "Identificar Artwork Downloader alternativo y Nombres de archivo de ilustraciones MSAA"
 
 # 32908 retired 2017-12-15
 
@@ -493,7 +493,7 @@ msgstr "Precargar automáticamente imágenes de la biblioteca de vídeo en cach�
 
 msgctxt "#32953"
 msgid "Automatically preload local music library artwork to Kodi texture cache"
-msgstr "Precargar automáticamente ilustraciones de la biblioteca de música en caché"
+msgstr "Precargar automáticamente imágenes de la biblioteca de música en caché"
 
 msgctxt "#32954"
 msgid "Additional art types for TV shows (comma separated)"
