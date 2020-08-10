@@ -146,7 +146,8 @@ class FileManager(object):
                     result = None
             return result, None
         except GetterError as ex:
-            message = L(CANT_CONTACT_PROVIDER) if ex.connection_error else L(HTTP_ERROR).format(ex.message)
+            message = L(CANT_CONTACT_PROVIDER) if ex.connection_error \
+                else L(HTTP_ERROR).format(ex.message) + '\n' + url
             return None, message
 
     def remove_deselected_files(self, mediaitem, assignedart=False):
