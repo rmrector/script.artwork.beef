@@ -89,6 +89,11 @@ class TheTVDBProvider(AbstractImageProvider):
                         ntype = ntype % image['subKey']
                         if ntype not in result:
                             result[ntype] = []
+
+                    # skip duplicates
+                    if any(x for x in result[ntype] if x['url'].endswith(image['fileName'])):
+                        continue
+
                     resultimage = {'provider': self.name}
                     resultimage['url'] = self.imageurl_base + image['fileName']
                     resultimage['preview'] = self.imageurl_base + (image['thumbnail'] or '_cache/' + image['fileName'])
