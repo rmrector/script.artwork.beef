@@ -1,3 +1,7 @@
+v0.28.2 (2020-08-09)
+- Fix: avoid adding duplicate fanart from TVDB
+- Fix: log full URL when download fails
+
 v0.28.1 (2020-04-25)
 - Fix: remove KyraDB
 
