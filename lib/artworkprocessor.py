@@ -13,6 +13,7 @@ from lib.libs import mediainfo as info, mediatypes, pykodi, quickjson
 from lib.libs.addonsettings import settings, PROGRESS_DISPLAY_FULLPROGRESS, PROGRESS_DISPLAY_NONE, EXCLUSION_PATH_TYPE_FOLDER, EXCLUSION_PATH_TYPE_PREFIX, EXCLUSION_PATH_TYPE_REGEX
 from lib.libs.processeditems import ProcessedItems
 from lib.libs.pykodi import datetime_now, get_kodi_version, localize as L, log
+from lib.libs.quickjson import JSONException
 from lib.libs.utils import SortedDisplay, natural_sort, get_simpledict_updates
 from lib.providers import search
 
@@ -272,6 +273,11 @@ class ArtworkProcessor(object):
             currentitem += 1
             try:
                 services_hit = self._process_item(mediaitem, singleitem)
+            except JSONException as ex:
+                mediaitem.error = "Kodi threw a non-descript JSON error."
+                log("Kodi threw a non-descript JSON error.", xbmc.LOGERROR)
+                log(ex.message, xbmc.LOGERROR)
+                services_hit = True
             except FileError as ex:
                 services_hit = True
                 mediaitem.error = ex.message
