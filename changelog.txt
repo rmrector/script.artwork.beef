@@ -1,3 +1,7 @@
+v0.28.3 (2020-10-21)
+- fix: treat 403 as 404 and replace it
+- fix: don't throw an error when a movie set is lost
+
 v0.28.2 (2020-08-09)
 - Fix: avoid adding duplicate fanart from TVDB
 - Fix: log full URL when download fails
