@@ -146,7 +146,7 @@ class FileManager(object):
                     result = None
             return result, None
         except GetterError as ex:
-            if ex.response and ex.response.status_code == 403:
+            if ex.response is not None and ex.response.status_code == 403:
                 # TVDB returns Forbidden for certain images. Don't show an error message, replace it
                 return None, None
             message = L(CANT_CONTACT_PROVIDER) if ex.connection_error \
