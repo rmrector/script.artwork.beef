@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<addon id="script.artwork.beef" name="Artwork Beef" version="0.28.5~adev" provider-name="rmrector">
+<addon id="script.artwork.beef" name="Artwork Beef" version="0.28.5" provider-name="rmrector">
 	<requires>
 		<import addon="xbmc.python" version="2.19.0" />
 		<import addon="xbmc.json" version="6.20.0" />
@@ -56,7 +56,10 @@
 		<summary lang="es">Agrega automáticamente ilustraciones adicionales para sus medios.</summary>
 		<description lang="es">Artwork Beef agrega automáticamente ilustraciones adicionales para Series TV y Películas a su biblioteca. Las ilustraciones son agregadas desde Servicios web y el Sistema de archivos local.</description>
 		<disclaimer lang="es">Fuente para ilustraciones: fanart.tv, TheTVDB.com, The Movie Database, TheAudioDB, KyraDB</disclaimer>
-		<news>v0.28.4 (2020-11-21)
+		<news>v0.28.5 (2020-11-26)
+- fix: really really treat 403 as 404 and replace it
+
+v0.28.4 (2020-11-21)
 - fix: 403 change causing errors with other web service issues
 
 v0.28.1 - v0.28.3

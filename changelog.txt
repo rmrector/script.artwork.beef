@@ -1,3 +1,6 @@
+v0.28.5 (2020-11-26)
+- fix: really really treat 403 as 404 and replace it
+
 v0.28.4 (2020-11-21)
 - fix: 403 change causing errors with other web service issues
 
