@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Artwork Beef</title>
@@ -29,7 +29,7 @@
       <description>Because who wants another dependency?
 Display multiple fanart Artwork Helper isn&amp;rsquo;t strictly needed, how about that? It is a bit more work though.
 The trick is to use a fadelabel control to gather multiple InfoLabels and randomize them, then use that control&amp;rsquo;s label as the final image to be displayed.
-&amp;lt;control type=&amp;quot;fadelabel&amp;quot; id=&amp;quot;398045&amp;quot;&amp;gt; &amp;lt;description&amp;gt;Randomizer for plugin-free multiple fanart&amp;lt;/description&amp;gt; &amp;lt;top&amp;gt;-1000&amp;lt;/top&amp;gt; &amp;lt;!-- Don&#39;t need to see it, but can&#39;t change its visibility.</description>
+&amp;lt;control type=&amp;#34;fadelabel&amp;#34; id=&amp;#34;398045&amp;#34;&amp;gt; &amp;lt;description&amp;gt;Randomizer for plugin-free multiple fanart&amp;lt;/description&amp;gt; &amp;lt;top&amp;gt;-1000&amp;lt;/top&amp;gt; &amp;lt;!-- Don&amp;#39;t need to see it, but can&amp;#39;t change its visibility. Put it off screen --&amp;gt; &amp;lt;width&amp;gt;1&amp;lt;/width&amp;gt; &amp;lt;height&amp;gt;1&amp;lt;/height&amp;gt; &amp;lt;info&amp;gt;ListItem.</description>
     </item>
     
     <item>

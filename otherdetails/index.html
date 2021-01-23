@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="generator" content="Hugo 0.40.1" />
+    <meta name="generator" content="Hugo 0.68.3" />
     <meta name="description" content="">
 
 
@@ -413,37 +413,13 @@ h5 {
                     <div class="progress">
     <div class="wrapper">
 <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#what-exactly-does-this-do-why-is-it-necessary">What exactly does this do, why is it necessary?</a>
-<ul>
-<li><a href="#add-extended-artwork-to-kodi-s-library">Add extended artwork to Kodi&rsquo;s library</a></li>
-<li><a href="#download-artwork-locally">Download artwork locally</a></li>
-<li><a href="#kodi-18-music-library">Kodi 18 music library</a></li>
-</ul></li>
-<li><a href="#how-do-i-quick-start-this-thing">How do I quick-start this thing?</a></li>
-<li><a href="#i-installed-artwork-beef-but-all-my-media-items-are-still-missing-artwork">I installed Artwork Beef but all my media items are still missing artwork!</a></li>
-<li><a href="#i-can-t-see-artwork-while-browsing-the-library-but-i-do-see-it-assigned-in-ab-select-artwork-or-kodi-s-built-in-choose-art-dialog">I can&rsquo;t see artwork while browsing the library, but I do see it assigned in &ldquo;AB: select artwork&hellip;&rdquo; or Kodi&rsquo;s built-in &ldquo;Choose art&rdquo; dialog.</a></li>
-<li><a href="#why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</a></li>
-<li><a href="#artwork-from-web-services-are-added-to-the-library-but-are-not-visible-in-the-gui">Artwork from web services are added to the library but are not visible in the GUI.</a></li>
-<li><a href="#i-receive-an-error-message-invalid-project-api-key-for-a-particular-web-service">I receive an error message &ldquo;Invalid project API key&rdquo; for a particular web service.</a></li>
-<li><a href="#manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</a></li>
-<li><a href="#i-received-a-message-no-web-service-ids-available-can-t-look-up-online">I received a message &ldquo;No web service IDs available, can&rsquo;t look up online&rdquo;</a></li>
-<li><a href="#artwork-beef-cannot-find-artwork-for-some-movie-sets-collections-from-fanart-tv">Artwork Beef cannot find artwork for some movie sets / collections from fanart.tv.</a></li>
-<li><a href="#a-kodi-skin-web-interface-remote-is-showing-a-thumbnail-image-instead-of-a-movie-poster">A Kodi skin / web interface / remote is showing a thumbnail image instead of a movie poster.</a></li>
-<li><a href="#where-do-i-put-my-project-api-keys-for-other-web-services">Where do I put my project API keys for other web services?</a></li>
-<li><a href="#where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</a></li>
-<li><a href="#trouble-with-animated-artwork">Trouble with animated artwork</a></li>
-<li><a href="#error-messages-about-kyradb-api-keys">Error messages about KyraDB API keys</a></li>
-</ul></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
     </div>
 </div>
@@ -462,125 +438,95 @@ h5 {
         
 
 
-
-
 <h4 id="what-exactly-does-this-do-why-is-it-necessary">What exactly does this do, why is it necessary?</h4>
-
 <p>Artwork Beef&rsquo;s main contributions to your Kodi setup is to add extended artwork to Kodi&rsquo;s library
 and to download artwork from web services to the local file system. It is generally designed to
 work automatically much like scrapers.</p>
-
-<h5 id="add-extended-artwork-to-kodi-s-library">Add extended artwork to Kodi&rsquo;s library</h5>
-
+<h5 id="add-extended-artwork-to-kodis-library">Add extended artwork to Kodi&rsquo;s library</h5>
 <p>Kodi and scrapers have had some support for extended artwork for the video library for awhile, but
 they aren&rsquo;t supported to the same extent as basic artwork, like &ldquo;poster&rdquo; and &ldquo;fanart&rdquo;, and need
 Artwork Beef or something like it to add extended artwork to Kodi&rsquo;s library with JSON-RPC.</p>
-
 <p><strong>Kodi 17 Krypton</strong> and below only assigns basic artwork from scrapers, NFO files, and the
 local file system. More help is needed to get any extended artwork into the library, whether you
 already have them saved locally or want to &ldquo;scrape&rdquo; them from web services.</p>
-
 <p><strong>Kodi 18 Leia</strong> has added the ability to assign extended artwork from scrapers and NFO files.
 It is still early days for Kodi 18 however, and not all scrapers currently
 support extended artwork or they may not support the full selection.</p>
-
 <p>Additionally for movie set artwork, Kodi just copies movie artwork, more help is needed
 to add meaningfully different artwork for them.</p>
-
 <h5 id="download-artwork-locally">Download artwork locally</h5>
-
 <p>Artwork Beef can download artwork locally to avoid troubles when web service URLs change, and
 avoid redownloading the same image for multiple Kodi installations or in the future if the image
 is no longer in Kodi&rsquo;s texture cache.</p>
-
 <h5 id="kodi-18-music-library">Kodi 18 music library</h5>
-
 <p>In Kodi 18 the music library now fully supports adding artwork from all sides. Kodi can be configured
 (with <a href="https://forum.kodi.tv/showthread.php?tid=331555&amp;pid=2731639#pid2731639">advancedsettings.xml</a>)
 to identify and add any type of local artwork, and any type of artwork can be specified in NFO files
 or from scrapers, which Kodi will set automatically if they match the AS.xml configuration.</p>
-
 <p>For the music library, Artwork Beef is still helpful to download full quality artwork locally
 and to add additional artwork from web services until scrapers are updated to add the full selection.</p>
-
 <p>Artwork Beef does not support music library artwork for Kodi 17 and below at all.</p>
-
 <h4 id="how-do-i-quick-start-this-thing">How do I quick-start this thing?</h4>
-
 <ul>
 <li>The quickest way to get started is to install it and <a href="https://rmrector.github.io/script.artwork.beef/usage/settings/">configure</a>
 it to your liking.</li>
 <li>If you want Artwork Beef to automatically add artwork for new media &hellip;
-
 <ul>
 <li>Enable the setting &ldquo;Add artwork for new videos after library updates&rdquo; and / or
 &ldquo;Add artwork for new music after library updates&rdquo;.</li>
-</ul></li>
+</ul>
+</li>
 <li>If you want Artwork Beef to download image files to your local file system &hellip;
-
 <ul>
 <li>Then add each image type to the settings &ldquo;Download these artwork types to the local file system&rdquo;
 for each media type at the bottom of the &lsquo;TV shows&rsquo;, &lsquo;Movies&rsquo;, &lsquo;Music videos&rsquo;, and &lsquo;Music&rsquo; tabs.</li>
-</ul></li>
+</ul>
+</li>
 <li>If you want Artwork Beef to only identify artwork you have already gathered
 <a href="https://rmrector.github.io/script.artwork.beef/usage/fromfiles/">locally</a> with a media manager &hellip;
-
 <ul>
 <li>Enable the setting &ldquo;Do not automatically add artwork from web services, only identify local files&rdquo;
 at the top of each media tab.</li>
-</ul></li>
+</ul>
+</li>
 <li>If you want Artwork Beef to ignore certain media types during automatic processing &hellip;
-
 <ul>
 <li>Disable all options under &ldquo;Automatically add these artwork types from web services and
 file system&rdquo; and &ldquo;Download these artwork types to the local file system&rdquo; for that media type.</li>
 <li>For movies, episodes, and music videos, also disable the options &ldquo;Replace episode / movie /
 music video &lsquo;thumb&rsquo; with Kodi generated thumb&rdquo; on the Advanced tab.</li>
-</ul></li>
+</ul>
+</li>
 <li>See <a href="https://rmrector.github.io/script.artwork.beef/usage/firstusage/">First usage</a> for more details.</li>
 </ul>
-
 <h4 id="i-installed-artwork-beef-but-all-my-media-items-are-still-missing-artwork">I installed Artwork Beef but all my media items are still missing artwork!</h4>
-
 <p>Run Artwork Beef from &ldquo;Program add-ons&rdquo; and then &ldquo;add missing artwork for &hellip;&rdquo; &ldquo;new videos&rdquo; or music.
 Artwork Beef must be run on media items before it can do anything. It can be configured to run
 automatically after library updates.</p>
-
-<h4 id="i-can-t-see-artwork-while-browsing-the-library-but-i-do-see-it-assigned-in-ab-select-artwork-or-kodi-s-built-in-choose-art-dialog">I can&rsquo;t see artwork while browsing the library, but I do see it assigned in &ldquo;AB: select artwork&hellip;&rdquo; or Kodi&rsquo;s built-in &ldquo;Choose art&rdquo; dialog.</h4>
-
+<h4 id="i-cant-see-artwork-while-browsing-the-library-but-i-do-see-it-assigned-in-ab-select-artwork-or-kodis-built-in-choose-art-dialog">I can&rsquo;t see artwork while browsing the library, but I do see it assigned in &ldquo;AB: select artwork&hellip;&rdquo; or Kodi&rsquo;s built-in &ldquo;Choose art&rdquo; dialog.</h4>
 <p>Artwork Beef has done its job. Skins are responsible for displaying artwork assigned in the
 Kodi library. Are you sure you have configured the <em>skin</em> to show the artwork type you expect
 for the media type you are looking at?</p>
-
-<h4 id="why-don-t-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</h4>
-
+<h4 id="why-dont-i-see-new-artwork-i-just-submitted-to-a-web-service-when-manually-selecting-artwork">Why don&rsquo;t I see new artwork I just submitted to a web service when manually selecting artwork?</h4>
 <ul>
 <li>It may take a day or two for new artwork to be available due to server caching.</li>
 <li>Artwork Beef caches the previous image results from web services for 72 hours.</li>
 <li>For fanart.tv, without a <em>personal</em> API key you results could be even older.</li>
 </ul>
-
 <h4 id="artwork-from-web-services-are-added-to-the-library-but-are-not-visible-in-the-gui">Artwork from web services are added to the library but are not visible in the GUI.</h4>
-
 <p>Most likely the web service is temporarily/intermittently unavailable. Try again later.
 Configuring Artwork Beef to download artwork to your local file system is probably a good idea.
 Connection timeouts, HTTP 500 errors, and certificate errors are good indications of this.</p>
-
 <h4 id="i-receive-an-error-message-invalid-project-api-key-for-a-particular-web-service">I receive an error message &ldquo;Invalid project API key&rdquo; for a particular web service.</h4>
-
 <p>Could be one of three things, the error message will specify precisely which:</p>
-
 <ul>
 <li>Artwork Beef was not <a href="https://rmrector.github.io/script.artwork.beef/usage/#installing">installed correctly</a>.</li>
 <li>You have entered your own project API key improperly; remove that setting and try again.</li>
 <li>Or the built-in API keys have been disabled and you will have to sign up for a project
 key of your own (unlikely).</li>
 </ul>
-
-<h4 id="manual-selection-of-artwork-doesn-t-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</h4>
-
+<h4 id="manual-selection-of-artwork-doesnt-show-any-artwork-from-one-or-any-web-service">Manual selection of artwork doesn&rsquo;t show any artwork from one or any web service.</h4>
 <p>Does it happen for all media items of a particular type?</p>
-
 <ul>
 <li>If there is a message about &ldquo;Invalid project API key&rdquo; for a particular web service, see
 the section just above.</li>
@@ -590,13 +536,10 @@ is broken. The Kodi debug log and Artwork Beef&rsquo;s artwork report may have m
 <li>Otherwise post a reply on the forum thread with a description of the problem, a
 <a href="https://kodi.wiki/view/Debug-log">Kodi debug log</a>, and the latest group of artwork-report.txt.</li>
 </ul>
-
-<h4 id="i-received-a-message-no-web-service-ids-available-can-t-look-up-online">I received a message &ldquo;No web service IDs available, can&rsquo;t look up online&rdquo;</h4>
-
+<h4 id="i-received-a-message-no-web-service-ids-available-cant-look-up-online">I received a message &ldquo;No web service IDs available, can&rsquo;t look up online&rdquo;</h4>
 <ul>
 <li>Artwork Beef requires web service IDs (like an IMDB number) for all items in the Kodi library except
 movie sets and music videos. These should be included in NFO files, scrapers, or embedded tags.
-
 <ul>
 <li>If you use scrapers for the media item, make sure your scrapers are up to date and
 refresh the item.</li>
@@ -605,45 +548,34 @@ An &ldquo;imdbnumber&rdquo; element should also work (for movies and TV shows), 
 If your NFOs don&rsquo;t have these elements then upgrade your media manager and recreate the NFOs,
 then refresh the item in Kodi.</li>
 <li>Music must be tagged with MusicBrainz IDs. Use MusicBrainz Picard for tagging files.</li>
-</ul></li>
 </ul>
-
-<h4 id="artwork-beef-cannot-find-artwork-for-some-movie-sets-collections-from-fanart-tv">Artwork Beef cannot find artwork for some movie sets / collections from fanart.tv.</h4>
-
+</li>
+</ul>
+<h4 id="artwork-beef-cannot-find-artwork-for-some-movie-sets--collections-from-fanarttv">Artwork Beef cannot find artwork for some movie sets / collections from fanart.tv.</h4>
 <p>Artwork Beef must look up movie set artwork on fanart.tv by a TheMovieDB ID, which has
 <a href="https://www.themoviedb.org/bible/collection">different rules</a>
 for what a movie collection is than you might.
 However, you can manually download that artwork and place it in the correct
-<a href="https://rmrector.github.io/script.artwork.beef/usage/fromfiles/#movie-collection-artwork">location on your file system</a>,
+<a href="https://rmrector.github.io/script.artwork.beef/usage/fromfiles/">location on your file system</a>,
 then run &ldquo;AB: add missing artwork&rdquo; on the affected movie set.</p>
-
-<h4 id="a-kodi-skin-web-interface-remote-is-showing-a-thumbnail-image-instead-of-a-movie-poster">A Kodi skin / web interface / remote is showing a thumbnail image instead of a movie poster.</h4>
-
+<h4 id="a-kodi-skin--web-interface--remote-is-showing-a-thumbnail-image-instead-of-a-movie-poster">A Kodi skin / web interface / remote is showing a thumbnail image instead of a movie poster.</h4>
 <p>The skin / web interface / remote is pulling up the movie &ldquo;thumb&rdquo; and expecting the fallback poster,
 but it should instead pick the &ldquo;poster&rdquo; first and fall back to the thumb only if the poster
 doesn&rsquo;t exist. They are two different images for two different purposes and should be chosen
 based on the interface design.</p>
-
 <h4 id="where-do-i-put-my-project-api-keys-for-other-web-services">Where do I put my project API keys for other web services?</h4>
-
 <ul>
 <li>I do not suggest you do this, the option is only available in case the built-in project keys
 stop working.</li>
-<li>At the bottom of the <a href="https://rmrector.github.io/script.artwork.beef/usage/settings/#advanced">Advanced tab</a> of add-on settings.</li>
+<li>At the bottom of the <a href="https://rmrector.github.io/script.artwork.beef/usage/settings/">Advanced tab</a> of add-on settings.</li>
 </ul>
-
 <h4 id="where-is-the-option-to-replace-the-fanart-slideshow-from-artwork-downloader">Where is the option to replace the fanart slideshow from Artwork Downloader?</h4>
-
 <p>No such option is available, Artwork Beef will not duplicate image files for this purpose.
-<a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/#grab-random-fanart-plus-any-other-info-from-items-in-any-library-path">Skins have other options</a> that don&rsquo;t require duplicating files.</p>
-
+<a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/">Skins have other options</a> that don&rsquo;t require duplicating files.</p>
 <h4 id="trouble-with-animated-artwork">Trouble with animated artwork</h4>
-
 <p>See the <a href="https://kodi.wiki/view/Artwork_types#Limitations_of_animated_artwork">Kodi wiki</a>
 for current limitations of animated artwork.</p>
-
 <h4 id="error-messages-about-kyradb-api-keys">Error messages about KyraDB API keys</h4>
-
 <p>Artwork from KyraDB requires an API key and User key, which you can get by signing up for a
 free account.</p>
 

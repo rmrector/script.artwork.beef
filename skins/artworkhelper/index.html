@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="generator" content="Hugo 0.40.1" />
+    <meta name="generator" content="Hugo 0.68.3" />
     <meta name="description" content="">
 
 
@@ -419,20 +419,18 @@ h5 {
                     <div class="progress">
     <div class="wrapper">
 <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#add-on-setting">Add-on setting</a></li>
-<li><a href="#paths-built-from-infolabels">Paths built from InfoLabels</a>
-<ul>
-<li><a href="#listitem-multi-image-plugin-path">ListItem multi image plugin path</a></li>
-<li><a href="#container-multi-image-plugin-path">Container multi image plugin path</a></li>
-<li><a href="#player-multi-image-plugin-path">Player multi image plugin path</a></li>
-<li><a href="#smart-series-multi-image-plugin-path">Smart series multi image plugin path</a></li>
-<li><a href="#arbitrary-images-plugin-path">Arbitrary images plugin path</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#add-on-setting">Add-on setting</a></li>
+    <li><a href="#paths-built-from-infolabels">Paths built from InfoLabels</a>
+      <ul>
+        <li><a href="#listitem-multi-image-plugin-path">ListItem multi image plugin path</a></li>
+        <li><a href="#container-multi-image-plugin-path">Container multi image plugin path</a></li>
+        <li><a href="#player-multi-image-plugin-path">Player multi image plugin path</a></li>
+        <li><a href="#smart-series-multi-image-plugin-path">Smart series multi image plugin path</a></li>
+        <li><a href="#arbitrary-images-plugin-path">Arbitrary images plugin path</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
     </div>
 </div>
@@ -451,34 +449,23 @@ h5 {
         
 
 
-
-
 <p>Artwork Helper provides skins with a few options for building a list of images for a <code>multiimage</code>
 or list control from images available via InfoLabels.
 This is a small add-on that skins can use as a dependency, only doing what a skin asks it to do.</p>
-
 <p>Current version only works for Kodi 17 and 18, use version 0.7.1 for 15 and 16.</p>
-
 <h2 id="add-on-setting">Add-on setting</h2>
-
 <p>There is an add-on setting to pull extrafanart and extrathumbs from the filesystem, if there is
 only a single image in the library. It is off by default, but can be turned on by the end user/viewer.
 This setting is not needed if Artwork Beef is used to manage artwork.
 It can be found by navigating to Kodi settings -&gt; System settings -&gt; Add-ons -&gt; Manage dependencies -&gt; Artwork Helper.
 The Settings level may need to be set to Advanced to see dependencies in &ldquo;Add-ons&rdquo;.</p>
-
 <h2 id="paths-built-from-infolabels">Paths built from InfoLabels</h2>
-
 <p>These paths use InfoLabels to gather image URLs just like skins do.</p>
-
 <h3 id="listitem-multi-image-plugin-path">ListItem multi image plugin path</h3>
-
-<p>The simplest form grabs multiple images for the currently focused ListItem.<br />
+<p>The simplest form grabs multiple images for the currently focused ListItem.<br>
 <code>plugin://script.artwork.helper/multiimage/listitem/?refresh=$INFO[ListItem.Label]</code></p>
-
 <p>Mostly for fanart (fanart#), but works for any art type that has one or more images.
 Additional query params are available to modify its behavior, separate them with <code>&amp;amp;&amp;amp;</code>.</p>
-
 <ul>
 <li><code>refresh</code> is required to get Kodi to fire off the plugin when the focused item changes. Set it
 to something that will change when the fanart should change, like ListItem.Label</li>
@@ -487,56 +474,41 @@ container on the <strong>Kodi 18 home window</strong>, or set to the desired con
 <li><code>arttype</code> lets you select different artwork. Defaults to &lsquo;fanart&rsquo;.</li>
 <li><code>allartists</code> includes artwork for all artists of the item, including &lsquo;artist&rsquo; and &lsquo;albumartist&rsquo; plus &lsquo;artist1&rsquo;,
 &lsquo;albumartist1&rsquo; for duets or more. For the music library in <strong>Kodi 18</strong> and up. Only takes effect
-when arttype is &ldquo;artist.[arttype]&rdquo; or &ldquo;albumartist.[arttype]&ldquo;.</li>
+when arttype is &ldquo;artist.[arttype]&rdquo; or &ldquo;albumartist.[arttype]&quot;.</li>
 </ul>
-
-<p>With the full complement of options:<br />
+<p>With the full complement of options:<br>
 <code>plugin://script.artwork.helper/multiimage/listitem/?refresh=$INFO[Container.ListItem.Label]&amp;amp;&amp;amp;containerid=&amp;amp;&amp;amp;arttype=artist.fanart&amp;amp;&amp;amp;allartists=true</code></p>
-
 <h3 id="container-multi-image-plugin-path">Container multi image plugin path</h3>
-
-<p>This grabs multiple images for the current skin Container.<br />
+<p>This grabs multiple images for the current skin Container.<br>
 <code>plugin://script.artwork.helper/multiimage/container/?refresh=$INFO[Container.FolderName]</code></p>
-
 <p>Additional query params are available to modify its behavior, separate them with <code>&amp;amp;&amp;amp;</code>.</p>
-
 <ul>
 <li><code>refresh</code> is required to get Kodi to fire off the plugin when the focused item changes. Set it
 to something that will change when the fanart should change, like Container.FolderName</li>
 <li><code>arttype</code> lets you select different artwork. Defaults to &lsquo;tvshow.fanart&rsquo;.</li>
 <li><code>allartists</code> includes artwork for all artists. Only takes effect
-when arttype is &ldquo;artist.[arttype]&rdquo; or &ldquo;albumartist.[arttype]&ldquo;.</li>
+when arttype is &ldquo;artist.[arttype]&rdquo; or &ldquo;albumartist.[arttype]&quot;.</li>
 </ul>
-
-<p>With some options:<br />
+<p>With some options:<br>
 <code>plugin://script.artwork.helper/multiimage/container/?refresh=$INFO[ListItem.Label]&amp;amp;&amp;amp;arttype=set.fanart</code></p>
-
 <h3 id="player-multi-image-plugin-path">Player multi image plugin path</h3>
-
-<p>This grabs multiple images for the currently playing media.<br />
+<p>This grabs multiple images for the currently playing media.<br>
 <code>plugin://script.artwork.helper/multiimage/player/?refresh=$INFO[Player.Title]</code></p>
-
 <p>Additional query params are available to modify its behavior, separate them with <code>&amp;amp;&amp;amp;</code>.</p>
-
 <ul>
 <li><code>refresh</code> is required to get Kodi to fire off the plugin when the focused item changes. Set it
 to something that will change when the fanart should change, like Player.Title</li>
 <li><code>arttype</code> lets you select different artwork. Defaults to &lsquo;artist.fanart&rsquo;.</li>
 <li><code>allartists</code> includes artwork for all artists. Defaults to &lsquo;true&rsquo; when arttype
-is &ldquo;artist.[arttype]&rdquo; or &ldquo;albumartist.[arttype]&ldquo;, no effect otherwise.</li>
+is &ldquo;artist.[arttype]&rdquo; or &ldquo;albumartist.[arttype]&quot;, no effect otherwise.</li>
 </ul>
-
-<p>With the full complement of options:<br />
+<p>With the full complement of options:<br>
 <code>plugin://script.artwork.helper/multiimage/player/?refresh=$INFO[Player.Title]&amp;amp;&amp;amp;arttype=artist.fanart&amp;amp;&amp;amp;allartists=false</code></p>
-
 <h3 id="smart-series-multi-image-plugin-path">Smart series multi image plugin path</h3>
-
 <p>This grabs multiple images for the current series, keeping the path the same through
 series-season-episode lists so that the fanart display stays smooth (only on the video library window).
 <code>plugin://script.artwork.helper/multiimage/smartseries/?title=$INFO[ListItem.Title]</code></p>
-
 <p>Additional query params are available to modify its behavior, separate them with <code>&amp;amp;&amp;amp;</code>.</p>
-
 <ul>
 <li><code>title</code> is required to get Kodi to fire off the plugin when the focused item changes, like
 &lsquo;refresh&rsquo; in ListItem/Container paths. Set it to ListItem.Title if Container.Content is tvshows
@@ -544,20 +516,15 @@ and Container.TVShowTitle if seasons/episodes.</li>
 <li><code>arttype</code> lets you select different artwork. Defaults to &lsquo;fanart&rsquo;. Use only the base
 art type like &lsquo;fanart&rsquo;, the plugin will decide if tvshow.* is needed.</li>
 </ul>
-
-<p>With the full complement of options:<br />
-<code>plugin://script.artwork.helper/multiimage/smartseries/?title=$INFO[ListItem.Title]&amp;amp;&amp;amp;arttype=fanart</code><br />
+<p>With the full complement of options:<br>
+<code>plugin://script.artwork.helper/multiimage/smartseries/?title=$INFO[ListItem.Title]&amp;amp;&amp;amp;arttype=fanart</code><br>
 <code>plugin://script.artwork.helper/multiimage/smartseries/?title=$INFO[Container.TVShowTitle]&amp;amp;&amp;amp;arttype=fanart</code></p>
-
 <h3 id="arbitrary-images-plugin-path">Arbitrary images plugin path</h3>
-
-<p>This format lets you stitch any images together into a list by specifying their paths.<br />
+<p>This format lets you stitch any images together into a list by specifying their paths.<br>
 <code>plugin://script.artwork.helper/multiimage/?image=&lt;image_path&gt;&amp;amp;&amp;amp;image=&lt;image_path&gt;&amp;amp;&amp;amp;image=&lt;image_path&gt;&amp;amp;&amp;amp;image=&lt;image_path&gt;&amp;amp;&amp;amp;image=&lt;image_path&gt;&amp;amp;&amp;amp;image=&lt;image_path&gt;</code></p>
-
 <p>When the ListItem options above doesn&rsquo;t work for you, this is your very wordy friend. Repeat the
 image block for as many images as you like, and it will ignore empty ones. The
 double ampersand <code>&amp;amp;&amp;amp;</code> separator between images is required.</p>
-
 <p>This path doesn&rsquo;t read any InfoLabels like the others, just returning the images you gave it into a
 format that <code>multiimage</code> or list controls can use. You can of course pass in the image paths from
 the InfoLabels yourself.</p>

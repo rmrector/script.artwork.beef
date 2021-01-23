@@ -17,9 +17,9 @@ skin depends on it.
 Inclusion in the official Kodi repo isn't likely for now, some of this functionality may make
 its way into Leia so it will probably see some feature churn before long.
 
-[dev repository]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/repository.rector.stuff-latest.zip
-[single zip file]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.beef-latest.zip
-[installable zip]: https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.helper-latest.zip
+[dev repository]: https://github.com/rmrector/repository.rector.stuff/raw/python2/latest/repository.rector.stuff-latest.zip
+[single zip file]: https://github.com/rmrector/repository.rector.stuff/raw/python2/latest/script.artwork.beef-latest.zip
+[installable zip]: https://github.com/rmrector/repository.rector.stuff/raw/python2/latest/script.artwork.helper-latest.zip
 
 ## Usage
 

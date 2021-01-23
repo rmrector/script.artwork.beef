@@ -95,16 +95,20 @@ available for many series.
 
 ##### "Artwork download configuration"
 
-By default artwork is only downloaded by Kodi's image (texture) caching. Switch this to
-"all configured above" to download everything configured in the section "Automatically add
-these artwork types from web services and file system", or "specific types below" for a more
+By default artwork is only downloaded by [Kodi's image (texture) caching], like artwork added from scrapers.
+Switch this to **all configured above** to download everything configured in the section "Automatically add
+these artwork types from web services and file system", or **specific types below** for a more
 detailed configuration of types to download.
 
-Artwork types configured below will be downloaded to the local file system (generally next to the media items),
-rather than linked directly to the original URL. This makes it easy to share with other Kodi installations
-and saves a bundle of bandwidth for you and the web services. For artwork types that can have multiple images,
-only the base art name is needed; "fanart" will also download any "fanart1", "fanart2",
-"fanart3", etc added to Kodi's library.
+Artwork types downloaded by Artwork Beef will be downloaded to the local file system
+(generally next to the media items), rather than linked directly to the original URL.
+This uses the same filenames as Kodi's library export. This makes it easy to share with other Kodi installations
+and saves some bandwidth for you and a bundle for the web services.
+
+For artwork types that can have multiple images, only the base art name is needed;
+"fanart" will also download any "fanart1", "fanart2", "fanart3", etc added to Kodi's library.
+
+[Kodi's image (texture) caching]: https://kodi.wiki/view/Artwork/Cache
 
 ## Advanced
 

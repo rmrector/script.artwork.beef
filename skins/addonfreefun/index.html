@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="generator" content="Hugo 0.40.1" />
+    <meta name="generator" content="Hugo 0.68.3" />
     <meta name="description" content="">
 
 
@@ -419,21 +419,15 @@ h5 {
                     <div class="progress">
     <div class="wrapper">
 <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#display-multiple-fanart">Display multiple fanart</a></li>
-<li><a href="#grab-random-fanart-plus-any-other-info-from-items-in-any-library-path">Grab random fanart (plus any other info) from items in any library path</a>
-<ul>
-<li><a href="#interesting-path-options">Interesting path options</a></li>
-<li><a href="#combining-multiple-paths">Combining multiple paths</a></li>
-</ul></li>
-<li><a href="#does-an-episode-or-season-have-its-own-fanart">Does an episode or season have its own fanart?</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li>
+      <ul>
+        <li><a href="#display-multiple-fanart">Display multiple fanart</a></li>
+        <li><a href="#grab-random-fanart-plus-any-other-info-from-items-in-any-library-path">Grab random fanart (plus any other info) from items in any library path</a></li>
+        <li><a href="#does-an-episode-or-season-have-its-own-fanart">Does an episode or season have its own fanart?</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
     </div>
 </div>
@@ -452,92 +446,72 @@ h5 {
         
 
 
-
-
 <p>Because who wants another dependency?</p>
-
 <h3 id="display-multiple-fanart">Display multiple fanart</h3>
-
 <p>Artwork Helper isn&rsquo;t strictly needed, how about that? It is a bit more work though.</p>
-
 <p>The trick is to use a <code>fadelabel</code> control to gather multiple InfoLabels and randomize them,
 then use that control&rsquo;s label as the final image to be displayed.</p>
-
-<pre><code class="language-xml">&lt;control type=&quot;fadelabel&quot; id=&quot;398045&quot;&gt;
-	&lt;description&gt;Randomizer for plugin-free multiple fanart&lt;/description&gt;
-	&lt;top&gt;-1000&lt;/top&gt; &lt;!-- Don't need to see it, but can't change its visibility. Put it off screen --&gt;
-	&lt;width&gt;1&lt;/width&gt;
-	&lt;height&gt;1&lt;/height&gt;
-	&lt;info&gt;ListItem.Art(fanart)&lt;/info&gt;
-	&lt;info&gt;ListItem.Art(fanart1)&lt;/info&gt;
-	&lt;info&gt;ListItem.Art(fanart2)&lt;/info&gt;
-	&lt;!-- ... repeat for each numbered fanart --&gt;
-	&lt;info&gt;ListItem.Art(fanart9)&lt;/info&gt;
-	&lt;!-- tvshow.fanart are filled with the series fanart when navigating season and episode lists --&gt;
-	&lt;info&gt;ListItem.Art(tvshow.fanart)&lt;/info&gt;
-	&lt;info&gt;ListItem.Art(tvshow.fanart1)&lt;/info&gt;
-	&lt;info&gt;ListItem.Art(tvshow.fanart2)&lt;/info&gt;
-	&lt;!-- ... repeat for each numbered fanart --&gt;
-	&lt;info&gt;ListItem.Art(tvshow.fanart9)&lt;/info&gt;
-	&lt;!-- Container.ListItem.Art() are filled based on the focused ListItem in the **focused container** in Leia --&gt;
-	&lt;info&gt;Container.ListItem.Art(fanart)&lt;/info&gt;
-	&lt;info&gt;Container.ListItem.Art(fanart1)&lt;/info&gt;
-	&lt;info&gt;Container.ListItem.Art(fanart2)&lt;/info&gt;
-	&lt;info&gt;Container.ListItem.Art(tvshow.fanart)&lt;/info&gt;
-	&lt;info&gt;Container.ListItem.Art(tvshow.fanart1)&lt;/info&gt;
-	&lt;info&gt;Container.ListItem.Art(tvshow.fanart2)&lt;/info&gt;
-	&lt;randomize&gt;true&lt;/randomize&gt;
-	&lt;pauseatend&gt;30000&lt;/pauseatend&gt; &lt;!-- Time to show each image, in milliseconds --&gt;
-	&lt;!-- No scrolling so only the pauseatend above (plus a short fade-in) affects length of time each
-		image is shown --&gt;
-	&lt;scroll&gt;false&lt;/scroll&gt;
-	&lt;scrollout&gt;false&lt;/scrollout&gt;
-	&lt;!-- Resets the timer when navigating to a new item, so each item's first visible fanart will
-		show for the full amount of time --&gt;
-	&lt;resetonlabelchange&gt;true&lt;/resetonlabelchange&gt;
-&lt;/control&gt;
-</code></pre>
-
-<p>With that on your window, the InfoLabel <code>$INFO[Control.GetLabel(398045)]</code> will contain the URL/path
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;control</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;fadelabel&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;398045&#34;</span><span style="color:#f92672">&gt;</span>
+	<span style="color:#f92672">&lt;description&gt;</span>Randomizer for plugin-free multiple fanart<span style="color:#f92672">&lt;/description&gt;</span>
+	<span style="color:#f92672">&lt;top&gt;</span>-1000<span style="color:#f92672">&lt;/top&gt;</span> <span style="color:#75715e">&lt;!-- Don&#39;t need to see it, but can&#39;t change its visibility. Put it off screen --&gt;</span>
+	<span style="color:#f92672">&lt;width&gt;</span>1<span style="color:#f92672">&lt;/width&gt;</span>
+	<span style="color:#f92672">&lt;height&gt;</span>1<span style="color:#f92672">&lt;/height&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>ListItem.Art(fanart)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>ListItem.Art(fanart1)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>ListItem.Art(fanart2)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#75715e">&lt;!-- ... repeat for each numbered fanart --&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>ListItem.Art(fanart9)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#75715e">&lt;!-- tvshow.fanart are filled with the series fanart when navigating season and episode lists --&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>ListItem.Art(tvshow.fanart)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>ListItem.Art(tvshow.fanart1)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>ListItem.Art(tvshow.fanart2)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#75715e">&lt;!-- ... repeat for each numbered fanart --&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>ListItem.Art(tvshow.fanart9)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#75715e">&lt;!-- Container.ListItem.Art() are filled based on the focused ListItem in the **focused container** in Leia --&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>Container.ListItem.Art(fanart)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>Container.ListItem.Art(fanart1)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>Container.ListItem.Art(fanart2)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>Container.ListItem.Art(tvshow.fanart)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>Container.ListItem.Art(tvshow.fanart1)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#f92672">&lt;info&gt;</span>Container.ListItem.Art(tvshow.fanart2)<span style="color:#f92672">&lt;/info&gt;</span>
+	<span style="color:#f92672">&lt;randomize&gt;</span>true<span style="color:#f92672">&lt;/randomize&gt;</span>
+	<span style="color:#f92672">&lt;pauseatend&gt;</span>30000<span style="color:#f92672">&lt;/pauseatend&gt;</span> <span style="color:#75715e">&lt;!-- Time to show each image, in milliseconds --&gt;</span>
+	<span style="color:#75715e">&lt;!-- No scrolling so only the pauseatend above (plus a short fade-in) affects length of time each
+</span><span style="color:#75715e">		image is shown --&gt;</span>
+	<span style="color:#f92672">&lt;scroll&gt;</span>false<span style="color:#f92672">&lt;/scroll&gt;</span>
+	<span style="color:#f92672">&lt;scrollout&gt;</span>false<span style="color:#f92672">&lt;/scrollout&gt;</span>
+	<span style="color:#75715e">&lt;!-- Resets the timer when navigating to a new item, so each item&#39;s first visible fanart will
+</span><span style="color:#75715e">		show for the full amount of time --&gt;</span>
+	<span style="color:#f92672">&lt;resetonlabelchange&gt;</span>true<span style="color:#f92672">&lt;/resetonlabelchange&gt;</span>
+<span style="color:#f92672">&lt;/control&gt;</span>
+</code></pre></div><p>With that on your window, the InfoLabel <code>$INFO[Control.GetLabel(398045)]</code> will contain the URL/path
 to a single image that can be given to an <code>image</code> or <code>multiimage</code> path, and it will randomly
 rotate through every available image. It will skip any that are empty, so no blank spaces will be
 left.</p>
-
 <p>You can make another structure with Player.Art for music visualization or a fullscreen now-playing window.</p>
-
 <h3 id="grab-random-fanart-plus-any-other-info-from-items-in-any-library-path">Grab random fanart (plus any other info) from items in any library path</h3>
-
 <p>Stick this little invisible list on your window somewhere:</p>
-
-<pre><code class="language-xml">&lt;control type=&quot;list&quot; id=&quot;12341&quot;&gt;
-	&lt;content sortby=&quot;random&quot;&gt;videodb://movies/titles/&lt;/content&gt;
-	&lt;autoscroll time=&quot;30000&quot;&gt;true&lt;/autoscroll&gt; &lt;!-- Time to show each image, in milliseconds --&gt;
-	&lt;itemlayout /&gt;
-	&lt;focusedlayout /&gt;
-&lt;/control&gt;
-</code></pre>
-
-<p>The path in the <code>&lt;content&gt;</code> element can be any path that Kodi supports, including any <code>videodb</code> paths
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;control</span> <span style="color:#a6e22e">type=</span><span style="color:#e6db74">&#34;list&#34;</span> <span style="color:#a6e22e">id=</span><span style="color:#e6db74">&#34;12341&#34;</span><span style="color:#f92672">&gt;</span>
+	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span><span style="color:#f92672">&gt;</span>videodb://movies/titles/<span style="color:#f92672">&lt;/content&gt;</span>
+	<span style="color:#f92672">&lt;autoscroll</span> <span style="color:#a6e22e">time=</span><span style="color:#e6db74">&#34;30000&#34;</span><span style="color:#f92672">&gt;</span>true<span style="color:#f92672">&lt;/autoscroll&gt;</span> <span style="color:#75715e">&lt;!-- Time to show each image, in milliseconds --&gt;</span>
+	<span style="color:#f92672">&lt;itemlayout</span> <span style="color:#f92672">/&gt;</span>
+	<span style="color:#f92672">&lt;focusedlayout</span> <span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;/control&gt;</span>
+</code></pre></div><p>The path in the <code>&lt;content&gt;</code> element can be any path that Kodi supports, including any <code>videodb</code> paths
 in the library, playlists, and plugins, as long as it directly contains items with fanart.</p>
-
 <p>Then <code>$INFO[Container(12341).ListItem.Art(fanart)]</code> will contain the URL/path to a single image
 that can be given to an <code>image</code> or <code>multiimage</code> path, and it will randomly rotate through every item
 in the list. Use any other ListItem InfoLabels as you need them.</p>
-
 <p>On <code>MyVideoNav</code>, when navigating categories like genres, studios, and years, this can pull fanart from items
 in just the focused category item by using <code>$INFO[ListItem.FolderPath]</code> for the <code>&lt;content&gt;</code> element.
 Big lists can take some time to fill when a new item is focused, so try a <code>limit=&quot;20&quot;</code> attribute to the
 content element.</p>
-
 <p>This can be combined with &ldquo;Display multiple fanart&rdquo; above to pick from all fanart set for all items
 in the list. Set the <code>fadelabel</code> timer to be longer than this list to still display just one image
 from each item, or shorter to flip through more than one fanart for each item.</p>
-
 <p><strong>NOTE</strong>: This works best with lists of items that mostly all have fanart, which may be a deal-breaker
 depending on your design, so keep it in mind when choosing this add-on free route.</p>
-
 <h4 id="interesting-path-options">Interesting path options</h4>
-
 <ul>
 <li>All movies - <code>videodb://movies/titles/</code></li>
 <li>All TV shows - <code>videodb://tvshows/titles/</code></li>
@@ -545,47 +519,40 @@ depending on your design, so keep it in mind when choosing this add-on free rout
 <li>Skin playlists - <code>special://skin/playlists/random_albums.xsp</code></li>
 <li>User playlists - <code>special://profile/playlists/video/latest_episodes.xsp</code></li>
 <li>Custom video nodes to separate concerts/children&rsquo;s shows/sports games/etc
-
 <ul>
 <li><code>library://video/movies/concerts.xml/</code></li>
 <li><code>library://video/movies/notconcerts.xml/</code></li>
 <li><code>library://video/tvshows/children.xml/</code></li>
 <li><code>library://video/tvshows/notchildren.xml/</code></li>
-<li>playlists can be used for similar purposes</li>
-</ul></li>
 </ul>
-
+<ul>
+<li>playlists can be used for similar purposes</li>
+</ul>
+</li>
+</ul>
 <h4 id="combining-multiple-paths">Combining multiple paths</h4>
-
 <p>One limitation of this vs an add-on is that there is no global library list that includes
 every media item in the library. Kodi 18 Leia adds a new feature that may convincingly accomplish
 something similar. Multiple content elements can be provided, so replace the single <code>&lt;content&gt;</code>
 above with something like below:</p>
-
-<pre><code class="language-xml">	&lt;content sortby=&quot;random&quot; limit=&quot;5&quot;&gt;videodb://movies/titles/&lt;/content&gt;
-	&lt;content sortby=&quot;random&quot; limit=&quot;5&quot;&gt;videodb://musicvideos/titles/&lt;/content&gt;
-	&lt;content sortby=&quot;random&quot; limit=&quot;5&quot;&gt;videodb://tvshows/titles/&lt;/content&gt;
-	&lt;content sortby=&quot;random&quot; limit=&quot;5&quot;&gt;videodb://movies/sets/&lt;/content&gt;
-	&lt;content sortby=&quot;random&quot; limit=&quot;5&quot;&gt;musicdb://artists/&lt;/content&gt;
-	&lt;content sortby=&quot;random&quot; limit=&quot;5&quot;&gt;videodb://movies/titles/&lt;/content&gt;
-	&lt;content sortby=&quot;random&quot; limit=&quot;5&quot;&gt;videodb://musicvideos/titles/&lt;/content&gt;
-	&lt;content sortby=&quot;random&quot; limit=&quot;5&quot;&gt;videodb://movies/sets/&lt;/content&gt;
-	&lt;content sortby=&quot;random&quot; limit=&quot;5&quot;&gt;videodb://tvshows/titles/&lt;/content&gt;
-	&lt;content sortby=&quot;random&quot; limit=&quot;5&quot;&gt;musicdb://artists/&lt;/content&gt;
-</code></pre>
-
-<p>The limit is low to avoid grouping too many of the same item together (&ldquo;That&rsquo;s not very random!&rdquo;),
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml">	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span> <span style="color:#a6e22e">limit=</span><span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">&gt;</span>videodb://movies/titles/<span style="color:#f92672">&lt;/content&gt;</span>
+	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span> <span style="color:#a6e22e">limit=</span><span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">&gt;</span>videodb://musicvideos/titles/<span style="color:#f92672">&lt;/content&gt;</span>
+	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span> <span style="color:#a6e22e">limit=</span><span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">&gt;</span>videodb://tvshows/titles/<span style="color:#f92672">&lt;/content&gt;</span>
+	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span> <span style="color:#a6e22e">limit=</span><span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">&gt;</span>videodb://movies/sets/<span style="color:#f92672">&lt;/content&gt;</span>
+	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span> <span style="color:#a6e22e">limit=</span><span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">&gt;</span>musicdb://artists/<span style="color:#f92672">&lt;/content&gt;</span>
+	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span> <span style="color:#a6e22e">limit=</span><span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">&gt;</span>videodb://movies/titles/<span style="color:#f92672">&lt;/content&gt;</span>
+	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span> <span style="color:#a6e22e">limit=</span><span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">&gt;</span>videodb://musicvideos/titles/<span style="color:#f92672">&lt;/content&gt;</span>
+	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span> <span style="color:#a6e22e">limit=</span><span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">&gt;</span>videodb://movies/sets/<span style="color:#f92672">&lt;/content&gt;</span>
+	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span> <span style="color:#a6e22e">limit=</span><span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">&gt;</span>videodb://tvshows/titles/<span style="color:#f92672">&lt;/content&gt;</span>
+	<span style="color:#f92672">&lt;content</span> <span style="color:#a6e22e">sortby=</span><span style="color:#e6db74">&#34;random&#34;</span> <span style="color:#a6e22e">limit=</span><span style="color:#e6db74">&#34;5&#34;</span><span style="color:#f92672">&gt;</span>musicdb://artists/<span style="color:#f92672">&lt;/content&gt;</span>
+</code></pre></div><p>The limit is low to avoid grouping too many of the same item together (&ldquo;That&rsquo;s not very random!&quot;),
 and then repeat the available paths at least once to add back a bit of variety.</p>
-
 <h3 id="does-an-episode-or-season-have-its-own-fanart">Does an episode or season have its own fanart?</h3>
-
 <p>If <code>ListItem.Art(fanart)</code> is the same image as <code>ListItem.Art(tvshow.fanart)</code> then it is a fallback
 image and the episode doesn&rsquo;t have its own. A variable value like below will show the single fanart
 image alone, because an episode with its own fanart is fancy.</p>
-
-<pre><code class="language-xml">&lt;value condition=&quot;[Container.Content(episodes) | Container.Content(seasons)] + !String.IsEqual(ListItem.Art(tvshow.fanart), ListItem.Art(fanart))&quot;&gt;$INFO[ListItem.Art(fanart)]&lt;/value&gt;
-</code></pre>
-
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#f92672">&lt;value</span> <span style="color:#a6e22e">condition=</span><span style="color:#e6db74">&#34;[Container.Content(episodes) | Container.Content(seasons)] + !String.IsEqual(ListItem.Art(tvshow.fanart), ListItem.Art(fanart))&#34;</span><span style="color:#f92672">&gt;</span>$INFO[ListItem.Art(fanart)]<span style="color:#f92672">&lt;/value&gt;</span>
+</code></pre></div>
 
 <footer class=" footline" >
 	

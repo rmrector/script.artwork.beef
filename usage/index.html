@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="generator" content="Hugo 0.40.1" />
+    <meta name="generator" content="Hugo 0.68.3" />
     <meta name="description" content="">
 
 
@@ -413,19 +413,17 @@ h5 {
                     <div class="progress">
     <div class="wrapper">
 <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#installing">Installing</a></li>
-<li><a href="#usage">Usage</a>
-<ul>
-<li><a href="#automatic-processing">Automatic processing</a></li>
-<li><a href="#manual-processing">Manual processing</a></li>
-<li><a href="#episode-fanart">Episode fanart</a></li>
-<li><a href="#change-report">Change report</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#installing">Installing</a></li>
+    <li><a href="#usage">Usage</a>
+      <ul>
+        <li><a href="#automatic-processing">Automatic processing</a></li>
+        <li><a href="#manual-processing">Manual processing</a></li>
+        <li><a href="#episode-fanart">Episode fanart</a></li>
+        <li><a href="#change-report">Change report</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
     </div>
 </div>
@@ -444,41 +442,26 @@ h5 {
         
 
 
-
-
 <h2 id="installing">Installing</h2>
-
-<p>Install my <a href="https://github.com/rmrector/repository.rector.stuff/raw/master/latest/repository.rector.stuff-latest.zip">dev repository</a> to get updates delivered to you automatically. After the repo is
+<p>Install my <a href="https://github.com/rmrector/repository.rector.stuff/raw/python2/latest/repository.rector.stuff-latest.zip">dev repository</a> to get updates delivered to you automatically. After the repo is
 installed, Artwork Beef can be installed from &ldquo;Program add-ons&rdquo;. It can also be installed with this
-<a href="https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.beef-latest.zip">single zip file</a>, but you will have to download each new version yourself. Do not install
+<a href="https://github.com/rmrector/repository.rector.stuff/raw/python2/latest/script.artwork.beef-latest.zip">single zip file</a>, but you will have to download each new version yourself. Do not install
 Artwork Beef from GitHub source unless you know you need to and have read the README.</p>
-
-<p><strong>Artwork Helper</strong> can be installed with this single <a href="https://github.com/rmrector/repository.rector.stuff/raw/master/latest/script.artwork.helper-latest.zip">installable zip</a>, but it&rsquo;s only necessary if a
+<p><strong>Artwork Helper</strong> can be installed with this single <a href="https://github.com/rmrector/repository.rector.stuff/raw/python2/latest/script.artwork.helper-latest.zip">installable zip</a>, but it&rsquo;s only necessary if a
 skin depends on it.</p>
-
 <p>Inclusion in the official Kodi repo isn&rsquo;t likely for now, some of this functionality may make
 its way into Leia so it will probably see some feature churn before long.</p>
-
 <h2 id="usage">Usage</h2>
-
 <p>Install it, and configure it to your liking. It is designed to run after library updates with the
 add-on settings &ldquo;Automatically add artwork for new videos&rdquo; and &ldquo;Automatically add artwork for new music&rdquo;.</p>
-
-<div class="notices note" ><p>There are a few actions and settings you may want to flip before letting Artwork Beef do its thing.
-See <a href="https://rmrector.github.io/script.artwork.beef/usage/firstusage/">First usage</a> for details.</p>
-</div>
-
-
+<!-- raw HTML omitted -->
 <h3 id="automatic-processing">Automatic processing</h3>
-
 <p>Artwork Beef must process all items in your library, and will do so automatically the first
 time it runs. If configured as above, it will scan new media items as they are added to Kodi&rsquo;s library,
 and over time (4-8 months) it will re-process existing media items still missing artwork,
 checking for new artwork from web services and the file system. If the option &ldquo;only identify local files&rdquo;
 is enabled it will check for new local artwork files monthly.</p>
-
 <h3 id="manual-processing">Manual processing</h3>
-
 <p>You can also run it from Program add-ons to trigger the automatic process for new or all items, or items old
 enough to need an update; a currently running process can also be canceled here. Some other
 actions are available here. To operate on a single
@@ -486,16 +469,12 @@ media item, open the context menu on that item, then under &ldquo;Manage&hellip;
 &ldquo;AB: Add missing artwork&rdquo; which processes the single item like the automatic process, checking for
 new local files and searching the web services for any missing art; and &ldquo;AB: Select artwork&hellip;&rdquo; to
 manually select new artwork.</p>
-
 <h3 id="episode-fanart">Episode fanart</h3>
-
 <p>Episode fanart requires using a scraper that grabs the TheTVDB ID for each episode, like the
 standard TheTVDB scraper and The Movie Database <em>TV show</em> scraper, or an NFO manager that does the same.
 You must enable adding episode fanart manually for each series through the add-on settings, as they add a bundle of new
 API calls to The Movie Database and just aren&rsquo;t available for many series.</p>
-
 <h3 id="change-report">Change report</h3>
-
 <p>It generates a report of changes to
 <a href="http://kodi.wiki/view/Userdata">userdata</a>/addon_data/script.artwork.beef/artwork-report.txt.</p>
 

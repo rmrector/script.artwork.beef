@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="generator" content="Hugo 0.40.1" />
+    <meta name="generator" content="Hugo 0.68.3" />
     <meta name="description" content="">
 
 
@@ -419,23 +419,21 @@ h5 {
                     <div class="progress">
     <div class="wrapper">
 <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#downloading-and-managing-local-artwork-files">Downloading and managing local artwork files</a></li>
-<li><a href="#artwork-file-naming-conventions-for-the-video-library">Artwork file naming conventions for the video library</a>
-<ul>
-<li><a href="#movies-episodes-and-music-videos">Movies, episodes, and music videos</a></li>
-<li><a href="#tv-shows-and-alternative-for-movies-and-music-videos">TV shows and alternative for movies and music videos</a></li>
-<li><a href="#movie-collection-artwork">Movie collection artwork</a></li>
-<li><a href="#music-artwork">Music artwork</a></li>
-<li><a href="#central-directory-folder-naming">Central directory folder naming</a></li>
-<li><a href="#file-system-safe-names">File system safe names</a></li>
-<li><a href="#legacy-file-names">Legacy file names</a></li>
-<li><a href="#an-option-to-rename-artwork-files">An option to rename artwork files</a></li>
-</ul></li>
-</ul></li>
-</ul>
+  <ul>
+    <li><a href="#downloading-and-managing-local-artwork-files">Downloading and managing local artwork files</a></li>
+    <li><a href="#artwork-file-naming-conventions-for-the-video-library">Artwork file naming conventions for the video library</a>
+      <ul>
+        <li><a href="#movies-episodes-and-music-videos">Movies, episodes, and music videos</a></li>
+        <li><a href="#tv-shows-and-alternative-for-movies-and-music-videos">TV shows and alternative for movies and music videos</a></li>
+        <li><a href="#movie-collection-artwork">Movie collection artwork</a></li>
+        <li><a href="#music-artwork">Music artwork</a></li>
+        <li><a href="#central-directory-folder-naming">Central directory folder naming</a></li>
+        <li><a href="#file-system-safe-names">File system safe names</a></li>
+        <li><a href="#legacy-file-names">Legacy file names</a></li>
+        <li><a href="#an-option-to-rename-artwork-files">An option to rename artwork files</a></li>
+      </ul>
+    </li>
+  </ul>
 </nav>
     </div>
 </div>
@@ -454,10 +452,7 @@ h5 {
         
 
 
-
-
 <h2 id="downloading-and-managing-local-artwork-files">Downloading and managing local artwork files</h2>
-
 <p>By default, Artwork Beef only identifies local artwork files, it does not add or modify them. There
 are some options to change that, though. With the settings &ldquo;Download artwork to local files&rdquo;
 you can configure exactly which types of artwork to download for each media type.
@@ -465,7 +460,6 @@ If configured to download artwork, most video library images will be saved next 
 with the most specific file names detailed below, with options to save movie and music video artwork
 without the base file name if you like, and options to save movie and music video fanart# to an
 &ldquo;extrafanart&rdquo; directory for skins using the classic style.</p>
-
 <ul>
 <li>The add-on setting &ldquo;Delete deselected artwork files&rdquo; will delete existing &ldquo;fanart&rdquo; files that are
 deselected manually in the GUI, to prevent that artwork file from being added back to the library
@@ -475,29 +469,22 @@ deleted and replaced artwork to Kodi&rsquo;s temp or cache directory. This is fa
 does not check the available space on the drive, and can overwrite the first recycled file
 if the same art type is modified again.</li>
 </ul>
-
 <h2 id="artwork-file-naming-conventions-for-the-video-library">Artwork file naming conventions for the video library</h2>
-
 <p>Artwork Beef will pick up artwork files next to your video files if they match the
 configured art types in add-on settings. It has two
 conventions for loading most artwork: <code>[media base file name]-[art type].[ext]</code> for movies,
 episodes, and music videos, and <code>[art type].[ext]</code> for TV shows and as a less specific alternative for
 movies and music videos within their own directories. This generally matches Kodi&rsquo;s file naming conventions.</p>
-
 <p><code>[art type]</code> must be alphanumeric and lowercase, but can
 otherwise be freely named. They should exactly match the name that skins can use to access
 them, and extra fanart are saved as <code>fanart1</code>, <code>fanart2</code>, and so on; the same goes for any
 other art type you want to save more than one of, though it requires a skin to actually support
 multiple in some way.</p>
-
 <h3 id="movies-episodes-and-music-videos">Movies, episodes, and music videos</h3>
-
 <p>Artwork for <code>//MRHOOD/Movies/Movie Name (2017)/Base File Name.mkv</code> can generally be stored at
 <code>//MRHOOD/Movies/Movie Name (2017)/Base File Name-[art type].[ext]</code>. Episode artwork is stored similarly,
 the important part is that it&rsquo;s in the same directory and has the same base file name as the episode video.</p>
-
 <p>A few specific examples are</p>
-
 <ul>
 <li><code>... /Movie Name (2017)/Movie File Name-poster.jpg</code></li>
 <li><code>... /Movie Name (2017)/Movie File Name-fanart.jpg</code></li>
@@ -506,22 +493,17 @@ the important part is that it&rsquo;s in the same directory and has the same bas
 <li><code>... /Movie Name (2017)/Movie File Name-fanart3.jpg</code></li>
 <li><code>... /Movie Name (2017)/Movie File Name-clearlogo.png</code></li>
 </ul>
-
 <p>If your movie or music video library is large, I suggest you keep each item in their own directory
 for performance reasons. Artwork Beef doesn&rsquo;t work any differently if you keep them all in one directory,
 but its processing will slow down just like Kodi&rsquo;s library update the more files that are packed together.</p>
-
 <h3 id="tv-shows-and-alternative-for-movies-and-music-videos">TV shows and alternative for movies and music videos</h3>
-
 <p>TV shows have a directory associated with them rather than an individual file, so there is no
 base file name to use. Artwork for <code>//MRHOOD/TVShows/TV Show 1/</code> can generally be stored at
 <code>//MRHOOD/TVShows/TV Show 1/[art type].[ext]</code>. Movies and music videos stored in separate directories
 can also use this style, though if both styles exist for one movie it will choose the other,
 more specific, one &ndash; handy for 3D or special editions that have their own artwork, if you keep them
 in the same directory.</p>
-
 <p>A few specific examples</p>
-
 <ul>
 <li><code>... /TV Show 1/poster.jpg</code></li>
 <li><code>... /TV Show 1/fanart.jpg</code></li>
@@ -534,41 +516,31 @@ in the same directory.</p>
 <li><code>... /TV Show 1/season01-poster.png</code></li>
 <li><code>... /TV Show 1/season01-landscape.png</code></li>
 </ul>
-
 <h3 id="movie-collection-artwork">Movie collection artwork</h3>
-
 <p>Movie collection artwork can be pulled from a central directory (configured in the add-on settings)
 containing artwork named in a similar fashion to both options above.
 Movie collections may not have a folder they can call their own,
 so instead use the set&rsquo;s name as the directory name.</p>
-
 <p>A few specific examples are</p>
-
 <ul>
 <li><code>... /[central movie set info directory]/Movie Collection Name/poster.jpg</code></li>
 <li><code>... /[central movie set info directory]/Movie Collection Name/fanart.jpg</code></li>
 <li><code>... /[central movie set info directory]/Movie Collection Name/fanart1.jpg</code></li>
 <li><code>... /[central movie set info directory]/Movie Collection Name/clearlogo.png</code></li>
 </ul>
-
 <p>or</p>
-
 <ul>
 <li><code>... /[central movie set info directory]/Movie Collection Name-poster.jpg</code></li>
 <li><code>... /[central movie set info directory]/Movie Collection Name-fanart.jpg</code></li>
 <li><code>... /[central movie set info directory]/Movie Collection Name-fanart1.jpg</code></li>
 <li><code>... /[central movie set info directory]/Movie Collection Name-clearlogo.png</code></li>
 </ul>
-
 <p>Artwork Beef can also be configured to pull collection artwork from a parent directory of movies,
 if that directory name exactly matches the cleaned collection name, with artwork
 named <code>[art type].[ext]</code>.</p>
-
 <h3 id="music-artwork">Music artwork</h3>
-
 <p>Music artwork is gathered from and downloaded to the &ldquo;Artist information folder&rdquo; setting in Kodi,
 added in 18 Leia under &ldquo;Media settings&rdquo;, &ldquo;Music&rdquo;, &ldquo;Library&rdquo;. The results are structured as</p>
-
 <ul>
 <li><code>... /[Artist information folder]/[artist name]/thumb.jpg</code></li>
 <li><code>... /[Artist information folder]/[artist name]/fanart.jpg</code></li>
@@ -580,65 +552,50 @@ added in 18 Leia under &ldquo;Media settings&rdquo;, &ldquo;Music&rdquo;, &ldquo
 <li><code>... /[Artist information folder]/[artist name]/[album name]/discart.png</code> for album artwork</li>
 <li><code>... /[Artist information folder]/[artist name]/[album name]/[song name]-thumb.jpg</code> for song artwork</li>
 </ul>
-
 <p>When there is more than one artist with the same name, the first four characters of the
 artist MusicBrainz ID is add to the end of the folder like <code>[artist name]_12fe</code>. Same goes
 when there is more than one album with the same name for a single artist (like remasters or
 other recordings), with the album / release MusicBrainz ID (not release group).</p>
-
 <p>For albums with multiple discs, you can add disc artwork as &lsquo;discart1.png&rsquo; for disc 1, &lsquo;discart2.png&rsquo;
 for disc 2, and so on. Multiple disc albums can also have their songs and discart stored in disc specific
 subfolders, but other artwork can stay in the top album folder.</p>
-
 <p>Artwork Beef will also identify album and song artwork next to the song files if all songs for
 one album are in a single folder, and don&rsquo;t share that folder with songs from any other album.
 Song artwork organized this way must match the base name of the song file, rather than just the
 song name as when in the artist folder. There is also an option to save album and song artwork
 to this directory if possible.</p>
-
 <p><strong>Note:</strong> Albums nested inside of artist folders in the <em>central directory</em> may not be the best
 idea for the future, but that&rsquo;s what Artwork Beef does for now.</p>
-
 <h3 id="central-directory-folder-naming">Central directory folder naming</h3>
-
 <p>When artwork is in the central directory (for music and movie sets), the folder name must exactly
 match the name in the library, including look-alike characters such as hyphen and
 <a href="https://en.wikipedia.org/wiki/Hyphen#Hyphen-minus">hyphen-minus</a>.</p>
-
 <h3 id="file-system-safe-names">File system safe names</h3>
-
 <p>For music and movie set artwork, the file name is made from the title or name of items, which
 may not be safe for the file system with characters like <code>:?&quot;/\&lt;&gt;*|</code>. Replace these characters
-with an underscore &lsquo;_&lsquo;, and remove spaces and periods from the end to match Kodi&rsquo;s file name cleaning.
+with an underscore &lsquo;_', and remove spaces and periods from the end to match Kodi&rsquo;s file name cleaning.
 Artwork Beef will be more lenient in its matching to catch other styles.</p>
-
 <h3 id="legacy-file-names">Legacy file names</h3>
-
 <p>Artwork Beef will also identify several other filenames that are / have been used by other tools,
 such as Artwork Downloader and Movie Set Artwork Automator,
 in cases when they are different than the art type name skins use to access them.</p>
-
 <p><code>logo.png</code> is added as clearlogo, <code>character.png</code> is added as characterart, <code>folder.jpg</code> to thumb,
 <code>disc.png</code> and <code>cdart.png</code> to discart, files in the extrafanart directory are added as fanart#,
 and files in the extrathumbs directory are added as thumb#.</p>
-
 <h3 id="an-option-to-rename-artwork-files">An option to rename artwork files</h3>
-
 <p>If you have a Linux computer with Perl installed, here is a collection of commands to rename
 some artwork files from Artwork Downloader to Kodi file names. Moving extrafanart and extrathumbs
 is a bit more work. Only do this if all of your media management tools support the new names,
 Artwork Beef will support both for some time yet. These commands are just &ldquo;dry runs&rdquo; that will
 print out what the rename <em>would</em> do, remove the <code>-n</code> option from each line to actually rename the files.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># For movies and TV shows</span>
+find /path/to/media/ <span style="color:#ae81ff">\(</span> -iname <span style="color:#e6db74">&#34;logo.png&#34;</span> -o -iname <span style="color:#e6db74">&#34;*-logo.png&#34;</span> <span style="color:#ae81ff">\)</span> -exec rename -n <span style="color:#e6db74">&#39;s/logo.png$/clearlogo.png/i&#39;</span> <span style="color:#e6db74">&#39;{}&#39;</span> <span style="color:#ae81ff">\;</span>
+find /path/to/media/ <span style="color:#ae81ff">\(</span> -iname <span style="color:#e6db74">&#34;disc.png&#34;</span> -o -iname <span style="color:#e6db74">&#34;*-disc.png&#34;</span> <span style="color:#ae81ff">\)</span> -exec rename -n <span style="color:#e6db74">&#39;s/disc.png$/discart.png/i&#39;</span> <span style="color:#e6db74">&#39;{}&#39;</span> <span style="color:#ae81ff">\;</span>
+find /path/to/media/ <span style="color:#ae81ff">\(</span> -iname <span style="color:#e6db74">&#34;character.png&#34;</span> -o -iname <span style="color:#e6db74">&#34;*-character.png&#34;</span> <span style="color:#ae81ff">\)</span> -exec rename -n <span style="color:#e6db74">&#39;s/character.png$/characterart.png/i&#39;</span> <span style="color:#e6db74">&#39;{}&#39;</span> <span style="color:#ae81ff">\;</span>
 
-<pre><code class="language-sh"># For movies and TV shows
-find /path/to/media/ \( -iname &quot;logo.png&quot; -o -iname &quot;*-logo.png&quot; \) -exec rename -n 's/logo.png$/clearlogo.png/i' '{}' \;
-find /path/to/media/ \( -iname &quot;disc.png&quot; -o -iname &quot;*-disc.png&quot; \) -exec rename -n 's/disc.png$/discart.png/i' '{}' \;
-find /path/to/media/ \( -iname &quot;character.png&quot; -o -iname &quot;*-character.png&quot; \) -exec rename -n 's/character.png$/characterart.png/i' '{}' \;
-
-# Music videos and the music library
-find /path/to/media/ \( -iname &quot;cdart.png&quot; -o -iname &quot;*-cdart.png&quot; \) -exec rename -n 's/cdart.png$/discart.png/i' '{}' \;
-</code></pre>
-
+<span style="color:#75715e"># Music videos and the music library</span>
+find /path/to/media/ <span style="color:#ae81ff">\(</span> -iname <span style="color:#e6db74">&#34;cdart.png&#34;</span> -o -iname <span style="color:#e6db74">&#34;*-cdart.png&#34;</span> <span style="color:#ae81ff">\)</span> -exec rename -n <span style="color:#e6db74">&#39;s/cdart.png$/discart.png/i&#39;</span> <span style="color:#e6db74">&#39;{}&#39;</span> <span style="color:#ae81ff">\;</span>
+</code></pre></div>
 
 <footer class=" footline" >
 	

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <meta name="generator" content="Hugo 0.40.1" />
+    <meta name="generator" content="Hugo 0.68.3" />
     <meta name="description" content="">
 
 
@@ -418,7 +418,7 @@ h5 {
                 
                     <div class="progress">
     <div class="wrapper">
-
+<nav id="TableOfContents"></nav>
     </div>
 </div>
 
@@ -438,14 +438,11 @@ h5 {
 
 <p>I think that multiple fanart for individual media items should be integrated into the
 library like all other artwork. Here is a list of my reasons.</p>
-
 <ol>
 <li>Media file organization and skin display should be completely independent.</li>
 <li>Skins and other interfaces should access all library artwork in the same way.</li>
 </ol>
-
 <p>or a list of particulars:</p>
-
 <ul>
 <li>Kodi&rsquo;s support for freely named artwork in the library is pretty great, so let&rsquo;s use it!</li>
 <li>It works for items in the library that may not point to a location on a file system that
@@ -462,20 +459,20 @@ like Plex and Emby, just like all other artwork.</li>
 once the images have been cached. Classic extrafanart always hits the file system at least once for each
 movie/TV show when first listing the path to get a list of the images, even if they are all cached.</li>
 <li>Skins can more easily work with all fanart together (main + extra fanart)
-
 <ul>
 <li>Display them in a <code>multiimage</code> control with a skin structure described in
 <a href="https://rmrector.github.io/script.artwork.beef/skins/addonfreefun/">Fun without add-ons</a>.</li>
 <li>There are also <strong>plugin://</strong> paths to accomplish this.
 See <a href="https://rmrector.github.io/script.artwork.beef/skins/artworkhelper/">Artwork Helper</a>.</li>
-</ul></li>
+</ul>
+</li>
 <li>Skins can look up each fanart image directly, which makes it simpler to display more than
 one at a time in arbitrary locations.
-
 <ul>
 <li>Probably overkill for fanart, but other art types could be multiplied for great effect.
 I&rsquo;ve been playing with <a href="https://rmrector.github.io/script.artwork.beef/examples/#and-multiple-characterart">characterart</a>.</li>
-</ul></li>
+</ul>
+</li>
 </ul>
 
 
